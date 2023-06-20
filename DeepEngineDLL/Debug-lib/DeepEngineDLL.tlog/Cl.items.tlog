@@ -1,0 +1,12 @@
+C:\Users\tytra\Documents\SourceCode\DeepEngine\src\core.cpp;C:\Users\tytra\Documents\SourceCode\DeepEngine\DeepEngineDLL\Debug-lib\core.obj
+C:\Users\tytra\Documents\SourceCode\DeepEngine\src\debug.cpp;C:\Users\tytra\Documents\SourceCode\DeepEngine\DeepEngineDLL\Debug-lib\debug.obj
+C:\Users\tytra\Documents\SourceCode\DeepEngine\src\drawable.cpp;C:\Users\tytra\Documents\SourceCode\DeepEngine\DeepEngineDLL\Debug-lib\drawable.obj
+C:\Users\tytra\Documents\SourceCode\DeepEngine\src\error.cpp;C:\Users\tytra\Documents\SourceCode\DeepEngine\DeepEngineDLL\Debug-lib\error.obj
+C:\Users\tytra\Documents\SourceCode\DeepEngine\src\key.cpp;C:\Users\tytra\Documents\SourceCode\DeepEngine\DeepEngineDLL\Debug-lib\key.obj
+C:\Users\tytra\Documents\SourceCode\DeepEngine\src\logger.cpp;C:\Users\tytra\Documents\SourceCode\DeepEngine\DeepEngineDLL\Debug-lib\logger.obj
+C:\Users\tytra\Documents\SourceCode\DeepEngine\src\output_file_stream.cpp;C:\Users\tytra\Documents\SourceCode\DeepEngine\DeepEngineDLL\Debug-lib\output_file_stream.obj
+C:\Users\tytra\Documents\SourceCode\DeepEngine\src\renderer.cpp;C:\Users\tytra\Documents\SourceCode\DeepEngine\DeepEngineDLL\Debug-lib\renderer.obj
+C:\Users\tytra\Documents\SourceCode\DeepEngine\src\string_utils.cpp;C:\Users\tytra\Documents\SourceCode\DeepEngine\DeepEngineDLL\Debug-lib\string_utils.obj
+C:\Users\tytra\Documents\SourceCode\DeepEngine\src\sys_win.c;C:\Users\tytra\Documents\SourceCode\DeepEngine\DeepEngineDLL\Debug-lib\sys_win.obj
+C:\Users\tytra\Documents\SourceCode\DeepEngine\src\sys_win_.cpp;C:\Users\tytra\Documents\SourceCode\DeepEngine\DeepEngineDLL\Debug-lib\sys_win_.obj
+C:\Users\tytra\Documents\SourceCode\DeepEngine\src\window.cpp;C:\Users\tytra\Documents\SourceCode\DeepEngine\DeepEngineDLL\Debug-lib\window.obj
