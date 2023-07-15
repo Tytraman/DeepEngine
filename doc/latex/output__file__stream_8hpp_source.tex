@@ -1,0 +1,128 @@
+\doxysection{output\+\_\+file\+\_\+stream.\+hpp}
+\hypertarget{output__file__stream_8hpp_source}{}\label{output__file__stream_8hpp_source}\index{include/DE/output\_file\_stream.hpp@{include/DE/output\_file\_stream.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_DEEP\_ENGINE\_OFS\_HPP\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_DEEP\_ENGINE\_OFS\_HPP\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <DE/def.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <DE/output\_stream.hpp>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <DE/types.hpp>}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <stddef.h>}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacede}{de}}\ \{}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keyword}{class\ }DE\_API\ \mbox{\hyperlink{classde_1_1_output_file_stream}{OutputFileStream}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classde_1_1_output_stream}{OutputStream}}\ \{}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ *\_filename;}
+\DoxyCodeLine{00018\ }
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classde_1_1_output_file_stream}{OutputFileStream}}(\textcolor{keyword}{const}\ std::string\ \&filename);}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classde_1_1_output_file_stream}{\string~OutputFileStream}}();}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ open()\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ close()\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ write(\textcolor{keyword}{const}\ uint8\_t\ *buffer,\ \textcolor{keywordtype}{size\_t}\ \mbox{\hyperlink{structde_1_1size}{size}},\ \textcolor{keywordtype}{size\_t}\ \&bytesWritten)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classde_1_1_output_file_stream}{OutputFileStream}}\ \&operator<<(\textcolor{keyword}{const}\ T\ \&value);}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classde_1_1_output_file_stream}{OutputFileStream}}\ \&operator<<(\textcolor{keyword}{const}\ T\ *value);}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//=====\ Getters\ =====}}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \ \ \ \ std::string\ \&getFilename();}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//=====\ Setters\ =====}}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ setFilename(\textcolor{keyword}{const}\ std::string\ \&value);}
+\DoxyCodeLine{00036\ \ \ \ \ \};}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ OutputFileStream::open()\ \{}
+\DoxyCodeLine{00039\ \textcolor{preprocessor}{\#ifdef\ DE\_WINDOWS}}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \_fd\ =\ CreateFileA(\_filename-\/>c\_str(),\ FILE\_APPEND\_DATA,\ FILE\_SHARE\_READ,\ NULL,\ OPEN\_ALWAYS,\ FILE\_ATTRIBUTE\_NORMAL,\ NULL);}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(\_fd\ ==\ INVALID\_HANDLE\_VALUE)}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{if}(SetFilePointer(\_fd,\ 0l,\ \textcolor{keyword}{nullptr},\ FILE\_END)\ ==\ INVALID\_SET\_FILE\_POINTER)\ \{}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \ \ close();}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{false};}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \}}
+\DoxyCodeLine{00047\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#error\ Implement\ this}}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \textcolor{keyword}{true};}
+\DoxyCodeLine{00051\ \ \ \ \ \}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ OutputFileStream::close()\ \{}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#ifdef\ DE\_WINDOWS}}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ CloseHandle(\_fd);}
+\DoxyCodeLine{00056\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#error\ Implement\ this}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ \_filename-\/>clear();}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \_fd\ =\ NULL\_FD;}
+\DoxyCodeLine{00061\ \ \ \ \ \}}
+\DoxyCodeLine{00062\ \ \ \ \ }
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keyword}{inline}\ OutputFileStream\ \&OutputFileStream::operator<<(\textcolor{keyword}{const}\ T\ \&value)\ \{}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#ifdef\ DE\_WINDOWS}}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ DWORD\ bytesWritten;}
+\DoxyCodeLine{00067\ \ \ \ \ \ \ \ \ WriteFile(\_fd,\ \&value,\ \textcolor{keyword}{sizeof}(T),\ \&bytesWritten,\ NULL);}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#error\ Implement\ this}}
+\DoxyCodeLine{00070\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00072\ \ \ \ \ \}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keyword}{template}\ <\textcolor{keyword}{typename}\ T>}
+\DoxyCodeLine{00075\ \ \ \ \ \textcolor{keyword}{inline}\ OutputFileStream\ \&OutputFileStream::operator<<(\textcolor{keyword}{const}\ T\ *value)\ \{}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ operator<<(*value);}
+\DoxyCodeLine{00077\ \ \ \ \ \}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{keyword}{template}\ <>}
+\DoxyCodeLine{00080\ \ \ \ \ \textcolor{keyword}{inline}\ OutputFileStream\ \&OutputFileStream::operator<<<std::string>(\textcolor{keyword}{const}\ std::string\ \&text)\ \{}
+\DoxyCodeLine{00081\ \textcolor{preprocessor}{\#ifdef\ DE\_WINDOWS}}
+\DoxyCodeLine{00082\ \ \ \ \ \ \ \ \ DWORD\ bytesWritten;}
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ WriteFile(\_fd,\ text.c\_str(),\ (DWORD)\ text.length(),\ \&bytesWritten,\ NULL);}
+\DoxyCodeLine{00084\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00085\ \textcolor{preprocessor}{\#error\ Implement\ this}}
+\DoxyCodeLine{00086\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00087\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00088\ \ \ \ \ \}}
+\DoxyCodeLine{00089\ }
+\DoxyCodeLine{00090\ \ \ \ \ \textcolor{keyword}{template}\ <>}
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keyword}{inline}\ OutputFileStream\ \&OutputFileStream::operator<<<char>(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *text)\ \{}
+\DoxyCodeLine{00092\ \textcolor{preprocessor}{\#ifdef\ DE\_WINDOWS}}
+\DoxyCodeLine{00093\ \ \ \ \ DWORD\ bytesWritten;}
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keywordtype}{size\_t}\ len\ =\ strlen(text);}
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#if\ DE\_64}}
+\DoxyCodeLine{00096\ \ \ \ \ DWORD\ first\ =\ len\ \&\ 0xFFFFFFFF;}
+\DoxyCodeLine{00097\ \ \ \ \ DWORD\ second\ =\ (len\ >>\ 32)\ \&\ 0xFFFFFFFF;}
+\DoxyCodeLine{00098\ \ \ \ \ WriteFile(\_fd,\ text,\ first,\ \&bytesWritten,\ NULL);}
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{keywordflow}{if}(second\ >\ 0)}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ WriteFile(\_fd,\ text\ +\ first,\ second,\ \&bytesWritten,\ NULL);}
+\DoxyCodeLine{00101\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00102\ \ \ \ \ WriteFile(\_fd,\ text,\ len,\ \&bytesWritten,\ NULL);}
+\DoxyCodeLine{00103\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00104\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00105\ \textcolor{preprocessor}{\ \ \ \ \#error\ Implement\ this}}
+\DoxyCodeLine{00106\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00107\ \ \ \ \ \textcolor{keywordflow}{return}\ *\textcolor{keyword}{this};}
+\DoxyCodeLine{00108\ \}}
+\DoxyCodeLine{00109\ }
+\DoxyCodeLine{00110\ \ \ \ \ \textcolor{keyword}{inline}\ std::string\ \&OutputFileStream::getFilename()\ \{}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ *\_filename;}
+\DoxyCodeLine{00112\ \ \ \ \ \}}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ OutputFileStream::setFilename(\textcolor{keyword}{const}\ std::string\ \&value)\ \{}
+\DoxyCodeLine{00115\ \ \ \ \ \ \ \ \ \_filename-\/>assign(value);}
+\DoxyCodeLine{00116\ \ \ \ \ \}}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \}}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ }
+\DoxyCodeLine{00122\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

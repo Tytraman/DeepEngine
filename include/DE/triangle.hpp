@@ -7,54 +7,57 @@
 #include <DE/color.hpp>
 #include <DE/vec.hpp>
 
+#include <stdint.h>
+
 namespace de {
 
-	class DE_API Triangle : public Drawable {
+	/// @class Triangle
+	/// @brief Repr√©sente un triangle √† dessiner sur l'√©cran.
+	class DE_API Triangle : public ColoredDrawable {
 
 		private:
-			colora _color;
 			vertex _vertices[3];
 			float _radius;
 
 		public:
 			Triangle() = delete;
-			Triangle(Renderer *renderer, const vec2 &&centerPos, const colora &&color, float radius, bool visible = true);
+			Triangle(DrawablePanel *panel, const fvec2 &centerPos, const colora &color, float radius, bool visible = true);
 
 			void rotate(float degrees) override;
-			void draw() override;
+			void draw(const fmat2x2 &baseVectors) override;
 
 			//===== Getters =====//
 
-			uint32 getType() override;
+			uint32_t getType() const override;
 
 			fvec2 getVertex0Pos() const;
 			fvec2 getVertex1Pos() const;
 			fvec2 getVertex2Pos() const;
-			fvec2 getVertexPos(int8 number) const;
+			fvec2 getVertexPos(int8_t number) const;
 
-			/// @brief	Calcule l'angle A en degrÈs.
-			/// @return La valeur en degrÈs de l'angle A.
+			/// @brief	Calcule l'angle A en degr√©s.
+			/// @return La valeur en degr√©s de l'angle A.
 			float getAngleA() const;
-			/// @brief	Calcule l'angle B en degrÈs.
-			/// @return La valeur en degrÈs de l'angle B.
+			/// @brief	Calcule l'angle B en degr√©s.
+			/// @return La valeur en degr√©s de l'angle B.
 			float getAngleB() const;
-			/// @brief	Calcule l'angle C en degrÈs.
-			/// @return La valeur en degrÈs de l'angle C.
+			/// @brief	Calcule l'angle C en degr√©s.
+			/// @return La valeur en degr√©s de l'angle C.
 			float getAngleC() const;
 
 			float getLengthOfAB() const;
 			float getLengthOfAC() const;
 			float getLengthOfBC() const;
 
-			/// @brief	VÈrifie si le triangle est rectangle.
+			/// @brief	V√©rifie si le triangle est rectangle.
 			/// @return L'index de l'angle rectangle ou -1 si le triangle n'est pas rectangle.
-			int8 isRectangle() const;
+			int8_t isRectangle() const;
 
 			float getArea() const;
 
 			//===== Setters =====//
 
-			void setPos(const vec2 &pos) override;
+			void setPos(const fvec2 &pos) override;
 
 			void setVertex0Pos(const fvec2 &pos);
 			void setVertex1Pos(const fvec2 &pos);
@@ -68,7 +71,7 @@ namespace de {
 	Triangle::getType
 	=================
 	*/
-	inline uint32 Triangle::getType()
+	inline uint32_t Triangle::getType() const
 	{
 		return DE_DRAWABLE_TYPE_TRIANGLE;
 	}
@@ -108,7 +111,7 @@ namespace de {
 	Triangle::getVertexPos
 	======================
 	*/
-	inline fvec2 Triangle::getVertexPos(int8 number) const
+	inline fvec2 Triangle::getVertexPos(int8_t number) const
 	{
 		return { _vertices[number].position.x, _vertices[number].position.y };
 	}

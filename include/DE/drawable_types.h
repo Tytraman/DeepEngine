@@ -3,5 +3,6 @@
 
 #define DE_DRAWABLE_TYPE_PIXEL    0
 #define DE_DRAWABLE_TYPE_TRIANGLE 1
+#define DE_DRAWABLE_TYPE_LINE     2
 
 #endif

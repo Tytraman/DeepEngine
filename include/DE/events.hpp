@@ -3,17 +3,31 @@
 
 #include <DE/def.h>
 #include <DE/types.hpp>
+
+#include <stdint.h>
+
 #include <SDL.h>
 
 namespace de {
 
-	enum events : uint32 {
-		Quit	= SDL_QUIT,
-		KeyDown = SDL_KEYDOWN,
-		KeyUp	= SDL_KEYUP
+	class Window;
+
+	namespace EventType {
+
+		enum : uint32_t {
+			Window = SDL_WINDOWEVENT
+		};
+
+	}
+
+	enum events : uint32_t {
+		Quit			= SDL_QUIT,
+		KeyDown			= SDL_KEYDOWN,
+		KeyUp			= SDL_KEYUP,
+		WindowResized	= SDL_WINDOWEVENT_RESIZED
 	};
 
-	enum dkey : sint32 {
+	enum dkey : int32_t {
 		Backspace = SDLK_BACKSPACE,
 		Esc = SDLK_ESCAPE,
 
@@ -49,11 +63,36 @@ namespace de {
 		DownArrow = SDLK_DOWN,
 		UpArrow = SDLK_UP
 	};
+	
+	/// @struct devent_s
+	/// @brief Permet la gestion des évènements système et des fenêtres.
+	struct DE_API devent_s {
 
-	struct devent {
-		sint32 ev;
-		keycode key;
+		static devent_s *create();
+
+		devent_s() = delete;
+		devent_s(devent_s &) = delete;
+		devent_s(devent_s &&) = delete;
+		~devent_s();
+
+		bool pollEvent();
+
+		uint32_t getType() const;
+		uint32_t getWindowEventType() const;
+
+		int32_t getKeysym() const;
+		size getWindowSize() const;
+		
+
 	};
+
+	/// @typedef devent
+	/// @brief Pointeur opaque vers la structure \ref devent_s.
+	/// 
+	/// Les évènements sont gérés en interne par la SDL et afin de rester
+	/// uniforme avec DeepEngine, les fonctions et les types de la SDL ne sont
+	/// pas exposer.
+	typedef struct devent_s *devent;
 
 }
 

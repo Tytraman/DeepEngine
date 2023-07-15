@@ -1,0 +1,152 @@
+\hypertarget{classde_1_1_triangle}{}\doxysection{de\+::Triangle Class Reference}
+\label{classde_1_1_triangle}\index{de::Triangle@{de::Triangle}}
+
+
+Représente un triangle à dessiner sur l\textquotesingle{}écran.  
+
+
+
+
+{\ttfamily \#include $<$triangle.\+hpp$>$}
+
+Inheritance diagram for de\+::Triangle\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classde_1_1_triangle}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classde_1_1_triangle_a862cb69e95695d2d05799ed25b4d6874}\label{classde_1_1_triangle_a862cb69e95695d2d05799ed25b4d6874}} 
+{\bfseries Triangle} (\mbox{\hyperlink{classde_1_1_drawable_panel}{Drawable\+Panel}} $\ast$panel, const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&center\+Pos, const \mbox{\hyperlink{structde_1_1colora}{colora}} \&\mbox{\hyperlink{structde_1_1color}{color}}, float radius, bool visible=true)
+\item 
+\mbox{\Hypertarget{classde_1_1_triangle_a1f9aa8a2168aa4fe0fc065dbe4a29ca6}\label{classde_1_1_triangle_a1f9aa8a2168aa4fe0fc065dbe4a29ca6}} 
+void {\bfseries rotate} (float degrees) override
+\item 
+\mbox{\Hypertarget{classde_1_1_triangle_a7b6dc7b7c022d22e409bdcbdddcb81a1}\label{classde_1_1_triangle_a7b6dc7b7c022d22e409bdcbdddcb81a1}} 
+void {\bfseries draw} (const \mbox{\hyperlink{structde_1_1fmat2x2}{fmat2x2}} \&base\+Vectors) override
+\item 
+\mbox{\Hypertarget{classde_1_1_triangle_a15810b2920beaf78b67e93879e3391dc}\label{classde_1_1_triangle_a15810b2920beaf78b67e93879e3391dc}} 
+uint32\+\_\+t {\bfseries get\+Type} () const override
+\item 
+\mbox{\Hypertarget{classde_1_1_triangle_a373889b3356ef083683ebb90a0289c03}\label{classde_1_1_triangle_a373889b3356ef083683ebb90a0289c03}} 
+\mbox{\hyperlink{structde_1_1fvec2}{fvec2}} {\bfseries get\+Vertex0\+Pos} () const
+\item 
+\mbox{\Hypertarget{classde_1_1_triangle_a8c4c21dd65c6199919686ea48946575d}\label{classde_1_1_triangle_a8c4c21dd65c6199919686ea48946575d}} 
+\mbox{\hyperlink{structde_1_1fvec2}{fvec2}} {\bfseries get\+Vertex1\+Pos} () const
+\item 
+\mbox{\Hypertarget{classde_1_1_triangle_a66e17f6c11191e02f936430b43f1dd14}\label{classde_1_1_triangle_a66e17f6c11191e02f936430b43f1dd14}} 
+\mbox{\hyperlink{structde_1_1fvec2}{fvec2}} {\bfseries get\+Vertex2\+Pos} () const
+\item 
+\mbox{\Hypertarget{classde_1_1_triangle_a700939bc2b68e9d549f19284a10d1818}\label{classde_1_1_triangle_a700939bc2b68e9d549f19284a10d1818}} 
+\mbox{\hyperlink{structde_1_1fvec2}{fvec2}} {\bfseries get\+Vertex\+Pos} (int8\+\_\+t number) const
+\item 
+float \mbox{\hyperlink{classde_1_1_triangle_a74a08d727c0f384fa4b1bc830b66d6c9}{get\+AngleA}} () const
+\begin{DoxyCompactList}\small\item\em Calcule l\textquotesingle{}angle A en degrés. \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{classde_1_1_triangle_a5338081983a82758e3a02b573fa00d21}{get\+AngleB}} () const
+\begin{DoxyCompactList}\small\item\em Calcule l\textquotesingle{}angle B en degrés. \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{classde_1_1_triangle_a0e2ebf56ea8c83fc7641191cc141f2ad}{get\+AngleC}} () const
+\begin{DoxyCompactList}\small\item\em Calcule l\textquotesingle{}angle C en degrés. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classde_1_1_triangle_a4bfa69fc0ba57b46842505fcc48165e3}\label{classde_1_1_triangle_a4bfa69fc0ba57b46842505fcc48165e3}} 
+float {\bfseries get\+Length\+Of\+AB} () const
+\item 
+\mbox{\Hypertarget{classde_1_1_triangle_a3257ea732d358075c2eb7e94441d8575}\label{classde_1_1_triangle_a3257ea732d358075c2eb7e94441d8575}} 
+float {\bfseries get\+Length\+Of\+AC} () const
+\item 
+\mbox{\Hypertarget{classde_1_1_triangle_a861b065a45a12e9b0ee5c741e3f964ea}\label{classde_1_1_triangle_a861b065a45a12e9b0ee5c741e3f964ea}} 
+float {\bfseries get\+Length\+Of\+BC} () const
+\item 
+int8\+\_\+t \mbox{\hyperlink{classde_1_1_triangle_ad02e43a00d74921d3b4959800f47158d}{is\+Rectangle}} () const
+\begin{DoxyCompactList}\small\item\em Vérifie si le triangle est rectangle. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classde_1_1_triangle_a4cbc6f62d174f5917994a74ab3cded87}\label{classde_1_1_triangle_a4cbc6f62d174f5917994a74ab3cded87}} 
+float {\bfseries get\+Area} () const
+\item 
+\mbox{\Hypertarget{classde_1_1_triangle_a93f547cf0030b5319cae30000d9ba8c2}\label{classde_1_1_triangle_a93f547cf0030b5319cae30000d9ba8c2}} 
+void {\bfseries set\+Pos} (const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&pos) override
+\item 
+\mbox{\Hypertarget{classde_1_1_triangle_a0b12bd57856ccfc4bebda136c153fb36}\label{classde_1_1_triangle_a0b12bd57856ccfc4bebda136c153fb36}} 
+void {\bfseries set\+Vertex0\+Pos} (const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&pos)
+\item 
+\mbox{\Hypertarget{classde_1_1_triangle_aebe87ab4e53653686709c26c3e2def18}\label{classde_1_1_triangle_aebe87ab4e53653686709c26c3e2def18}} 
+void {\bfseries set\+Vertex1\+Pos} (const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&pos)
+\item 
+\mbox{\Hypertarget{classde_1_1_triangle_abe4ae83efd35a0ed8ecf51ae0b502ae6}\label{classde_1_1_triangle_abe4ae83efd35a0ed8ecf51ae0b502ae6}} 
+void {\bfseries set\+Vertex2\+Pos} (const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&pos)
+\item 
+\mbox{\Hypertarget{classde_1_1_triangle_a7ec5519954d2a82c2245c0cb84ffdc99}\label{classde_1_1_triangle_a7ec5519954d2a82c2245c0cb84ffdc99}} 
+void {\bfseries set\+Vertices\+Pos} (const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&vertex0, const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&vertex1, const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&vertex2)
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classde_1_1_triangle_a7f559eedb65eb8f5582e2deced516e1d}\label{classde_1_1_triangle_a7f559eedb65eb8f5582e2deced516e1d}} 
+vertex {\bfseries \+\_\+vertices} \mbox{[}3\mbox{]}
+\item 
+\mbox{\Hypertarget{classde_1_1_triangle_a120e790653f73a91b83676f83d1c7972}\label{classde_1_1_triangle_a120e790653f73a91b83676f83d1c7972}} 
+float {\bfseries \+\_\+radius}
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+\doxysubsection{Detailed Description}
+Représente un triangle à dessiner sur l\textquotesingle{}écran. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classde_1_1_triangle_a74a08d727c0f384fa4b1bc830b66d6c9}\label{classde_1_1_triangle_a74a08d727c0f384fa4b1bc830b66d6c9}} 
+\index{de::Triangle@{de::Triangle}!getAngleA@{getAngleA}}
+\index{getAngleA@{getAngleA}!de::Triangle@{de::Triangle}}
+\doxysubsubsection{\texorpdfstring{getAngleA()}{getAngleA()}}
+{\footnotesize\ttfamily float de\+::\+Triangle\+::get\+AngleA (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Calcule l\textquotesingle{}angle A en degrés. 
+
+\begin{DoxyReturn}{Returns}
+La valeur en degrés de l\textquotesingle{}angle A. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classde_1_1_triangle_a5338081983a82758e3a02b573fa00d21}\label{classde_1_1_triangle_a5338081983a82758e3a02b573fa00d21}} 
+\index{de::Triangle@{de::Triangle}!getAngleB@{getAngleB}}
+\index{getAngleB@{getAngleB}!de::Triangle@{de::Triangle}}
+\doxysubsubsection{\texorpdfstring{getAngleB()}{getAngleB()}}
+{\footnotesize\ttfamily float de\+::\+Triangle\+::get\+AngleB (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Calcule l\textquotesingle{}angle B en degrés. 
+
+\begin{DoxyReturn}{Returns}
+La valeur en degrés de l\textquotesingle{}angle B. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classde_1_1_triangle_a0e2ebf56ea8c83fc7641191cc141f2ad}\label{classde_1_1_triangle_a0e2ebf56ea8c83fc7641191cc141f2ad}} 
+\index{de::Triangle@{de::Triangle}!getAngleC@{getAngleC}}
+\index{getAngleC@{getAngleC}!de::Triangle@{de::Triangle}}
+\doxysubsubsection{\texorpdfstring{getAngleC()}{getAngleC()}}
+{\footnotesize\ttfamily float de\+::\+Triangle\+::get\+AngleC (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Calcule l\textquotesingle{}angle C en degrés. 
+
+\begin{DoxyReturn}{Returns}
+La valeur en degrés de l\textquotesingle{}angle C. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classde_1_1_triangle_ad02e43a00d74921d3b4959800f47158d}\label{classde_1_1_triangle_ad02e43a00d74921d3b4959800f47158d}} 
+\index{de::Triangle@{de::Triangle}!isRectangle@{isRectangle}}
+\index{isRectangle@{isRectangle}!de::Triangle@{de::Triangle}}
+\doxysubsubsection{\texorpdfstring{isRectangle()}{isRectangle()}}
+{\footnotesize\ttfamily int8\+\_\+t de\+::\+Triangle\+::is\+Rectangle (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const}
+
+
+
+Vérifie si le triangle est rectangle. 
+
+\begin{DoxyReturn}{Returns}
+L\textquotesingle{}index de l\textquotesingle{}angle rectangle ou -\/1 si le triangle n\textquotesingle{}est pas rectangle. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\+D\+E/triangle.\+hpp\end{DoxyCompactItemize}

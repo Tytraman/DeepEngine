@@ -1,0 +1,57 @@
+\doxysection{line.\+hpp}
+\hypertarget{line_8hpp_source}{}\label{line_8hpp_source}\index{include/DE/line.hpp@{include/DE/line.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_DEEP\_ENGINE\_LINE\_HPP\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_DEEP\_ENGINE\_LINE\_HPP\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <DE/def.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <DE/types.hpp>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <DE/drawable.hpp>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <DE/vec.hpp>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacede}{de}}\ \{}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \ \ \ \ \textcolor{keyword}{class\ }DE\_API\ \mbox{\hyperlink{classde_1_1_line}{Line}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classde_1_1_colored_drawable}{ColoredDrawable}}\ \{}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \ \ \ \ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structde_1_1fvec2}{fvec2}}\ \_p2;}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classde_1_1_line}{Line}}()\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classde_1_1_line}{Line}}(\mbox{\hyperlink{classde_1_1_drawable_panel}{DrawablePanel}}\ *panel,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structde_1_1fvec2}{fvec2}}\ \&p1,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structde_1_1fvec2}{fvec2}}\ \&p2,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structde_1_1colora}{colora}}\ \&\mbox{\hyperlink{structde_1_1color}{color}},\ \textcolor{keywordtype}{bool}\ visible\ =\ \textcolor{keyword}{true});}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ draw(\textcolor{keyword}{const}\ \mbox{\hyperlink{structde_1_1fmat2x2}{fmat2x2}}\ \&baseVectors)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ rotate(\textcolor{keywordtype}{float}\ degrees)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ getType()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00023\ }
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ setPos2(\textcolor{keyword}{const}\ \mbox{\hyperlink{structde_1_1fvec2}{fvec2}}\ \&pos);}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \};}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00029\ \textcolor{comment}{\ \ \ \ =============}}
+\DoxyCodeLine{00030\ \textcolor{comment}{\ \ \ \ Line::getType}}
+\DoxyCodeLine{00031\ \textcolor{comment}{\ \ \ \ =============}}
+\DoxyCodeLine{00032\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keyword}{inline}\ uint32\_t\ Line::getType()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00034\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ DE\_DRAWABLE\_TYPE\_LINE;}
+\DoxyCodeLine{00036\ \ \ \ \ \}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00039\ \textcolor{comment}{\ \ \ \ =============}}
+\DoxyCodeLine{00040\ \textcolor{comment}{\ \ \ \ Line::setPos2}}
+\DoxyCodeLine{00041\ \textcolor{comment}{\ \ \ \ =============}}
+\DoxyCodeLine{00042\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00043\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ Line::setPos2(\textcolor{keyword}{const}\ fvec2\ \&pos)}
+\DoxyCodeLine{00044\ \ \ \ \ \{}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \_p2\ =\ pos;}
+\DoxyCodeLine{00046\ \ \ \ \ \}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \}}
+\DoxyCodeLine{00049\ }
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

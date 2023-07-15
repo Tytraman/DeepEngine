@@ -4,71 +4,58 @@
 #include <DE/def.h>
 #include <DE/types.hpp>
 #include <DE/drawable_types.h>
+#include <DE/panel.hpp>
 #include <DE/renderer.hpp>
 #include <DE/vec.hpp>
 
 #include <stdint.h>
+#include <vector>
 
 namespace de {
 
 	class Window;
 
-	/// @brief Classe 
 	class DE_API Drawable {
 
 		friend Window;
+		friend DrawablePanel;
 
 		protected:
-			Renderer *_renderer;
-			vec2 _pos;
+			fvec2 _pos;
 			bool _visible;
 			bool _drawVectors;
+			DrawablePanel *_panel;
 
 		protected:
-			Drawable(Renderer *renderer, const vec2 &pos, bool visible = true);
-			Drawable(Renderer *renderer, const vec2 &&pos, bool visible = true);
+			Drawable(DrawablePanel *panel, const fvec2 &pos, bool visible = true);
 
 		public:
 			Drawable() = delete;
 
+			//=== Méthodes virtuelles pures ===//
+			virtual void draw(const fmat2x2 &baseVectors) = 0;
 			virtual void rotate(float degrees) = 0;
-			virtual void draw() = 0;
+			virtual uint32_t getType() const = 0;
 
+			//=== Mééthodes virtuelles ===//
 			virtual void move(direction::Direction direction, int value);
+			virtual void setPos(const fvec2 &pos);
 
-			//===== Getters =====//
-
-			virtual uint32_t getType() = 0;
-			Renderer *getRenderer();
-			vec2 getPos() const;
+			
+			fvec2 getPos() const;
 			bool isVisible() const;
 
-			//===== Setters =====//
-
-			virtual void setPos(const vec2 &pos);
-
-			void setRenderer(Renderer *renderer);
+			
 			void setVisible(bool value);
 			void setVectorsVisible(bool value);
-
 	};
-
-	/*
-	=====================
-	Drawable::getRenderer
-	=====================
-	*/
-	inline Renderer *Drawable::getRenderer()
-	{
-		return _renderer;
-	}
 
 	/*
 	================
 	Drawable::getPos
 	================
 	*/
-	inline vec2 Drawable::getPos() const
+	inline fvec2 Drawable::getPos() const
 	{
 		return _pos;
 	}
@@ -84,21 +71,11 @@ namespace de {
 	}
 
 	/*
-	=====================
-	Drawable::setRenderer
-	=====================
-	*/
-	inline void Drawable::setRenderer(Renderer *renderer)
-	{
-		_renderer = renderer;
-	}
-
-	/*
 	================
 	Drawable::setPos
 	================
 	*/
-	inline void Drawable::setPos(const vec2 &pos)
+	inline void Drawable::setPos(const fvec2 &pos)
 	{
 		_pos = pos;
 	}
@@ -123,10 +100,16 @@ namespace de {
 		_drawVectors = value;
 	}
 
-	class DE_API BasicDrawable : public Drawable {
+	class DE_API ColoredDrawable : public Drawable {
 
-		private:
-			
+		protected:
+			colora _color;
+
+		protected:
+			ColoredDrawable(DrawablePanel *panel, const fvec2 &pos, const colora &color, bool visible = true);
+
+		public:
+			ColoredDrawable() = delete;
 
 	};
 

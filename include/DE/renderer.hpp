@@ -33,32 +33,29 @@ namespace de {
 			/// @param color	
 			void setColor(const colora &color);
 			
-			/// @brief			Défini la couleur utilisée par les opérations de dessins
-			/// @param color	La couleur à appliquer.
-			void setColor(const colora &&color);
-			
 			/// @brief Nettoie toute la surface de dessin en la remplissant de la couleur définie.
 			void clear() const;
 			
 			/// @brief		Dessine un pixel aux coordonnées indiquées avec la couleur définie.
 			/// @param pos	Position du pixel.
 			void drawPixel(const vec2 &pos) const;
-						
+
 			/// @brief		Dessine un pixel aux coordonnées indiquées avec la couleur définie.
 			/// @param pos	Position du pixel.
-			void drawPixel(const vec2 &&pos) const;
+			void drawPixel(const fvec2 &pos) const;
 			
 			/// @brief		Dessine une ligne qui part des coordonnées x1, y1 et qui va jusqu'aux coordonnées x2, y2 avec la couleur définie.
 			/// @param x1	Position X de départ de la ligne.
 			/// @param y1	Position Y de départ de la ligne.
 			/// @param x2	Position X de fin de la ligne.
 			/// @param y2	Position Y de fin de la ligne.
-			void drawLine(int x1, int y1, int x2, int y2) const;
+			/// @return \c true si la fonction a réussie.
+			bool drawLine(int x1, int y1, int x2, int y2) const;
 			
 			/// @brief			Dessine un rectangle avec la couleur définie. Peut être rempli ou non.
 			/// @param rect		Position et taille du rectangle.
 			/// @param fill		Détermine si le rectangle doit être rempli.
-			void drawRectangle(const rect &&rect, bool fill = false) const;
+			void drawRectangle(const rect &rect, bool fill = false) const;
 			
 			void drawShape(const vertex *vertices, int verticesNumber) const;
 			

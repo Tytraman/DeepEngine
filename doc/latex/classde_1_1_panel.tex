@@ -1,0 +1,189 @@
+\hypertarget{classde_1_1_panel}{}\doxysection{de\+::Panel Class Reference}
+\label{classde_1_1_panel}\index{de::Panel@{de::Panel}}
+
+
+Classe mère de la gestion des groupements d\textquotesingle{}éléments.  
+
+
+
+
+{\ttfamily \#include $<$panel.\+hpp$>$}
+
+Inheritance diagram for de\+::Panel\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classde_1_1_panel}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Types}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classde_1_1_panel_a96db182796cecfb893a18cdb4f56bc63}\label{classde_1_1_panel_a96db182796cecfb893a18cdb4f56bc63}} 
+typedef void($\ast$ {\bfseries Panel\+Enum\+Proc}) (\mbox{\hyperlink{classde_1_1_panel}{Panel}} $\ast$panel, void $\ast$args)
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{classde_1_1_panel_abcd039896496b508985db8fbb07ec22b}{Panel}} (\mbox{\hyperlink{classde_1_1_panel}{Panel}} $\ast$parent, Panel\+Type\+::e type, const \mbox{\hyperlink{structde_1_1size}{size}} \&\mbox{\hyperlink{structde_1_1size}{size}})
+\begin{DoxyCompactList}\small\item\em Constructeur du panel. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classde_1_1_panel_ac5b97d41dfff68025ea07993b4e0026c}\label{classde_1_1_panel_ac5b97d41dfff68025ea07993b4e0026c}} 
+\mbox{\hyperlink{classde_1_1_panel_ac5b97d41dfff68025ea07993b4e0026c}{$\sim$\+Panel}} ()
+\begin{DoxyCompactList}\small\item\em Vide la mémoire interne utilisée par le panel. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classde_1_1_panel_a7f7c4648ddd5eeb58b740db921e014a4}\label{classde_1_1_panel_a7f7c4648ddd5eeb58b740db921e014a4}} 
+void {\bfseries enumerate\+Panels} (Panel\+Enum\+Proc proc, void $\ast$args)
+\item 
+\mbox{\Hypertarget{classde_1_1_panel_aade0fb01ee47b4dedd6b9e7e24cfb21f}\label{classde_1_1_panel_aade0fb01ee47b4dedd6b9e7e24cfb21f}} 
+virtual void \mbox{\hyperlink{classde_1_1_panel_aade0fb01ee47b4dedd6b9e7e24cfb21f}{destroy}} ()
+\begin{DoxyCompactList}\small\item\em Détruit le panel sans détruire ses enfants. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classde_1_1_panel_a9fe325bd48960b009b536e8bdd9d8d83}{add\+Panel}} (\mbox{\hyperlink{classde_1_1_panel}{Panel}} $\ast$panel)
+\begin{DoxyCompactList}\small\item\em Ajoute un panel enfant. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classde_1_1_panel_a57af6a990bac987c98c63ad017aa568b}{set\+Size}} (const \mbox{\hyperlink{structde_1_1size}{size}} \&\mbox{\hyperlink{structde_1_1size}{size}})
+\begin{DoxyCompactList}\small\item\em Défini la taille du panel. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classde_1_1_panel}{Panel}} $\ast$ \mbox{\hyperlink{classde_1_1_panel_a090fb44d18a688d43b34b645bcecc37d}{get\+Parent}} ()
+\begin{DoxyCompactList}\small\item\em Récupère le parent du panel. \end{DoxyCompactList}\item 
+Panel\+Type\+::e \mbox{\hyperlink{classde_1_1_panel_a09ee6805d68d3894506f8aa64abbd774}{get\+Type}} () const
+\begin{DoxyCompactList}\small\item\em Récupère le type du panel. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structde_1_1size}{size}} \mbox{\hyperlink{classde_1_1_panel_a81047a2e49e6a172b932315dd1eaec78}{get\+Size}} () const
+\begin{DoxyCompactList}\small\item\em Récupère la taille du panel. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{classde_1_1_panel}{Panel}} $\ast$ \mbox{\hyperlink{classde_1_1_panel_ab809bf41dc3d2da77c651d4d407759a0}{get\+Panel}} (size\+\_\+t index)
+\begin{DoxyCompactList}\small\item\em Récupère un panel enfant. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Protected Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classde_1_1_panel_aeba1b7b8f0eaea06369bed253611fe65}\label{classde_1_1_panel_aeba1b7b8f0eaea06369bed253611fe65}} 
+\mbox{\hyperlink{classde_1_1_panel}{Panel}} $\ast$ \mbox{\hyperlink{classde_1_1_panel_aeba1b7b8f0eaea06369bed253611fe65}{\+\_\+parent}}
+\begin{DoxyCompactList}\small\item\em Pointeur vers le \mbox{\hyperlink{classde_1_1_panel}{Panel}} parent, {\ttfamily nullptr} si aucun parent. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classde_1_1_panel_a8fd3f4bb9be1aa215d607c10524905c9}\label{classde_1_1_panel_a8fd3f4bb9be1aa215d607c10524905c9}} 
+Panel\+Type\+::e \mbox{\hyperlink{classde_1_1_panel_a8fd3f4bb9be1aa215d607c10524905c9}{\+\_\+type}}
+\begin{DoxyCompactList}\small\item\em Type de panel représenté. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classde_1_1_panel_ac3461f6a62d0fdfcbe6ab38427554b70}\label{classde_1_1_panel_ac3461f6a62d0fdfcbe6ab38427554b70}} 
+\mbox{\hyperlink{structde_1_1size}{size}} \mbox{\hyperlink{classde_1_1_panel_ac3461f6a62d0fdfcbe6ab38427554b70}{\+\_\+size}}
+\begin{DoxyCompactList}\small\item\em La taille du panel en pixels. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classde_1_1_panel_a668577ad7f4b4696da8d15e1c7d00fd5}\label{classde_1_1_panel_a668577ad7f4b4696da8d15e1c7d00fd5}} 
+std\+::vector$<$ \mbox{\hyperlink{classde_1_1_panel}{Panel}} $\ast$ $>$ $\ast$ \mbox{\hyperlink{classde_1_1_panel_a668577ad7f4b4696da8d15e1c7d00fd5}{\+\_\+panels}}
+\begin{DoxyCompactList}\small\item\em Liste des panels enfants. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Classe mère de la gestion des groupements d\textquotesingle{}éléments. 
+
+Les panels servent à grouper plusieurs éléments dans un seul conteneur. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{classde_1_1_panel_abcd039896496b508985db8fbb07ec22b}\label{classde_1_1_panel_abcd039896496b508985db8fbb07ec22b}} 
+\index{de::Panel@{de::Panel}!Panel@{Panel}}
+\index{Panel@{Panel}!de::Panel@{de::Panel}}
+\doxysubsubsection{\texorpdfstring{Panel()}{Panel()}}
+{\footnotesize\ttfamily de\+::\+Panel\+::\+Panel (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classde_1_1_panel}{Panel}} $\ast$}]{parent,  }\item[{Panel\+Type\+::e}]{type,  }\item[{const \mbox{\hyperlink{structde_1_1size}{size}} \&}]{size }\end{DoxyParamCaption})}
+
+
+
+Constructeur du panel. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em parent} & Pointeur vers le panel parent ou {\ttfamily nullptr} si aucun parent. \\
+\hline
+{\em type} & Type de panel créé. \\
+\hline
+{\em size} & Taille en pixels du panel. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classde_1_1_panel_a9fe325bd48960b009b536e8bdd9d8d83}\label{classde_1_1_panel_a9fe325bd48960b009b536e8bdd9d8d83}} 
+\index{de::Panel@{de::Panel}!addPanel@{addPanel}}
+\index{addPanel@{addPanel}!de::Panel@{de::Panel}}
+\doxysubsubsection{\texorpdfstring{addPanel()}{addPanel()}}
+{\footnotesize\ttfamily void de\+::\+Panel\+::add\+Panel (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classde_1_1_panel}{Panel}} $\ast$}]{panel }\end{DoxyParamCaption})}
+
+
+
+Ajoute un panel enfant. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em panel} & Pointer du panel enfant à ajouter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+Il est à absolument éviter de rendre un panel enfant à plusieurs panels. 
+\end{DoxyRemark}
+\mbox{\Hypertarget{classde_1_1_panel_ab809bf41dc3d2da77c651d4d407759a0}\label{classde_1_1_panel_ab809bf41dc3d2da77c651d4d407759a0}} 
+\index{de::Panel@{de::Panel}!getPanel@{getPanel}}
+\index{getPanel@{getPanel}!de::Panel@{de::Panel}}
+\doxysubsubsection{\texorpdfstring{getPanel()}{getPanel()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classde_1_1_panel}{Panel}}$\ast$ de\+::\+Panel\+::get\+Panel (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{index }\end{DoxyParamCaption})}
+
+
+
+Récupère un panel enfant. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em index} & Le numéro d\textquotesingle{}index du panel enfant à récupérer. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Pointeur vers le panel enfant. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classde_1_1_panel_a090fb44d18a688d43b34b645bcecc37d}\label{classde_1_1_panel_a090fb44d18a688d43b34b645bcecc37d}} 
+\index{de::Panel@{de::Panel}!getParent@{getParent}}
+\index{getParent@{getParent}!de::Panel@{de::Panel}}
+\doxysubsubsection{\texorpdfstring{getParent()}{getParent()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{classde_1_1_panel}{Panel}} $\ast$ de\+::\+Panel\+::get\+Parent (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Récupère le parent du panel. 
+
+\begin{DoxyReturn}{Returns}
+Pointeur vers le panel parent ou {\ttfamily nullptr} si aucun parent. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classde_1_1_panel_a81047a2e49e6a172b932315dd1eaec78}\label{classde_1_1_panel_a81047a2e49e6a172b932315dd1eaec78}} 
+\index{de::Panel@{de::Panel}!getSize@{getSize}}
+\index{getSize@{getSize}!de::Panel@{de::Panel}}
+\doxysubsubsection{\texorpdfstring{getSize()}{getSize()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structde_1_1size}{size}} de\+::\+Panel\+::get\+Size (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Récupère la taille du panel. 
+
+\begin{DoxyReturn}{Returns}
+La taille en pixels. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classde_1_1_panel_a09ee6805d68d3894506f8aa64abbd774}\label{classde_1_1_panel_a09ee6805d68d3894506f8aa64abbd774}} 
+\index{de::Panel@{de::Panel}!getType@{getType}}
+\index{getType@{getType}!de::Panel@{de::Panel}}
+\doxysubsubsection{\texorpdfstring{getType()}{getType()}}
+{\footnotesize\ttfamily Panel\+Type\+::e de\+::\+Panel\+::get\+Type (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Récupère le type du panel. 
+
+\begin{DoxyReturn}{Returns}
+Panel\+Type représentant le type du panel. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classde_1_1_panel_a57af6a990bac987c98c63ad017aa568b}\label{classde_1_1_panel_a57af6a990bac987c98c63ad017aa568b}} 
+\index{de::Panel@{de::Panel}!setSize@{setSize}}
+\index{setSize@{setSize}!de::Panel@{de::Panel}}
+\doxysubsubsection{\texorpdfstring{setSize()}{setSize()}}
+{\footnotesize\ttfamily void de\+::\+Panel\+::set\+Size (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structde_1_1size}{size}} \&}]{size }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Défini la taille du panel. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em size} & La taille à définir. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\+D\+E/panel.\+hpp\end{DoxyCompactItemize}

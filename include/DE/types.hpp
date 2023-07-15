@@ -2,11 +2,14 @@
 #define __DEEP_ENGINE_TYPES_HPP__
 
 #include <DE/def.h>
-#include <DE/int.hpp>
 #include <DE/color.hpp>
+
+#include <stdint.h>
 
 #include <SDL.h>
 
+/// @namespace de
+/// @brief Espace de nom regroupant tout ce qui est relatif au DeepEngine.
 namespace de {
 
 
@@ -31,7 +34,7 @@ namespace de {
 	typedef SDL_Vertex	vertex;
 
 	namespace direction {
-		enum Direction : uint8 {
+		enum Direction : uint8_t {
 			Left,
 			Right,
 			Up,
@@ -41,34 +44,34 @@ namespace de {
 
 	DE_UNION(dual8,
 		struct {
-			uint8 l;
-			uint8 h;
+			uint8_t l;
+			uint8_t h;
 		};
-		uint16 value;
+		uint16_t value;
 	);
 
 	DE_UNION(dual16,
 		struct {
-			uint16 l;
-			uint16 h;
+			uint16_t l;
+			uint16_t h;
 		};
-		uint32 value;
+		uint32_t value;
 	);
 
 	DE_UNION(dual32,
 		struct {
-			uint32 l;
-			uint32 h;
+			uint32_t l;
+			uint32_t h;
 		};
-		uint64 value;
+		uint64_t value;
 	);
 
 	struct DE_API size {
-		uint32 width;
-		uint32 height;
+		uint32_t width;
+		uint32_t height;
 
 		size();
-		size(uint32 width, uint32 height);
+		size(uint32_t width, uint32_t height);
 	};
 
 	/*
@@ -87,7 +90,7 @@ namespace de {
 	size::size
 	==========
 	*/
-	inline size::size(uint32 width, uint32 height)
+	inline size::size(uint32_t width, uint32_t height)
 	{
 		this->width = width;
 		this->height = height;
@@ -95,11 +98,11 @@ namespace de {
 
 	/// @brief Position X et Y sont formes d'entiers. @ref fposition pour la forme flottante.
 	struct DE_API position {
-		int32 x;
-		int32 y;
+		int32_t x;
+		int32_t y;
 
 		position();
-		position(int32 x, int32 y);
+		position(int32_t x, int32_t y);
 	};
 
 	/*
@@ -118,7 +121,7 @@ namespace de {
 	position::position
 	==================
 	*/
-	inline position::position(int32 x, int32 y)
+	inline position::position(int32_t x, int32_t y)
 	{
 		this->x = x;
 		this->y = y;

@@ -5,21 +5,20 @@
 #include <DE/drawable.hpp>
 #include <DE/color.hpp>
 
+#include <stdint.h>
+
 namespace de {
 
-	class DE_API Pixel : public Drawable {
-
-		private:
-			colora _color;
+	class DE_API Pixel : public ColoredDrawable {
 
 		public:
 			Pixel() = delete;
-			Pixel(Renderer *renderer, const vec2 &&pos, const colora &&color, bool visible = true);
+			Pixel(DrawablePanel *panel, const fvec2 &pos, const colora &color, bool visible = true);
 
 			void rotate(float degrees) override;
-			void draw() override;
+			void draw(const fmat2x2 &baseVectors) override;
 
-			uint32 getType() override;
+			uint32_t getType() const override;
 
 	};
 
@@ -30,17 +29,12 @@ namespace de {
 	*/
 	inline void Pixel::rotate(float degrees) { }
 
-	inline void Pixel::draw() {
-		_renderer->setColor(_color);
-		_renderer->drawPixel(_pos);
-	}
-
 	/*
 	==============
 	Pixel::getType
 	==============
 	*/
-	inline uint32 Pixel::getType() {
+	inline uint32_t Pixel::getType() const {
 		return DE_DRAWABLE_TYPE_PIXEL;
 	}
 

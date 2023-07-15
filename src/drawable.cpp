@@ -5,17 +5,11 @@
 Drawable::Drawable
 ==================
 */
-de::Drawable::Drawable(Renderer *renderer, const vec2 &pos, bool visible)
-	: _renderer(renderer), _pos(pos), _visible(visible), _drawVectors(false)
-{ }
-
-/*
-==================
-Drawable::Drawable
-==================
-*/
-de::Drawable::Drawable(Renderer *renderer, const vec2 &&pos, bool visible)
-	: _renderer(renderer), _pos(pos), _visible(visible), _drawVectors(false)
+de::Drawable::Drawable(DrawablePanel *panel, const fvec2 &pos, bool visible)
+	: _pos(pos),
+	  _visible(visible),
+	  _drawVectors(false),
+	  _panel(panel)
 { }
 
 /*
@@ -41,3 +35,13 @@ void de::Drawable::move(direction::Direction direction, int value)
 		} return;
 	}
 }
+
+/*
+================================
+ColoredDrawable::ColoredDrawable
+================================
+*/
+de::ColoredDrawable::ColoredDrawable(DrawablePanel *panel, const fvec2 &pos, const colora &color, bool visible)
+	: Drawable(panel, pos, visible),
+	  _color(color)
+{ }

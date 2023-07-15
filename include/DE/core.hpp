@@ -4,23 +4,25 @@
 #include <DE/def.h>
 #include <DE/error.hpp>
 
+#include <stdint.h>
+
 namespace de {
 
 	class DE_API Core {
 
 		private:
-			static uint64 _initTime;
+			static uint64_t _initTime;
 
 		public:
 			static ErrorStatus init();
 
 			static void quit();
 
-			static uint64 getTick();
+			static uint64_t getTick();
 
 	};
 
-	inline uint64 Core::getTick() {
+	inline uint64_t Core::getTick() {
 #ifdef DE_WINDOWS
 		return GetTickCount64() - _initTime;
 #else

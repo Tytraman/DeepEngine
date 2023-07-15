@@ -2,6 +2,16 @@
 #include <DE/renderer.hpp>
 
 /*
+==========
+vec2::draw
+==========
+*/
+void de::vec2::draw(Renderer &renderer) const
+{
+	renderer.drawLine(0, 0, x, y);
+}
+
+/*
 ===========
 fvec2::draw
 ===========

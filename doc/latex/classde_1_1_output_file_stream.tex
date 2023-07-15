@@ -1,0 +1,47 @@
+\hypertarget{classde_1_1_output_file_stream}{}\doxysection{de\+::Output\+File\+Stream Class Reference}
+\label{classde_1_1_output_file_stream}\index{de::OutputFileStream@{de::OutputFileStream}}
+Inheritance diagram for de\+::Output\+File\+Stream\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=3.000000cm]{classde_1_1_output_file_stream}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classde_1_1_output_file_stream_a702a8d6af89e490f61e94ade18618038}\label{classde_1_1_output_file_stream_a702a8d6af89e490f61e94ade18618038}} 
+{\bfseries Output\+File\+Stream} (const std\+::string \&filename)
+\item 
+\mbox{\Hypertarget{classde_1_1_output_file_stream_a72e8b28b383dda2be3b8997a605b9b01}\label{classde_1_1_output_file_stream_a72e8b28b383dda2be3b8997a605b9b01}} 
+bool {\bfseries open} () override
+\item 
+\mbox{\Hypertarget{classde_1_1_output_file_stream_a5776a0bdd841a1c1834162e66952c1e2}\label{classde_1_1_output_file_stream_a5776a0bdd841a1c1834162e66952c1e2}} 
+void {\bfseries close} () override
+\item 
+\mbox{\Hypertarget{classde_1_1_output_file_stream_aac847314ef0248c354790e2392c40c5d}\label{classde_1_1_output_file_stream_aac847314ef0248c354790e2392c40c5d}} 
+bool {\bfseries write} (const uint8\+\_\+t $\ast$buffer, size\+\_\+t \mbox{\hyperlink{structde_1_1size}{size}}, size\+\_\+t \&bytes\+Written) override
+\item 
+\mbox{\Hypertarget{classde_1_1_output_file_stream_a331d9d63810897bd340b1abc67970ffb}\label{classde_1_1_output_file_stream_a331d9d63810897bd340b1abc67970ffb}} 
+{\footnotesize template$<$typename T $>$ }\\\mbox{\hyperlink{classde_1_1_output_file_stream}{Output\+File\+Stream}} \& {\bfseries operator$<$$<$} (const T \&value)
+\item 
+\mbox{\Hypertarget{classde_1_1_output_file_stream_aa644c6d71a2a54383cfef24e546aa86d}\label{classde_1_1_output_file_stream_aa644c6d71a2a54383cfef24e546aa86d}} 
+{\footnotesize template$<$typename T $>$ }\\\mbox{\hyperlink{classde_1_1_output_file_stream}{Output\+File\+Stream}} \& {\bfseries operator$<$$<$} (const T $\ast$value)
+\item 
+\mbox{\Hypertarget{classde_1_1_output_file_stream_afb3214dad39163b65981d9a4d879f412}\label{classde_1_1_output_file_stream_afb3214dad39163b65981d9a4d879f412}} 
+std\+::string \& {\bfseries get\+Filename} ()
+\item 
+\mbox{\Hypertarget{classde_1_1_output_file_stream_a3e1af30bdfeed847f7f31e2007075b73}\label{classde_1_1_output_file_stream_a3e1af30bdfeed847f7f31e2007075b73}} 
+void {\bfseries set\+Filename} (const std\+::string \&value)
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classde_1_1_output_file_stream_ae35f1d58617dde62eac8c4869fb36406}\label{classde_1_1_output_file_stream_ae35f1d58617dde62eac8c4869fb36406}} 
+std\+::string $\ast$ {\bfseries \+\_\+filename}
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\+D\+E/output\+\_\+file\+\_\+stream.\+hpp\end{DoxyCompactItemize}

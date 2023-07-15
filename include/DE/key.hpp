@@ -3,12 +3,15 @@
 
 #include <DE/def.h>
 #include <DE/types.hpp>
+
+#include <stdint.h>
+
 #include <SDL.h>
 
 namespace de {
 
 	namespace key {
-		enum DKey : sint32 {
+		enum DKey : int32_t {
 			LeftArrow = SDL_SCANCODE_LEFT,
 			RightArrow = SDL_SCANCODE_RIGHT,
 			UpArrow = SDL_SCANCODE_UP,

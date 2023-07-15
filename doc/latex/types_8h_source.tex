@@ -1,0 +1,49 @@
+\doxysection{types.\+h}
+\hypertarget{types_8h_source}{}\label{types_8h_source}\index{include/DE/c-\/wrapper/types.h@{include/DE/c-\/wrapper/types.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_DEEP\_ENGINE\_TYPES\_H\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_DEEP\_ENGINE\_TYPES\_H\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <DE/def.h>}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }de\_cpp\_string\_s\ de\_cpp\_string\_t,\ *de\_cpp\_hstring;}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{char}\ de\_bool;}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#if\ DE\_WINDOWS}}
+\DoxyCodeLine{00011\ \ \ \ \ \textcolor{keyword}{typedef}\ \_\_int8\ \ de\_sbyte;}
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keyword}{typedef}\ \_\_int16\ de\_sword;}
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keyword}{typedef}\ \_\_int32\ de\_sdword;}
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keyword}{typedef}\ \_\_int64\ de\_sqword;}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{unsigned}\ \_\_int8\ \ de\_byte;}
+\DoxyCodeLine{00017\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{unsigned}\ \_\_int16\ de\_word;}
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{unsigned}\ \_\_int32\ de\_dword;}
+\DoxyCodeLine{00019\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{unsigned}\ \_\_int64\ de\_qword;}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \ \ \textcolor{keyword}{typedef}\ WCHAR\ de\_os\_char;}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keyword}{typedef}\ HANDLE\ de\_os\_fd;}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#define\ NULL\_FD\ NULL}}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keywordtype}{int}\ os\_fd;}
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ NULL\_FD\ (-\/1)}}
+\DoxyCodeLine{00031\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \textcolor{keyword}{typedef}\ de\_byte\ \ de\_uint8;}
+\DoxyCodeLine{00034\ \textcolor{keyword}{typedef}\ de\_word\ \ de\_uint16;}
+\DoxyCodeLine{00035\ \textcolor{keyword}{typedef}\ de\_dword\ de\_uint32;}
+\DoxyCodeLine{00036\ \textcolor{keyword}{typedef}\ de\_qword\ de\_uint64;}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{keyword}{typedef}\ de\_sbyte\ \ de\_int8;}
+\DoxyCodeLine{00039\ \textcolor{keyword}{typedef}\ de\_sword\ \ de\_int16;}
+\DoxyCodeLine{00040\ \textcolor{keyword}{typedef}\ de\_sdword\ de\_int32;}
+\DoxyCodeLine{00041\ \textcolor{keyword}{typedef}\ de\_sqword\ de\_int64;}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

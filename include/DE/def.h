@@ -5,18 +5,24 @@
 
 //===== HELPERs =====//
 
-#define DE_CONCAT_HELPER(__a,__b) __a##__b
-#define DE_STRINGIFY_HELPER(__value) #__value
-#define DE_ENUM_HELPER(__name,__type,...) enum __name : __type { __VA_ARGS__ }
-#define DE_STRUCT_HELPER(__name,...) struct __name { __VA_ARGS__ }
-#define DE_UNION_HELPER(__name,...) union __name { __VA_ARGS__ }
+#define DE_CONCAT_HELPER(__a, __b)          __a##__b
+#define DE_STRINGIFY_HELPER(__value)        #__value
+#define DE_ENUM_HELPER(__name, __type, ...) enum __name : __type { __VA_ARGS__ }
+#define DE_STRUCT_HELPER(__name, ...)                                          \
+    struct __name {                                                            \
+        __VA_ARGS__                                                            \
+    }
+#define DE_UNION_HELPER(__name, ...)                                           \
+    union __name {                                                             \
+        __VA_ARGS__                                                            \
+    }
 
-#define DE_CONCAT(__a,__b) DE_CONCAT_HELPER(__a,__b)
+#define DE_CONCAT(__a, __b)   DE_CONCAT_HELPER(__a, __b)
 #define DE_STRINGIFY(__value) DE_STRINGIFY_HELPER(__value)
 
-#define DE_ENUM(__name,__type,...) DE_ENUM_HELPER(__name,__type,__VA_ARGS__)
-#define DE_STRUCT(__name,...) DE_STRUCT_HELPER(__name,__VA_ARGS__)
-#define DE_UNION(__name,...) DE_UNION_HELPER(__name,__VA_ARGS__)
+#define DE_ENUM(__name, __type, ...) DE_ENUM_HELPER(__name, __type, __VA_ARGS__)
+#define DE_STRUCT(__name, ...)       DE_STRUCT_HELPER(__name, __VA_ARGS__)
+#define DE_UNION(__name, ...)        DE_UNION_HELPER(__name, __VA_ARGS__)
 
 #if _WIN32 || __WIN32__
 #if _WIN64

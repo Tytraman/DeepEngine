@@ -1,0 +1,180 @@
+\doxysection{triangle.\+hpp}
+\hypertarget{triangle_8hpp_source}{}\label{triangle_8hpp_source}\index{include/DE/triangle.hpp@{include/DE/triangle.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_DEEP\_ENGINE\_TRIANGLE\_HPP\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_DEEP\_ENGINE\_TRIANGLE\_HPP\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <DE/def.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <DE/types.hpp>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <DE/drawable.hpp>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <DE/color.hpp>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <DE/vec.hpp>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacede}{de}}\ \{}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keyword}{class\ }DE\_API\ \mbox{\hyperlink{classde_1_1_triangle}{Triangle}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classde_1_1_colored_drawable}{ColoredDrawable}}\ \{}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \textcolor{keyword}{private}:}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \ \ \ \ vertex\ \_vertices[3];}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \_radius;}
+\DoxyCodeLine{00021\ }
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classde_1_1_triangle}{Triangle}}()\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classde_1_1_triangle}{Triangle}}(\mbox{\hyperlink{classde_1_1_drawable_panel}{DrawablePanel}}\ *panel,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structde_1_1fvec2}{fvec2}}\ \&centerPos,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structde_1_1colora}{colora}}\ \&\mbox{\hyperlink{structde_1_1color}{color}},\ \textcolor{keywordtype}{float}\ radius,\ \textcolor{keywordtype}{bool}\ visible\ =\ \textcolor{keyword}{true});}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ rotate(\textcolor{keywordtype}{float}\ degrees)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ draw(\textcolor{keyword}{const}\ \mbox{\hyperlink{structde_1_1fmat2x2}{fmat2x2}}\ \&baseVectors)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//=====\ Getters\ =====//}}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \ \ \ \ uint32\_t\ getType()\ \textcolor{keyword}{const\ override};}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structde_1_1fvec2}{fvec2}}\ getVertex0Pos()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structde_1_1fvec2}{fvec2}}\ getVertex1Pos()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structde_1_1fvec2}{fvec2}}\ getVertex2Pos()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structde_1_1fvec2}{fvec2}}\ getVertexPos(int8\_t\ number)\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{classde_1_1_triangle_a74a08d727c0f384fa4b1bc830b66d6c9}{getAngleA}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{classde_1_1_triangle_a5338081983a82758e3a02b573fa00d21}{getAngleB}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ \mbox{\hyperlink{classde_1_1_triangle_a0e2ebf56ea8c83fc7641191cc141f2ad}{getAngleC}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ getLengthOfAB()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ getLengthOfAC()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ getLengthOfBC()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00051\ }
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ \ \ \ \ int8\_t\ \mbox{\hyperlink{classde_1_1_triangle_ad02e43a00d74921d3b4959800f47158d}{isRectangle}}()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00055\ }
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{float}\ getArea()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00057\ }
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//=====\ Setters\ =====//}}
+\DoxyCodeLine{00059\ }
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ setPos(\textcolor{keyword}{const}\ \mbox{\hyperlink{structde_1_1fvec2}{fvec2}}\ \&pos)\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00061\ }
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ setVertex0Pos(\textcolor{keyword}{const}\ \mbox{\hyperlink{structde_1_1fvec2}{fvec2}}\ \&pos);}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ setVertex1Pos(\textcolor{keyword}{const}\ \mbox{\hyperlink{structde_1_1fvec2}{fvec2}}\ \&pos);}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ setVertex2Pos(\textcolor{keyword}{const}\ \mbox{\hyperlink{structde_1_1fvec2}{fvec2}}\ \&pos);}
+\DoxyCodeLine{00065\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ setVerticesPos(\textcolor{keyword}{const}\ \mbox{\hyperlink{structde_1_1fvec2}{fvec2}}\ \&vertex0,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structde_1_1fvec2}{fvec2}}\ \&vertex1,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structde_1_1fvec2}{fvec2}}\ \&vertex2);}
+\DoxyCodeLine{00066\ }
+\DoxyCodeLine{00067\ \ \ \ \ \};}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00070\ \textcolor{comment}{\ \ \ \ =================}}
+\DoxyCodeLine{00071\ \textcolor{comment}{\ \ \ \ Triangle::getType}}
+\DoxyCodeLine{00072\ \textcolor{comment}{\ \ \ \ =================}}
+\DoxyCodeLine{00073\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keyword}{inline}\ uint32\_t\ Triangle::getType()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00075\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ DE\_DRAWABLE\_TYPE\_TRIANGLE;}
+\DoxyCodeLine{00077\ \ \ \ \ \}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00080\ \textcolor{comment}{\ \ \ \ =======================}}
+\DoxyCodeLine{00081\ \textcolor{comment}{\ \ \ \ Triangle::getVertex0Pos}}
+\DoxyCodeLine{00082\ \textcolor{comment}{\ \ \ \ =======================}}
+\DoxyCodeLine{00083\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keyword}{inline}\ fvec2\ Triangle::getVertex0Pos()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00085\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{\ \_vertices[0].position.x,\ \_vertices[0].position.y\ \};}
+\DoxyCodeLine{00087\ \ \ \ \ \}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00090\ \textcolor{comment}{\ \ \ \ =======================}}
+\DoxyCodeLine{00091\ \textcolor{comment}{\ \ \ \ Triangle::getVertex1Pos}}
+\DoxyCodeLine{00092\ \textcolor{comment}{\ \ \ \ =======================}}
+\DoxyCodeLine{00093\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keyword}{inline}\ fvec2\ Triangle::getVertex1Pos()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00095\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{\ \_vertices[1].position.x,\ \_vertices[1].position.y\ \};}
+\DoxyCodeLine{00097\ \ \ \ \ \}}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00100\ \textcolor{comment}{\ \ \ \ =======================}}
+\DoxyCodeLine{00101\ \textcolor{comment}{\ \ \ \ Triangle::getVertex2Pos}}
+\DoxyCodeLine{00102\ \textcolor{comment}{\ \ \ \ =======================}}
+\DoxyCodeLine{00103\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00104\ \ \ \ \ \textcolor{keyword}{inline}\ fvec2\ Triangle::getVertex2Pos()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00105\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{\ \_vertices[2].position.x,\ \_vertices[2].position.y\ \};}
+\DoxyCodeLine{00107\ \ \ \ \ \}}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00110\ \textcolor{comment}{\ \ \ \ ======================}}
+\DoxyCodeLine{00111\ \textcolor{comment}{\ \ \ \ Triangle::getVertexPos}}
+\DoxyCodeLine{00112\ \textcolor{comment}{\ \ \ \ ======================}}
+\DoxyCodeLine{00113\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00114\ \ \ \ \ \textcolor{keyword}{inline}\ fvec2\ Triangle::getVertexPos(int8\_t\ number)\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00115\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{\ \_vertices[number].position.x,\ \_vertices[number].position.y\ \};}
+\DoxyCodeLine{00117\ \ \ \ \ \}}
+\DoxyCodeLine{00118\ }
+\DoxyCodeLine{00119\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00120\ \textcolor{comment}{\ \ \ \ =======================}}
+\DoxyCodeLine{00121\ \textcolor{comment}{\ \ \ \ Triangle::getLengthOfAB}}
+\DoxyCodeLine{00122\ \textcolor{comment}{\ \ \ \ =======================}}
+\DoxyCodeLine{00123\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00124\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ Triangle::getLengthOfAB()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00125\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ fvec2::magn(getVertex1Pos()\ -\/\ getVertex0Pos());}
+\DoxyCodeLine{00127\ \ \ \ \ \}}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00130\ \textcolor{comment}{\ \ \ \ =======================}}
+\DoxyCodeLine{00131\ \textcolor{comment}{\ \ \ \ Triangle::getLengthOfAC}}
+\DoxyCodeLine{00132\ \textcolor{comment}{\ \ \ \ =======================}}
+\DoxyCodeLine{00133\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00134\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ Triangle::getLengthOfAC()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00135\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00136\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ fvec2::magn(getVertex2Pos()\ -\/\ getVertex0Pos());}
+\DoxyCodeLine{00137\ \ \ \ \ \}}
+\DoxyCodeLine{00138\ }
+\DoxyCodeLine{00139\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00140\ \textcolor{comment}{\ \ \ \ =======================}}
+\DoxyCodeLine{00141\ \textcolor{comment}{\ \ \ \ Triangle::getLengthOfBC}}
+\DoxyCodeLine{00142\ \textcolor{comment}{\ \ \ \ =======================}}
+\DoxyCodeLine{00143\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00144\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{float}\ Triangle::getLengthOfBC()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00145\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ fvec2::magn(getVertex2Pos()\ -\/\ getVertex1Pos());}
+\DoxyCodeLine{00147\ \ \ \ \ \}}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00150\ \textcolor{comment}{\ \ \ \ =======================}}
+\DoxyCodeLine{00151\ \textcolor{comment}{\ \ \ \ Triangle::setVertex0Pos}}
+\DoxyCodeLine{00152\ \textcolor{comment}{\ \ \ \ =======================}}
+\DoxyCodeLine{00153\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ Triangle::setVertex0Pos(\textcolor{keyword}{const}\ fvec2\ \&pos)}
+\DoxyCodeLine{00155\ \ \ \ \ \{}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \_vertices[0].position.x\ =\ pos.x;}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \_vertices[0].position.y\ =\ pos.y;}
+\DoxyCodeLine{00158\ \ \ \ \ \}}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00160\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00161\ \textcolor{comment}{\ \ \ \ =======================}}
+\DoxyCodeLine{00162\ \textcolor{comment}{\ \ \ \ Triangle::setVertex1Pos}}
+\DoxyCodeLine{00163\ \textcolor{comment}{\ \ \ \ =======================}}
+\DoxyCodeLine{00164\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ Triangle::setVertex1Pos(\textcolor{keyword}{const}\ fvec2\ \&pos)}
+\DoxyCodeLine{00166\ \ \ \ \ \{}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \_vertices[1].position.x\ =\ pos.x;}
+\DoxyCodeLine{00168\ \ \ \ \ \ \ \ \ \_vertices[1].position.y\ =\ pos.y;}
+\DoxyCodeLine{00169\ \ \ \ \ \}}
+\DoxyCodeLine{00170\ }
+\DoxyCodeLine{00171\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00172\ \textcolor{comment}{\ \ \ \ =======================}}
+\DoxyCodeLine{00173\ \textcolor{comment}{\ \ \ \ Triangle::setVertex2Pos}}
+\DoxyCodeLine{00174\ \textcolor{comment}{\ \ \ \ =======================}}
+\DoxyCodeLine{00175\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00176\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ Triangle::setVertex2Pos(\textcolor{keyword}{const}\ fvec2\ \&pos)}
+\DoxyCodeLine{00177\ \ \ \ \ \{}
+\DoxyCodeLine{00178\ \ \ \ \ \ \ \ \ \_vertices[2].position.x\ =\ pos.x;}
+\DoxyCodeLine{00179\ \ \ \ \ \ \ \ \ \_vertices[2].position.y\ =\ pos.y;}
+\DoxyCodeLine{00180\ \ \ \ \ \}}
+\DoxyCodeLine{00181\ }
+\DoxyCodeLine{00182\ \}}
+\DoxyCodeLine{00183\ }
+\DoxyCodeLine{00184\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

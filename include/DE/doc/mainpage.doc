@@ -1,0 +1,18 @@
+/**
+ * @file mainpage.doc
+ * @mainpage Page d'accueil
+ * 
+ * @section sec_intro Introduction
+ * Bienvenue dans la documentation super officielle du moteur profond !
+ * 
+ * @section sec_utilisation Utilisation
+ * Pour le moment le moteur n'est disponible que sur les plateformes Windows, mais le support de
+ * Linux et MacOS est prévu.
+ * 
+ * @subsection sub_paroucommencer Par où commencer ?
+ * Pour commencer simplement, vous pouvez suivre ces <i>(futurs)</i> exemples décrits dans la prochaine section.
+ * 
+ * @section sec_exemples Exemples
+ * Voici un exemple de programme qui crée une fenêtre et affiche une ligne au milieu de l'écran : 
+ * 
+ */

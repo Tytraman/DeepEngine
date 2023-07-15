@@ -198,6 +198,8 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>stdc11</LanguageStandard_C>
       <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)..\..\lib\C\SDL2\include;$(SolutionDir)..\..\libs\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <ExceptionHandling>false</ExceptionHandling>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -216,6 +218,8 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>stdc11</LanguageStandard_C>
       <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)..\..\lib\C\SDL2\include;$(SolutionDir)..\..\libs\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <ExceptionHandling>false</ExceptionHandling>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -261,6 +265,8 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>stdc11</LanguageStandard_C>
       <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)..\..\lib\C\SDL2\include;$(SolutionDir)..\..\libs\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <ExceptionHandling>false</ExceptionHandling>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -283,6 +289,8 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>stdc11</LanguageStandard_C>
       <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)..\..\lib\C\SDL2\include;$(SolutionDir)..\..\libs\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <ExceptionHandling>false</ExceptionHandling>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -323,6 +331,8 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>stdc11</LanguageStandard_C>
       <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)..\..\lib\C\SDL2\include;$(SolutionDir)..\..\libs\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <ExceptionHandling>false</ExceptionHandling>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -341,6 +351,8 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>stdc11</LanguageStandard_C>
       <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)..\..\lib\C\SDL2\include;$(SolutionDir)..\..\libs\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <ExceptionHandling>false</ExceptionHandling>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -386,6 +398,8 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>stdc11</LanguageStandard_C>
       <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)..\..\lib\C\SDL2\include;$(SolutionDir)..\..\libs\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <ExceptionHandling>false</ExceptionHandling>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -408,6 +422,8 @@
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>stdc11</LanguageStandard_C>
       <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)..\..\lib\C\SDL2\include;$(SolutionDir)..\..\libs\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeTypeInfo>false</RuntimeTypeInfo>
+      <ExceptionHandling>false</ExceptionHandling>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -427,33 +443,44 @@
     <ClInclude Include="include\DE\c-wrapper\logger.h" />
     <ClInclude Include="include\DE\c-wrapper\output_stream.h" />
     <ClInclude Include="include\DE\c-wrapper\types.h" />
+    <ClInclude Include="include\DE\collider.hpp" />
+    <ClInclude Include="include\DE\component.hpp" />
     <ClInclude Include="include\DE\debug.hpp" />
     <ClInclude Include="include\DE\drawable.hpp" />
     <ClInclude Include="include\DE\drawable_types.h" />
+    <ClInclude Include="include\DE\entity.hpp" />
     <ClInclude Include="include\DE\events.hpp" />
     <ClInclude Include="include\DE\color.hpp" />
     <ClInclude Include="include\DE\core.hpp" />
     <ClInclude Include="include\DE\def.h" />
     <ClInclude Include="include\DE\error.hpp" />
+    <ClInclude Include="include\DE\health.hpp" />
     <ClInclude Include="include\DE\key.hpp" />
     <ClInclude Include="include\DE\line.hpp" />
     <ClInclude Include="include\DE\logger.hpp" />
     <ClInclude Include="include\DE\mat.hpp" />
     <ClInclude Include="include\DE\output_file_stream.hpp" />
     <ClInclude Include="include\DE\output_stream.hpp" />
+    <ClInclude Include="include\DE\panel.hpp" />
     <ClInclude Include="include\DE\renderer.hpp" />
+    <ClInclude Include="include\DE\scene.hpp" />
     <ClInclude Include="include\DE\string_utils.hpp" />
     <ClInclude Include="include\DE\sys_win.hpp" />
     <ClInclude Include="include\DE\triangle.hpp" />
     <ClInclude Include="include\DE\vec.hpp" />
+    <ClInclude Include="include\DE\velocity.hpp" />
     <ClInclude Include="include\DE\window.hpp" />
     <ClInclude Include="include\DE\pixel.hpp" />
     <ClInclude Include="include\DE\c-wrapper\string_utils.h" />
     <ClInclude Include="include\DE\c-wrapper\debug.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="color.cpp" />
-    <ClCompile Include="pixel.cpp" />
+    <ClCompile Include="src\color.cpp" />
+    <ClCompile Include="src\entity.cpp" />
+    <ClCompile Include="src\events.cpp" />
+    <ClCompile Include="src\line.cpp" />
+    <ClCompile Include="src\panel.cpp" />
+    <ClCompile Include="src\pixel.cpp" />
     <ClCompile Include="src\debug.cpp" />
     <ClCompile Include="src\drawable.cpp" />
     <ClCompile Include="src\error.cpp" />
@@ -463,6 +490,7 @@
     <ClCompile Include="src\renderer.cpp" />
     <ClCompile Include="src\core.cpp" />
     <ClCompile Include="include\DE\types.hpp" />
+    <ClCompile Include="src\scene.cpp" />
     <ClCompile Include="src\string_utils.cpp" />
     <ClCompile Include="src\sys_win.cpp" />
     <ClCompile Include="src\triangle.cpp" />
@@ -470,7 +498,9 @@
     <ClCompile Include="src\window.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include=".gitignore" />
     <None Include="cpp.hint" />
+    <None Include="README.md" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

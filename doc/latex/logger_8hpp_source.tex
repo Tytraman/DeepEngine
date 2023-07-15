@@ -1,0 +1,65 @@
+\doxysection{logger.\+hpp}
+\hypertarget{logger_8hpp_source}{}\label{logger_8hpp_source}\index{include/DE/logger.hpp@{include/DE/logger.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_DEEP\_ENGINE\_LOGGER\_HPP\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_DEEP\_ENGINE\_LOGGER\_HPP\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <DE/def.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <DE/types.hpp>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <DE/output\_file\_stream.hpp>}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <string>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacede}{de}}\ \{}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keyword}{class\ }DE\_API\ \mbox{\hyperlink{classde_1_1_logger}{Logger}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classde_1_1_output_file_stream}{OutputFileStream}}\ \{}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00015\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classde_1_1_logger}{Logger}}(\textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *filename);}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ add(\textcolor{keyword}{const}\ std::string\ \&title,\ \textcolor{keyword}{const}\ std::string\ \&text);}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ info(\textcolor{keyword}{const}\ std::string\ \&text);}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ warn(\textcolor{keyword}{const}\ std::string\ \&text);}
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ error(\textcolor{keyword}{const}\ std::string\ \&text);}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ success(\textcolor{keyword}{const}\ std::string\ \&text);}
+\DoxyCodeLine{00022\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ callback(\textcolor{keyword}{const}\ std::string\ \&text);}
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ instruction(\textcolor{keyword}{const}\ std::string\ \&text);}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ append(\textcolor{keyword}{const}\ std::string\ \&text);}
+\DoxyCodeLine{00025\ }
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \textcolor{keywordtype}{void}\ appendTime(std::string\ \&dest,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *dateSeparator,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *timeSeparator,\ \textcolor{keyword}{const}\ \textcolor{keywordtype}{char}\ *separator);}
+\DoxyCodeLine{00027\ \ \ \ \ \};}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ Logger::info(\textcolor{keyword}{const}\ std::string\ \&text)\ \{}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ add(\textcolor{stringliteral}{"{}INFO"{}},\ text);}
+\DoxyCodeLine{00031\ \ \ \ \ \}}
+\DoxyCodeLine{00032\ }
+\DoxyCodeLine{00033\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ Logger::warn(\textcolor{keyword}{const}\ std::string\ \&text)\ \{}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ add(\textcolor{stringliteral}{"{}WARNING"{}},\ text);}
+\DoxyCodeLine{00035\ \ \ \ \ \}}
+\DoxyCodeLine{00036\ }
+\DoxyCodeLine{00037\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ Logger::error(\textcolor{keyword}{const}\ std::string\ \&text)\ \{}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ add(\textcolor{stringliteral}{"{}ERROR"{}},\ text);}
+\DoxyCodeLine{00039\ \ \ \ \ \}}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ Logger::success(\textcolor{keyword}{const}\ std::string\ \&text)\ \{}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ add(\textcolor{stringliteral}{"{}SUCCESS"{}},\ text);}
+\DoxyCodeLine{00043\ \ \ \ \ \}}
+\DoxyCodeLine{00044\ }
+\DoxyCodeLine{00045\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ Logger::callback(\textcolor{keyword}{const}\ std::string\ \&text)\ \{}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ add(\textcolor{stringliteral}{"{}CALLBACK"{}},\ text);}
+\DoxyCodeLine{00047\ \ \ \ \ \}}
+\DoxyCodeLine{00048\ }
+\DoxyCodeLine{00049\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ Logger::instruction(\textcolor{keyword}{const}\ std::string\ \&text)\ \{}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ add(\textcolor{stringliteral}{"{}INSTRUCTION"{}},\ text);}
+\DoxyCodeLine{00051\ \ \ \ \ \}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ Logger::append(\textcolor{keyword}{const}\ std::string\ \&text)\ \{}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ OutputFileStream::operator<<(text);}
+\DoxyCodeLine{00055\ \ \ \ \ \}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

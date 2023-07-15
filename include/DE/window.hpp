@@ -3,19 +3,20 @@
 
 #include <DE/def.h>
 #include <DE/types.hpp>
-#include <DE/color.hpp>
 #include <DE/error.hpp>
-#include <DE/renderer.hpp>
 #include <DE/events.hpp>
-#include <DE/drawable.hpp>
+#include <DE/panel.hpp>
 
+#include <stdint.h>
 #include <string>
 #include <vector>
 #include <memory>
 
 namespace de {
 
-	class DE_API Window {
+	/// @class Window
+	/// @brief Permet la gestion d'une fenÃªtre.
+	class DE_API Window : public Panel {
 
 		friend Renderer;
 
@@ -24,114 +25,54 @@ namespace de {
 			typedef void (*UpdateCallback)(Window &window);
 
 		private:
-			Renderer _renderer;
-			colora _backColor;
-			std::vector<Drawable *> *_drawables;
 			SDL_Window *_window;
 			EventCallback _eventCallback;
 			UpdateCallback _updateCallback;
-			uint16 _targetMSPerUpdate;
+			uint16_t _targetMSPerUpdate;
 			bool _running;
 
 		public:
-			Window(uint16 targetFPS);
-			~Window();
+			Window(uint16_t targetFPS, const size &size);
 			
-			/// @brief			Crée une fenêtre avec un titre et une taille.
-			/// @param win		La fenêtre à créer.
-			/// @param title	Titre de la fenêtre.
-			/// @param size		Taille de la fenêtre.
+			/// @brief			CrÃ©e une fenÃªtre avec un titre et une taille.
+			/// @param win		La fenÃªtre Ã  crÃ©er.
+			/// @param title	Titre de la fenÃªtre.
+			/// @param size		Taille de la fenÃªtre.
 			/// @return			Le code d'erreur.
-			static ErrorStatus create(Window &win, const char *title, size &&size);
+			static ErrorStatus create(Window &win, const char *title);
 			
-			/// @brief Détruit la fenêtre ainsi que tous ses composants internes.
+			/// @brief DÃ©truit la fenÃªtre ainsi que tous ses composants internes.
 			void destroy();
-			
-			/// @brief Nettoie toute la surface de dessin en la remplissant de la couleur définie.
-			void clear();
 			
 			/// @brief Game Loop
 			void run();
 			
-			/// @brief Fait le rendu graphique de tous les éléments de la fenêtre.
-			void render();
-			
-			/// @brief			Récupère et retire l'évènement le plus vieux de la queue.
-			/// @param event	Variable qui stockera le dernier évènement de la queue.
-			/// @return			@ref true tant qu'il y a un évènement dans la queue.
-			bool pollEvent(devent &event) const;
+			/// @brief			RÃ©cupÃ¨re et retire l'Ã©vÃ¨nement le plus vieux de la queue.
+			/// @return			Un \ref de::devent lorsqu'un Ã©vÃ¨nement s'est produit ou \c nullptr s'il n'y a aucun Ã©vÃ¨nement.
+			/// @remark			La valeur retournÃ©e par cette mÃ©thode doit Ãªtre \c delete.
+			de::devent pollEvent() const;
 
 			static void defaultInputCallback(Window &window, devent e);
-
-			void addDrawable(Drawable *drawable);
-
-			Drawable *getDrawable(size_t index);
 
 
 			//===== GETTERS =====//
 
 			SDL_Window *getWindow();
-			Renderer &getRenderer();
-			Renderer *getRendererPtr();
-			colora getBackColor() const;
 			size getSize() const;
+			uint32_t getWidth() const;
+			uint32_t getHeight() const;
 
 
 			//===== SETTERS =====//
 
 			void setEventCallback(EventCallback callabck);
 			void setUpdateCallback(UpdateCallback callback);
+
+		private:
+			void internalEventCallback(devent e);
 	};
 
-	/*
-	==============
-	Window::Window
-	==============
-	*/
-	inline Window::Window(uint16 targetMSPerUpdate)
-		: _drawables(new std::vector<Drawable *>()), _window(NULL), _running(false), _eventCallback(defaultInputCallback), _updateCallback(nullptr), _targetMSPerUpdate(targetMSPerUpdate)
-	{ }
-
-	/*
-	===============
-	Window::~Window
-	===============
-	*/
-	inline Window::~Window()
-	{
-		delete _drawables;
-	}
-
-	/*
-	===================
-	Window::addDrawable
-	===================
-	*/
-	inline void Window::addDrawable(Drawable *drawable)
-	{
-		_drawables->push_back(drawable);
-	}
-
-	/*
-	===================
-	Window::getDrawable
-	===================
-	*/
-	inline Drawable *Window::getDrawable(size_t index)
-	{
-		return (*_drawables)[index];
-	}
-
-	/*
-	=============
-	Window::clear
-	=============
-	*/
-	inline void Window::clear()
-	{
-		_renderer.setColor(_backColor);
-		_renderer.clear();
-	}
+	
 
 	/*
 	=================
@@ -141,48 +82,6 @@ namespace de {
 	inline SDL_Window *Window::getWindow()
 	{
 		return _window;
-	}
-
-	/*
-	===================
-	Window::getRenderer
-	===================
-	*/
-	inline Renderer &Window::getRenderer()
-	{
-		return _renderer;
-	}
-
-	/*
-	======================
-	Window::getRendererPtr
-	======================
-	*/
-	inline Renderer *Window::getRendererPtr()
-	{
-		return &_renderer;
-	}
-
-	/*
-	====================
-	Window::getBackColor
-	====================
-	*/
-	inline colora Window::getBackColor() const
-	{
-		return _backColor;
-	}
-
-	/*
-	===============
-	Window::getSize
-	===============
-	*/
-	inline size Window::getSize() const
-	{
-		size windowSize;
-		SDL_GetWindowSize(_window, (int *) & windowSize.width, (int *) & windowSize.height);
-		return windowSize;
 	}
 
 	/*

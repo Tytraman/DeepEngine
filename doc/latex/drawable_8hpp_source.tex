@@ -1,0 +1,124 @@
+\doxysection{drawable.\+hpp}
+\hypertarget{drawable_8hpp_source}{}\label{drawable_8hpp_source}\index{include/DE/drawable.hpp@{include/DE/drawable.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_DEEP\_ENGINE\_DRAWABLE\_HPP\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_DEEP\_ENGINE\_DRAWABLE\_HPP\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <DE/def.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <DE/types.hpp>}}
+\DoxyCodeLine{00006\ \textcolor{preprocessor}{\#include\ <DE/drawable\_types.h>}}
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <DE/panel.hpp>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <DE/renderer.hpp>}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <DE/vec.hpp>}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacede}{de}}\ \{}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \ \ \ \ \textcolor{keyword}{class\ }Window;}
+\DoxyCodeLine{00017\ }
+\DoxyCodeLine{00018\ \ \ \ \ \textcolor{keyword}{class\ }DE\_API\ \mbox{\hyperlink{classde_1_1_drawable}{Drawable}}\ \{}
+\DoxyCodeLine{00019\ }
+\DoxyCodeLine{00020\ \ \ \ \ \ \ \ \ \textcolor{keyword}{friend}\ \mbox{\hyperlink{classde_1_1_window}{Window}};}
+\DoxyCodeLine{00021\ \ \ \ \ \ \ \ \ \textcolor{keyword}{friend}\ \mbox{\hyperlink{classde_1_1_drawable_panel}{DrawablePanel}};}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \ \ \ \ \ \ \ \ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structde_1_1fvec2}{fvec2}}\ \_pos;}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \_visible;}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \_drawVectors;}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classde_1_1_drawable_panel}{DrawablePanel}}\ *\_panel;}
+\DoxyCodeLine{00028\ }
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00030\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classde_1_1_drawable}{Drawable}}(\mbox{\hyperlink{classde_1_1_drawable_panel}{DrawablePanel}}\ *panel,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structde_1_1fvec2}{fvec2}}\ \&pos,\ \textcolor{keywordtype}{bool}\ visible\ =\ \textcolor{keyword}{true});}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classde_1_1_drawable}{Drawable}}()\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00034\ }
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//===\ Méthodes\ virtuelles\ pures\ ===//}}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ draw(\textcolor{keyword}{const}\ \mbox{\hyperlink{structde_1_1fmat2x2}{fmat2x2}}\ \&baseVectors)\ =\ 0;}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ rotate(\textcolor{keywordtype}{float}\ degrees)\ =\ 0;}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ uint32\_t\ getType()\ \textcolor{keyword}{const}\ =\ 0;}
+\DoxyCodeLine{00039\ }
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{comment}{//===\ Mééthodes\ virtuelles\ ===//}}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ move(direction::Direction\ direction,\ \textcolor{keywordtype}{int}\ value);}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ setPos(\textcolor{keyword}{const}\ \mbox{\hyperlink{structde_1_1fvec2}{fvec2}}\ \&pos);}
+\DoxyCodeLine{00043\ }
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structde_1_1fvec2}{fvec2}}\ getPos()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ isVisible()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ setVisible(\textcolor{keywordtype}{bool}\ value);}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ setVectorsVisible(\textcolor{keywordtype}{bool}\ value);}
+\DoxyCodeLine{00051\ \ \ \ \ \};}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00054\ \textcolor{comment}{\ \ \ \ ================}}
+\DoxyCodeLine{00055\ \textcolor{comment}{\ \ \ \ Drawable::getPos}}
+\DoxyCodeLine{00056\ \textcolor{comment}{\ \ \ \ ================}}
+\DoxyCodeLine{00057\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00058\ \ \ \ \ \textcolor{keyword}{inline}\ \mbox{\hyperlink{structde_1_1fvec2}{fvec2}}\ Drawable::getPos()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00059\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00060\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_pos;}
+\DoxyCodeLine{00061\ \ \ \ \ \}}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00064\ \textcolor{comment}{\ \ \ \ ===================}}
+\DoxyCodeLine{00065\ \textcolor{comment}{\ \ \ \ Drawable::isVisible}}
+\DoxyCodeLine{00066\ \textcolor{comment}{\ \ \ \ ===================}}
+\DoxyCodeLine{00067\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00068\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{bool}\ Drawable::isVisible()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00069\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00070\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_visible;}
+\DoxyCodeLine{00071\ \ \ \ \ \}}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00074\ \textcolor{comment}{\ \ \ \ ================}}
+\DoxyCodeLine{00075\ \textcolor{comment}{\ \ \ \ Drawable::setPos}}
+\DoxyCodeLine{00076\ \textcolor{comment}{\ \ \ \ ================}}
+\DoxyCodeLine{00077\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00078\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ Drawable::setPos(\textcolor{keyword}{const}\ fvec2\ \&pos)}
+\DoxyCodeLine{00079\ \ \ \ \ \{}
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ \_pos\ =\ pos;}
+\DoxyCodeLine{00081\ \ \ \ \ \}}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00084\ \textcolor{comment}{\ \ \ \ ====================}}
+\DoxyCodeLine{00085\ \textcolor{comment}{\ \ \ \ Drawable::setVisible}}
+\DoxyCodeLine{00086\ \textcolor{comment}{\ \ \ \ ====================}}
+\DoxyCodeLine{00087\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00088\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ Drawable::setVisible(\textcolor{keywordtype}{bool}\ value)}
+\DoxyCodeLine{00089\ \ \ \ \ \{}
+\DoxyCodeLine{00090\ \ \ \ \ \ \ \ \ \_visible\ =\ value;}
+\DoxyCodeLine{00091\ \ \ \ \ \}}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00094\ \textcolor{comment}{\ \ \ \ ====================}}
+\DoxyCodeLine{00095\ \textcolor{comment}{\ \ \ \ Drawable::setVisible}}
+\DoxyCodeLine{00096\ \textcolor{comment}{\ \ \ \ ====================}}
+\DoxyCodeLine{00097\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00098\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ Drawable::setVectorsVisible(\textcolor{keywordtype}{bool}\ value)}
+\DoxyCodeLine{00099\ \ \ \ \ \{}
+\DoxyCodeLine{00100\ \ \ \ \ \ \ \ \ \_drawVectors\ =\ value;}
+\DoxyCodeLine{00101\ \ \ \ \ \}}
+\DoxyCodeLine{00102\ }
+\DoxyCodeLine{00103\ \ \ \ \ \textcolor{keyword}{class\ }DE\_API\ \mbox{\hyperlink{classde_1_1_colored_drawable}{ColoredDrawable}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classde_1_1_drawable}{Drawable}}\ \{}
+\DoxyCodeLine{00104\ }
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structde_1_1colora}{colora}}\ \_color;}
+\DoxyCodeLine{00107\ }
+\DoxyCodeLine{00108\ \ \ \ \ \ \ \ \ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classde_1_1_colored_drawable}{ColoredDrawable}}(\mbox{\hyperlink{classde_1_1_drawable_panel}{DrawablePanel}}\ *panel,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structde_1_1fvec2}{fvec2}}\ \&pos,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structde_1_1colora}{colora}}\ \&\mbox{\hyperlink{structde_1_1color}{color}},\ \textcolor{keywordtype}{bool}\ visible\ =\ \textcolor{keyword}{true});}
+\DoxyCodeLine{00110\ }
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classde_1_1_colored_drawable}{ColoredDrawable}}()\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \ \ \ \ \};}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \}}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

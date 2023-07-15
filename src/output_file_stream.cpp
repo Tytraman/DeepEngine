@@ -8,7 +8,7 @@ de::OutputFileStream::~OutputFileStream() {
 	delete _filename;
 }
 
-bool de::OutputFileStream::write(const uint8 *buffer, size_t size, size_t &bytesWritten) {
+bool de::OutputFileStream::write(const uint8_t *buffer, size_t size, size_t &bytesWritten) {
 #ifdef DE_WINDOWS
 
 #if DE_32

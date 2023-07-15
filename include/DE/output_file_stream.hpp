@@ -5,8 +5,9 @@
 #include <DE/output_stream.hpp>
 #include <DE/types.hpp>
 
-#include <string>
+#include <stdint.h>
 #include <stddef.h>
+#include <string>
 
 namespace de {
 
@@ -20,7 +21,7 @@ namespace de {
 			~OutputFileStream();
 			bool open() override;
 			void close() override;
-			bool write(const uint8 *buffer, size_t size, size_t &bytesWritten) override;
+			bool write(const uint8_t *buffer, size_t size, size_t &bytesWritten) override;
 
 			template <typename T>
 			OutputFileStream &operator<<(const T &value);

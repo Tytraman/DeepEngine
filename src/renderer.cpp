@@ -30,7 +30,7 @@ de::ErrorStatus de::Renderer::create(Renderer &dest, const Window &window)
 Renderer::drawRectangle
 =======================
 */
-void de::Renderer::drawRectangle(const rect &&rect, bool fill) const
+void de::Renderer::drawRectangle(const rect &rect, bool fill) const
 {
 	SDL_Rect r {
 		r.x = rect.pos.x,
@@ -67,17 +67,6 @@ void de::Renderer::setColor(const colora &color)
 }
 
 /*
-==================
-Renderer::setColor
-==================
-*/
-void de::Renderer::setColor(const colora &&color)
-{
-	_color = color;
-	SDL_SetRenderDrawColor(_renderer, color.R, color.G, color.B, color.A);
-}
-
-/*
 ===================
 Renderer::drawPixel
 ===================
@@ -92,9 +81,9 @@ void de::Renderer::drawPixel(const vec2 &pos) const
 Renderer::drawPixel
 ===================
 */
-void de::Renderer::drawPixel(const vec2 &&pos) const
+void de::Renderer::drawPixel(const fvec2 &pos) const
 {
-	SDL_RenderDrawPoint(_renderer, pos.x, pos.y);
+	SDL_RenderDrawPoint(_renderer, (int) pos.x, (int) pos.y);
 }
 
 /*
@@ -102,9 +91,15 @@ void de::Renderer::drawPixel(const vec2 &&pos) const
 Renderer::drawLine
 ==================
 */
-void de::Renderer::drawLine(int x1, int y1, int x2, int y2) const
+bool de::Renderer::drawLine(int x1, int y1, int x2, int y2) const
 {
-	SDL_RenderDrawLine(_renderer, x1, y1, x2, y2);
+	if(SDL_RenderDrawLine(_renderer, x1, y1, x2, y2) != 0) {
+		fprintf(stderr, "SDL_RenderDrawLine error: %s", SDL_GetError());
+
+		return false;
+	}
+	
+	return true;
 }
 
 /*

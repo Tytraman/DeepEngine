@@ -5,6 +5,7 @@
 #include <DE/types.hpp>
 
 #include <stddef.h>
+#include <stdint.h>
 
 namespace de {
 
@@ -18,7 +19,7 @@ namespace de {
 		public:
 			virtual bool open() = 0;
 			virtual void close() = 0;
-			virtual bool write(const uint8 *buffer, size_t size, size_t &bytesWritten) = 0;
+			virtual bool write(const uint8_t *buffer, size_t size, size_t &bytesWritten) = 0;
 			
 	};
 

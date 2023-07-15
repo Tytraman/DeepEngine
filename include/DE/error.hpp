@@ -4,6 +4,8 @@
 #include <DE/def.h>
 #include <DE/types.hpp>
 
+#include <stdint.h>
+
 #define DE_ERROR_SW_HELPER(__status,...) switch(__status) { __VA_ARGS__ }
 #define DE_ERROR_CASE_HELPER(__name) case __name:{error = #__name; }break
 
@@ -12,11 +14,12 @@
 
 namespace de {
 
-	enum ErrorStatus : uint16 {
+	enum ErrorStatus : uint16_t {
 		NoError,
 		InitSDL,
 		CreateWindowSDL,
-		CreateRendererSDL
+		CreateRendererSDL,
+		NoWindowFound
 	};
 
 	class DE_API DError {

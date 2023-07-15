@@ -1,0 +1,241 @@
+\doxysection{panel.\+hpp}
+\hypertarget{panel_8hpp_source}{}\label{panel_8hpp_source}\index{include/DE/panel.hpp@{include/DE/panel.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_DEEP\_ENGINE\_PANEL\_HPP\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_DEEP\_ENGINE\_PANEL\_HPP\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <DE/def.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <DE/renderer.hpp>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#include\ <vector>}}
+\DoxyCodeLine{00009\ }
+\DoxyCodeLine{00010\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacede}{de}}\ \{}
+\DoxyCodeLine{00011\ }
+\DoxyCodeLine{00012\ \ \ \ \ \textcolor{keyword}{class\ }Drawable;}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \ \ \ \ \textcolor{keyword}{namespace\ }PanelType\ \{}
+\DoxyCodeLine{00015\ }
+\DoxyCodeLine{00016\ \ \ \ \ \ \ \ \ \textcolor{keyword}{enum}\ e\ :\ uint32\_t\ \{}
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ \ \ \ \ Window,}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \ \ \ \ Drawable}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \ \ \}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keyword}{class\ }DE\_API\ \mbox{\hyperlink{classde_1_1_panel}{Panel}}\ \{}
+\DoxyCodeLine{00024\ }
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classde_1_1_panel}{Panel}}\ *\_parent;}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ \ \ \ \ PanelType::e\ \_type;}
+\DoxyCodeLine{00028\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structde_1_1size}{size}}\ \_size;}
+\DoxyCodeLine{00029\ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<Panel\ *>\ *\_panels;}
+\DoxyCodeLine{00030\ }
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classde_1_1_panel}{Panel}}()\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00033\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classde_1_1_panel}{Panel}}(\mbox{\hyperlink{classde_1_1_panel}{Panel}}\ *parent,\ PanelType::e\ type,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structde_1_1size}{size}}\ \&\mbox{\hyperlink{structde_1_1size}{size}});}
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classde_1_1_panel}{\string~Panel}}();}
+\DoxyCodeLine{00035\ }
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{virtual}\ \textcolor{keywordtype}{void}\ destroy();}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ addPanel(\mbox{\hyperlink{classde_1_1_panel}{Panel}}\ *panel);}
+\DoxyCodeLine{00038\ }
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ setSize(\textcolor{keyword}{const}\ \mbox{\hyperlink{structde_1_1size}{size}}\ \&\mbox{\hyperlink{structde_1_1size}{size}});}
+\DoxyCodeLine{00040\ }
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classde_1_1_panel}{Panel}}\ *getParent();}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ \ \ \ \ PanelType::e\ getType()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structde_1_1size}{size}}\ getSize()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classde_1_1_panel}{Panel}}\ *getPanel(\textcolor{keywordtype}{size\_t}\ index);}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \ \ \ \ \};}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00049\ \textcolor{comment}{\ \ \ \ ==============}}
+\DoxyCodeLine{00050\ \textcolor{comment}{\ \ \ \ Panel::destroy}}
+\DoxyCodeLine{00051\ \textcolor{comment}{\ \ \ \ ==============}}
+\DoxyCodeLine{00052\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00053\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ Panel::destroy()}
+\DoxyCodeLine{00054\ \ \ \ \ \{}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ \textcolor{keyword}{delete}\ \_panels;}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ \_panels\ =\ \textcolor{keyword}{nullptr};}
+\DoxyCodeLine{00057\ \ \ \ \ \}}
+\DoxyCodeLine{00058\ }
+\DoxyCodeLine{00059\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00060\ \textcolor{comment}{\ \ \ \ ==============}}
+\DoxyCodeLine{00061\ \textcolor{comment}{\ \ \ \ Panel::setSize}}
+\DoxyCodeLine{00062\ \textcolor{comment}{\ \ \ \ ==============}}
+\DoxyCodeLine{00063\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00064\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ Panel::setSize(\textcolor{keyword}{const}\ size\ \&size)}
+\DoxyCodeLine{00065\ \ \ \ \ \{}
+\DoxyCodeLine{00066\ \ \ \ \ \ \ \ \ \_size\ =\ size;}
+\DoxyCodeLine{00067\ \ \ \ \ \}}
+\DoxyCodeLine{00068\ }
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00070\ \textcolor{comment}{\ \ \ \ ================}}
+\DoxyCodeLine{00071\ \textcolor{comment}{\ \ \ \ Panel::getParent}}
+\DoxyCodeLine{00072\ \textcolor{comment}{\ \ \ \ ================}}
+\DoxyCodeLine{00073\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00074\ \ \ \ \ \textcolor{keyword}{inline}\ Panel\ *Panel::getParent()}
+\DoxyCodeLine{00075\ \ \ \ \ \{}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_parent;}
+\DoxyCodeLine{00077\ \ \ \ \ \}}
+\DoxyCodeLine{00078\ }
+\DoxyCodeLine{00079\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00080\ \textcolor{comment}{\ \ \ \ ==============}}
+\DoxyCodeLine{00081\ \textcolor{comment}{\ \ \ \ Panel::getType}}
+\DoxyCodeLine{00082\ \textcolor{comment}{\ \ \ \ ==============}}
+\DoxyCodeLine{00083\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00084\ \ \ \ \ \textcolor{keyword}{inline}\ PanelType::e\ Panel::getType()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00085\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00086\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_type;}
+\DoxyCodeLine{00087\ \ \ \ \ \}}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00089\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00090\ \textcolor{comment}{\ \ \ \ ==============}}
+\DoxyCodeLine{00091\ \textcolor{comment}{\ \ \ \ Panel::getSize}}
+\DoxyCodeLine{00092\ \textcolor{comment}{\ \ \ \ ==============}}
+\DoxyCodeLine{00093\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00094\ \ \ \ \ \textcolor{keyword}{inline}\ size\ Panel::getSize()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00095\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00096\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_size;}
+\DoxyCodeLine{00097\ \ \ \ \ \}}
+\DoxyCodeLine{00098\ }
+\DoxyCodeLine{00099\ \ \ \ \ \textcolor{keyword}{class\ }DE\_API\ \mbox{\hyperlink{classde_1_1_drawable_panel}{DrawablePanel}}\ :\ \textcolor{keyword}{public}\ \mbox{\hyperlink{classde_1_1_panel}{Panel}}\ \{}
+\DoxyCodeLine{00100\ }
+\DoxyCodeLine{00101\ \ \ \ \ \ \ \ \ \textcolor{keyword}{protected}:}
+\DoxyCodeLine{00102\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classde_1_1_renderer}{Renderer}}\ \_renderer;}
+\DoxyCodeLine{00103\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structde_1_1fmat2x2}{fmat2x2}}\ \_baseVectors;}
+\DoxyCodeLine{00104\ \ \ \ \ \ \ \ \ \ \ \ \ std::vector<Drawable\ *>\ *\_drawables;}
+\DoxyCodeLine{00105\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structde_1_1colora}{colora}}\ \_backColor;}
+\DoxyCodeLine{00106\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \_showXAxis;}
+\DoxyCodeLine{00107\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ \_showYAxis;}
+\DoxyCodeLine{00108\ }
+\DoxyCodeLine{00109\ \ \ \ \ \ \ \ \ \textcolor{keyword}{public}:}
+\DoxyCodeLine{00110\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classde_1_1_drawable_panel}{DrawablePanel}}()\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00111\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classde_1_1_drawable_panel}{DrawablePanel}}(\mbox{\hyperlink{classde_1_1_panel}{Panel}}\ *parent,\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structde_1_1size}{size}}\ \&\mbox{\hyperlink{structde_1_1size}{size}},\ \textcolor{keywordtype}{bool}\ showXAxis\ =\ \textcolor{keyword}{false},\ \textcolor{keywordtype}{bool}\ showYAxis\ =\ \textcolor{keyword}{false},\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structde_1_1fvec2}{fvec2}}\ \&baseIVector\ =\ \mbox{\hyperlink{structde_1_1fvec2}{fvec2}}(1.0f,\ 0.0f),\ \textcolor{keyword}{const}\ \mbox{\hyperlink{structde_1_1fvec2}{fvec2}}\ \&baseJVector\ =\ \mbox{\hyperlink{structde_1_1fvec2}{fvec2}}(0.0f,\ 1.0f));}
+\DoxyCodeLine{00112\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classde_1_1_drawable_panel}{\string~DrawablePanel}}();}
+\DoxyCodeLine{00113\ }
+\DoxyCodeLine{00114\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ destroy()\ \textcolor{keyword}{override};}
+\DoxyCodeLine{00115\ }
+\DoxyCodeLine{00116\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ ErrorStatus\ create(\mbox{\hyperlink{classde_1_1_drawable_panel}{DrawablePanel}}\ \&dest);}
+\DoxyCodeLine{00117\ }
+\DoxyCodeLine{00118\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ clear();}
+\DoxyCodeLine{00119\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ render();}
+\DoxyCodeLine{00120\ }
+\DoxyCodeLine{00121\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ addDrawable(\mbox{\hyperlink{classde_1_1_drawable}{Drawable}}\ *drawable);}
+\DoxyCodeLine{00122\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classde_1_1_drawable}{Drawable}}\ *getDrawable(\textcolor{keywordtype}{size\_t}\ index);}
+\DoxyCodeLine{00123\ }
+\DoxyCodeLine{00124\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{classde_1_1_renderer}{Renderer}}\ *getRenderer();}
+\DoxyCodeLine{00125\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structde_1_1fvec2}{fvec2}}\ getBaseIVector()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00126\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structde_1_1fvec2}{fvec2}}\ getBaseJVector()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00127\ \ \ \ \ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structde_1_1colora}{colora}}\ getBackColor()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00128\ }
+\DoxyCodeLine{00129\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ setRenderer(\mbox{\hyperlink{classde_1_1_renderer}{Renderer}}\ *renderer);}
+\DoxyCodeLine{00130\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ setBaseIVector(\textcolor{keyword}{const}\ \mbox{\hyperlink{structde_1_1fvec2}{fvec2}}\ \&baseVector);}
+\DoxyCodeLine{00131\ \ \ \ \ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{void}\ setBaseJVector(\textcolor{keyword}{const}\ \mbox{\hyperlink{structde_1_1fvec2}{fvec2}}\ \&baseVector);}
+\DoxyCodeLine{00132\ }
+\DoxyCodeLine{00133\ \ \ \ \ \};}
+\DoxyCodeLine{00134\ }
+\DoxyCodeLine{00135\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00136\ \textcolor{comment}{\ \ \ \ ======================}}
+\DoxyCodeLine{00137\ \textcolor{comment}{\ \ \ \ DrawablePanel::destroy}}
+\DoxyCodeLine{00138\ \textcolor{comment}{\ \ \ \ ======================}}
+\DoxyCodeLine{00139\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00140\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ de::DrawablePanel::destroy()}
+\DoxyCodeLine{00141\ \ \ \ \ \{}
+\DoxyCodeLine{00142\ \ \ \ \ \ \ \ \ \_renderer.destroy();}
+\DoxyCodeLine{00143\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ Attention\ car\ si\ le\ panel\ a\ des\ enfants,\ en\ supprimant\ le\ panel,\ les\ enfants\ ne\ seront\ pas}}
+\DoxyCodeLine{00144\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ supprimés,\ c'est\ donc\ à celui\ qui\ détruit\ le\ premier\ panel\ de\ s'assurer\ de\ d'abord\ détruire\ les\ enfants.}}
+\DoxyCodeLine{00145\ \ \ \ \ \ \ \ \ \textcolor{comment}{//\ TODO:\ La\ classe\ Window\ doit\ le\ faire.}}
+\DoxyCodeLine{00146\ \ \ \ \ \ \ \ \ Panel::destroy();}
+\DoxyCodeLine{00147\ \ \ \ \ \}}
+\DoxyCodeLine{00148\ }
+\DoxyCodeLine{00149\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00150\ \textcolor{comment}{\ \ \ \ ====================}}
+\DoxyCodeLine{00151\ \textcolor{comment}{\ \ \ \ DrawablePanel::clear}}
+\DoxyCodeLine{00152\ \textcolor{comment}{\ \ \ \ ====================}}
+\DoxyCodeLine{00153\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00154\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ DrawablePanel::clear()}
+\DoxyCodeLine{00155\ \ \ \ \ \{}
+\DoxyCodeLine{00156\ \ \ \ \ \ \ \ \ \_renderer.\mbox{\hyperlink{classde_1_1_renderer_aa4d6dce1906edd489c0851fefea27708}{setColor}}(\_backColor);}
+\DoxyCodeLine{00157\ \ \ \ \ \ \ \ \ \_renderer.\mbox{\hyperlink{classde_1_1_renderer_a13e76ad2f30b1609472b8288cb577c97}{clear}}();}
+\DoxyCodeLine{00158\ \ \ \ \ \}}
+\DoxyCodeLine{00159\ }
+\DoxyCodeLine{00160\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00161\ \textcolor{comment}{\ \ \ \ ==========================}}
+\DoxyCodeLine{00162\ \textcolor{comment}{\ \ \ \ DrawablePanel::getRenderer}}
+\DoxyCodeLine{00163\ \textcolor{comment}{\ \ \ \ ==========================}}
+\DoxyCodeLine{00164\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00165\ \ \ \ \ \textcolor{keyword}{inline}\ Renderer\ *DrawablePanel::getRenderer()}
+\DoxyCodeLine{00166\ \ \ \ \ \{}
+\DoxyCodeLine{00167\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \&\_renderer;}
+\DoxyCodeLine{00168\ \ \ \ \ \}}
+\DoxyCodeLine{00169\ }
+\DoxyCodeLine{00170\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00171\ \textcolor{comment}{\ \ \ \ ===========================}}
+\DoxyCodeLine{00172\ \textcolor{comment}{\ \ \ \ DrawablePanel::getBackColor}}
+\DoxyCodeLine{00173\ \textcolor{comment}{\ \ \ \ ==========================}}
+\DoxyCodeLine{00174\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00175\ \ \ \ \ \textcolor{keyword}{inline}\ colora\ DrawablePanel::getBackColor()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00176\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00177\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \_backColor;}
+\DoxyCodeLine{00178\ \ \ \ \ \}}
+\DoxyCodeLine{00179\ }
+\DoxyCodeLine{00180\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00181\ \textcolor{comment}{\ \ \ \ ==========================}}
+\DoxyCodeLine{00182\ \textcolor{comment}{\ \ \ \ DrawablePanel::setRenderer}}
+\DoxyCodeLine{00183\ \textcolor{comment}{\ \ \ \ ==========================}}
+\DoxyCodeLine{00184\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00185\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ DrawablePanel::setRenderer(Renderer\ *renderer)}
+\DoxyCodeLine{00186\ \ \ \ \ \{}
+\DoxyCodeLine{00187\ \ \ \ \ \ \ \ \ \_renderer\ =\ *renderer;}
+\DoxyCodeLine{00188\ \ \ \ \ \}}
+\DoxyCodeLine{00189\ }
+\DoxyCodeLine{00190\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00191\ \textcolor{comment}{\ \ \ \ =============================}}
+\DoxyCodeLine{00192\ \textcolor{comment}{\ \ \ \ DrawablePanel::getBaseIVector}}
+\DoxyCodeLine{00193\ \textcolor{comment}{\ \ \ \ =============================}}
+\DoxyCodeLine{00194\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00195\ \ \ \ \ \textcolor{keyword}{inline}\ fvec2\ DrawablePanel::getBaseIVector()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00196\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00197\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{\ \_baseVectors.x1,\ \_baseVectors.y1\ \};}
+\DoxyCodeLine{00198\ \ \ \ \ \}}
+\DoxyCodeLine{00199\ }
+\DoxyCodeLine{00200\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00201\ \textcolor{comment}{\ \ \ \ =============================}}
+\DoxyCodeLine{00202\ \textcolor{comment}{\ \ \ \ DrawablePanel::getBaseJVector}}
+\DoxyCodeLine{00203\ \textcolor{comment}{\ \ \ \ =============================}}
+\DoxyCodeLine{00204\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00205\ \ \ \ \ \textcolor{keyword}{inline}\ fvec2\ DrawablePanel::getBaseJVector()\textcolor{keyword}{\ const}}
+\DoxyCodeLine{00206\ \textcolor{keyword}{\ \ \ \ }\{}
+\DoxyCodeLine{00207\ \ \ \ \ \ \ \ \ \textcolor{keywordflow}{return}\ \{\ \_baseVectors.x2,\ \_baseVectors.y2\ \};}
+\DoxyCodeLine{00208\ \ \ \ \ \}}
+\DoxyCodeLine{00209\ }
+\DoxyCodeLine{00210\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00211\ \textcolor{comment}{\ \ \ \ =============================}}
+\DoxyCodeLine{00212\ \textcolor{comment}{\ \ \ \ DrawablePanel::setBaseIVector}}
+\DoxyCodeLine{00213\ \textcolor{comment}{\ \ \ \ =============================}}
+\DoxyCodeLine{00214\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00215\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ DrawablePanel::setBaseIVector(\textcolor{keyword}{const}\ fvec2\ \&baseVector)}
+\DoxyCodeLine{00216\ \ \ \ \ \{}
+\DoxyCodeLine{00217\ \ \ \ \ \ \ \ \ \_baseVectors.x1\ =\ baseVector.x;}
+\DoxyCodeLine{00218\ \ \ \ \ \ \ \ \ \_baseVectors.y1\ =\ baseVector.y;}
+\DoxyCodeLine{00219\ \ \ \ \ \}}
+\DoxyCodeLine{00220\ }
+\DoxyCodeLine{00221\ \ \ \ \ \textcolor{comment}{/*}}
+\DoxyCodeLine{00222\ \textcolor{comment}{\ \ \ \ =============================}}
+\DoxyCodeLine{00223\ \textcolor{comment}{\ \ \ \ DrawablePanel::setBaseJVector}}
+\DoxyCodeLine{00224\ \textcolor{comment}{\ \ \ \ =============================}}
+\DoxyCodeLine{00225\ \textcolor{comment}{\ \ \ \ */}}
+\DoxyCodeLine{00226\ \ \ \ \ \textcolor{keyword}{inline}\ \textcolor{keywordtype}{void}\ DrawablePanel::setBaseJVector(\textcolor{keyword}{const}\ fvec2\ \&baseVector)}
+\DoxyCodeLine{00227\ \ \ \ \ \{}
+\DoxyCodeLine{00228\ \ \ \ \ \ \ \ \ \_baseVectors.x2\ =\ baseVector.x;}
+\DoxyCodeLine{00229\ \ \ \ \ \ \ \ \ \_baseVectors.y2\ =\ baseVector.y;}
+\DoxyCodeLine{00230\ \ \ \ \ \}}
+\DoxyCodeLine{00231\ }
+\DoxyCodeLine{00232\ }
+\DoxyCodeLine{00233\ \}}
+\DoxyCodeLine{00234\ }
+\DoxyCodeLine{00235\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

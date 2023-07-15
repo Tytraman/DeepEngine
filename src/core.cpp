@@ -4,7 +4,7 @@
 #include <SDL.h>
 
 #ifdef DE_WINDOWS
-	de::uint64 de::Core::_initTime = GetTickCount64();
+	uint64_t de::Core::_initTime = GetTickCount64();
 #else
 #error Need implementation
 #endif

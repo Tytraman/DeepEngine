@@ -16,6 +16,8 @@ namespace de {
 		int32_t y;
 
 		vec2(int32_t x = 1, int32_t y = 1);
+
+		void draw(Renderer &renderer) const;
 	};
 
 	/*
@@ -54,6 +56,9 @@ namespace de {
 		static float magn(const fvec2 &vec);
 		static float angle(const fvec2 &vec1, const fvec2 &vec2);
 		static fvec2 mul(const fvec2 &vec, const fmat2x2 &mat);
+		static fvec2 inv(const fvec2 &vec);
+		static fvec2 interpolateX(const fvec2 &vec1, const fvec2 &vec2, float y);
+		static fvec2 interpolateY(const fvec2 &vec1, const fvec2 &vec2, float x);
 	};
 
 	/*
@@ -261,8 +266,46 @@ namespace de {
 	inline fvec2 fvec2::mul(const fvec2 &vec, const fmat2x2 &mat)
 	{
 		return {
-			vec.x * mat.x1 + vec.y * mat.y1,
-			vec.x * mat.x2 + vec.y * mat.y2
+			vec.x * mat.x1 + vec.y * mat.x2,
+			vec.x * mat.y1 + vec.y * mat.y2
+		};
+	}
+
+	/*
+	==========
+	fvec2::inv
+	==========
+	*/
+	inline fvec2 fvec2::inv(const fvec2 &vec)
+	{
+		return scale(vec, -1.0f);
+	}
+
+	/*
+	===================
+	fvec2::interpolateX
+	===================
+	*/
+	inline fvec2 fvec2::interpolateX(const fvec2 &vec1, const fvec2 &vec2, float y)
+	{
+		return {
+			vec1.x * (vec2.y - y) / (vec2.y - vec1.y) +
+			vec2.x * (y - vec1.y) / (vec2.y - vec1.y),
+			y
+		};
+	}
+
+	/*
+	===================
+	fvec2::interpolateY
+	===================
+	*/
+	inline fvec2 fvec2::interpolateY(const fvec2 &vec1, const fvec2 &vec2, float x)
+	{
+		return {
+			vec1.y * (vec2.x - x) / (vec2.x - vec1.x) +
+			vec2.y * (x - vec1.x) / (vec2.x - vec1.x),
+			x
 		};
 	}
 

@@ -1,0 +1,97 @@
+\doxysection{events.\+hpp}
+\hypertarget{events_8hpp_source}{}\label{events_8hpp_source}\index{include/DE/events.hpp@{include/DE/events.hpp}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_DEEP\_ENGINE\_EVENTS\_HPP\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_DEEP\_ENGINE\_EVENTS\_HPP\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <DE/def.h>}}
+\DoxyCodeLine{00005\ \textcolor{preprocessor}{\#include\ <DE/types.hpp>}}
+\DoxyCodeLine{00006\ }
+\DoxyCodeLine{00007\ \textcolor{preprocessor}{\#include\ <stdint.h>}}
+\DoxyCodeLine{00008\ }
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#include\ <SDL.h>}}
+\DoxyCodeLine{00010\ }
+\DoxyCodeLine{00011\ \textcolor{keyword}{namespace\ }\mbox{\hyperlink{namespacede}{de}}\ \{}
+\DoxyCodeLine{00012\ }
+\DoxyCodeLine{00013\ \ \ \ \ \textcolor{keyword}{class\ }Window;}
+\DoxyCodeLine{00014\ }
+\DoxyCodeLine{00015\ \ \ \ \ \textcolor{keyword}{namespace\ }EventType\ \{}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \ \ \ \ \ \ \ \ enum\ :\ uint32\_t\ \{}
+\DoxyCodeLine{00018\ \ \ \ \ \ \ \ \ \ \ \ \ Window\ =\ SDL\_WINDOWEVENT}
+\DoxyCodeLine{00019\ \ \ \ \ \ \ \ \ \};}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \ \ \ \ \}}
+\DoxyCodeLine{00022\ }
+\DoxyCodeLine{00023\ \ \ \ \ \textcolor{keyword}{enum}\ events\ :\ uint32\_t\ \{}
+\DoxyCodeLine{00024\ \ \ \ \ \ \ \ \ Quit\ \ \ \ \ \ \ \ \ \ \ \ =\ SDL\_QUIT,}
+\DoxyCodeLine{00025\ \ \ \ \ \ \ \ \ KeyDown\ \ \ \ \ \ \ \ \ =\ SDL\_KEYDOWN,}
+\DoxyCodeLine{00026\ \ \ \ \ \ \ \ \ KeyUp\ \ \ \ \ \ \ \ \ \ \ =\ SDL\_KEYUP,}
+\DoxyCodeLine{00027\ \ \ \ \ \ \ \ \ WindowResized\ \ \ =\ SDL\_WINDOWEVENT\_RESIZED}
+\DoxyCodeLine{00028\ \ \ \ \ \};}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \ \ \ \ \textcolor{keyword}{enum}\ dkey\ :\ int32\_t\ \{}
+\DoxyCodeLine{00031\ \ \ \ \ \ \ \ \ Backspace\ =\ SDLK\_BACKSPACE,}
+\DoxyCodeLine{00032\ \ \ \ \ \ \ \ \ Esc\ =\ SDLK\_ESCAPE,}
+\DoxyCodeLine{00033\ }
+\DoxyCodeLine{00034\ \ \ \ \ \ \ \ \ A\ =\ SDLK\_a,}
+\DoxyCodeLine{00035\ \ \ \ \ \ \ \ \ B\ =\ SDLK\_b,}
+\DoxyCodeLine{00036\ \ \ \ \ \ \ \ \ C\ =\ SDLK\_c,}
+\DoxyCodeLine{00037\ \ \ \ \ \ \ \ \ D\ =\ SDLK\_d,}
+\DoxyCodeLine{00038\ \ \ \ \ \ \ \ \ E\ =\ SDLK\_e,}
+\DoxyCodeLine{00039\ \ \ \ \ \ \ \ \ F\ =\ SDLK\_f,}
+\DoxyCodeLine{00040\ \ \ \ \ \ \ \ \ G\ =\ SDLK\_g,}
+\DoxyCodeLine{00041\ \ \ \ \ \ \ \ \ H\ =\ SDLK\_h,}
+\DoxyCodeLine{00042\ \ \ \ \ \ \ \ \ I\ =\ SDLK\_i,}
+\DoxyCodeLine{00043\ \ \ \ \ \ \ \ \ J\ =\ SDLK\_j,}
+\DoxyCodeLine{00044\ \ \ \ \ \ \ \ \ K\ =\ SDLK\_k,}
+\DoxyCodeLine{00045\ \ \ \ \ \ \ \ \ L\ =\ SDLK\_l,}
+\DoxyCodeLine{00046\ \ \ \ \ \ \ \ \ M\ =\ SDLK\_m,}
+\DoxyCodeLine{00047\ \ \ \ \ \ \ \ \ N\ =\ SDLK\_n,}
+\DoxyCodeLine{00048\ \ \ \ \ \ \ \ \ O\ =\ SDLK\_o,}
+\DoxyCodeLine{00049\ \ \ \ \ \ \ \ \ P\ =\ SDLK\_p,}
+\DoxyCodeLine{00050\ \ \ \ \ \ \ \ \ Q\ =\ SDLK\_q,}
+\DoxyCodeLine{00051\ \ \ \ \ \ \ \ \ R\ =\ SDLK\_r,}
+\DoxyCodeLine{00052\ \ \ \ \ \ \ \ \ S\ =\ SDLK\_s,}
+\DoxyCodeLine{00053\ \ \ \ \ \ \ \ \ T\ =\ SDLK\_t,}
+\DoxyCodeLine{00054\ \ \ \ \ \ \ \ \ U\ =\ SDLK\_u,}
+\DoxyCodeLine{00055\ \ \ \ \ \ \ \ \ V\ =\ SDLK\_v,}
+\DoxyCodeLine{00056\ \ \ \ \ \ \ \ \ W\ =\ SDLK\_w,}
+\DoxyCodeLine{00057\ \ \ \ \ \ \ \ \ X\ =\ SDLK\_x,}
+\DoxyCodeLine{00058\ \ \ \ \ \ \ \ \ Y\ =\ SDLK\_y,}
+\DoxyCodeLine{00059\ \ \ \ \ \ \ \ \ Z\ =\ SDLK\_z,}
+\DoxyCodeLine{00060\ }
+\DoxyCodeLine{00061\ \ \ \ \ \ \ \ \ RightArrow\ =\ SDLK\_RIGHT,}
+\DoxyCodeLine{00062\ \ \ \ \ \ \ \ \ LeftArrow\ =\ SDLK\_LEFT,}
+\DoxyCodeLine{00063\ \ \ \ \ \ \ \ \ DownArrow\ =\ SDLK\_DOWN,}
+\DoxyCodeLine{00064\ \ \ \ \ \ \ \ \ UpArrow\ =\ SDLK\_UP}
+\DoxyCodeLine{00065\ \ \ \ \ \};}
+\DoxyCodeLine{00066\ \ \ \ \ }
+\DoxyCodeLine{00069\ \ \ \ \ \textcolor{keyword}{struct\ }DE\_API\ \mbox{\hyperlink{structde_1_1devent__s}{devent\_s}}\ \{}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \ \ \ \ \ \ \ \ \textcolor{keyword}{static}\ \mbox{\hyperlink{structde_1_1devent__s}{devent\_s}}\ *create();}
+\DoxyCodeLine{00072\ }
+\DoxyCodeLine{00073\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structde_1_1devent__s}{devent\_s}}()\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00074\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structde_1_1devent__s}{devent\_s}}(\mbox{\hyperlink{structde_1_1devent__s}{devent\_s}}\ \&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00075\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structde_1_1devent__s}{devent\_s}}(\mbox{\hyperlink{structde_1_1devent__s}{devent\_s}}\ \&\&)\ =\ \textcolor{keyword}{delete};}
+\DoxyCodeLine{00076\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structde_1_1devent__s}{\string~devent\_s}}();}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \ \ \ \ \ \ \ \ \textcolor{keywordtype}{bool}\ pollEvent();}
+\DoxyCodeLine{00079\ }
+\DoxyCodeLine{00080\ \ \ \ \ \ \ \ \ uint32\_t\ getType()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00081\ \ \ \ \ \ \ \ \ uint32\_t\ getWindowEventType()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00082\ }
+\DoxyCodeLine{00083\ \ \ \ \ \ \ \ \ int32\_t\ getKeysym()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00084\ \ \ \ \ \ \ \ \ \mbox{\hyperlink{structde_1_1size}{size}}\ getWindowSize()\ \textcolor{keyword}{const};}
+\DoxyCodeLine{00085\ \ \ \ \ \ \ \ \ }
+\DoxyCodeLine{00086\ }
+\DoxyCodeLine{00087\ \ \ \ \ \};}
+\DoxyCodeLine{00088\ }
+\DoxyCodeLine{00091\ \ \ \ \ \textcolor{keyword}{typedef}\ \textcolor{keyword}{struct\ }\mbox{\hyperlink{structde_1_1devent__s}{devent\_s}}\ *\mbox{\hyperlink{structde_1_1devent__s}{devent}};}
+\DoxyCodeLine{00092\ }
+\DoxyCodeLine{00093\ \}}
+\DoxyCodeLine{00094\ }
+\DoxyCodeLine{00095\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}

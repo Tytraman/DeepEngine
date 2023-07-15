@@ -1,0 +1,84 @@
+\doxysection{def.\+h}
+\hypertarget{def_8h_source}{}\label{def_8h_source}\index{include/DE/def.h@{include/DE/def.h}}
+
+\begin{DoxyCode}{0}
+\DoxyCodeLine{00001\ \textcolor{preprocessor}{\#ifndef\ \_\_DEEP\_ENGINE\_DEF\_H\_\_}}
+\DoxyCodeLine{00002\ \textcolor{preprocessor}{\#define\ \_\_DEEP\_ENGINE\_DEF\_H\_\_}}
+\DoxyCodeLine{00003\ }
+\DoxyCodeLine{00004\ \textcolor{preprocessor}{\#include\ <math.h>}}
+\DoxyCodeLine{00005\ }
+\DoxyCodeLine{00006\ \textcolor{comment}{//=====\ HELPERs\ =====//}}
+\DoxyCodeLine{00007\ }
+\DoxyCodeLine{00008\ \textcolor{preprocessor}{\#define\ DE\_CONCAT\_HELPER(\_\_a,\_\_b)\ \_\_a\#\#\_\_b}}
+\DoxyCodeLine{00009\ \textcolor{preprocessor}{\#define\ DE\_STRINGIFY\_HELPER(\_\_value)\ \#\_\_value}}
+\DoxyCodeLine{00010\ \textcolor{preprocessor}{\#define\ DE\_ENUM\_HELPER(\_\_name,\_\_type,...)\ enum\ \_\_name\ :\ \_\_type\ \{\ \_\_VA\_ARGS\_\_\ \}}}
+\DoxyCodeLine{00011\ \textcolor{preprocessor}{\#define\ DE\_STRUCT\_HELPER(\_\_name,...)\ struct\ \_\_name\ \{\ \_\_VA\_ARGS\_\_\ \}}}
+\DoxyCodeLine{00012\ \textcolor{preprocessor}{\#define\ DE\_UNION\_HELPER(\_\_name,...)\ union\ \_\_name\ \{\ \_\_VA\_ARGS\_\_\ \}}}
+\DoxyCodeLine{00013\ }
+\DoxyCodeLine{00014\ \textcolor{preprocessor}{\#define\ DE\_CONCAT(\_\_a,\_\_b)\ DE\_CONCAT\_HELPER(\_\_a,\_\_b)}}
+\DoxyCodeLine{00015\ \textcolor{preprocessor}{\#define\ DE\_STRINGIFY(\_\_value)\ DE\_STRINGIFY\_HELPER(\_\_value)}}
+\DoxyCodeLine{00016\ }
+\DoxyCodeLine{00017\ \textcolor{preprocessor}{\#define\ DE\_ENUM(\_\_name,\_\_type,...)\ DE\_ENUM\_HELPER(\_\_name,\_\_type,\_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{00018\ \textcolor{preprocessor}{\#define\ DE\_STRUCT(\_\_name,...)\ DE\_STRUCT\_HELPER(\_\_name,\_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{00019\ \textcolor{preprocessor}{\#define\ DE\_UNION(\_\_name,...)\ DE\_UNION\_HELPER(\_\_name,\_\_VA\_ARGS\_\_)}}
+\DoxyCodeLine{00020\ }
+\DoxyCodeLine{00021\ \textcolor{preprocessor}{\#if\ \_WIN32\ ||\ \_\_WIN32\_\_}}
+\DoxyCodeLine{00022\ \textcolor{preprocessor}{\#if\ \_WIN64}}
+\DoxyCodeLine{00023\ \textcolor{preprocessor}{\#define\ DE\_64\ 1}}
+\DoxyCodeLine{00024\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00025\ \textcolor{preprocessor}{\#define\ DE\_32\ 1}}
+\DoxyCodeLine{00026\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00027\ }
+\DoxyCodeLine{00028\ \textcolor{preprocessor}{\#include\ <Windows.h>}}
+\DoxyCodeLine{00029\ }
+\DoxyCodeLine{00030\ \textcolor{preprocessor}{\#define\ DE\_WINDOWS\ 1}}
+\DoxyCodeLine{00031\ }
+\DoxyCodeLine{00032\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00033\ \textcolor{comment}{//\ Pour\ le\ moment\ la\ librairie\ vise\ des\ plateformes\ sous\ Windows\ mais\ il\ est\ prévu}}
+\DoxyCodeLine{00034\ \textcolor{comment}{//\ qu'elle\ soit\ disponible\ pour\ des\ systèmes\ sous\ Linux.}}
+\DoxyCodeLine{00035\ \textcolor{preprocessor}{\#error\ Can't\ compile\ on\ another\ plateform\ than\ Windows\ at\ the\ moment}}
+\DoxyCodeLine{00036\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00037\ }
+\DoxyCodeLine{00038\ \textcolor{comment}{//\ La\ librairie\ est\ écrite\ en\ C++\ mais\ est\ utilisable\ par\ des\ programmes\ en\ langage\ C,}}
+\DoxyCodeLine{00039\ \textcolor{comment}{//\ certaines\ directives\ n'existent\ pas\ dans\ les\ compilateurs\ C\ donc\ il\ est\ nécessaire\ de}}
+\DoxyCodeLine{00040\ \textcolor{comment}{//\ vérifier\ si\ les\ fichiers\ d'en-\/têtes\ sont\ lues\ par\ un\ compilateur\ de\ C\ ou\ de\ C++}}
+\DoxyCodeLine{00041\ \textcolor{preprocessor}{\#ifdef\ \_\_cplusplus}}
+\DoxyCodeLine{00042\ }
+\DoxyCodeLine{00043\ \textcolor{preprocessor}{\#define\ DE\_BEGIN\_EXTERN\_C\ extern\ "{}C"{}}\ \{}
+\DoxyCodeLine{00044\ \textcolor{preprocessor}{\#define\ DE\_END\_EXTERN\_C\ \}}}
+\DoxyCodeLine{00045\ }
+\DoxyCodeLine{00046\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00047\ }
+\DoxyCodeLine{00048\ \textcolor{preprocessor}{\#define\ DE\_BEGIN\_EXTERN\_C\ }}
+\DoxyCodeLine{00049\ \textcolor{preprocessor}{\#define\ DE\_END\_EXTERN\_C\ }}
+\DoxyCodeLine{00050\ }
+\DoxyCodeLine{00051\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00052\ }
+\DoxyCodeLine{00053\ \textcolor{preprocessor}{\#ifdef\ \_MSC\_VER}}
+\DoxyCodeLine{00054\ \textcolor{preprocessor}{\#define\ DE\_MSVC\ 1}}
+\DoxyCodeLine{00055\ \textcolor{preprocessor}{\#define\ DE\_FUNCTION\_NAME\ \_\_FUNCTION\_\_}}
+\DoxyCodeLine{00056\ }
+\DoxyCodeLine{00057\ \textcolor{preprocessor}{\#if\ DEEPENGINE\_LIB}}
+\DoxyCodeLine{00058\ \textcolor{preprocessor}{\#define\ DE\_API\ \_\_declspec(dllexport)}}
+\DoxyCodeLine{00059\ \textcolor{preprocessor}{\#else}}
+\DoxyCodeLine{00060\ \textcolor{preprocessor}{\#define\ DE\_API\ \_\_declspec(dllimport)}}
+\DoxyCodeLine{00061\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00062\ }
+\DoxyCodeLine{00063\ \textcolor{preprocessor}{\#elif\ \_\_GNUC\_\_}}
+\DoxyCodeLine{00064\ \textcolor{preprocessor}{\#error\ gcc\ is\ not\ supported}}
+\DoxyCodeLine{00065\ \textcolor{preprocessor}{\#define\ DE\_GCC\ 1}}
+\DoxyCodeLine{00066\ \textcolor{preprocessor}{\#elif\ \_\_clang\_\_}}
+\DoxyCodeLine{00067\ \textcolor{preprocessor}{\#error\ clang\ is\ not\ supported}}
+\DoxyCodeLine{00068\ \textcolor{preprocessor}{\#define\ DE\_CLANG\ 1}}
+\DoxyCodeLine{00069\ \textcolor{preprocessor}{\#endif}}
+\DoxyCodeLine{00070\ }
+\DoxyCodeLine{00071\ \textcolor{preprocessor}{\#define\ DE\_TRUE\ \ 1}}
+\DoxyCodeLine{00072\ \textcolor{preprocessor}{\#define\ DE\_FALSE\ 0}}
+\DoxyCodeLine{00073\ }
+\DoxyCodeLine{00074\ \textcolor{preprocessor}{\#define\ de\ DeepEngine}}
+\DoxyCodeLine{00075\ }
+\DoxyCodeLine{00076\ \textcolor{preprocessor}{\#define\ DE\_DEG\_RAD(\_\_deg)\ (\_\_deg\ *\ (float)\ M\_PI\ /\ 180.0f)}}
+\DoxyCodeLine{00077\ }
+\DoxyCodeLine{00078\ \textcolor{preprocessor}{\#endif}}
+
+\end{DoxyCode}
