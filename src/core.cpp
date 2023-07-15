@@ -23,3 +23,13 @@ de_uint64 de_core_get_tick() {
 void de::Core::quit() {
 	SDL_Quit();
 }
+
+uint64_t de::Core::getCurrentTimeMillis()
+{
+	FILETIME t;
+	uint64_t millis;
+	GetSystemTimeAsFileTime(&t);
+	millis = ((uint64_t) t.dwLowDateTime + ((uint64_t) (t.dwHighDateTime) << 32)) / 10000;
+
+	return millis;
+}

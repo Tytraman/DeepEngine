@@ -29,10 +29,11 @@ namespace de {
 			EventCallback _eventCallback;
 			UpdateCallback _updateCallback;
 			uint16_t _targetMSPerUpdate;
+			uint16_t _targetFPS;
 			bool _running;
 
 		public:
-			Window(uint16_t targetFPS, const size &size);
+			Window(uint16_t targetMS, uint16_t targetFPS, const size &size);
 			
 			/// @brief			Crée une fenêtre avec un titre et une taille.
 			/// @param win		La fenêtre à créer.
@@ -61,12 +62,14 @@ namespace de {
 			size getSize() const;
 			uint32_t getWidth() const;
 			uint32_t getHeight() const;
+			const char *getTitle() const;
 
 
 			//===== SETTERS =====//
 
 			void setEventCallback(EventCallback callabck);
 			void setUpdateCallback(UpdateCallback callback);
+			void setTitle(const char *title) const;
 
 		private:
 			void internalEventCallback(devent e);

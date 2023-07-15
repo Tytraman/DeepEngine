@@ -57,12 +57,13 @@ void de::Window::internalEventCallback(devent e)
 Window::Window
 ==============
 */
-de::Window::Window(uint16_t targetMSPerUpdate, const size &size)
+de::Window::Window(uint16_t targetMS, uint16_t targetFPS, const size &size)
 	: Panel(nullptr, PanelType::Window, size),
 	  _window(NULL),
 	  _eventCallback(defaultInputCallback),
 	  _updateCallback(nullptr),
-	  _targetMSPerUpdate(targetMSPerUpdate),
+	  _targetMSPerUpdate(targetMS),
+	  _targetFPS(targetFPS),
 	  _running(false)
 { }
 
@@ -113,14 +114,20 @@ void de::Window::run()
 	devent e;
 	uint64_t lag = 0;
 	uint64_t previous = Core::getTick();
+	uint64_t end;
 	uint64_t current;
 	uint64_t elapsed;
 	size_t iPanel;
+	uint32_t cn = 0;
+	uint32_t updates = 0;
+	uint16_t desiredDelta = 1000 / _targetFPS;
+	std::string title(getTitle());
 
 	_running = true;
 
 	// Boucle infinie du jeu
 	// TODO: mettre cette boucle autre part que dans la fenêtre car ça n'a pas vraiment de lien
+	uint64_t startTime = Core::getCurrentTimeMillis(), endTime;
 	while(_running) {
 		// Calcule le temps passé à faire la boucle
 		current = Core::getTick();		// Récupère le tick actuel.
@@ -151,6 +158,7 @@ void de::Window::run()
 			if(_updateCallback != nullptr)
 				_updateCallback(*this);
 			lag -= _targetMSPerUpdate;
+			updates++;
 
 			// Note: plus on reste longtemps dans cette boucle, et plus le lag sera élevé
 		}
@@ -165,6 +173,22 @@ void de::Window::run()
 				((DrawablePanel *) panel)->render();
 			}
 		}
+
+		end = Core::getTick();
+
+		cn++;
+		endTime = Core::getCurrentTimeMillis();
+		elapsed = endTime - startTime;
+		if(elapsed >= 1000) {
+			setTitle((title + " | UPS: " + std::to_string(updates) + " | FPS: " + std::to_string(cn)).c_str());
+			cn = 0;
+			updates = 0;
+			startTime = endTime;
+		}
+
+		elapsed = end - current;
+		if(elapsed < desiredDelta)
+			Core::sleep(desiredDelta - elapsed);
 	}
 }
 
@@ -240,4 +264,14 @@ uint32_t de::Window::getHeight() const
 	int w, h;
 	SDL_GetWindowSize(_window, &w, &h);
 	return h;
+}
+
+const char *de::Window::getTitle() const
+{
+	return SDL_GetWindowTitle(_window);
+}
+
+void de::Window::setTitle(const char *title) const
+{
+	SDL_SetWindowTitle(_window, title);
 }

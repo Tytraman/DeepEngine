@@ -19,12 +19,23 @@ namespace de {
 			static void quit();
 
 			static uint64_t getTick();
+			static uint64_t getCurrentTimeMillis();
+			static void sleep(uint32_t millis);
 
 	};
 
 	inline uint64_t Core::getTick() {
 #ifdef DE_WINDOWS
 		return GetTickCount64() - _initTime;
+#else
+#error Need implementation
+#endif
+	}
+
+	inline void Core::sleep(uint32_t millis)
+	{
+#ifdef DE_WINDOWS
+		Sleep(millis);
 #else
 #error Need implementation
 #endif
