@@ -31,6 +31,8 @@ namespace de {
 
 	
 	typedef SDL_Keycode keycode;
+
+	/// @brief Sommet d'une figure.
 	typedef SDL_Vertex	vertex;
 
 	namespace direction {

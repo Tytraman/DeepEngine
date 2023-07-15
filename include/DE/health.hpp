@@ -9,7 +9,7 @@
 
 namespace de {
 
-	struct HealthComponent {
+	struct DE_API HealthComponent {
 		uint32_t pv;
 		uint32_t max;
 

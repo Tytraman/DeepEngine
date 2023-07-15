@@ -7,7 +7,7 @@
 
 namespace de {
 
-	struct VelocityComponent {
+	struct DE_API VelocityComponent {
 
 	};
 

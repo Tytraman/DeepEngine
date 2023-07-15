@@ -46,6 +46,9 @@
     <Filter Include="Header Files\components">
       <UniqueIdentifier>{aedde96e-de0d-4579-8806-ffd018006445}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Source Files\components">
+      <UniqueIdentifier>{3a10670b-942a-4e55-aa9c-eb62df0ffaea}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\DE\core.hpp">
@@ -150,6 +153,9 @@
     <ClInclude Include="include\DE\velocity.hpp">
       <Filter>Header Files\components</Filter>
     </ClInclude>
+    <ClInclude Include="include\DE\rectangle.hpp">
+      <Filter>Header Files\graphics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\core.cpp">
@@ -212,8 +218,11 @@
     <ClCompile Include="src\scene.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="src\rectangle.cpp">
+      <Filter>Source Files\graphics</Filter>
+    </ClCompile>
     <ClCompile Include="src\entity.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

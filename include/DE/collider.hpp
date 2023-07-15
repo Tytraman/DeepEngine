@@ -7,7 +7,7 @@
 
 namespace de {
 
-	struct ColliderComponent {
+	struct DE_API ColliderComponent {
 		
 	};
 

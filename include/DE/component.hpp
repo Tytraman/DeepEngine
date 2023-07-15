@@ -11,7 +11,7 @@ namespace de {
 	typedef uint32_t component_id;
 	typedef uint16_t component_mask;
 
-	struct component_info {
+	struct DE_API component_info {
 		component_id id;
 		component_mask mask;
 	};

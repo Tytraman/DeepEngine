@@ -462,6 +462,7 @@
     <ClInclude Include="include\DE\output_file_stream.hpp" />
     <ClInclude Include="include\DE\output_stream.hpp" />
     <ClInclude Include="include\DE\panel.hpp" />
+    <ClInclude Include="include\DE\rectangle.hpp" />
     <ClInclude Include="include\DE\renderer.hpp" />
     <ClInclude Include="include\DE\scene.hpp" />
     <ClInclude Include="include\DE\string_utils.hpp" />
@@ -487,6 +488,7 @@
     <ClCompile Include="src\key.cpp" />
     <ClCompile Include="src\logger.cpp" />
     <ClCompile Include="src\output_file_stream.cpp" />
+    <ClCompile Include="src\rectangle.cpp" />
     <ClCompile Include="src\renderer.cpp" />
     <ClCompile Include="src\core.cpp" />
     <ClCompile Include="include\DE\types.hpp" />
