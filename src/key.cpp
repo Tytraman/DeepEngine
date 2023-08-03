@@ -5,3 +5,7 @@ const Uint8 *de::Key::_keys = nullptr;
 void de::Key::update() {
 	_keys = SDL_GetKeyboardState(NULL);
 }
+
+bool de::Key::isPressed(key::DKey key) {
+	return _keys[SDL_GetScancodeFromKey(key)];
+}

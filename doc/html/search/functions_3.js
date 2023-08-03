@@ -1,10 +1,6 @@
 var searchData=
 [
-  ['getanglea_106',['getAngleA',['../classde_1_1_triangle.html#a74a08d727c0f384fa4b1bc830b66d6c9',1,'de::Triangle']]],
-  ['getangleb_107',['getAngleB',['../classde_1_1_triangle.html#a5338081983a82758e3a02b573fa00d21',1,'de::Triangle']]],
-  ['getanglec_108',['getAngleC',['../classde_1_1_triangle.html#a0e2ebf56ea8c83fc7641191cc141f2ad',1,'de::Triangle']]],
-  ['getpanel_109',['getPanel',['../classde_1_1_panel.html#ab809bf41dc3d2da77c651d4d407759a0',1,'de::Panel']]],
-  ['getparent_110',['getParent',['../classde_1_1_panel.html#a090fb44d18a688d43b34b645bcecc37d',1,'de::Panel']]],
-  ['getsize_111',['getSize',['../classde_1_1_panel.html#a81047a2e49e6a172b932315dd1eaec78',1,'de::Panel']]],
-  ['gettype_112',['getType',['../classde_1_1_panel.html#a09ee6805d68d3894506f8aa64abbd774',1,'de::Panel']]]
+  ['enablesystem_152',['enableSystem',['../classde_1_1_system_manager.html#ae7177cc0c6192ca56e2909e879f562dd',1,'de::SystemManager']]],
+  ['executesystem_153',['executeSystem',['../classde_1_1_system_manager.html#a5988a5d6401cda5ef2139f39f4f9d45a',1,'de::SystemManager']]],
+  ['executesystems_154',['executeSystems',['../classde_1_1_system_manager.html#a56fb3a41c8988eeb5f06b130dec38294',1,'de::SystemManager']]]
 ];

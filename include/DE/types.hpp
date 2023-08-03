@@ -29,11 +29,12 @@ namespace de {
 
 #endif	// else DE_WINDOWS
 
+	using de_id = uint32_t;
+
+	constexpr size_t nothing = -1;	///< Quand rien n'a été trouvé.
+	constexpr de_id badID = -1;		///< Quand un ID n'est pas valide.
 	
 	typedef SDL_Keycode keycode;
-
-	/// @brief Sommet d'une figure.
-	typedef SDL_Vertex	vertex;
 
 	namespace direction {
 		enum Direction : uint8_t {
@@ -129,7 +130,7 @@ namespace de {
 		this->y = y;
 	}
 
-	/// @brief Position X et Y sont formes de flottants. @ref position pour la forme enti�re.
+	/// @brief Position X et Y sont formes de flottants. @ref position pour la forme entière.
 	struct DE_API fposition {
 		float x;
 		float y;

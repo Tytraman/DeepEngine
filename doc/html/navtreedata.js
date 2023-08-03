@@ -25,7 +25,8 @@ var NAVTREE =
   [ "DeepEngine", "index.html", [
     [ "Page d'accueil", "index.html", [
       [ "Introduction", "index.html#sec_intro", null ],
-      [ "Utilisation", "index.html#sec_utilisation", [
+      [ "Utilisation", "index.html#sec_utilisation", null ],
+      [ "Objectifs", "index.html#sec_objectifs", [
         [ "Par où commencer ?", "index.html#sub_paroucommencer", null ]
       ] ],
       [ "Exemples", "index.html#sec_exemples", null ]
@@ -34,6 +35,7 @@ var NAVTREE =
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [
         [ "All", "namespacemembers.html", null ],
+        [ "Variables", "namespacemembers_vars.html", null ],
         [ "Typedefs", "namespacemembers_type.html", null ]
       ] ]
     ] ],
@@ -56,7 +58,7 @@ var NAVTREE =
 var NAVTREEINDEX =
 [
 "annotated.html",
-"structde_1_1entity.html#a0b3d74f12e0424b8ba0a02556b8e5e61"
+"structde_1_1fmat2x2.html#ae9238429548b7f0b2a9aee7a65fdf79e"
 ];
 
 var SYNCONMSG = 'click to disable panel synchronisation';

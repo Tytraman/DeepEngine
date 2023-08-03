@@ -1,8 +1,5 @@
 var searchData=
 [
-  ['_5fmaxentities_0',['_maxEntities',['../classde_1_1_entity_manager.html#adc6797ca23deb40656da1cc1fcedb569',1,'de::EntityManager']]],
-  ['_5fpanels_1',['_panels',['../classde_1_1_panel.html#a668577ad7f4b4696da8d15e1c7d00fd5',1,'de::Panel']]],
-  ['_5fparent_2',['_parent',['../classde_1_1_panel.html#aeba1b7b8f0eaea06369bed253611fe65',1,'de::Panel']]],
-  ['_5fsize_3',['_size',['../classde_1_1_panel.html#ac3461f6a62d0fdfcbe6ab38427554b70',1,'de::Panel']]],
-  ['_5ftype_4',['_type',['../classde_1_1_panel.html#a8fd3f4bb9be1aa215d607c10524905c9',1,'de::Panel']]]
+  ['addcopy_0',['addCopy',['../classde_1_1_list.html#a4cace8b4db709fca956c83608263c2ed',1,'de::List']]],
+  ['attachcomponent_1',['attachComponent',['../classde_1_1_entity_manager.html#a09fb7d2f056791ed878cd1b423874079',1,'de::EntityManager::attachComponent()'],['../classde_1_1_scene.html#a0412f3227f57d5c7b2d5db9d6b4bbd1e',1,'de::Scene::attachComponent()']]]
 ];

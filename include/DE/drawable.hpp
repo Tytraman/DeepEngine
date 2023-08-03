@@ -4,7 +4,6 @@
 #include <DE/def.h>
 #include <DE/types.hpp>
 #include <DE/drawable_types.h>
-#include <DE/panel.hpp>
 #include <DE/renderer.hpp>
 #include <DE/vec.hpp>
 
@@ -18,34 +17,30 @@ namespace de {
 	class DE_API Drawable {
 
 		friend Window;
-		friend DrawablePanel;
 
 		protected:
 			fvec2 _pos;
 			bool _visible;
 			bool _drawVectors;
-			DrawablePanel *_panel;
 
 		protected:
-			Drawable(DrawablePanel *panel, const fvec2 &pos, bool visible = true);
+			Drawable(const fvec2 &pos, bool visible = true);
 
 		public:
 			Drawable() = delete;
 
-			//=== Méthodes virtuelles pures ===//
+			//=== Méthodes virtuelles pures ===// 
 			virtual void draw(const fmat2x2 &baseVectors) = 0;
+
+			virtual void scale(float scale1, float scale2) = 0;
+			virtual void translate(float x, float y) = 0;
 			virtual void rotate(float degrees) = 0;
-			virtual uint32_t getType() const = 0;
-
-			//=== Mééthodes virtuelles ===//
-			virtual void move(direction::Direction direction, int value);
-			virtual void setPos(const fvec2 &pos);
-
 			
+			virtual uint32_t getType() const = 0;
 			fvec2 getPos() const;
 			bool isVisible() const;
 
-			
+			virtual void setPos(const fvec2 &pos);
 			void setVisible(bool value);
 			void setVectorsVisible(bool value);
 	};
@@ -106,7 +101,7 @@ namespace de {
 			colora _color;
 
 		protected:
-			ColoredDrawable(DrawablePanel *panel, const fvec2 &pos, const colora &color, bool visible = true);
+			ColoredDrawable(const fvec2 &pos, const colora &color, bool visible = true);
 
 		public:
 			ColoredDrawable() = delete;

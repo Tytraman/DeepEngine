@@ -16,9 +16,9 @@ de::Renderer::Renderer()
 Renderer::create
 ================
 */
-de::ErrorStatus de::Renderer::create(Renderer &dest, const Window &window)
+de::ErrorStatus de::Renderer::create(Renderer &dest, Window &window)
 {
-	dest._renderer = SDL_CreateRenderer(window._window, -1, SDL_RENDERER_ACCELERATED);
+	dest._renderer = SDL_CreateRenderer(window.getWindow(), -1, SDL_RENDERER_ACCELERATED);
 	if(dest._renderer == NULL)
 		return ErrorStatus::CreateRendererSDL;
 
@@ -107,7 +107,7 @@ bool de::Renderer::drawLine(int x1, int y1, int x2, int y2) const
 Renderer::drawShape
 ===================
 */
-void de::Renderer::drawShape(const vertex *vertices, int verticesNumber) const
+void de::Renderer::drawShape(const SDL_Vertex *vertices, int verticesNumber) const
 {
 	SDL_RenderGeometry(_renderer, nullptr, vertices, verticesNumber, nullptr, 0);
 }

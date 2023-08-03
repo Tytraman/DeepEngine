@@ -1,4 +1,3 @@
-<!-- HTML header for doxygen 1.8.17-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
@@ -23,7 +22,6 @@
 /* @license-end */
 </script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
-<link href="customdoxygen.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -95,32 +93,247 @@ $(document).ready(function(){initNavTree('classde_1_1_scene.html',''); initResiz
 
 <div class="header">
   <div class="summary">
-<a href="#pub-methods">Public Member Functions</a> &#124;
+<a href="#pub-static-methods">Static Public Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
+<a href="#pri-static-attribs">Static Private Attributes</a> &#124;
 <a href="classde_1_1_scene-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">de::Scene Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
-Public Member Functions</h2></td></tr>
-<tr class="memitem:ad59ee7e0a8a6ceeb87f6b8030575885a"><td class="memItemLeft" align="right" valign="top"><a id="ad59ee7e0a8a6ceeb87f6b8030575885a"></a>
-<a class="el" href="namespacede.html#a5ecd62b4b816bda5029b42d887f8f6ea">entity_id</a>&#160;</td><td class="memItemRight" valign="bottom"><b>addEntity</b> (<a class="el" href="structde_1_1component__info.html">component_info</a> componentInfo)</td></tr>
-<tr class="separator:ad59ee7e0a8a6ceeb87f6b8030575885a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
+Static Public Member Functions</h2></td></tr>
+<tr class="memitem:a4ca6cc8e63684ad12eb384658eb0545c"><td class="memItemLeft" align="right" valign="top">static scene_id&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classde_1_1_scene.html#a4ca6cc8e63684ad12eb384658eb0545c">createScene</a> ()</td></tr>
+<tr class="memdesc:a4ca6cc8e63684ad12eb384658eb0545c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Crée une scène.  <a href="classde_1_1_scene.html#a4ca6cc8e63684ad12eb384658eb0545c">More...</a><br /></td></tr>
+<tr class="separator:a4ca6cc8e63684ad12eb384658eb0545c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a24d607a859846bc4875924bb50947c34"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classde_1_1_scene.html#a24d607a859846bc4875924bb50947c34">deleteScene</a> (scene_id scene)</td></tr>
+<tr class="memdesc:a24d607a859846bc4875924bb50947c34"><td class="mdescLeft">&#160;</td><td class="mdescRight">Supprime une scène.  <a href="classde_1_1_scene.html#a24d607a859846bc4875924bb50947c34">More...</a><br /></td></tr>
+<tr class="separator:a24d607a859846bc4875924bb50947c34"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abafc5ee7c91ef11d4a2a85630cb35154"><td class="memItemLeft" align="right" valign="top"><a id="abafc5ee7c91ef11d4a2a85630cb35154"></a>
+static void&#160;</td><td class="memItemRight" valign="bottom"><b>setCurrentScene</b> (scene_id scene)</td></tr>
+<tr class="separator:abafc5ee7c91ef11d4a2a85630cb35154"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:acc15d10804463cb1bc9bebb761b53fc5"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="namespacede.html#a4b769e8ad9ef40c80d6977dd63b13d8d">entity_id</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classde_1_1_scene.html#acc15d10804463cb1bc9bebb761b53fc5">createEntity</a> (scene_id scene)</td></tr>
+<tr class="memdesc:acc15d10804463cb1bc9bebb761b53fc5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Crée une entité dans la scène.  <a href="classde_1_1_scene.html#acc15d10804463cb1bc9bebb761b53fc5">More...</a><br /></td></tr>
+<tr class="separator:acc15d10804463cb1bc9bebb761b53fc5"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a9a514d0173316e438b555d4de91751df"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classde_1_1_scene.html#a9a514d0173316e438b555d4de91751df">destroyEntity</a> (scene_id scene, <a class="el" href="namespacede.html#a4b769e8ad9ef40c80d6977dd63b13d8d">entity_id</a> entity)</td></tr>
+<tr class="memdesc:a9a514d0173316e438b555d4de91751df"><td class="mdescLeft">&#160;</td><td class="mdescRight">Détruit une entité appartenant à la scène.  <a href="classde_1_1_scene.html#a9a514d0173316e438b555d4de91751df">More...</a><br /></td></tr>
+<tr class="separator:a9a514d0173316e438b555d4de91751df"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a0412f3227f57d5c7b2d5db9d6b4bbd1e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classde_1_1_scene.html#a0412f3227f57d5c7b2d5db9d6b4bbd1e">attachComponent</a> (scene_id scene, <a class="el" href="namespacede.html#a4b769e8ad9ef40c80d6977dd63b13d8d">entity_id</a> entity, <a class="el" href="namespacede.html#adbab350ac25bb55830790ba08466a4a1">component_id</a> component)</td></tr>
+<tr class="memdesc:a0412f3227f57d5c7b2d5db9d6b4bbd1e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Attache un composant à l'entité appartenant à la scène.  <a href="classde_1_1_scene.html#a0412f3227f57d5c7b2d5db9d6b4bbd1e">More...</a><br /></td></tr>
+<tr class="separator:a0412f3227f57d5c7b2d5db9d6b4bbd1e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d585acf387b8920679fe6fc2a5a566a"><td class="memItemLeft" align="right" valign="top"><a id="a3d585acf387b8920679fe6fc2a5a566a"></a>
+static entity_collection_id&#160;</td><td class="memItemRight" valign="bottom"><b>getEntityCollection</b> (scene_id scene)</td></tr>
+<tr class="separator:a3d585acf387b8920679fe6fc2a5a566a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a623092ad801321beaf7422f75e8335ea"><td class="memItemLeft" align="right" valign="top"><a id="a623092ad801321beaf7422f75e8335ea"></a>
+static scene_id&#160;</td><td class="memItemRight" valign="bottom"><b>getActiveSceneID</b> ()</td></tr>
+<tr class="separator:a623092ad801321beaf7422f75e8335ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:a0603f231cfda8138acc735b42b29a9f6"><td class="memItemLeft" align="right" valign="top"><a id="a0603f231cfda8138acc735b42b29a9f6"></a>
-std::vector&lt; <a class="el" href="structde_1_1entity.html">entity</a> &gt;&#160;</td><td class="memItemRight" valign="bottom"><b>_entities</b></td></tr>
-<tr class="separator:a0603f231cfda8138acc735b42b29a9f6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaa394fde254be1da903c6dcf23b01347"><td class="memItemLeft" align="right" valign="top"><a id="aaa394fde254be1da903c6dcf23b01347"></a>
+entity_collection_id&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classde_1_1_scene.html#aaa394fde254be1da903c6dcf23b01347">m_EntityCollection</a></td></tr>
+<tr class="memdesc:aaa394fde254be1da903c6dcf23b01347"><td class="mdescLeft">&#160;</td><td class="mdescRight">ID du gestionnaire d'entités de la scène. <br /></td></tr>
+<tr class="separator:aaa394fde254be1da903c6dcf23b01347"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-attribs"></a>
+Static Private Attributes</h2></td></tr>
+<tr class="memitem:a836db6e41bf09d49f5c45d3ccd907cb7"><td class="memItemLeft" align="right" valign="top"><a id="a836db6e41bf09d49f5c45d3ccd907cb7"></a>
+static scene_id&#160;</td><td class="memItemRight" valign="bottom"><b>m_ActiveScene</b></td></tr>
+<tr class="separator:a836db6e41bf09d49f5c45d3ccd907cb7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a0412f3227f57d5c7b2d5db9d6b4bbd1e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a0412f3227f57d5c7b2d5db9d6b4bbd1e">&#9670;&nbsp;</a></span>attachComponent()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void de::Scene::attachComponent </td>
+          <td>(</td>
+          <td class="paramtype">scene_id&#160;</td>
+          <td class="paramname"><em>scene</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacede.html#a4b769e8ad9ef40c80d6977dd63b13d8d">entity_id</a>&#160;</td>
+          <td class="paramname"><em>entity</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacede.html#adbab350ac25bb55830790ba08466a4a1">component_id</a>&#160;</td>
+          <td class="paramname"><em>component</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Attache un composant à l'entité appartenant à la scène. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">entity</td><td>L'ID de l'entité à laquelle ajouter un composant. </td></tr>
+    <tr><td class="paramname">component</td><td>L'ID du composant à ajouter. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="acc15d10804463cb1bc9bebb761b53fc5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#acc15d10804463cb1bc9bebb761b53fc5">&#9670;&nbsp;</a></span>createEntity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static <a class="el" href="namespacede.html#a4b769e8ad9ef40c80d6977dd63b13d8d">entity_id</a> de::Scene::createEntity </td>
+          <td>(</td>
+          <td class="paramtype">scene_id&#160;</td>
+          <td class="paramname"><em>scene</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Crée une entité dans la scène. </p>
+<dl class="section return"><dt>Returns</dt><dd>L'ID de l'entité nouvellement créé. </dd></dl>
+
+</div>
+</div>
+<a id="a4ca6cc8e63684ad12eb384658eb0545c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4ca6cc8e63684ad12eb384658eb0545c">&#9670;&nbsp;</a></span>createScene()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static scene_id de::Scene::createScene </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Crée une scène. </p>
+<dl class="section return"><dt>Returns</dt><dd>L'ID de la scène nouvellement créée. </dd></dl>
+
+</div>
+</div>
+<a id="a24d607a859846bc4875924bb50947c34"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a24d607a859846bc4875924bb50947c34">&#9670;&nbsp;</a></span>deleteScene()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void de::Scene::deleteScene </td>
+          <td>(</td>
+          <td class="paramtype">scene_id&#160;</td>
+          <td class="paramname"><em>scene</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Supprime une scène. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">scene</td><td>L'ID de la scène à supprimer. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a9a514d0173316e438b555d4de91751df"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a9a514d0173316e438b555d4de91751df">&#9670;&nbsp;</a></span>destroyEntity()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void de::Scene::destroyEntity </td>
+          <td>(</td>
+          <td class="paramtype">scene_id&#160;</td>
+          <td class="paramname"><em>scene</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="namespacede.html#a4b769e8ad9ef40c80d6977dd63b13d8d">entity_id</a>&#160;</td>
+          <td class="paramname"><em>entity</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Détruit une entité appartenant à la scène. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">entity</td><td>L'ID de l'entité à retirer. </td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
 <li>include/DE/<a class="el" href="scene_8hpp_source.html">scene.hpp</a></li>
 </ul>
 </div><!-- contents -->
 </div><!-- doc-content -->
-<!-- HTML footer for doxygen 1.8.17-->
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>

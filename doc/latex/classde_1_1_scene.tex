@@ -1,17 +1,115 @@
 \hypertarget{classde_1_1_scene}{}\doxysection{de\+::Scene Class Reference}
 \label{classde_1_1_scene}\index{de::Scene@{de::Scene}}
-\doxysubsection*{Public Member Functions}
+\doxysubsection*{Static Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{classde_1_1_scene_ad59ee7e0a8a6ceeb87f6b8030575885a}\label{classde_1_1_scene_ad59ee7e0a8a6ceeb87f6b8030575885a}} 
-\mbox{\hyperlink{namespacede_a5ecd62b4b816bda5029b42d887f8f6ea}{entity\+\_\+id}} {\bfseries add\+Entity} (\mbox{\hyperlink{structde_1_1component__info}{component\+\_\+info}} component\+Info)
+static scene\+\_\+id \mbox{\hyperlink{classde_1_1_scene_a4ca6cc8e63684ad12eb384658eb0545c}{create\+Scene}} ()
+\begin{DoxyCompactList}\small\item\em Crée une scène. \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{classde_1_1_scene_a24d607a859846bc4875924bb50947c34}{delete\+Scene}} (scene\+\_\+id scene)
+\begin{DoxyCompactList}\small\item\em Supprime une scène. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classde_1_1_scene_abafc5ee7c91ef11d4a2a85630cb35154}\label{classde_1_1_scene_abafc5ee7c91ef11d4a2a85630cb35154}} 
+static void {\bfseries set\+Current\+Scene} (scene\+\_\+id scene)
+\item 
+static \mbox{\hyperlink{namespacede_a4b769e8ad9ef40c80d6977dd63b13d8d}{entity\+\_\+id}} \mbox{\hyperlink{classde_1_1_scene_acc15d10804463cb1bc9bebb761b53fc5}{create\+Entity}} (scene\+\_\+id scene)
+\begin{DoxyCompactList}\small\item\em Crée une entité dans la scène. \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{classde_1_1_scene_a9a514d0173316e438b555d4de91751df}{destroy\+Entity}} (scene\+\_\+id scene, \mbox{\hyperlink{namespacede_a4b769e8ad9ef40c80d6977dd63b13d8d}{entity\+\_\+id}} entity)
+\begin{DoxyCompactList}\small\item\em Détruit une entité appartenant à la scène. \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{classde_1_1_scene_a0412f3227f57d5c7b2d5db9d6b4bbd1e}{attach\+Component}} (scene\+\_\+id scene, \mbox{\hyperlink{namespacede_a4b769e8ad9ef40c80d6977dd63b13d8d}{entity\+\_\+id}} entity, \mbox{\hyperlink{namespacede_adbab350ac25bb55830790ba08466a4a1}{component\+\_\+id}} component)
+\begin{DoxyCompactList}\small\item\em Attache un composant à l\textquotesingle{}entité appartenant à la scène. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classde_1_1_scene_a3d585acf387b8920679fe6fc2a5a566a}\label{classde_1_1_scene_a3d585acf387b8920679fe6fc2a5a566a}} 
+static entity\+\_\+collection\+\_\+id {\bfseries get\+Entity\+Collection} (scene\+\_\+id scene)
+\item 
+\mbox{\Hypertarget{classde_1_1_scene_a623092ad801321beaf7422f75e8335ea}\label{classde_1_1_scene_a623092ad801321beaf7422f75e8335ea}} 
+static scene\+\_\+id {\bfseries get\+Active\+Scene\+ID} ()
 \end{DoxyCompactItemize}
 \doxysubsection*{Private Attributes}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{classde_1_1_scene_a0603f231cfda8138acc735b42b29a9f6}\label{classde_1_1_scene_a0603f231cfda8138acc735b42b29a9f6}} 
-std\+::vector$<$ \mbox{\hyperlink{structde_1_1entity}{entity}} $>$ {\bfseries \+\_\+entities}
+\mbox{\Hypertarget{classde_1_1_scene_aaa394fde254be1da903c6dcf23b01347}\label{classde_1_1_scene_aaa394fde254be1da903c6dcf23b01347}} 
+entity\+\_\+collection\+\_\+id \mbox{\hyperlink{classde_1_1_scene_aaa394fde254be1da903c6dcf23b01347}{m\+\_\+\+Entity\+Collection}}
+\begin{DoxyCompactList}\small\item\em ID du gestionnaire d\textquotesingle{}entités de la scène. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Static Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classde_1_1_scene_a836db6e41bf09d49f5c45d3ccd907cb7}\label{classde_1_1_scene_a836db6e41bf09d49f5c45d3ccd907cb7}} 
+static scene\+\_\+id {\bfseries m\+\_\+\+Active\+Scene}
 \end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classde_1_1_scene_a0412f3227f57d5c7b2d5db9d6b4bbd1e}\label{classde_1_1_scene_a0412f3227f57d5c7b2d5db9d6b4bbd1e}} 
+\index{de::Scene@{de::Scene}!attachComponent@{attachComponent}}
+\index{attachComponent@{attachComponent}!de::Scene@{de::Scene}}
+\doxysubsubsection{\texorpdfstring{attachComponent()}{attachComponent()}}
+{\footnotesize\ttfamily static void de\+::\+Scene\+::attach\+Component (\begin{DoxyParamCaption}\item[{scene\+\_\+id}]{scene,  }\item[{\mbox{\hyperlink{namespacede_a4b769e8ad9ef40c80d6977dd63b13d8d}{entity\+\_\+id}}}]{entity,  }\item[{\mbox{\hyperlink{namespacede_adbab350ac25bb55830790ba08466a4a1}{component\+\_\+id}}}]{component }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Attache un composant à l\textquotesingle{}entité appartenant à la scène. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em entity} & L\textquotesingle{}ID de l\textquotesingle{}entité à laquelle ajouter un composant. \\
+\hline
+{\em component} & L\textquotesingle{}ID du composant à ajouter. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classde_1_1_scene_acc15d10804463cb1bc9bebb761b53fc5}\label{classde_1_1_scene_acc15d10804463cb1bc9bebb761b53fc5}} 
+\index{de::Scene@{de::Scene}!createEntity@{createEntity}}
+\index{createEntity@{createEntity}!de::Scene@{de::Scene}}
+\doxysubsubsection{\texorpdfstring{createEntity()}{createEntity()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{namespacede_a4b769e8ad9ef40c80d6977dd63b13d8d}{entity\+\_\+id}} de\+::\+Scene\+::create\+Entity (\begin{DoxyParamCaption}\item[{scene\+\_\+id}]{scene }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Crée une entité dans la scène. 
+
+\begin{DoxyReturn}{Returns}
+L\textquotesingle{}ID de l\textquotesingle{}entité nouvellement créé. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classde_1_1_scene_a4ca6cc8e63684ad12eb384658eb0545c}\label{classde_1_1_scene_a4ca6cc8e63684ad12eb384658eb0545c}} 
+\index{de::Scene@{de::Scene}!createScene@{createScene}}
+\index{createScene@{createScene}!de::Scene@{de::Scene}}
+\doxysubsubsection{\texorpdfstring{createScene()}{createScene()}}
+{\footnotesize\ttfamily static scene\+\_\+id de\+::\+Scene\+::create\+Scene (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Crée une scène. 
+
+\begin{DoxyReturn}{Returns}
+L\textquotesingle{}ID de la scène nouvellement créée. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classde_1_1_scene_a24d607a859846bc4875924bb50947c34}\label{classde_1_1_scene_a24d607a859846bc4875924bb50947c34}} 
+\index{de::Scene@{de::Scene}!deleteScene@{deleteScene}}
+\index{deleteScene@{deleteScene}!de::Scene@{de::Scene}}
+\doxysubsubsection{\texorpdfstring{deleteScene()}{deleteScene()}}
+{\footnotesize\ttfamily static void de\+::\+Scene\+::delete\+Scene (\begin{DoxyParamCaption}\item[{scene\+\_\+id}]{scene }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Supprime une scène. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em scene} & L\textquotesingle{}ID de la scène à supprimer. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classde_1_1_scene_a9a514d0173316e438b555d4de91751df}\label{classde_1_1_scene_a9a514d0173316e438b555d4de91751df}} 
+\index{de::Scene@{de::Scene}!destroyEntity@{destroyEntity}}
+\index{destroyEntity@{destroyEntity}!de::Scene@{de::Scene}}
+\doxysubsubsection{\texorpdfstring{destroyEntity()}{destroyEntity()}}
+{\footnotesize\ttfamily static void de\+::\+Scene\+::destroy\+Entity (\begin{DoxyParamCaption}\item[{scene\+\_\+id}]{scene,  }\item[{\mbox{\hyperlink{namespacede_a4b769e8ad9ef40c80d6977dd63b13d8d}{entity\+\_\+id}}}]{entity }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Détruit une entité appartenant à la scène. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em entity} & L\textquotesingle{}ID de l\textquotesingle{}entité à retirer. \\
+\hline
+\end{DoxyParams}
 
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}

@@ -17,11 +17,13 @@ var classde_1_1_triangle =
     [ "getVertexPos", "classde_1_1_triangle.html#a700939bc2b68e9d549f19284a10d1818", null ],
     [ "isRectangle", "classde_1_1_triangle.html#ad02e43a00d74921d3b4959800f47158d", null ],
     [ "rotate", "classde_1_1_triangle.html#a1f9aa8a2168aa4fe0fc065dbe4a29ca6", null ],
+    [ "scale", "classde_1_1_triangle.html#a01497292d051876e875962ad88c6781e", null ],
     [ "setPos", "classde_1_1_triangle.html#a93f547cf0030b5319cae30000d9ba8c2", null ],
     [ "setVertex0Pos", "classde_1_1_triangle.html#a0b12bd57856ccfc4bebda136c153fb36", null ],
     [ "setVertex1Pos", "classde_1_1_triangle.html#aebe87ab4e53653686709c26c3e2def18", null ],
     [ "setVertex2Pos", "classde_1_1_triangle.html#abe4ae83efd35a0ed8ecf51ae0b502ae6", null ],
     [ "setVerticesPos", "classde_1_1_triangle.html#a7ec5519954d2a82c2245c0cb84ffdc99", null ],
+    [ "translate", "classde_1_1_triangle.html#a054d0f65346eb87ef70f163e73644549", null ],
     [ "_radius", "classde_1_1_triangle.html#a120e790653f73a91b83676f83d1c7972", null ],
     [ "_vertices", "classde_1_1_triangle.html#a7f559eedb65eb8f5582e2deced516e1d", null ]
 ];

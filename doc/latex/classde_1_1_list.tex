@@ -1,0 +1,207 @@
+\hypertarget{classde_1_1_list}{}\doxysection{de\+::List Class Reference}
+\label{classde_1_1_list}\index{de::List@{de::List}}
+
+
+Permet de stocker une liste d\textquotesingle{}éléments de façon dynamique.  
+
+
+
+
+{\ttfamily \#include $<$list.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classde_1_1_list_a1aa0cd27d94d5e285ae4c4e2f8ffc658}\label{classde_1_1_list_a1aa0cd27d94d5e285ae4c4e2f8ffc658}} 
+{\bfseries List} (size\+\_\+t element\+Size, uint16\+\_\+t capacity\+Step=10)
+\item 
+bool \mbox{\hyperlink{classde_1_1_list_a4cace8b4db709fca956c83608263c2ed}{add\+Copy}} (void $\ast$to\+Add)
+\begin{DoxyCompactList}\small\item\em Ajoute dans la liste une copie de l\textquotesingle{}élément pointé. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classde_1_1_list_a633ca182cc2839e4987230ae4bec03d3}{get\+Copy}} (size\+\_\+t index, mem\+\_\+ptr dest)
+\begin{DoxyCompactList}\small\item\em Copie l\textquotesingle{}élément à l\textquotesingle{}index spécifié vers l\textquotesingle{}adresse passée. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classde_1_1_list_a2059406a51d1bb91ae629de6d7727852}{set\+Copy}} (size\+\_\+t index, void $\ast$to\+Set)
+\begin{DoxyCompactList}\small\item\em Défini la valeur d\textquotesingle{}un élément de la liste. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{classde_1_1_list_a19f74ba7d32bbd7a77db978d53546517}{remove}} (size\+\_\+t index)
+\begin{DoxyCompactList}\small\item\em Supprime l\textquotesingle{}élément à l\textquotesingle{}index spécifié. \end{DoxyCompactList}\item 
+size\+\_\+t \mbox{\hyperlink{classde_1_1_list_a96f1e7991b25b94d09d340e867aaa38c}{find}} (void $\ast$to\+Search)
+\begin{DoxyCompactList}\small\item\em Cherche si un élément est dans la liste. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classde_1_1_list_a2ddff9c981bceb0ca25a6b144af29b2d}\label{classde_1_1_list_a2ddff9c981bceb0ca25a6b144af29b2d}} 
+void \mbox{\hyperlink{classde_1_1_list_a2ddff9c981bceb0ca25a6b144af29b2d}{free}} ()
+\begin{DoxyCompactList}\small\item\em Libère la mémoire utilisée par la liste. \end{DoxyCompactList}\item 
+size\+\_\+t \mbox{\hyperlink{classde_1_1_list_a3b0c28b1bcd540f2cc3977472f61e348}{get\+Element\+Size}} () const
+\begin{DoxyCompactList}\small\item\em Récupère la taille en octet d\textquotesingle{}un élément. \end{DoxyCompactList}\item 
+size\+\_\+t \mbox{\hyperlink{classde_1_1_list_ae0544e9288dd7e01f7edca2b42f401ad}{get\+Number\+Of\+Elements}} () const
+\begin{DoxyCompactList}\small\item\em Récupère le nombre d\textquotesingle{}éléments présents dans la liste. \end{DoxyCompactList}\item 
+size\+\_\+t \mbox{\hyperlink{classde_1_1_list_a7bbcb33884036b4c144cf6e2cb839377}{get\+Capacity}} () const
+\begin{DoxyCompactList}\small\item\em Récupère la capacité actuelle de la liste. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classde_1_1_list_a3fc1c0968c3ca889e4860cf73fb9ab50}\label{classde_1_1_list_a3fc1c0968c3ca889e4860cf73fb9ab50}} 
+mem\+\_\+ptr {\bfseries get\+Data} ()
+\item 
+\mbox{\Hypertarget{classde_1_1_list_ad6b40e5441bdbcbe104dc3c39d363126}\label{classde_1_1_list_ad6b40e5441bdbcbe104dc3c39d363126}} 
+void {\bfseries set\+Element\+Size} (size\+\_\+t \mbox{\hyperlink{structde_1_1size}{size}})
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classde_1_1_list_adeebc9e8783350310e7136aac7f3c053}\label{classde_1_1_list_adeebc9e8783350310e7136aac7f3c053}} 
+Memory\+Status\+::\+Code {\bfseries grow\+If\+Needed} ()
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classde_1_1_list_a988e25dfbcb0eb27a894ddf53840abdb}\label{classde_1_1_list_a988e25dfbcb0eb27a894ddf53840abdb}} 
+mem\+\_\+ptr \mbox{\hyperlink{classde_1_1_list_a988e25dfbcb0eb27a894ddf53840abdb}{m\+\_\+\+Data}}
+\begin{DoxyCompactList}\small\item\em Bloc de données brutes contenant la liste des éléments. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classde_1_1_list_a092ce5e5b825ae7aa366bbf8f0327d7b}\label{classde_1_1_list_a092ce5e5b825ae7aa366bbf8f0327d7b}} 
+size\+\_\+t \mbox{\hyperlink{classde_1_1_list_a092ce5e5b825ae7aa366bbf8f0327d7b}{m\+\_\+\+Element\+Size}}
+\begin{DoxyCompactList}\small\item\em Taille en octet d\textquotesingle{}un seul élément de la liste. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classde_1_1_list_ac431f546bc043705b0a7c4b1b7fc47e6}\label{classde_1_1_list_ac431f546bc043705b0a7c4b1b7fc47e6}} 
+size\+\_\+t \mbox{\hyperlink{classde_1_1_list_ac431f546bc043705b0a7c4b1b7fc47e6}{m\+\_\+\+Number\+Of\+Elements}}
+\begin{DoxyCompactList}\small\item\em Contient le nombre d\textquotesingle{}éléments présent dans la liste. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classde_1_1_list_a7b85b3aed892a98e2440c2d293b05989}\label{classde_1_1_list_a7b85b3aed892a98e2440c2d293b05989}} 
+size\+\_\+t \mbox{\hyperlink{classde_1_1_list_a7b85b3aed892a98e2440c2d293b05989}{m\+\_\+\+Capacity}}
+\begin{DoxyCompactList}\small\item\em Contient la capacité actuelle de la liste, permettant d\textquotesingle{}économiser une /c réallocation en allouant plus d\textquotesingle{}espace que nécessaire. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classde_1_1_list_a24156e55a0eba16a6d999d70eca188d0}\label{classde_1_1_list_a24156e55a0eba16a6d999d70eca188d0}} 
+uint16\+\_\+t \mbox{\hyperlink{classde_1_1_list_a24156e55a0eba16a6d999d70eca188d0}{m\+\_\+\+Capacity\+Step}}
+\begin{DoxyCompactList}\small\item\em Contient le nombre d\textquotesingle{}éléments maximum ajoutés à la capacité lorsque celle-\/ci devient saturée. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Permet de stocker une liste d\textquotesingle{}éléments de façon dynamique. 
+
+\begin{DoxyRemark}{Remarks}
+Cette classe a été créé avec comme idée de ne stocker que des valeurs \char`\"{}simples\char`\"{}, c\textquotesingle{}est-\/à-\/dire des types primitifs ou des structures. Le stockage d\textquotesingle{}objets complexes est possible mais l\textquotesingle{}ajout de ceux-\/ci dans une liste sera donc plus long. 
+\end{DoxyRemark}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classde_1_1_list_a4cace8b4db709fca956c83608263c2ed}\label{classde_1_1_list_a4cace8b4db709fca956c83608263c2ed}} 
+\index{de::List@{de::List}!addCopy@{addCopy}}
+\index{addCopy@{addCopy}!de::List@{de::List}}
+\doxysubsubsection{\texorpdfstring{addCopy()}{addCopy()}}
+{\footnotesize\ttfamily bool de\+::\+List\+::add\+Copy (\begin{DoxyParamCaption}\item[{void $\ast$}]{to\+Add }\end{DoxyParamCaption})}
+
+
+
+Ajoute dans la liste une copie de l\textquotesingle{}élément pointé. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em to\+Add} & Pointeur de l\textquotesingle{}élément à ajouter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+/c true si la procédure a réussi. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classde_1_1_list_a96f1e7991b25b94d09d340e867aaa38c}\label{classde_1_1_list_a96f1e7991b25b94d09d340e867aaa38c}} 
+\index{de::List@{de::List}!find@{find}}
+\index{find@{find}!de::List@{de::List}}
+\doxysubsubsection{\texorpdfstring{find()}{find()}}
+{\footnotesize\ttfamily size\+\_\+t de\+::\+List\+::find (\begin{DoxyParamCaption}\item[{void $\ast$}]{to\+Search }\end{DoxyParamCaption})}
+
+
+
+Cherche si un élément est dans la liste. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em to\+Search} & Pointeur de l\textquotesingle{}élément à chercher. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Index dans la liste de l\textquotesingle{}élément trouvé ou /ref nothing si aucun élément n\textquotesingle{}a été trouvé. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classde_1_1_list_a7bbcb33884036b4c144cf6e2cb839377}\label{classde_1_1_list_a7bbcb33884036b4c144cf6e2cb839377}} 
+\index{de::List@{de::List}!getCapacity@{getCapacity}}
+\index{getCapacity@{getCapacity}!de::List@{de::List}}
+\doxysubsubsection{\texorpdfstring{getCapacity()}{getCapacity()}}
+{\footnotesize\ttfamily size\+\_\+t de\+::\+List\+::get\+Capacity (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Récupère la capacité actuelle de la liste. 
+
+\begin{DoxyReturn}{Returns}
+La capacité actuelle de la liste. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classde_1_1_list_a633ca182cc2839e4987230ae4bec03d3}\label{classde_1_1_list_a633ca182cc2839e4987230ae4bec03d3}} 
+\index{de::List@{de::List}!getCopy@{getCopy}}
+\index{getCopy@{getCopy}!de::List@{de::List}}
+\doxysubsubsection{\texorpdfstring{getCopy()}{getCopy()}}
+{\footnotesize\ttfamily bool de\+::\+List\+::get\+Copy (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{index,  }\item[{mem\+\_\+ptr}]{dest }\end{DoxyParamCaption})}
+
+
+
+Copie l\textquotesingle{}élément à l\textquotesingle{}index spécifié vers l\textquotesingle{}adresse passée. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em index} & Index de l\textquotesingle{}élément à récupérer. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+/c true si l\textquotesingle{}élément a pu être récupéré. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classde_1_1_list_a3b0c28b1bcd540f2cc3977472f61e348}\label{classde_1_1_list_a3b0c28b1bcd540f2cc3977472f61e348}} 
+\index{de::List@{de::List}!getElementSize@{getElementSize}}
+\index{getElementSize@{getElementSize}!de::List@{de::List}}
+\doxysubsubsection{\texorpdfstring{getElementSize()}{getElementSize()}}
+{\footnotesize\ttfamily size\+\_\+t de\+::\+List\+::get\+Element\+Size (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Récupère la taille en octet d\textquotesingle{}un élément. 
+
+\begin{DoxyReturn}{Returns}
+La taille en octet d\textquotesingle{}un élément. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classde_1_1_list_ae0544e9288dd7e01f7edca2b42f401ad}\label{classde_1_1_list_ae0544e9288dd7e01f7edca2b42f401ad}} 
+\index{de::List@{de::List}!getNumberOfElements@{getNumberOfElements}}
+\index{getNumberOfElements@{getNumberOfElements}!de::List@{de::List}}
+\doxysubsubsection{\texorpdfstring{getNumberOfElements()}{getNumberOfElements()}}
+{\footnotesize\ttfamily size\+\_\+t de\+::\+List\+::get\+Number\+Of\+Elements (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Récupère le nombre d\textquotesingle{}éléments présents dans la liste. 
+
+\begin{DoxyReturn}{Returns}
+Le nombre d\textquotesingle{}éléments dans la liste. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classde_1_1_list_a19f74ba7d32bbd7a77db978d53546517}\label{classde_1_1_list_a19f74ba7d32bbd7a77db978d53546517}} 
+\index{de::List@{de::List}!remove@{remove}}
+\index{remove@{remove}!de::List@{de::List}}
+\doxysubsubsection{\texorpdfstring{remove()}{remove()}}
+{\footnotesize\ttfamily void de\+::\+List\+::remove (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{index }\end{DoxyParamCaption})}
+
+
+
+Supprime l\textquotesingle{}élément à l\textquotesingle{}index spécifié. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em index} & Index de l\textquotesingle{}élément à supprimer. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classde_1_1_list_a2059406a51d1bb91ae629de6d7727852}\label{classde_1_1_list_a2059406a51d1bb91ae629de6d7727852}} 
+\index{de::List@{de::List}!setCopy@{setCopy}}
+\index{setCopy@{setCopy}!de::List@{de::List}}
+\doxysubsubsection{\texorpdfstring{setCopy()}{setCopy()}}
+{\footnotesize\ttfamily void de\+::\+List\+::set\+Copy (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{index,  }\item[{void $\ast$}]{to\+Set }\end{DoxyParamCaption})}
+
+
+
+Défini la valeur d\textquotesingle{}un élément de la liste. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em index} & Index de l\textquotesingle{}élément à définir. \\
+\hline
+{\em to\+Set} & Pointeur de l\textquotesingle{}élément à copier. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\+D\+E/memory/list.\+hpp\end{DoxyCompactItemize}

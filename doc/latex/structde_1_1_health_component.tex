@@ -1,22 +1,40 @@
 \hypertarget{structde_1_1_health_component}{}\doxysection{de\+::Health\+Component Struct Reference}
 \label{structde_1_1_health_component}\index{de::HealthComponent@{de::HealthComponent}}
+
+
+Composant indiquant qu\textquotesingle{}une entité possède une quantité de points de vie.  
+
+
+
+
+{\ttfamily \#include $<$component.\+hpp$>$}
+
 \doxysubsection*{Public Attributes}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\Hypertarget{structde_1_1_health_component_a1eaa6a8662ad1c341d46c587038bbcf5}\label{structde_1_1_health_component_a1eaa6a8662ad1c341d46c587038bbcf5}} 
 uint32\+\_\+t {\bfseries pv}
 \item 
-\mbox{\Hypertarget{structde_1_1_health_component_a3149944f43844431bc707206a132e6f6}\label{structde_1_1_health_component_a3149944f43844431bc707206a132e6f6}} 
-uint32\+\_\+t {\bfseries max}
+\mbox{\Hypertarget{structde_1_1_health_component_a0be4b997fbe29b85cdfefc7f7d5a23ab}\label{structde_1_1_health_component_a0be4b997fbe29b85cdfefc7f7d5a23ab}} 
+uint32\+\_\+t {\bfseries max\+Pv}
 \end{DoxyCompactItemize}
-\doxysubsection*{Static Private Attributes}
+\doxysubsection*{Private Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{structde_1_1_health_component_aa0e53178eb5526afc1a26ae3a027beaa}\label{structde_1_1_health_component_aa0e53178eb5526afc1a26ae3a027beaa}} 
-static std\+::vector$<$ \mbox{\hyperlink{structde_1_1_health_component}{Health\+Component}} $>$ {\bfseries \+\_\+health\+Components}
+\mbox{\Hypertarget{structde_1_1_health_component_a98003859fceaa8a670c648a6060909ce}\label{structde_1_1_health_component_a98003859fceaa8a670c648a6060909ce}} 
+{\bfseries Health\+Component} (uint32\+\_\+t pv, uint32\+\_\+t max\+Pv)
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structde_1_1_health_component_a37d5915d3e4aa8559e15db3db9ac7403}\label{structde_1_1_health_component_a37d5915d3e4aa8559e15db3db9ac7403}} 
+friend {\bfseries Component\+Manager}
 \end{DoxyCompactItemize}
 
+
+\doxysubsection{Detailed Description}
+Composant indiquant qu\textquotesingle{}une entité possède une quantité de points de vie. 
 
 The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
 \item 
-include/\+D\+E/health.\+hpp\end{DoxyCompactItemize}
+include/\+D\+E/ecs/component.\+hpp\end{DoxyCompactItemize}

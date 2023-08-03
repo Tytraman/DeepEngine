@@ -3,7 +3,7 @@
 Inheritance diagram for de\+::Drawable\+:\begin{figure}[H]
 \begin{center}
 \leavevmode
-\includegraphics[height=3.000000cm]{classde_1_1_drawable}
+\includegraphics[height=2.000000cm]{classde_1_1_drawable}
 \end{center}
 \end{figure}
 \doxysubsection*{Public Member Functions}
@@ -12,23 +12,26 @@ Inheritance diagram for de\+::Drawable\+:\begin{figure}[H]
 \mbox{\Hypertarget{classde_1_1_drawable_a7fee01a4f7398618e4c972825189c51e}\label{classde_1_1_drawable_a7fee01a4f7398618e4c972825189c51e}} 
 virtual void {\bfseries draw} (const \mbox{\hyperlink{structde_1_1fmat2x2}{fmat2x2}} \&base\+Vectors)=0
 \item 
+\mbox{\Hypertarget{classde_1_1_drawable_a269e059ab7eff5353324b6aeab34f4b9}\label{classde_1_1_drawable_a269e059ab7eff5353324b6aeab34f4b9}} 
+virtual void {\bfseries scale} (float scale1, float scale2)=0
+\item 
+\mbox{\Hypertarget{classde_1_1_drawable_ae5f378f8bdf80ffad809a6b2357f02fb}\label{classde_1_1_drawable_ae5f378f8bdf80ffad809a6b2357f02fb}} 
+virtual void {\bfseries translate} (float x, float y)=0
+\item 
 \mbox{\Hypertarget{classde_1_1_drawable_a9caf06a36d839e11194c2137c1cce35d}\label{classde_1_1_drawable_a9caf06a36d839e11194c2137c1cce35d}} 
 virtual void {\bfseries rotate} (float degrees)=0
 \item 
 \mbox{\Hypertarget{classde_1_1_drawable_ae44d17875819cf8bf3e6281864ee0433}\label{classde_1_1_drawable_ae44d17875819cf8bf3e6281864ee0433}} 
 virtual uint32\+\_\+t {\bfseries get\+Type} () const =0
 \item 
-\mbox{\Hypertarget{classde_1_1_drawable_ae9a467f22e68093df81412464f8606d8}\label{classde_1_1_drawable_ae9a467f22e68093df81412464f8606d8}} 
-virtual void {\bfseries move} (direction\+::\+Direction direction, int value)
-\item 
-\mbox{\Hypertarget{classde_1_1_drawable_aa2edafdc3dc7adb760ff73f3f519d146}\label{classde_1_1_drawable_aa2edafdc3dc7adb760ff73f3f519d146}} 
-virtual void {\bfseries set\+Pos} (const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&pos)
-\item 
 \mbox{\Hypertarget{classde_1_1_drawable_ad310dc8a052d91ef394a7329bcc570b0}\label{classde_1_1_drawable_ad310dc8a052d91ef394a7329bcc570b0}} 
 \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} {\bfseries get\+Pos} () const
 \item 
 \mbox{\Hypertarget{classde_1_1_drawable_af5d402640234284b50472088d8fd2c1b}\label{classde_1_1_drawable_af5d402640234284b50472088d8fd2c1b}} 
 bool {\bfseries is\+Visible} () const
+\item 
+\mbox{\Hypertarget{classde_1_1_drawable_aa2edafdc3dc7adb760ff73f3f519d146}\label{classde_1_1_drawable_aa2edafdc3dc7adb760ff73f3f519d146}} 
+virtual void {\bfseries set\+Pos} (const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&pos)
 \item 
 \mbox{\Hypertarget{classde_1_1_drawable_a9b354db5c8f52ed99a03801d967f5a19}\label{classde_1_1_drawable_a9b354db5c8f52ed99a03801d967f5a19}} 
 void {\bfseries set\+Visible} (bool value)
@@ -39,8 +42,8 @@ void {\bfseries set\+Vectors\+Visible} (bool value)
 \doxysubsection*{Protected Member Functions}
 \begin{DoxyCompactItemize}
 \item 
-\mbox{\Hypertarget{classde_1_1_drawable_aa1aa66a4516a88686b14b381d591526b}\label{classde_1_1_drawable_aa1aa66a4516a88686b14b381d591526b}} 
-{\bfseries Drawable} (\mbox{\hyperlink{classde_1_1_drawable_panel}{Drawable\+Panel}} $\ast$panel, const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&pos, bool visible=true)
+\mbox{\Hypertarget{classde_1_1_drawable_a77d388d9c27e3a90df704d66571bde6b}\label{classde_1_1_drawable_a77d388d9c27e3a90df704d66571bde6b}} 
+{\bfseries Drawable} (const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&pos, bool visible=true)
 \end{DoxyCompactItemize}
 \doxysubsection*{Protected Attributes}
 \begin{DoxyCompactItemize}
@@ -53,18 +56,12 @@ bool {\bfseries \+\_\+visible}
 \item 
 \mbox{\Hypertarget{classde_1_1_drawable_a21c826341ecc49667f7188f6f8cc7c35}\label{classde_1_1_drawable_a21c826341ecc49667f7188f6f8cc7c35}} 
 bool {\bfseries \+\_\+draw\+Vectors}
-\item 
-\mbox{\Hypertarget{classde_1_1_drawable_aa625e8720a92719b99c3aca6e9996ed4}\label{classde_1_1_drawable_aa625e8720a92719b99c3aca6e9996ed4}} 
-\mbox{\hyperlink{classde_1_1_drawable_panel}{Drawable\+Panel}} $\ast$ {\bfseries \+\_\+panel}
 \end{DoxyCompactItemize}
 \doxysubsection*{Private Attributes}
 \begin{DoxyCompactItemize}
 \item 
 \mbox{\Hypertarget{classde_1_1_drawable_a29bf9eccb923b2f720f3fdee2aad25b2}\label{classde_1_1_drawable_a29bf9eccb923b2f720f3fdee2aad25b2}} 
 friend {\bfseries Window}
-\item 
-\mbox{\Hypertarget{classde_1_1_drawable_a5b2601ea5ace14a8b8230bd078d7d97c}\label{classde_1_1_drawable_a5b2601ea5ace14a8b8230bd078d7d97c}} 
-friend {\bfseries Drawable\+Panel}
 \end{DoxyCompactItemize}
 
 

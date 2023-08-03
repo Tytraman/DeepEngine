@@ -27,7 +27,7 @@ namespace de {
 			/// @param dest		Le contexte de rendu à créer.
 			/// @param window	La fenêtre sur laquelle dessiner.
 			/// @return			Le code d'erreur.
-			static ErrorStatus create(Renderer &dest, const Window &window);
+			static ErrorStatus create(Renderer &dest, Window &window);
 			
 			/// @brief			Défini la couleur utilisée par les opérations de dessins.
 			/// @param color	
@@ -57,7 +57,7 @@ namespace de {
 			/// @param fill		Détermine si le rectangle doit être rempli.
 			void drawRectangle(const rect &rect, bool fill = false) const;
 			
-			void drawShape(const vertex *vertices, int verticesNumber) const;
+			void drawShape(const SDL_Vertex *vertices, int verticesNumber) const;
 			
 			/// @brief Intervertie les buffers sur la surface de dessins.
 			void swapBuffers() const;
