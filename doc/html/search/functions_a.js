@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['_7epanel_195',['~Panel',['../classde_1_1_panel.html#ac5b97d41dfff68025ea07993b4e0026c',1,'de::Panel']]]
+  ['query_198',['query',['../classde_1_1_entity_manager.html#ad10c627184fb84d1ca88880846edfdf8',1,'de::EntityManager']]]
 ];

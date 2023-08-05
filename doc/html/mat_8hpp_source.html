@@ -22,6 +22,7 @@
 /* @license-end */
 </script>
 <link href="doxygen.css" rel="stylesheet" type="text/css" />
+<link href="customdoxygen.css" rel="stylesheet" type="text/css"/>
 </head>
 <body>
 <div id="top"><!-- do not remove this div, it is closed by doxygen! -->
@@ -179,7 +180,7 @@ $(document).ready(function(){initNavTree('mat_8hpp_source.html',''); initResizab
 <div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;<span class="comment">    */</span></div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keyword">inline</span> fvec2 fmat2x2::mul(<span class="keyword">const</span> fmat2x2 &amp;mat, <span class="keyword">const</span> fvec2 &amp;vec)</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;    {</div>
-<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="keywordflow">return</span> fvec2::mul(vec, mat);</div>
+<div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="structde_1_1fvec2.html#a25f1d65c7ef9636b26eff1fb82340063">fvec2::mul</a>(vec, mat);</div>
 <div class="line"><a name="l00085"></a><span class="lineno">   85</span>&#160;    }</div>
 <div class="line"><a name="l00086"></a><span class="lineno">   86</span>&#160; </div>
 <div class="line"><a name="l00087"></a><span class="lineno">   87</span>&#160;    <span class="comment">/*</span></div>
@@ -189,7 +190,7 @@ $(document).ready(function(){initNavTree('mat_8hpp_source.html',''); initResizab
 <div class="line"><a name="l00091"></a><span class="lineno">   91</span>&#160;<span class="comment">    */</span></div>
 <div class="line"><a name="l00092"></a><span class="lineno">   92</span>&#160;    <span class="keyword">inline</span> fvec3 fmat3x3::mul(<span class="keyword">const</span> fmat3x3 &amp;mat, <span class="keyword">const</span> fvec3 &amp;vec)</div>
 <div class="line"><a name="l00093"></a><span class="lineno">   93</span>&#160;    {</div>
-<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <span class="keywordflow">return</span> fvec3::mul(vec, mat);</div>
+<div class="line"><a name="l00094"></a><span class="lineno">   94</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="structde_1_1fvec3.html#a315e3a21a79b70a6fb6bcfbd2cee3857">fvec3::mul</a>(vec, mat);</div>
 <div class="line"><a name="l00095"></a><span class="lineno">   95</span>&#160;    }</div>
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160; </div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    <span class="comment">/*</span></div>
@@ -213,12 +214,12 @@ $(document).ready(function(){initNavTree('mat_8hpp_source.html',''); initResizab
 <div class="line"><a name="l00115"></a><span class="lineno">  115</span>&#160;<span class="comment">    */</span></div>
 <div class="line"><a name="l00116"></a><span class="lineno">  116</span>&#160;    <span class="keyword">inline</span> fvec2 fmat2x2::scale(<span class="keyword">const</span> fvec2 &amp;vec, <span class="keywordtype">float</span> scale1, <span class="keywordtype">float</span> scale2)</div>
 <div class="line"><a name="l00117"></a><span class="lineno">  117</span>&#160;    {</div>
-<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        <span class="keywordflow">return</span> fvec2::mul(vec, { scale1, 0.0f, 0.0f, scale2 } );</div>
+<div class="line"><a name="l00118"></a><span class="lineno">  118</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="structde_1_1fvec2.html#a25f1d65c7ef9636b26eff1fb82340063">fvec2::mul</a>(vec, { scale1, 0.0f, 0.0f, scale2 } );</div>
 <div class="line"><a name="l00119"></a><span class="lineno">  119</span>&#160;    }</div>
 <div class="line"><a name="l00120"></a><span class="lineno">  120</span>&#160; </div>
 <div class="line"><a name="l00121"></a><span class="lineno">  121</span>&#160;    <span class="keyword">inline</span> fvec2 fmat2x2::translate(<span class="keyword">const</span> fvec2 &amp;vec, <span class="keywordtype">float</span> x, <span class="keywordtype">float</span> y)</div>
 <div class="line"><a name="l00122"></a><span class="lineno">  122</span>&#160;    {</div>
-<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        <span class="keywordflow">return</span> { vec.x + x, vec.y + y };</div>
+<div class="line"><a name="l00123"></a><span class="lineno">  123</span>&#160;        <span class="keywordflow">return</span> { vec.<a class="code" href="structde_1_1fvec2.html#adb0b1372559d46e5ea3a0b41351a7389">x</a> + x, vec.y + y };</div>
 <div class="line"><a name="l00124"></a><span class="lineno">  124</span>&#160;    }</div>
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160; </div>
 <div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    <span class="comment">/*</span></div>
@@ -229,7 +230,7 @@ $(document).ready(function(){initNavTree('mat_8hpp_source.html',''); initResizab
 <div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    <span class="keyword">inline</span> fvec2 fmat2x2::rotate(<span class="keyword">const</span> fvec2 &amp;vec, <span class="keywordtype">float</span> degrees)</div>
 <div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    {</div>
 <div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;        <span class="keywordtype">float</span> rad = DE_DEG_RAD(degrees);</div>
-<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        <span class="keywordflow">return</span> fvec2::mul(vec, {</div>
+<div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;        <span class="keywordflow">return</span> <a class="code" href="structde_1_1fvec2.html#a25f1d65c7ef9636b26eff1fb82340063">fvec2::mul</a>(vec, {</div>
 <div class="line"><a name="l00135"></a><span class="lineno">  135</span>&#160;            cosf(rad), -sinf(rad),</div>
 <div class="line"><a name="l00136"></a><span class="lineno">  136</span>&#160;            sinf(rad), cosf(rad) </div>
 <div class="line"><a name="l00137"></a><span class="lineno">  137</span>&#160;        });</div>
@@ -292,11 +293,14 @@ $(document).ready(function(){initNavTree('mat_8hpp_source.html',''); initResizab
 <div class="line"><a name="l00194"></a><span class="lineno">  194</span>&#160;<span class="preprocessor">#endif</span></div>
 </div><!-- fragment --></div><!-- contents -->
 </div><!-- doc-content -->
+<div class="ttc" id="astructde_1_1fvec2_html_adb0b1372559d46e5ea3a0b41351a7389"><div class="ttname"><a href="structde_1_1fvec2.html#adb0b1372559d46e5ea3a0b41351a7389">de::fvec2::x</a></div><div class="ttdeci">float x</div><div class="ttdoc">Composante X du vecteur.</div><div class="ttdef"><b>Definition:</b> vec.hpp:42</div></div>
 <div class="ttc" id="anamespacede_html"><div class="ttname"><a href="namespacede.html">de</a></div><div class="ttdoc">Espace de nom regroupant tout ce qui est relatif au DeepEngine.</div><div class="ttdef"><b>Definition:</b> color.hpp:8</div></div>
-<div class="ttc" id="astructde_1_1fvec2_html"><div class="ttname"><a href="structde_1_1fvec2.html">de::fvec2</a></div><div class="ttdef"><b>Definition:</b> vec.hpp:32</div></div>
+<div class="ttc" id="astructde_1_1fvec2_html"><div class="ttname"><a href="structde_1_1fvec2.html">de::fvec2</a></div><div class="ttdoc">Vecteur à 2 dimensions avec des composantes de type flottant.</div><div class="ttdef"><b>Definition:</b> vec.hpp:41</div></div>
 <div class="ttc" id="astructde_1_1fmat2x2_html"><div class="ttname"><a href="structde_1_1fmat2x2.html">de::fmat2x2</a></div><div class="ttdef"><b>Definition:</b> mat.hpp:13</div></div>
+<div class="ttc" id="astructde_1_1fvec3_html_a315e3a21a79b70a6fb6bcfbd2cee3857"><div class="ttname"><a href="structde_1_1fvec3.html#a315e3a21a79b70a6fb6bcfbd2cee3857">de::fvec3::mul</a></div><div class="ttdeci">static fvec3 mul(const fvec3 &amp;v, const fmat3x3 &amp;mat)</div><div class="ttdoc">Retourne le résultat de la multiplication entre un vecteur et une matrice.</div><div class="ttdef"><b>Definition:</b> vec_imp.hpp:425</div></div>
 <div class="ttc" id="astructde_1_1fmat3x3_html"><div class="ttname"><a href="structde_1_1fmat3x3.html">de::fmat3x3</a></div><div class="ttdef"><b>Definition:</b> mat.hpp:30</div></div>
-<div class="ttc" id="astructde_1_1fvec3_html"><div class="ttname"><a href="structde_1_1fvec3.html">de::fvec3</a></div><div class="ttdef"><b>Definition:</b> vec.hpp:67</div></div>
+<div class="ttc" id="astructde_1_1fvec2_html_a25f1d65c7ef9636b26eff1fb82340063"><div class="ttname"><a href="structde_1_1fvec2.html#a25f1d65c7ef9636b26eff1fb82340063">de::fvec2::mul</a></div><div class="ttdeci">static fvec2 mul(const fvec2 &amp;v, const fmat2x2 &amp;mat)</div><div class="ttdoc">Retourne le résultat de la multiplication entre un vecteur et une matrice.</div><div class="ttdef"><b>Definition:</b> vec_imp.hpp:412</div></div>
+<div class="ttc" id="astructde_1_1fvec3_html"><div class="ttname"><a href="structde_1_1fvec3.html">de::fvec3</a></div><div class="ttdoc">Vecteur à 3 dimensions avec des composantes de type flottant.</div><div class="ttdef"><b>Definition:</b> vec.hpp:220</div></div>
 <!-- start footer part -->
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>

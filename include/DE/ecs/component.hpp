@@ -87,7 +87,7 @@ namespace de {
 
 	constexpr component_type TransformationComponentType = (1 << 1);
 
-	/// @struct TransformationComponentComponent
+	/// @struct TransformationComponent
 	/// @brief	Composant indiquant qu'une entité possède une transformation.
 	struct DE_API TransformationComponent {
 		fvec2 translation;

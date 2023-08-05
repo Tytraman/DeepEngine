@@ -39,7 +39,6 @@ var hierarchy =
     [ "de::SystemItem", "structde_1_1_system_item.html", null ],
     [ "de::SystemManager", "classde_1_1_system_manager.html", null ],
     [ "de::TransformationComponent", "structde_1_1_transformation_component.html", null ],
-    [ "TransformationComponentComponent", "struct_transformation_component_component.html", null ],
     [ "de::vec2", "structde_1_1vec2.html", null ],
     [ "de::VelocityComponent", "structde_1_1_velocity_component.html", null ],
     [ "de::Vertex", "structde_1_1_vertex.html", null ],

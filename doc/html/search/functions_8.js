@@ -1,5 +1,9 @@
 var searchData=
 [
-  ['remove_164',['remove',['../classde_1_1_list.html#a19f74ba7d32bbd7a77db978d53546517',1,'de::List']]],
-  ['run_165',['run',['../classde_1_1_window.html#a65c9ff44e36652d4f242f345cd0d0a94',1,'de::Window']]]
+  ['operator_2a_191',['operator*',['../structde_1_1fvec2.html#a03b20d2aff5d900c09cec9a32cee8ca0',1,'de::fvec2::operator*(float scalar) const'],['../structde_1_1fvec2.html#a68b37b81361a500b21f056ab8a57e20b',1,'de::fvec2::operator*(const fmat2x2 &amp;mat) const'],['../structde_1_1fvec3.html#a59c90edcd946804e7af2fb000c9555ec',1,'de::fvec3::operator*(float scalar) const'],['../structde_1_1fvec3.html#a7069c1340d557734d79cecdcdeca26e8',1,'de::fvec3::operator*(const fmat3x3 &amp;mat) const']]],
+  ['operator_2a_3d_192',['operator*=',['../structde_1_1fvec2.html#aefc5456016cfd0a74751b9ec2de9e937',1,'de::fvec2::operator*=()'],['../structde_1_1fvec3.html#a81ac80a43ac29d2d9b5af42415ae6a6c',1,'de::fvec3::operator*=()']]],
+  ['operator_2b_193',['operator+',['../structde_1_1fvec2.html#a4f528cf8a92d0e0e314934a58738583d',1,'de::fvec2::operator+(const fvec2 &amp;vec) const'],['../structde_1_1fvec2.html#a402d293ce9e0ea905360480940887db2',1,'de::fvec2::operator+(const vec2 &amp;vec) const'],['../structde_1_1fvec2.html#a4040b3d03ba77a1d05e51775d437e44e',1,'de::fvec2::operator+(float valueToAdd) const'],['../structde_1_1fvec3.html#a7923d700e480f52c02e7dc0e2d86c7d3',1,'de::fvec3::operator+(const fvec3 &amp;v) const'],['../structde_1_1fvec3.html#a76800aa908de54109180f98f21eefc09',1,'de::fvec3::operator+(float valueToAdd) const']]],
+  ['operator_2b_3d_194',['operator+=',['../structde_1_1fvec2.html#a5627103ab4d13b8abec8fb4954f0660f',1,'de::fvec2']]],
+  ['operator_2d_195',['operator-',['../structde_1_1fvec2.html#a3d6e85dad3f6bf0e72373f42896e2836',1,'de::fvec2::operator-(const fvec2 &amp;v) const'],['../structde_1_1fvec2.html#aca45c6432c9c81f121960a47acce5c4a',1,'de::fvec2::operator-(float valueToSub) const'],['../structde_1_1fvec3.html#a18c6911d78a25e42cd3672e9e93bda69',1,'de::fvec3::operator-(const fvec3 &amp;v) const'],['../structde_1_1fvec3.html#ae52d819d356b86cdac89a93d7854ef67',1,'de::fvec3::operator-(float valueToSub) const']]],
+  ['operator_2d_3d_196',['operator-=',['../structde_1_1fvec2.html#aff436d5a7140a8914da8d2f510f2e306',1,'de::fvec2']]]
 ];
