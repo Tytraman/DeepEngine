@@ -38,7 +38,10 @@ namespace de {
 	============
 	*/
 	Scene::Scene()
-		: m_EntityCollection(EntityManager::createEntityCollection())
+		: m_EntityCollection(EntityManager::createEntityCollection()),
+		  m_ViewTranslation(0.0f, 0.0f),
+		  m_ViewScale(1.0f, 1.0f),
+		  m_ViewAngle(0.0f)
 	{ }
 
 	/*
@@ -94,6 +97,19 @@ namespace de {
 		if(it == m_Scenes.end())
 			return badID;
 		return it->second.m_EntityCollection;
+	}
+
+	/*
+	===============
+	Scene::getScene
+	===============
+	*/
+	Scene *Scene::getScene(scene_id scene)
+	{
+		auto it = m_Scenes.find(scene);
+		if(it == m_Scenes.end())
+			return nullptr;
+		return &it->second;
 	}
 
 }

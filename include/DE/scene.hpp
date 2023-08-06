@@ -5,6 +5,7 @@
 #include <DE/types.hpp>
 #include <DE/memory/list.hpp>
 #include <DE/ecs/entity.hpp>
+#include <DE/vec.hpp>
 
 namespace de {
 
@@ -15,7 +16,10 @@ namespace de {
 		private:
 			static scene_id m_ActiveScene;
 
-			entity_collection_id m_EntityCollection;	///< ID du gestionnaire d'entités de la scène.
+			entity_collection_id m_EntityCollection;    ///< ID du gestionnaire d'entités de la scène.
+			fvec2 m_ViewTranslation;                    ///< La position de la vue relative à l'origine du plan.
+			fvec2 m_ViewScale;                          ///< Le zoom / déformation de la vue.
+			float m_ViewAngle;                          ///< L'angle de rotation de la vue relative à l'origine du plan.
 
 		public:
 			/// @brief	Crée une scène.
@@ -43,8 +47,37 @@ namespace de {
 
 			//===== GETTERS =====//
 
+			/// @brief       Récupère l'ID de la collection d'entités liée à la scène spécifiée.
+			/// @param scene L'ID de la scène.
+			/// @return      L'ID de la collection d'entités si la scène existe sinon \ref badID.
 			static entity_collection_id getEntityCollection(scene_id scene);
+
+			/// @brief  Récupère l'ID de la scène actuellement active.
+			/// @return L'ID de la scène active ou \ref badID si aucune scène n'est active.
 			static scene_id getActiveSceneID();
+
+			/// @brief       Récupère un pointeur vers la structure de la scène spécifié.
+			/// @param scene L'ID de la scène.
+			/// @return      Le pointeur vers la structure si la scène existe ou \c nullptr si elle n'existe pas.
+			static Scene *getScene(scene_id scene);
+
+			/// @brief  Récupère la position de la vue de la scène.
+			/// @return Le vecteur décrivant la translation de la vue.
+			fvec2 getViewTranslation() const;
+
+			/// @brief  Récupère le zoom / déformation de la vue de la scène.
+			/// @return Le vecteur décrivant le zoom / déformation de la vue.
+			fvec2 getViewScale() const;
+
+			/// @brief  Récupère l'angle de rotation de la vue de la scène.
+			/// @return L'angle de rotation de la vue de la scène.
+			float getViewAngle() const;
+
+			//===== SETTERS =====//
+
+			void setViewTranslation(const fvec2 &vec);
+			void setViewScale(const fvec2 &vec);
+			void setViewAngle(float angle);
 
 			
 		private:
@@ -70,6 +103,66 @@ namespace de {
 	inline scene_id Scene::getActiveSceneID()
 	{
 		return m_ActiveScene;
+	}
+
+	/*
+	=========================
+	Scene::getViewTranslation
+	=========================
+	*/
+	inline fvec2 Scene::getViewTranslation() const
+	{
+		return m_ViewTranslation;
+	}
+
+	/*
+	===================
+	Scene::getViewScale
+	===================
+	*/
+	inline fvec2 Scene::getViewScale() const
+	{
+		return m_ViewScale;
+	}
+
+	/*
+	===================
+	Scene::getViewAngle
+	===================
+	*/
+	inline float Scene::getViewAngle() const
+	{
+		return m_ViewAngle;
+	}
+
+	/*
+	=========================
+	Scene::setViewTranslation
+	=========================
+	*/
+	inline void Scene::setViewTranslation(const fvec2 &vec)
+	{
+		m_ViewTranslation = vec;
+	}
+
+	/*
+	===================
+	Scene::setViewScale
+	===================
+	*/
+	inline void Scene::setViewScale(const fvec2 &vec)
+	{
+		m_ViewScale = vec;
+	}
+
+	/*
+	===================
+	Scene::setViewAngle
+	===================
+	*/
+	inline void Scene::setViewAngle(float angle)
+	{
+		m_ViewAngle = angle;
 	}
 
 }

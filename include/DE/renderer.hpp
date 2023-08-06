@@ -55,7 +55,7 @@ namespace de {
 			/// @brief			Dessine un rectangle avec la couleur définie. Peut être rempli ou non.
 			/// @param rect		Position et taille du rectangle.
 			/// @param fill		Détermine si le rectangle doit être rempli.
-			void drawRectangle(const rect &rect, bool fill = false) const;
+			// void drawRectangle(const rect &rect, bool fill = false) const;
 			
 			void drawShape(const SDL_Vertex *vertices, int verticesNumber) const;
 			

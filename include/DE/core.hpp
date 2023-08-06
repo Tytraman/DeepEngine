@@ -11,10 +11,12 @@ namespace de {
 	class DE_API Core {
 
 		private:
-			static uint64_t _initTime;
+			static uint64_t m_InitTime;
 
 		public:
 			static ErrorStatus init();
+
+			static uint32_t getMousePosition(int *x, int *y);
 
 			static void quit();
 
@@ -26,7 +28,7 @@ namespace de {
 
 	inline uint64_t Core::getTick() {
 #ifdef DE_WINDOWS
-		return GetTickCount64() - _initTime;
+		return GetTickCount64() - m_InitTime;
 #else
 #error Need implementation
 #endif

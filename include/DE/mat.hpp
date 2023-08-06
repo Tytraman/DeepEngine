@@ -45,6 +45,7 @@ namespace de {
 		);
 
 		fvec3 operator*(const fvec3 &vec) const;
+		fmat3x3 operator*(const fmat3x3 &mat) const;
 
 		static fvec3 mul(const fmat3x3 &mat, const fvec3 &vec);
 		static fmat3x3 mul(const fmat3x3 &mat1, const fmat3x3 &mat2);
@@ -72,6 +73,16 @@ namespace de {
 	inline fvec3 fmat3x3::operator*(const fvec3 &vec) const
 	{
 		return mul(*this, vec);
+	}
+
+	/*
+	==================
+	fmat3x3::operator*
+	==================
+	*/
+	inline fmat3x3 fmat3x3::operator*(const fmat3x3 &mat) const
+	{
+		return mul(*this, mat);
 	}
 
 	/*

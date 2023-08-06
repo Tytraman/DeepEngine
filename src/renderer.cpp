@@ -30,20 +30,20 @@ de::ErrorStatus de::Renderer::create(Renderer &dest, Window &window)
 Renderer::drawRectangle
 =======================
 */
-void de::Renderer::drawRectangle(const rect &rect, bool fill) const
-{
-	SDL_Rect r {
-		r.x = rect.pos.x,
-		r.y = rect.pos.y,
-		r.w = rect.dim.width,
-		r.h = rect.dim.height
-	};
-
-	if(fill)
-		SDL_RenderFillRect(_renderer, &r);
-	else
-		SDL_RenderDrawRect(_renderer, &r);
-}
+//void de::Renderer::drawRectangle(const rect &rect, bool fill) const
+//{
+//	SDL_Rect r {
+//		r.x = rect.pos.x,
+//		r.y = rect.pos.y,
+//		r.w = rect.dim.width,
+//		r.h = rect.dim.height
+//	};
+//
+//	if(fill)
+//		SDL_RenderFillRect(_renderer, &r);
+//	else
+//		SDL_RenderDrawRect(_renderer, &r);
+//}
 
 /*
 ===============

@@ -100,9 +100,30 @@ namespace de {
 	*/
 	void SystemManager::renderSystem(Renderer &renderer)
 	{
-		List entities(sizeof(entity_id));
-		entity_collection_id collection = Scene::getEntityCollection(Scene::getActiveSceneID());
+		scene_id sceneID = Scene::getActiveSceneID();
 
+		// Si aucune scène n'est active, cela ne sert à rien de continuer la procédure.
+		if(sceneID == badID)
+			return;
+
+		Scene *scene = Scene::getScene(sceneID);
+
+		// scene n'est pas censée pouvoir valoir nullptr, mais ne sait-on jamais.
+		if(scene == nullptr)
+			return;
+
+		List entities(sizeof(entity_id));
+		entity_collection_id collection = Scene::getEntityCollection(sceneID);
+		fvec2 sceneViewTranslation = scene->getViewTranslation();
+		fvec2 sceneViewScale = scene->getViewScale();
+		float sceneViewAngle = scene->getViewAngle();
+
+		// Cette matrice permet de passer de l'espace du monde à l'espace de la caméra.
+		fmat3x3 view = fmat3x3::translate(fmat3x3(), sceneViewTranslation);
+		        view = fmat3x3::rotate(view, sceneViewAngle);
+				view = fmat3x3::scale(view, sceneViewScale);
+
+		// Récupère toutes les entités dessinables et ayant une transformation.
 		EntityManager::query(collection, DrawableComponentType | TransformationComponentType, 0, &entities);
 
 		size_t index, length = entities.getNumberOfElements();
@@ -110,10 +131,11 @@ namespace de {
 		component_id drawableComponentID;
 		component_id positionComponentID;
 		
+		// Nettoie l'écran en le remplissant de la couleur noire.
 		renderer.setColor(colora(0, 0, 0, 255));
 		renderer.clear();
 		
-		// Itère à travers toutes les entités.
+		// Itère à travers toutes les entités précédemment récupérées.
 		for(index = 0; index < length; ++index) {
 			if(entities.getCopy(index, &entity)) {
 				DrawableComponent *drawableComponent;
@@ -138,25 +160,21 @@ namespace de {
 
 				Vertex vertex;
 
-				// TODO: optimiser le rendu, utiliser OpenGL
+				// TODO: optimiser le rendu, utiliser OpenGL.
 				for(i = 0; i < numberOfVertices; ++i) {
 					if(drawableComponent->vertices.getCopy(i, &vertex)) {
-						fvec3 vec(vertex.pos.x, vertex.pos.y);
+						fvec3 vertexPos(vertex.pos.x, vertex.pos.y);
 
-						// Translation
-						fmat3x3 trans = fmat3x3::translate(fmat3x3(), transformationComponent->translation);
-
-						// Rotation
-						trans = fmat3x3::rotate(trans, transformationComponent->rotation);
-
-						// Scaling
-						trans = fmat3x3::scale(trans, transformationComponent->scaling);
+						// Cette matrice permet de passer de l'espace local à l'espce du monde.
+						fmat3x3 model = fmat3x3::translate(fmat3x3(), transformationComponent->translation);
+						        model = fmat3x3::rotate(model, transformationComponent->rotation);
+						        model = fmat3x3::scale(model, transformationComponent->scaling);
 
 						// Applique la transformation sur le vecteur final
-						vec = trans * vec;
+						vertexPos = view * model * vertexPos;
 
-						vertices[i].position.x = vec.x;
-						vertices[i].position.y = vec.y;
+						vertices[i].position.x = vertexPos.x;
+						vertices[i].position.y = vertexPos.y;
 						vertices[i].color.a = vertex.color.A;
 						vertices[i].color.r = vertex.color.R;
 						vertices[i].color.g = vertex.color.G;

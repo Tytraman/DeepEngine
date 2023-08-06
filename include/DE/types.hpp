@@ -161,34 +161,6 @@ namespace de {
 		this->y = y;
 	}
 
-	struct DE_API rect {
-		position pos;
-		size dim;
-
-		rect();
-		rect(const position &&pos, const size &&dim);
-	};
-
-	/*
-	==========
-	rect::rect
-	==========
-	*/
-	inline rect::rect()
-		: pos(), dim()
-	{ }
-
-	/*
-	==========
-	rect::rect
-	==========
-	*/
-	inline rect::rect(const position &&pos, const size &&dim)
-	{
-		this->pos = pos;
-		this->dim = dim;
-	}
-
 }
 
 #endif

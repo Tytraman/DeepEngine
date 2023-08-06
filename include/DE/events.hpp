@@ -15,7 +15,11 @@ namespace de {
 	namespace EventType {
 
 		enum : uint32_t {
-			Window = SDL_WINDOWEVENT
+			Window          = SDL_WINDOWEVENT,
+			MouseMotion     = SDL_MOUSEMOTION,
+			MouseButtonDown = SDL_MOUSEBUTTONDOWN,
+			MouseButtonUp   = SDL_MOUSEBUTTONUP,
+			MouseWheel      = SDL_MOUSEWHEEL
 		};
 
 	}
@@ -25,6 +29,12 @@ namespace de {
 		KeyDown			= SDL_KEYDOWN,
 		KeyUp			= SDL_KEYUP,
 		WindowResized	= SDL_WINDOWEVENT_RESIZED
+	};
+
+	enum MouseButton {
+		Left   = SDL_BUTTON_LEFT,
+		Middle = SDL_BUTTON_MIDDLE,
+		Right  = SDL_BUTTON_RIGHT
 	};
 
 	enum dkey : int32_t {
@@ -78,6 +88,14 @@ namespace de {
 		bool pollEvent();
 
 		uint32_t getType() const;
+
+		uint8_t getMouseButton() const;
+		int getMouseX() const;
+		int getMouseY() const;
+
+		int getMouseScrollX() const;
+		int getMouseScrollY() const;
+
 		uint32_t getWindowEventType() const;
 
 		int32_t getKeysym() const;
