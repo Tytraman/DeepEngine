@@ -171,6 +171,16 @@ namespace de {
 	fvec2::operator+=
 	=================
 	*/
+	inline void fvec2::operator+=(const fvec2 &v)
+	{
+		*this = add(*this, v);
+	}
+
+	/*
+	=================
+	fvec2::operator+=
+	=================
+	*/
 	inline void fvec2::operator+=(float value)
 	{
 		*this = add(*this, value);

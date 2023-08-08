@@ -55,6 +55,8 @@ namespace de {
 			/// @param system	L'ID du système à désactiver.
 			static void disableSystem(system_id system);
 
+			static void colliderSystem();
+
 			static void renderSystem(Renderer &renderer);
 	};
 

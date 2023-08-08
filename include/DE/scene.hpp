@@ -6,20 +6,24 @@
 #include <DE/memory/list.hpp>
 #include <DE/ecs/entity.hpp>
 #include <DE/vec.hpp>
+#include <DE/graphic/shape.hpp>
 
 namespace de {
 
 	using scene_id = de_id;
+
+	using ColliderCallback = void (*)(entity_id entity1, entity_id entity2, const fvec2 &difference, const Rect &collision);
 
 	class DE_API Scene {
 
 		private:
 			static scene_id m_ActiveScene;
 
-			entity_collection_id m_EntityCollection;    ///< ID du gestionnaire d'entités de la scène.
-			fvec2 m_ViewTranslation;                    ///< La position de la vue relative à l'origine du plan.
-			fvec2 m_ViewScale;                          ///< Le zoom / déformation de la vue.
-			float m_ViewAngle;                          ///< L'angle de rotation de la vue relative à l'origine du plan.
+			ColliderCallback m_ColliderCallback;     ///< Callback lorsqu'une collision est détectée entre 2 entités.
+			entity_collection_id m_EntityCollection; ///< ID du gestionnaire d'entités de la scène.
+			fvec2 m_ViewTranslation;                 ///< La position de la vue relative à l'origine du plan.
+			fvec2 m_ViewScale;                       ///< Le zoom / déformation de la vue.
+			float m_ViewAngle;                       ///< L'angle de rotation de la vue relative à l'origine du plan.
 
 		public:
 			/// @brief	Crée une scène.
@@ -61,6 +65,8 @@ namespace de {
 			/// @return      Le pointeur vers la structure si la scène existe ou \c nullptr si elle n'existe pas.
 			static Scene *getScene(scene_id scene);
 
+			ColliderCallback getColliderCallback() const;
+
 			/// @brief  Récupère la position de la vue de la scène.
 			/// @return Le vecteur décrivant la translation de la vue.
 			fvec2 getViewTranslation() const;
@@ -75,6 +81,7 @@ namespace de {
 
 			//===== SETTERS =====//
 
+			void setColliderCallback(ColliderCallback callback);
 			void setViewTranslation(const fvec2 &vec);
 			void setViewScale(const fvec2 &vec);
 			void setViewAngle(float angle);
@@ -106,6 +113,16 @@ namespace de {
 	}
 
 	/*
+	==========================
+	Scene::getColliderCallback
+	==========================
+	*/
+	inline ColliderCallback Scene::getColliderCallback() const
+	{
+		return m_ColliderCallback;
+	}
+
+	/*
 	=========================
 	Scene::getViewTranslation
 	=========================
@@ -133,6 +150,16 @@ namespace de {
 	inline float Scene::getViewAngle() const
 	{
 		return m_ViewAngle;
+	}
+
+	/*
+	==========================
+	Scene::setColliderCallback
+	==========================
+	*/
+	inline void Scene::setColliderCallback(ColliderCallback callback)
+	{
+		m_ColliderCallback = callback;
 	}
 
 	/*

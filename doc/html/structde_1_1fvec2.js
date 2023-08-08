@@ -8,6 +8,7 @@ var structde_1_1fvec2 =
     [ "operator+", "structde_1_1fvec2.html#a4f528cf8a92d0e0e314934a58738583d", null ],
     [ "operator+", "structde_1_1fvec2.html#a402d293ce9e0ea905360480940887db2", null ],
     [ "operator+", "structde_1_1fvec2.html#a4040b3d03ba77a1d05e51775d437e44e", null ],
+    [ "operator+=", "structde_1_1fvec2.html#a2042fc5c74be37a9a028c44a0b09ad38", null ],
     [ "operator+=", "structde_1_1fvec2.html#a5627103ab4d13b8abec8fb4954f0660f", null ],
     [ "operator-", "structde_1_1fvec2.html#a3d6e85dad3f6bf0e72373f42896e2836", null ],
     [ "operator-", "structde_1_1fvec2.html#aca45c6432c9c81f121960a47acce5c4a", null ],

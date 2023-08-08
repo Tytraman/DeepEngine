@@ -1,6 +1,7 @@
 var structde_1_1fmat3x3 =
 [
     [ "fmat3x3", "structde_1_1fmat3x3.html#a7dd0871eba398bf2ab06d79e571a80c4", null ],
+    [ "operator*", "structde_1_1fmat3x3.html#a81106e44e2687e7a947286727004e4ed", null ],
     [ "operator*", "structde_1_1fmat3x3.html#ab1a04d775739ab12cc73eb896ff31357", null ],
     [ "x1", "structde_1_1fmat3x3.html#ac7da6a5e32ec408fd544d65cec2726e8", null ],
     [ "x2", "structde_1_1fmat3x3.html#ae724499177d50700ad1c7405f6e43530", null ],

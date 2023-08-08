@@ -1,11 +1,13 @@
 #include <DE/key.hpp>
 
-const Uint8 *de::Key::_keys = nullptr;
+namespace de {
+	const Uint8 *Key::m_Keys = nullptr;
 
-void de::Key::update() {
-	_keys = SDL_GetKeyboardState(NULL);
-}
+	void Key::update() {
+		m_Keys = SDL_GetKeyboardState(NULL);
+	}
 
-bool de::Key::isPressed(key::DKey key) {
-	return _keys[SDL_GetScancodeFromKey(key)];
+	bool Key::isPressed(key::DKey key) {
+		return m_Keys[SDL_GetScancodeFromKey(key)];
+	}
 }

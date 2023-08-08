@@ -4,11 +4,22 @@
 namespace de {
 
 	/*
+	==========
+	Rect::Rect
+	==========
+	*/
+	Rect::Rect(const fvec2 &position, float width, float height)
+		: pos(position),
+		  w(width),
+		  h(height)
+	{ }
+
+	/*
 	======================
 	Scene::attachComponent
 	======================
 	*/
-	entity_id Graphic::createRectangle(scene_id scene, const fvec2 &position, float width, float height, const colora &color)
+	entity_id Graphic::createRectangle(scene_id scene, const fvec2 &position, float width, float height, const colora &color, bool collidable)
 	{
 		entity_collection_id collectionID = Scene::getEntityCollection(scene);
 
@@ -47,6 +58,18 @@ namespace de {
 		entity_id entityID = EntityManager::createEntity(collectionID);
 		EntityManager::attachComponent(collectionID, entityID, drawableComponentID);
 		EntityManager::attachComponent(collectionID, entityID, transformationComponentID);
+
+		if(collidable) {
+			component_id colliderComponentID = ComponentManager::createColliderComponent();
+
+			ColliderComponent *colliderComponent = ComponentManager::getColliderComponent(colliderComponentID);
+			colliderComponent->contour.pos.x = position.x - width / 2;
+			colliderComponent->contour.pos.y = position.y - height / 2;
+			colliderComponent->contour.w = width;
+			colliderComponent->contour.h = height;
+
+			EntityManager::attachComponent(collectionID, entityID, colliderComponentID);
+		}
 
 		return entityID;
 	}

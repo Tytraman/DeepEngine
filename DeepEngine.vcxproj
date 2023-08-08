@@ -455,6 +455,7 @@
     <ClInclude Include="include\DE\def.h" />
     <ClInclude Include="include\DE\error.hpp" />
     <ClInclude Include="include\DE\graphic\graphic.hpp" />
+    <ClInclude Include="include\DE\graphic\shape.hpp" />
     <ClInclude Include="include\DE\graphic\vertex.hpp" />
     <ClInclude Include="include\DE\key.hpp" />
     <ClInclude Include="include\DE\logger.hpp" />

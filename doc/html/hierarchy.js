@@ -18,21 +18,19 @@ var hierarchy =
     [ "de::fposition", "structde_1_1fposition.html", null ],
     [ "de::fvec2", "structde_1_1fvec2.html", null ],
     [ "de::fvec3", "structde_1_1fvec3.html", null ],
+    [ "de::Graphic", "classde_1_1_graphic.html", null ],
     [ "de::HealthComponent", "structde_1_1_health_component.html", null ],
     [ "de::Key", "classde_1_1_key.html", null ],
     [ "de::List", "classde_1_1_list.html", null ],
     [ "de::MemoryManager", "classde_1_1_memory_manager.html", null ],
-    [ "de::MoveableComponent", "structde_1_1_moveable_component.html", null ],
     [ "de::OutputStream", "classde_1_1_output_stream.html", [
       [ "de::OutputFileStream", "classde_1_1_output_file_stream.html", [
         [ "de::Logger", "classde_1_1_logger.html", null ]
       ] ]
     ] ],
     [ "de::position", "structde_1_1position.html", null ],
-    [ "de::rect", "structde_1_1rect.html", null ],
+    [ "de::Rect", "structde_1_1_rect.html", null ],
     [ "de::Renderer", "classde_1_1_renderer.html", null ],
-    [ "de::RotatableComponent", "structde_1_1_rotatable_component.html", null ],
-    [ "de::ScalableComponent", "structde_1_1_scalable_component.html", null ],
     [ "de::Scene", "classde_1_1_scene.html", null ],
     [ "de::size", "structde_1_1size.html", null ],
     [ "de::StringUtils", "classde_1_1_string_utils.html", null ],

@@ -1,4 +1,6 @@
 #include <DE/ecs/component.hpp>
+#include <DE/graphic/graphic.hpp>
+#include <DE/mat.hpp>
 
 #include <unordered_map>
 
@@ -9,9 +11,6 @@ namespace de {
 	static std::unordered_map<component_id, component_type>				m_ComponentsType;
 	static std::unordered_map<component_id, DrawableComponent>			m_DrawableComponents;
 	static std::unordered_map<component_id, TransformationComponent>	m_TransformationComponents;
-	static std::unordered_map<component_id, MoveableComponent>			m_MoveableComponents;
-	static std::unordered_map<component_id, ScalableComponent>			m_ScalableComponents;
-	static std::unordered_map<component_id, RotatableComponent>			m_RotatableComponents;
 	static std::unordered_map<component_id, VelocityComponent>			m_VelocityComponents;
 	static std::unordered_map<component_id, ColliderComponent>			m_ColliderComponents;
 	static std::unordered_map<component_id, HealthComponent>			m_HealthComponents;
@@ -34,6 +33,45 @@ namespace de {
 	DrawableComponent::DrawableComponent()
 		: vertices(sizeof(Vertex)), flags(0)
 	{ }
+
+	/*
+	==================================
+	DrawableComponent::calcRectContour
+	==================================
+	*/
+	Rect DrawableComponent::calcRectContour()
+	{
+		size_t length = vertices.getNumberOfElements();
+		size_t i;
+		Vertex *vertList = (Vertex *) vertices.getData();
+		Vertex *vert;
+
+		float topY    = vertList->pos.y;
+		float bottomY = vertList->pos.y;
+		float leftX   = vertList->pos.x;
+		float rightX  = vertList->pos.x;
+
+		// Itère à travers tous les sommets.
+		for(i = 1; i < length; ++i) {
+			vert = vertList + i;
+
+			// Top Y
+			if(vert->pos.y < topY)
+				topY = vert->pos.y;
+			// Bottom Y
+			else if(vert->pos.y > bottomY)
+				bottomY = vert->pos.y;
+
+			// Left X
+			if(vert->pos.x < leftX)
+				leftX = vert->pos.x;
+			// Right X
+			else if(vert->pos.x > rightX)
+				rightX = vert->pos.x;
+		}
+
+		return Rect(fvec2(leftX, topY), rightX - leftX, bottomY - topY);
+	}
 
 	/*
 	=========================================
@@ -82,9 +120,29 @@ namespace de {
 	TransformationComponent::TransformationComponent
 	================================================
 	*/
-	TransformationComponent::TransformationComponent(const fvec2 &_translation, const fvec2 &_scaling, float _rotation)
-		: translation(_translation), scaling(_scaling), rotation(_rotation)
+	TransformationComponent::TransformationComponent(const fvec2 &translation, const fvec2 &scaling, float rotation)
+		: m_Translation(translation), m_Scaling(scaling), m_Rotation(rotation), m_LastMovement(0.0f, 0.0f)
 	{ }
+
+	/*
+	================================================
+	TransformationComponent::applyAABBTransformation
+	================================================
+	*/
+	void TransformationComponent::applyAABBTransformation(Rect &rectangle) const
+	{
+		fmat3x3 trans = fmat3x3::translate(fmat3x3(), m_Translation);
+		        trans = fmat3x3::scale(trans, m_Scaling);
+
+		fvec3 vec(rectangle.pos.x, rectangle.pos.y, 1.0f);
+		vec = vec * trans;
+
+		rectangle.pos.x = vec.x;
+		rectangle.pos.y = vec.y;
+
+		rectangle.w *= m_Scaling.x;
+		rectangle.h *= m_Scaling.y;
+	}
 
 	/*
 	===============================================
@@ -130,144 +188,6 @@ namespace de {
 
 	/*
 	====================================
-	MoveableComponent::MoveableComponent
-	====================================
-	*/
-	MoveableComponent::MoveableComponent()
-		: movement(fvec2(0.0f, 0.0f))
-	{ }
-
-	/*
-	====================================
-	MoveableComponent::MoveableComponent
-	====================================
-	*/
-	MoveableComponent::MoveableComponent(const fvec2 &__movement)
-		: movement(__movement)
-	{ }
-
-	/*
-	=========================================
-	ComponentManager::createMoveableComponent
-	=========================================
-	*/
-	component_id ComponentManager::createMoveableComponent(const fvec2 &movement)
-	{
-		component_id id = m_ComponentCount;
-
-		m_MoveableComponents.emplace(id, MoveableComponent(movement));
-		m_ComponentsType[id] = MoveableComponentType;
-
-		m_ComponentCount = id + 1;
-
-		return id;
-	}
-
-	/*
-	=========================================
-	ComponentManager::deleteMoveableComponent
-	=========================================
-	*/
-	void ComponentManager::deleteMoveableComponent(component_id id)
-	{
-		m_MoveableComponents.erase(id);
-		m_ComponentsType.erase(id);
-	}
-
-	/*
-	=====================================
-	ScalableComponent::	ScalableComponent
-	=====================================
-	*/
-	ScalableComponent::	ScalableComponent()
-		: scaling(fvec2(0.0f, 0.0f))
-	{ }
-
-	/*
-	=====================================
-	ScalableComponent::	ScalableComponent
-	=====================================
-	*/
-	ScalableComponent::ScalableComponent(const fvec2 &__scaling)
-		: scaling(__scaling)
-	{ }
-
-	/*
-	=========================================
-	ComponentManager::createScalableComponent
-	=========================================
-	*/
-	component_id ComponentManager::createScalableComponent(const fvec2 &scaling)
-	{
-		component_id id = m_ComponentCount;
-
-		m_ScalableComponents.emplace(id, ScalableComponent(scaling));
-		m_ComponentsType[id] = ScalableComponentType;
-
-		m_ComponentCount = id + 1;
-
-		return id;
-	}
-
-	/*
-	=========================================
-	ComponentManager::deleteScalableComponent
-	=========================================
-	*/
-	void ComponentManager::deleteScalableComponent(component_id id)
-	{
-		m_ScalableComponents.erase(id);
-		m_ComponentsType.erase(id);
-	}
-
-	/*
-	======================================
-	RotatableComponent::RotatableComponent
-	======================================
-	*/
-	RotatableComponent::RotatableComponent()
-		: degrees(0.0f)
-	{ }
-	
-	/*
-	======================================
-	RotatableComponent::RotatableComponent
-	======================================
-	*/
-	RotatableComponent::RotatableComponent(float __degrees)
-		: degrees(__degrees)
-	{ }
-
-	/*
-	==========================================
-	ComponentManager::createRotatableComponent
-	==========================================
-	*/
-	component_id ComponentManager::createRotatableComponent(float degrees)
-	{
-		component_id id = m_ComponentCount;
-
-		m_RotatableComponents.emplace(id, RotatableComponent(degrees));
-		m_ComponentsType[id] = RotatableComponentType;
-
-		m_ComponentCount = id + 1;
-
-		return id;
-	}
-
-	/*
-	==========================================
-	ComponentManager::deleteRotatableComponent
-	==========================================
-	*/
-	void ComponentManager::deleteRotatableComponent(component_id id)
-	{
-		m_RotatableComponents.erase(id);
-		m_ComponentsType.erase(id);
-	}
-
-	/*
-	====================================
 	VelocityComponent::VelocityComponent
 	====================================
 	*/
@@ -308,6 +228,7 @@ namespace de {
 	====================================
 	*/
 	ColliderComponent::ColliderComponent()
+		: contour(fvec2(0.0f, 0.0f), 0.0f, 0.0f)
 	{ }
 
 	/*
@@ -325,6 +246,20 @@ namespace de {
 		m_ComponentCount = id + 1;
 
 		return id;
+	}
+
+	/*
+	======================================
+	ComponentManager::getColliderComponent
+	======================================
+	*/
+	ColliderComponent *ComponentManager::getColliderComponent(component_id component)
+	{
+		const auto &it = m_ColliderComponents.find(component);
+		if(it == m_ColliderComponents.end())
+			return nullptr;
+
+		return &it->second;
 	}
 
 	/*

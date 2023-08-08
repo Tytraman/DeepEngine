@@ -6,6 +6,7 @@
 #include <DE/vec.hpp>
 #include <DE/memory/list.hpp>
 #include <DE/graphic/vertex.hpp>
+#include <DE/graphic/shape.hpp>
 
 namespace de {
 
@@ -14,12 +15,11 @@ namespace de {
 
 	struct DrawableComponent;
 	struct TransformationComponent;
-	struct MoveableComponent;
-	struct ScalableComponent;
-	struct RotatableComponent;
 	struct VelocityComponent;
 	struct ColliderComponent;
 	struct HealthComponent;
+
+	class SystemManager;
 
 	/// @class ComponentManager
 	/// @brief Permet la gestion de composants.
@@ -42,25 +42,13 @@ namespace de {
 			static TransformationComponent *getTransformationComponent(component_id component);
 			static void deleteTransformationComponent(component_id id);
 
-			static component_id createMoveableComponent(const fvec2 &movement);
-			static MoveableComponent *getMoveableComponent(component_id component);
-			static void deleteMoveableComponent(component_id id);
-
-			static component_id createScalableComponent(const fvec2 &scaling);
-			static ScalableComponent *getScalableComponent(component_id component);
-			static void deleteScalableComponent(component_id id);
-
-			static component_id createRotatableComponent(float degrees);
-			static RotatableComponent *getRotatableComponent(component_id component);
-			static void deleteRotatableComponent(component_id id);
+			static component_id createColliderComponent();
+			static ColliderComponent *getColliderComponent(component_id component);
+			static void deleteColliderComponent(component_id id);
 
 			static component_id createVelocityComponent();
 			static VelocityComponent *getVelocityComponent(component_id component);
 			static void deleteVelocityComponent(component_id id);
-
-			static component_id createColliderComponent();
-			static ColliderComponent *getColliderComponent(component_id component);
-			static void deleteColliderComponent(component_id id);
 			
 			static component_id createHealthComponent(uint32_t pv, uint32_t max);
 			static HealthComponent *getHealthComponent(component_id component);
@@ -78,6 +66,8 @@ namespace de {
 
 		List vertices;	///< Contient la liste des sommets du composant de dessin.
 		uint8_t flags;	///< Contient les options du composant de dessin.
+
+		Rect calcRectContour();
 		
 		private:
 			DrawableComponent();
@@ -90,59 +80,84 @@ namespace de {
 	/// @struct TransformationComponent
 	/// @brief	Composant indiquant qu'une entité possède une transformation.
 	struct DE_API TransformationComponent {
-		fvec2 translation;
-		fvec2 scaling;
-		float rotation;
+		
+		public:
+			void applyAABBTransformation(Rect &rectangle) const;
+
+			fvec2 getTranslation() const;
+			fvec2 getScaling() const;
+			float getRotation() const;
+			fvec2 getLastMovement() const;
+
+			void setTranslation(const fvec2 &translation);
+			void setScaling(const fvec2 &scaling);
+			void setRotation(float rotation);
 
 		private:
+			fvec2 m_Translation;
+			fvec2 m_Scaling;
+			float m_Rotation;
+
+			fvec2 m_LastMovement;
+
 			TransformationComponent(const fvec2 &translation, const fvec2 &scaling, float rotation);
 
 			friend ComponentManager;
+			friend SystemManager;
 	};
 
-	constexpr component_type MoveableComponentType = (1 << 2);
+	inline fvec2 TransformationComponent::getTranslation() const
+	{
+		return m_Translation;
+	}
 
-	/// @struct MoveableComponent
-	/// @brief	Composant indiquant qu'une entité est déplaçable.
-	struct DE_API MoveableComponent {
-		fvec2 movement;
+	inline fvec2 TransformationComponent::getScaling() const
+	{
+		return m_Scaling;
+	}
 
+	inline float TransformationComponent::getRotation() const
+	{
+		return m_Rotation;
+	}
+
+	inline fvec2 TransformationComponent::getLastMovement() const
+	{
+		return m_LastMovement;
+	}
+
+	inline void TransformationComponent::setTranslation(const fvec2 &translation)
+	{
+		m_LastMovement += m_Translation - translation;
+		m_Translation = translation;
+	}
+
+	inline void TransformationComponent::setScaling(const fvec2 &scaling)
+	{
+		m_Scaling = scaling;
+	}
+
+	inline void TransformationComponent::setRotation(float rotation)
+	{
+		m_Rotation = rotation;
+	}
+
+
+	constexpr component_type ColliderComponentType = (1 << 2);
+
+	/// @struct ColliderComponent
+	/// @brief  Composant décrivant qu'une entité possède une boîte de collision de type AABB.
+	/// @remark En utilisant l'AABB, il n'est pas conseillé de tourner les objets car la boîte de collision est rectangulaire.
+	struct DE_API ColliderComponent {
+		Rect contour;
+		
 		private:
-			MoveableComponent();
-			MoveableComponent(const fvec2 &movement);
+			ColliderComponent();
 
 			friend ComponentManager;
 	};
 
-	constexpr component_type ScalableComponentType = (1 << 3);
-
-	/// @struct ScalableComponent
-	/// @brief	Composant indiquant qu'une entité est redimensionnable.
-	struct DE_API ScalableComponent {
-		fvec2 scaling;
-
-		private:
-			ScalableComponent();
-			ScalableComponent(const fvec2 &scaling);
-
-			friend ComponentManager;
-	};
-
-	constexpr component_type RotatableComponentType = (1 << 4);
-
-	/// @struct RotatableComponent
-	/// @brief	Composant indiquant qu'une entité est pivotable.
-	struct DE_API RotatableComponent {
-		float degrees;
-
-		private:
-			RotatableComponent();
-			RotatableComponent(float degrees);
-
-			friend ComponentManager;
-	};
-
-	constexpr component_type VelocityComponentType = (1 << 5);
+	constexpr component_type VelocityComponentType = (1 << 3);
 	struct DE_API VelocityComponent {
 
 		private:
@@ -151,16 +166,7 @@ namespace de {
 			friend ComponentManager;
 	};
 
-	constexpr component_type ColliderComponentType = (1 << 6);
-	struct DE_API ColliderComponent {
-		
-		private:
-			ColliderComponent();
-
-			friend ComponentManager;
-	};
-
-	constexpr component_type HealthComponentType = (1 << 7);
+	constexpr component_type HealthComponentType = (1 << 4);
 
 	/// @struct HealthComponent
 	/// @brief	Composant indiquant qu'une entité possède une quantité de points de vie.

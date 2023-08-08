@@ -1,5 +1,29 @@
 \hypertarget{classde_1_1_scene}{}\doxysection{de\+::Scene Class Reference}
 \label{classde_1_1_scene}\index{de::Scene@{de::Scene}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classde_1_1_scene_a743ce1a93dce2edce083a73d2ebd53fd}\label{classde_1_1_scene_a743ce1a93dce2edce083a73d2ebd53fd}} 
+Collider\+Callback {\bfseries get\+Collider\+Callback} () const
+\item 
+\mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \mbox{\hyperlink{classde_1_1_scene_af58f5976792d0d66f44322571ed7e80e}{get\+View\+Translation}} () const
+\begin{DoxyCompactList}\small\item\em Récupère la position de la vue de la scène. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \mbox{\hyperlink{classde_1_1_scene_a4a97b23e3a1cfbbc201b2cd37741d1b5}{get\+View\+Scale}} () const
+\begin{DoxyCompactList}\small\item\em Récupère le zoom / déformation de la vue de la scène. \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{classde_1_1_scene_a24ac87c91551c7a929892e69088fb3c6}{get\+View\+Angle}} () const
+\begin{DoxyCompactList}\small\item\em Récupère l\textquotesingle{}angle de rotation de la vue de la scène. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classde_1_1_scene_a28d25e3a8555fa3cad158b39858de741}\label{classde_1_1_scene_a28d25e3a8555fa3cad158b39858de741}} 
+void {\bfseries set\+Collider\+Callback} (Collider\+Callback callback)
+\item 
+\mbox{\Hypertarget{classde_1_1_scene_a6f592265b4b71afac38d80413f21cd7e}\label{classde_1_1_scene_a6f592265b4b71afac38d80413f21cd7e}} 
+void {\bfseries set\+View\+Translation} (const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&vec)
+\item 
+\mbox{\Hypertarget{classde_1_1_scene_aa99560c6555a61c69541d6c4e6d9bf65}\label{classde_1_1_scene_aa99560c6555a61c69541d6c4e6d9bf65}} 
+void {\bfseries set\+View\+Scale} (const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&vec)
+\item 
+\mbox{\Hypertarget{classde_1_1_scene_af2d5948a2537a11d6377ad05d0dfa93b}\label{classde_1_1_scene_af2d5948a2537a11d6377ad05d0dfa93b}} 
+void {\bfseries set\+View\+Angle} (float angle)
+\end{DoxyCompactItemize}
 \doxysubsection*{Static Public Member Functions}
 \begin{DoxyCompactItemize}
 \item 
@@ -16,18 +40,30 @@ static void \mbox{\hyperlink{classde_1_1_scene_a9a514d0173316e438b555d4de91751df
 \begin{DoxyCompactList}\small\item\em Détruit une entité appartenant à la scène. \end{DoxyCompactList}\item 
 static void \mbox{\hyperlink{classde_1_1_scene_a0412f3227f57d5c7b2d5db9d6b4bbd1e}{attach\+Component}} (scene\+\_\+id scene, \mbox{\hyperlink{namespacede_a4b769e8ad9ef40c80d6977dd63b13d8d}{entity\+\_\+id}} entity, \mbox{\hyperlink{namespacede_adbab350ac25bb55830790ba08466a4a1}{component\+\_\+id}} component)
 \begin{DoxyCompactList}\small\item\em Attache un composant à l\textquotesingle{}entité appartenant à la scène. \end{DoxyCompactList}\item 
-\mbox{\Hypertarget{classde_1_1_scene_a3d585acf387b8920679fe6fc2a5a566a}\label{classde_1_1_scene_a3d585acf387b8920679fe6fc2a5a566a}} 
-static entity\+\_\+collection\+\_\+id {\bfseries get\+Entity\+Collection} (scene\+\_\+id scene)
-\item 
-\mbox{\Hypertarget{classde_1_1_scene_a623092ad801321beaf7422f75e8335ea}\label{classde_1_1_scene_a623092ad801321beaf7422f75e8335ea}} 
-static scene\+\_\+id {\bfseries get\+Active\+Scene\+ID} ()
-\end{DoxyCompactItemize}
+static entity\+\_\+collection\+\_\+id \mbox{\hyperlink{classde_1_1_scene_a3d585acf387b8920679fe6fc2a5a566a}{get\+Entity\+Collection}} (scene\+\_\+id scene)
+\begin{DoxyCompactList}\small\item\em Récupère l\textquotesingle{}ID de la collection d\textquotesingle{}entités liée à la scène spécifiée. \end{DoxyCompactList}\item 
+static scene\+\_\+id \mbox{\hyperlink{classde_1_1_scene_a623092ad801321beaf7422f75e8335ea}{get\+Active\+Scene\+ID}} ()
+\begin{DoxyCompactList}\small\item\em Récupère l\textquotesingle{}ID de la scène actuellement active. \end{DoxyCompactList}\item 
+static \mbox{\hyperlink{classde_1_1_scene}{Scene}} $\ast$ \mbox{\hyperlink{classde_1_1_scene_a4b8c61f978ba9bd08b8c5da98b141087}{get\+Scene}} (scene\+\_\+id scene)
+\begin{DoxyCompactList}\small\item\em Récupère un pointeur vers la structure de la scène spécifié. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Private Attributes}
 \begin{DoxyCompactItemize}
 \item 
+\mbox{\Hypertarget{classde_1_1_scene_a95db30456135cf315b1729628ccee704}\label{classde_1_1_scene_a95db30456135cf315b1729628ccee704}} 
+Collider\+Callback \mbox{\hyperlink{classde_1_1_scene_a95db30456135cf315b1729628ccee704}{m\+\_\+\+Collider\+Callback}}
+\begin{DoxyCompactList}\small\item\em Callback lorsqu\textquotesingle{}une collision est détectée entre 2 entités. \end{DoxyCompactList}\item 
 \mbox{\Hypertarget{classde_1_1_scene_aaa394fde254be1da903c6dcf23b01347}\label{classde_1_1_scene_aaa394fde254be1da903c6dcf23b01347}} 
 entity\+\_\+collection\+\_\+id \mbox{\hyperlink{classde_1_1_scene_aaa394fde254be1da903c6dcf23b01347}{m\+\_\+\+Entity\+Collection}}
-\begin{DoxyCompactList}\small\item\em ID du gestionnaire d\textquotesingle{}entités de la scène. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\begin{DoxyCompactList}\small\item\em ID du gestionnaire d\textquotesingle{}entités de la scène. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classde_1_1_scene_a364b45548989c337a2323a31b7d58fbb}\label{classde_1_1_scene_a364b45548989c337a2323a31b7d58fbb}} 
+\mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \mbox{\hyperlink{classde_1_1_scene_a364b45548989c337a2323a31b7d58fbb}{m\+\_\+\+View\+Translation}}
+\begin{DoxyCompactList}\small\item\em La position de la vue relative à l\textquotesingle{}origine du plan. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classde_1_1_scene_a300a989d9a0c1d46ce6c896ef03109f9}\label{classde_1_1_scene_a300a989d9a0c1d46ce6c896ef03109f9}} 
+\mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \mbox{\hyperlink{classde_1_1_scene_a300a989d9a0c1d46ce6c896ef03109f9}{m\+\_\+\+View\+Scale}}
+\begin{DoxyCompactList}\small\item\em Le zoom / déformation de la vue. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classde_1_1_scene_abedfec80db2c4bb668a7193e1ec6e0f3}\label{classde_1_1_scene_abedfec80db2c4bb668a7193e1ec6e0f3}} 
+float \mbox{\hyperlink{classde_1_1_scene_abedfec80db2c4bb668a7193e1ec6e0f3}{m\+\_\+\+View\+Angle}}
+\begin{DoxyCompactList}\small\item\em L\textquotesingle{}angle de rotation de la vue relative à l\textquotesingle{}origine du plan. \end{DoxyCompactList}\end{DoxyCompactItemize}
 \doxysubsection*{Static Private Attributes}
 \begin{DoxyCompactItemize}
 \item 
@@ -110,6 +146,94 @@ Détruit une entité appartenant à la scène.
 {\em entity} & L\textquotesingle{}ID de l\textquotesingle{}entité à retirer. \\
 \hline
 \end{DoxyParams}
+\mbox{\Hypertarget{classde_1_1_scene_a623092ad801321beaf7422f75e8335ea}\label{classde_1_1_scene_a623092ad801321beaf7422f75e8335ea}} 
+\index{de::Scene@{de::Scene}!getActiveSceneID@{getActiveSceneID}}
+\index{getActiveSceneID@{getActiveSceneID}!de::Scene@{de::Scene}}
+\doxysubsubsection{\texorpdfstring{getActiveSceneID()}{getActiveSceneID()}}
+{\footnotesize\ttfamily scene\+\_\+id de\+::\+Scene\+::get\+Active\+Scene\+ID (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Récupère l\textquotesingle{}ID de la scène actuellement active. 
+
+\begin{DoxyReturn}{Returns}
+L\textquotesingle{}ID de la scène active ou \mbox{\hyperlink{namespacede_a6a1375f95640c602aee0f14c8c3468e6}{bad\+ID}} si aucune scène n\textquotesingle{}est active. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classde_1_1_scene_a3d585acf387b8920679fe6fc2a5a566a}\label{classde_1_1_scene_a3d585acf387b8920679fe6fc2a5a566a}} 
+\index{de::Scene@{de::Scene}!getEntityCollection@{getEntityCollection}}
+\index{getEntityCollection@{getEntityCollection}!de::Scene@{de::Scene}}
+\doxysubsubsection{\texorpdfstring{getEntityCollection()}{getEntityCollection()}}
+{\footnotesize\ttfamily static entity\+\_\+collection\+\_\+id de\+::\+Scene\+::get\+Entity\+Collection (\begin{DoxyParamCaption}\item[{scene\+\_\+id}]{scene }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Récupère l\textquotesingle{}ID de la collection d\textquotesingle{}entités liée à la scène spécifiée. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em scene} & L\textquotesingle{}ID de la scène. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+L\textquotesingle{}ID de la collection d\textquotesingle{}entités si la scène existe sinon \mbox{\hyperlink{namespacede_a6a1375f95640c602aee0f14c8c3468e6}{bad\+ID}}. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classde_1_1_scene_a4b8c61f978ba9bd08b8c5da98b141087}\label{classde_1_1_scene_a4b8c61f978ba9bd08b8c5da98b141087}} 
+\index{de::Scene@{de::Scene}!getScene@{getScene}}
+\index{getScene@{getScene}!de::Scene@{de::Scene}}
+\doxysubsubsection{\texorpdfstring{getScene()}{getScene()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{classde_1_1_scene}{Scene}}$\ast$ de\+::\+Scene\+::get\+Scene (\begin{DoxyParamCaption}\item[{scene\+\_\+id}]{scene }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Récupère un pointeur vers la structure de la scène spécifié. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em scene} & L\textquotesingle{}ID de la scène. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Le pointeur vers la structure si la scène existe ou {\ttfamily nullptr} si elle n\textquotesingle{}existe pas. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classde_1_1_scene_a24ac87c91551c7a929892e69088fb3c6}\label{classde_1_1_scene_a24ac87c91551c7a929892e69088fb3c6}} 
+\index{de::Scene@{de::Scene}!getViewAngle@{getViewAngle}}
+\index{getViewAngle@{getViewAngle}!de::Scene@{de::Scene}}
+\doxysubsubsection{\texorpdfstring{getViewAngle()}{getViewAngle()}}
+{\footnotesize\ttfamily float de\+::\+Scene\+::get\+View\+Angle (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Récupère l\textquotesingle{}angle de rotation de la vue de la scène. 
+
+\begin{DoxyReturn}{Returns}
+L\textquotesingle{}angle de rotation de la vue de la scène. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classde_1_1_scene_a4a97b23e3a1cfbbc201b2cd37741d1b5}\label{classde_1_1_scene_a4a97b23e3a1cfbbc201b2cd37741d1b5}} 
+\index{de::Scene@{de::Scene}!getViewScale@{getViewScale}}
+\index{getViewScale@{getViewScale}!de::Scene@{de::Scene}}
+\doxysubsubsection{\texorpdfstring{getViewScale()}{getViewScale()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} de\+::\+Scene\+::get\+View\+Scale (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Récupère le zoom / déformation de la vue de la scène. 
+
+\begin{DoxyReturn}{Returns}
+Le vecteur décrivant le zoom / déformation de la vue. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classde_1_1_scene_af58f5976792d0d66f44322571ed7e80e}\label{classde_1_1_scene_af58f5976792d0d66f44322571ed7e80e}} 
+\index{de::Scene@{de::Scene}!getViewTranslation@{getViewTranslation}}
+\index{getViewTranslation@{getViewTranslation}!de::Scene@{de::Scene}}
+\doxysubsubsection{\texorpdfstring{getViewTranslation()}{getViewTranslation()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} de\+::\+Scene\+::get\+View\+Translation (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Récupère la position de la vue de la scène. 
+
+\begin{DoxyReturn}{Returns}
+Le vecteur décrivant la translation de la vue. 
+\end{DoxyReturn}
 
 
 The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}

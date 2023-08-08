@@ -121,11 +121,8 @@ void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="clas
 <tr class="memitem:ace4a878ddd10eb607dc5cee9beea0d11"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classde_1_1_renderer.html#ace4a878ddd10eb607dc5cee9beea0d11">drawLine</a> (int x1, int y1, int x2, int y2) const</td></tr>
 <tr class="memdesc:ace4a878ddd10eb607dc5cee9beea0d11"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dessine une ligne qui part des coordonnées x1, y1 et qui va jusqu'aux coordonnées x2, y2 avec la couleur définie.  <a href="classde_1_1_renderer.html#ace4a878ddd10eb607dc5cee9beea0d11">More...</a><br /></td></tr>
 <tr class="separator:ace4a878ddd10eb607dc5cee9beea0d11"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3b58b1a1a03b67d3b70737b38bdd60a7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classde_1_1_renderer.html#a3b58b1a1a03b67d3b70737b38bdd60a7">drawRectangle</a> (const <a class="el" href="structde_1_1rect.html">rect</a> &amp;<a class="el" href="structde_1_1rect.html">rect</a>, bool fill=false) const</td></tr>
-<tr class="memdesc:a3b58b1a1a03b67d3b70737b38bdd60a7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dessine un rectangle avec la couleur définie. Peut être rempli ou non.  <a href="classde_1_1_renderer.html#a3b58b1a1a03b67d3b70737b38bdd60a7">More...</a><br /></td></tr>
-<tr class="separator:a3b58b1a1a03b67d3b70737b38bdd60a7"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a1937bf8bce7123b22f70789bd37cf36a"><td class="memItemLeft" align="right" valign="top"><a id="a1937bf8bce7123b22f70789bd37cf36a"></a>
-void&#160;</td><td class="memItemRight" valign="bottom"><b>drawShape</b> (const SDL_Vertex *vertices, int verticesNumber) const</td></tr>
+<tr class="memitem:a1937bf8bce7123b22f70789bd37cf36a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classde_1_1_renderer.html#a1937bf8bce7123b22f70789bd37cf36a">drawShape</a> (const SDL_Vertex *vertices, int verticesNumber) const</td></tr>
+<tr class="memdesc:a1937bf8bce7123b22f70789bd37cf36a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Dessine un rectangle avec la couleur définie. Peut être rempli ou non.  <a href="classde_1_1_renderer.html#a1937bf8bce7123b22f70789bd37cf36a">More...</a><br /></td></tr>
 <tr class="separator:a1937bf8bce7123b22f70789bd37cf36a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a24d88616d74e1c8beb2feef0b6815c20"><td class="memItemLeft" align="right" valign="top"><a id="a24d88616d74e1c8beb2feef0b6815c20"></a>
 void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classde_1_1_renderer.html#a24d88616d74e1c8beb2feef0b6815c20">swapBuffers</a> () const</td></tr>
@@ -308,23 +305,23 @@ SDL_Renderer *&#160;</td><td class="memItemRight" valign="bottom"><b>_renderer</
 
 </div>
 </div>
-<a id="a3b58b1a1a03b67d3b70737b38bdd60a7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3b58b1a1a03b67d3b70737b38bdd60a7">&#9670;&nbsp;</a></span>drawRectangle()</h2>
+<a id="a1937bf8bce7123b22f70789bd37cf36a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1937bf8bce7123b22f70789bd37cf36a">&#9670;&nbsp;</a></span>drawShape()</h2>
 
 <div class="memitem">
 <div class="memproto">
       <table class="memname">
         <tr>
-          <td class="memname">void de::Renderer::drawRectangle </td>
+          <td class="memname">void de::Renderer::drawShape </td>
           <td>(</td>
-          <td class="paramtype">const <a class="el" href="structde_1_1rect.html">rect</a> &amp;&#160;</td>
-          <td class="paramname"><em>rect</em>, </td>
+          <td class="paramtype">const SDL_Vertex *&#160;</td>
+          <td class="paramname"><em>vertices</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>fill</em> = <code>false</code>&#160;</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>verticesNumber</em>&#160;</td>
         </tr>
         <tr>
           <td></td>

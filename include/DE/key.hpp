@@ -42,14 +42,17 @@ namespace de {
 			W = SDLK_w,
 			X = SDLK_x,
 			Y = SDLK_y,
-			Z = SDLK_z
+			Z = SDLK_z,
+
+			LCtrl  = SDLK_LCTRL,
+			LShift = SDLK_LSHIFT
 		};
 	}
 
 	class DE_API Key {
 
 		private:
-			static const Uint8 *_keys;
+			static const Uint8 *m_Keys;
 
 		public:
 			static void update();

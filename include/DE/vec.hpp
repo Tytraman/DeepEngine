@@ -11,6 +11,16 @@ namespace de {
 	struct fmat2x2;
 	struct fmat3x3;
 
+	namespace Vec2Direction {
+		enum e : uint8_t {
+			Up,
+			Left,
+			Down,
+			Right,
+			None
+		};
+	}
+
 	/// @struct vec2
 	/// @brief  Vecteur à 2 dimensions avec des composantes de type \c int32_t.
 	struct DE_API vec2 {
@@ -89,6 +99,10 @@ namespace de {
 		/// @brief       Surcharge qui effectue cette fonction : \ref sub(const fvec2 &v, float valueToSub) sur le vecteur courant.
 		/// @param value La valeur à retirer du vecteur courant.
 		void operator-=(float value);
+
+		/// @brief   Surcharge qui effectue cette fonction \ref add(const fvec2 &v1, const vec2 &v2) sur le vecteur courant.
+		/// @param v Le vecteur à ajouter au vecteur courant.
+		void operator+=(const fvec2 &v);
 
 		/// @brief       Surcharge qui effectue cette fonction : \ref add(const fvec2 &v, float valueToAdd) sur le vecteur courant.
 		/// @param value La valeur à ajouter au vecteur courant.

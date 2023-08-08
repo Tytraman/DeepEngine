@@ -160,7 +160,10 @@
       <Filter>Header Files\graphic</Filter>
     </ClInclude>
     <ClInclude Include="include\DE\graphic\graphic.hpp">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\graphic</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DE\graphic\shape.hpp">
+      <Filter>Header Files\graphic</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
