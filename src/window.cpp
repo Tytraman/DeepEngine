@@ -100,7 +100,7 @@ namespace de {
 		Key::update();
 
 		// Boucle infinie du jeu
-		// TODO: mettre cette boucle autre part que dans la fenêtre car ça n'a pas vraiment de lien
+		// TODO: mettre cette boucle autre part que dans la fenêtre car ça n'a pas vraiment de lien.
 		uint64_t startTime = Core::getCurrentTimeMillis(), endTime;
 		while(m_Running) {
 			scene_id sceneID = Scene::getActiveSceneID();
@@ -114,10 +114,10 @@ namespace de {
 			// Récupère les évènements système, les entrées utilisateurs etc...
 			// et exécute un callback s'il y en a un.
 			while((e = pollEvent()) != nullptr) {
-				// Gère les évènements internes
+				// Gère les évènements internes.
 				internalEventCallback(e);
 
-				// Appelle le callback s'il y en a un spécifié
+				// Appelle le callback utilisateur.
 				if(m_EventCallback != nullptr)
 					m_EventCallback(*this, e);
 
@@ -125,15 +125,20 @@ namespace de {
 			}
 
 			// Ne met à jour l'état du jeu que si le lag est supérieur au ms visé.
-			// _targetMSPerUpdate est une constante qui ne doit jamais changer car elle impacte directement
-			// la vitesse du jeu et l'entièreté de la physique
+			// m_TargetMSPerUpdate est une constante qui ne doit jamais changer car elle impacte directement
+			// la vitesse du jeu et l'entièreté de la physique.
 			while(lag >= m_TargetMSPerUpdate) {
+				// Exécute la fonction update callback de l'utilisateur.
 				if(m_UpdateCallback != nullptr)
 					m_UpdateCallback(*this);
 
 				// Exécute les systèmes créés par l'utilisateur.
 				SystemManager::executeSystems();
 
+				// Applique la vélocité à toutes les entités en possédant.
+				SystemManager::velocitySystem();
+
+				// Les collisions sont vérifiées après tous les déplacements possibles afin d'éviter les problèmes.
 				SystemManager::colliderSystem();
 
 				lag -= m_TargetMSPerUpdate;
@@ -142,6 +147,7 @@ namespace de {
 				// Note: plus on reste longtemps dans cette boucle, et plus le lag sera élevé
 			}
 
+			// Fait le rendu final de la frame !
 			SystemManager::renderSystem(m_Renderer);
 
 			end = Core::getTick();

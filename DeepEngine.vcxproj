@@ -447,6 +447,7 @@
     <ClInclude Include="include\DE\debug.hpp" />
     <ClInclude Include="include\DE\drawable.hpp" />
     <ClInclude Include="include\DE\drawable_types.h" />
+    <ClInclude Include="include\DE\ecs\ecs.hpp" />
     <ClInclude Include="include\DE\ecs\entity.hpp" />
     <ClInclude Include="include\DE\ecs\system.hpp" />
     <ClInclude Include="include\DE\events.hpp" />

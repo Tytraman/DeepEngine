@@ -1,4 +1,5 @@
 #include <DE/scene.hpp>
+#include <DE/ecs/entity.hpp>
 
 #include <unordered_map>
 
@@ -50,27 +51,13 @@ namespace de {
 	Scene::addEntity
 	================
 	*/
-	entity_id Scene::createEntity(scene_id scene)
+	Entity Scene::createEntity(scene_id scene)
 	{
 		const auto &s = m_Scenes.find(scene);
 		if(s == m_Scenes.end())
-			return badID;
+			return Entity::bad();
 
 		return EntityManager::createEntity(s->second.m_EntityCollection);
-	}
-
-	/*
-	====================
-	Scene::destroyEntity
-	====================
-	*/
-	void Scene::destroyEntity(scene_id scene, entity_id entity)
-	{
-		const auto &s = m_Scenes.find(scene);
-		if(s == m_Scenes.end())
-			return;
-
-		EntityManager::destroyEntity(s->second.m_EntityCollection, entity);
 	}
 
 	/*
@@ -78,14 +65,14 @@ namespace de {
 	Scene::attachComponent
 	======================
 	*/
-	void Scene::attachComponent(scene_id scene, entity_id entity, component_id component)
+	/*void Scene::attachComponent(scene_id scene, entity_id entity, component_id component)
 	{
 		const auto &s = m_Scenes.find(scene);
 		if(s == m_Scenes.end())
 			return;
 
 		EntityManager::attachComponent(s->second.m_EntityCollection, entity, component);
-	}
+	}*/
 
 	/*
 	==========================

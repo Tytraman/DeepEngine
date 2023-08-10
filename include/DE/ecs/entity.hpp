@@ -3,16 +3,55 @@
 
 #include <DE/def.h>
 #include <DE/types.hpp>
-#include <DE/ecs/component.hpp>
+#include <DE/ecs/ecs.hpp>
 #include <DE/memory/list.hpp>
 
 namespace de {
 
-	/// @brief	Identifie une entité dans une scène.
-	/// @remark	Chaque entité d'une scène est représenté par un identifiant unique.
-	using entity_id = de_id;
-	
-	using entity_collection_id = de_id;
+	class EntityManager;
+
+	class DE_API Entity {
+
+		private:
+			entity_collection_id  m_CollectionID;
+			entity_id m_EntityID;
+
+			friend EntityManager;
+
+		public:
+			Entity() = delete;
+
+			static Entity bad();
+
+			bool isOK() const;
+
+			entity_collection_id getCollectionID() const;
+			entity_id getEntityID() const;
+
+		protected:
+			Entity(entity_collection_id collectionID, entity_id entityID);
+
+	};
+
+	inline Entity Entity::bad()
+	{
+		return Entity(badID, badID);
+	}
+
+	inline bool Entity::isOK() const
+	{
+		return (m_CollectionID != badID && m_EntityID != badID);
+	}
+
+	inline scene_id Entity::getCollectionID() const
+	{
+		return m_CollectionID;
+	}
+
+	inline entity_id Entity::getEntityID() const
+	{
+		return m_EntityID;
+	}
 
 	/// @brief	Classe permettant la gestion d'une collection d'entités.
 	class DE_API EntityManager {
@@ -25,18 +64,16 @@ namespace de {
 			static entity_collection_id createEntityCollection();
 
 			/// @brief	Crée une entité.
-			/// @return L'ID de l'entité.
-			static entity_id createEntity(entity_collection_id collection);
+			/// @return L'entité nouvellement créée.
+			static Entity createEntity(entity_collection_id collection);
 
 			/// @brief		Supprime une entité de la liste.
-			/// @param id	L'ID de l'entité à supprimer.
-			static void destroyEntity(entity_collection_id collection, entity_id entity);
+			static void destroyEntity(const Entity &entity);
 
 			/// @brief				Attache un composant à une entité.
 			/// @param entity		L'entité à laquelle attacher le composant.
-			/// @param component	Composant à attacher.
 			/// @return				\c true si le composant à bien été attaché.
-			static bool attachComponent(entity_collection_id collection, entity_id entity, component_id component);
+			static bool attachComponent(const Entity &entity, component_id component);
 
 			/// @brief							Cherche toutes les entités qui respectent les conditions d'inclusions et les ajoute dans la liste destination.
 			/// @param collection				ID de la collection d'entités dans laquelle chercher.
@@ -45,9 +82,15 @@ namespace de {
 			/// @param dest						Pointeur vers la liste qui stockera les entités répondant aux conditions.
 			static void query(entity_collection_id collection, component_type componentTypesToInclude, component_type componentTypesToExclude, List *dest);
 
-			static component_id getComponentID(entity_collection_id collection, entity_id entity, component_type componentType);
+			static component_id getComponentID(entity_collection_id collectionID, entity_id entityID, component_type componentType);
+			static component_id getComponentID(const Entity &entity, component_type componentType);
 
 	};
+
+	inline component_id EntityManager::getComponentID(const Entity &entity, component_type componentType)
+	{
+		return getComponentID(entity.m_CollectionID, entity.m_EntityID, componentType);
+	}
 
 }
 

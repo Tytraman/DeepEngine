@@ -3,15 +3,13 @@
 
 #include <DE/def.h>
 #include <DE/types.hpp>
+#include <DE/ecs/ecs.hpp>
 #include <DE/vec.hpp>
 #include <DE/memory/list.hpp>
 #include <DE/graphic/vertex.hpp>
 #include <DE/graphic/shape.hpp>
 
 namespace de {
-
-	using component_id   = de_id;			///< Identificateur de composant.
-	using component_type = uint32_t;		///< Type associé à un composant.
 
 	struct DrawableComponent;
 	struct TransformationComponent;
@@ -159,12 +157,27 @@ namespace de {
 
 	constexpr component_type VelocityComponentType = (1 << 3);
 	struct DE_API VelocityComponent {
+		public:
+			fvec2 getVelocity() const;
+			void setVelocity(const fvec2 &vel);
 
 		private:
+			fvec2 m_Velocity;
+
 			VelocityComponent();
 
 			friend ComponentManager;
 	};
+
+	inline fvec2 VelocityComponent::getVelocity() const
+	{
+		return m_Velocity;
+	}
+
+	inline void VelocityComponent::setVelocity(const fvec2 &vel)
+	{
+		m_Velocity = vel;
+	}
 
 	constexpr component_type HealthComponentType = (1 << 4);
 

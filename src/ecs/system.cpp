@@ -1,5 +1,7 @@
-#include <DE/ecs/system.hpp>
 #include <DE/ecs/entity.hpp>
+#include <DE/ecs/component.hpp>
+#include <DE/ecs/system.hpp>
+
 #include <DE/scene.hpp>
 #include <DE/mat.hpp>
 
@@ -98,6 +100,62 @@ namespace de {
 	SystemManager::colliderSystem
 	=============================
 	*/
+	void SystemManager::velocitySystem()
+	{
+		scene_id sceneID = Scene::getActiveSceneID();
+
+		// Si aucune scène n'est active, cela ne sert à rien de continuer la procédure.
+		if(sceneID == badID)
+			return;
+
+		List entities(sizeof(entity_id));
+		entity_collection_id collectionID = Scene::getEntityCollection(sceneID);
+
+		// Query toutes les entités possédant une vélocité et une transformation.
+		EntityManager::query(collectionID, TransformationComponentType | VelocityComponentType, 0, &entities);
+
+		size_t length = entities.getNumberOfElements();
+		size_t i;
+		entity_id entity;
+
+		// Itère à travers toutes les entités possédant une vélocité et une transformation.
+		for(i = 0; i < length; ++i) {
+			if(entities.getCopy(i, &entity)) {
+				component_id transformationComponentID = EntityManager::getComponentID(collectionID, entity, TransformationComponentType);
+
+				TransformationComponent *transformationComponent = ComponentManager::getTransformationComponent(transformationComponentID);
+
+				if(transformationComponent == nullptr)
+					continue;
+
+				component_id velocityComponentID = EntityManager::getComponentID(collectionID, entity, VelocityComponentType);
+
+				VelocityComponent *velocityComponent = ComponentManager::getVelocityComponent(velocityComponentID);
+
+				if(velocityComponent == nullptr)
+					continue;
+
+				// Applique la vélocité sur la transformation.
+				fvec2 translation = transformationComponent->getTranslation();
+				fvec2 velocity = velocityComponent->getVelocity();
+				translation += velocity;
+				transformationComponent->setTranslation(translation);
+
+				// Si l'entité possède une collision, on met à jour sa position aussi.
+				component_id colliderComponentID = EntityManager::getComponentID(collectionID, entity, ColliderComponentType);
+				if(colliderComponentID != badID) {
+					ColliderComponent *colliderComponent = ComponentManager::getColliderComponent(colliderComponentID);
+					colliderComponent->contour.pos += velocity;
+				}
+			}
+		}
+	}
+
+	/*
+	=============================
+	SystemManager::colliderSystem
+	=============================
+	*/
 	void SystemManager::colliderSystem()
 	{
 		scene_id sceneID = Scene::getActiveSceneID();
@@ -185,7 +243,7 @@ namespace de {
 							
 
 							// Appelle la fonction callback entre les 2 entités qui sont en collision entre elles.
-							callback(entity1, entity2, entity2Middle - entity1Middle, collision);
+							callback(collectionID, entity1, entity2, entity2Middle - entity1Middle, collision);
 
 							int a = 10;
 						}

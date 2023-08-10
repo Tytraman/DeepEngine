@@ -1,4 +1,5 @@
 #include <DE/ecs/entity.hpp>
+#include <DE/ecs/component.hpp>
 
 #include <unordered_map>
 
@@ -6,19 +7,24 @@ namespace de {
 
 	/// @struct Entity
 	/// @brief	Une entité peut contenir plusieurs composants et est représentée par un ID.
-	struct Entity {
+	struct EntityItem {
 		List components;				///< Contient tous les composants que l'entité possède.
 		component_type componentsType;	///< Masque des types de composants attribués à l'entité.
 
-		Entity();
+		EntityItem();
 	};
 
 	static entity_collection_id m_NextCollectionID = 0;														///< Prochain ID de collection à attribuer.
-	static std::unordered_map<entity_collection_id, std::unordered_map<entity_id, Entity>> m_Collections;	///< Collection d'entités.
+	static std::unordered_map<entity_collection_id, std::unordered_map<entity_id, EntityItem>> m_Collections;	///< Collection d'entités.
 	static std::unordered_map<entity_collection_id, entity_id> m_NextEntityID;								///< Contient le prochain ID d'entité à attribuer dans une collection.
 
-	Entity::Entity()
+	EntityItem::EntityItem()
 		: components(sizeof(component_id)), componentsType(0)
+	{ }
+
+	Entity::Entity(entity_collection_id collectionID, entity_id entityID)
+		: m_CollectionID(collectionID),
+		  m_EntityID(entityID)
 	{ }
 
 	/*
@@ -30,7 +36,7 @@ namespace de {
 	{
 		entity_collection_id id = m_NextCollectionID;
 
-		m_Collections[id] = std::unordered_map<entity_id, Entity>();
+		m_Collections[id] = std::unordered_map<entity_id, EntityItem>();
 
 		m_NextCollectionID++;
 
@@ -42,7 +48,7 @@ namespace de {
 	EntityManager::createEntity
 	===========================
 	*/
-	entity_id EntityManager::createEntity(entity_collection_id collection)
+	Entity EntityManager::createEntity(entity_collection_id collection)
 	{
 		auto &entityCollection = m_Collections[collection];
 
@@ -51,7 +57,7 @@ namespace de {
 
 		m_NextEntityID[collection]++;
 
-		return id;
+		return Entity(collection, id);
 	}
 
 	/*
@@ -59,13 +65,13 @@ namespace de {
 	EntityManager::destroyEntity
 	============================
 	*/
-	void EntityManager::destroyEntity(entity_collection_id collection, entity_id entity)
+	void EntityManager::destroyEntity(const Entity &entity)
 	{
-		auto &entityCollection = m_Collections[collection];
+		auto &entityCollection = m_Collections[entity.m_CollectionID];
 
 		// Libère la mémoire utilisée par la liste.
-		entityCollection[entity].components.free();
-		entityCollection.erase(entity);
+		entityCollection[entity.m_EntityID].components.free();
+		entityCollection.erase(entity.m_EntityID);
 	}
 
 	/*
@@ -73,13 +79,13 @@ namespace de {
 	EntityManager::attachComponent
 	==============================
 	*/
-	bool EntityManager::attachComponent(entity_collection_id collection, entity_id entity, component_id component)
+	bool EntityManager::attachComponent(const Entity &entity, component_id component)
 	{
-		const auto &itCollection = m_Collections.find(collection);
+		const auto &itCollection = m_Collections.find(entity.m_CollectionID);
 		if(itCollection == m_Collections.end())
 			return false;
 
-		const auto &ent = itCollection->second.find(entity);
+		const auto &ent = itCollection->second.find(entity.m_EntityID);
 		if(ent == itCollection->second.end())
 			return false;
 
@@ -100,13 +106,13 @@ namespace de {
 	EntityManager::getComponentID
 	=============================
 	*/
-	component_id EntityManager::getComponentID(entity_collection_id collection, entity_id entity, component_type componentType)
+	component_id EntityManager::getComponentID(entity_collection_id collectionID, entity_id entityID, component_type componentType)
 	{
-		const auto &itCollection = m_Collections.find(collection);
+		const auto &itCollection = m_Collections.find(collectionID);
 		if(itCollection == m_Collections.end())
 			return badID;
 
-		const auto &ent = itCollection->second.find(entity);
+		const auto &ent = itCollection->second.find(entityID);
 		if(ent == itCollection->second.end())
 			return badID;
 

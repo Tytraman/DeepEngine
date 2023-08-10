@@ -1,6 +1,9 @@
 #include <DE/graphic/graphic.hpp>
 #include <DE/graphic/vertex.hpp>
 
+#include <DE/ecs/entity.hpp>
+#include <DE/ecs/component.hpp>
+
 namespace de {
 
 	/*
@@ -19,10 +22,8 @@ namespace de {
 	Scene::attachComponent
 	======================
 	*/
-	entity_id Graphic::createRectangle(scene_id scene, const fvec2 &position, float width, float height, const colora &color, bool collidable)
+	Entity Graphic::createRectangle(entity_collection_id collectionID, const fvec2 &position, float width, float height, const colora &color, bool collidable)
 	{
-		entity_collection_id collectionID = Scene::getEntityCollection(scene);
-
 		component_id drawableComponentID = ComponentManager::createDrawableComponent();
 		component_id transformationComponentID = ComponentManager::createTransformationComponent(position, fvec2(width, height), 0.0f);
 
@@ -55,9 +56,9 @@ namespace de {
 		drawableComponent->vertices.addCopy(&v3);
 		drawableComponent->vertices.addCopy(&v4);
 
-		entity_id entityID = EntityManager::createEntity(collectionID);
-		EntityManager::attachComponent(collectionID, entityID, drawableComponentID);
-		EntityManager::attachComponent(collectionID, entityID, transformationComponentID);
+		Entity entity = EntityManager::createEntity(collectionID);
+		EntityManager::attachComponent(entity, drawableComponentID);
+		EntityManager::attachComponent(entity, transformationComponentID);
 
 		if(collidable) {
 			component_id colliderComponentID = ComponentManager::createColliderComponent();
@@ -68,10 +69,10 @@ namespace de {
 			colliderComponent->contour.w = width;
 			colliderComponent->contour.h = height;
 
-			EntityManager::attachComponent(collectionID, entityID, colliderComponentID);
+			EntityManager::attachComponent(entity, colliderComponentID);
 		}
 
-		return entityID;
+		return entity;
 	}
 
 	/*
@@ -79,10 +80,8 @@ namespace de {
 	Scene::createTriangle
 	=====================
 	*/
-	entity_id Graphic::createTriangle(scene_id scene, const fvec2 &position, float radius, const colora &color)
+	Entity Graphic::createTriangle(entity_collection_id collectionID, const fvec2 &position, float radius, const colora &color)
 	{
-		entity_collection_id collectionID = Scene::getEntityCollection(scene);
-
 		component_id drawableComponentID = ComponentManager::createDrawableComponent();
 		component_id transformationComponentID = ComponentManager::createTransformationComponent(position, fvec2(radius, radius), 0.0f);
 
@@ -107,11 +106,11 @@ namespace de {
 		drawableComponent->vertices.addCopy(&v2);
 		drawableComponent->vertices.addCopy(&v3);
 
-		entity_id entityID = EntityManager::createEntity(collectionID);
-		EntityManager::attachComponent(collectionID, entityID, drawableComponentID);
-		EntityManager::attachComponent(collectionID, entityID, transformationComponentID);
+		Entity entity = EntityManager::createEntity(collectionID);
+		EntityManager::attachComponent(entity, drawableComponentID);
+		EntityManager::attachComponent(entity, transformationComponentID);
 
-		return entityID;
+		return entity;
 	}
 
 }

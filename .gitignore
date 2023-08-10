@@ -363,7 +363,6 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # ==================== #
-Tester
 Debug-DLL
 Debug-lib
 DeepEngineDLL

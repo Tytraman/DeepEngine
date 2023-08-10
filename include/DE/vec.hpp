@@ -191,6 +191,8 @@ namespace de {
 		/// @return  La magnitude du vecteur.
 		static float magn(const fvec2 &v);
 
+		static fvec2 norm(const fvec2 &v);
+
 		/// @brief    Retourne l'angle en degrés entre 2 vecteurs.
 		/// @param v1 Vecteur 1.
 		/// @param v2 Vecteur 2.

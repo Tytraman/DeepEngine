@@ -4,14 +4,10 @@
 #include <DE/def.h>
 #include <DE/types.hpp>
 #include <DE/memory/list.hpp>
-#include <DE/ecs/component.hpp>
+#include <DE/ecs/ecs.hpp>
 #include <DE/renderer.hpp>
 
 namespace de {
-
-	using SystemFunction = void (*)(List *query);	///< Pointeur vers une fonction qu'un système doit exécuter.
-
-	using system_id = de_id;						///< ID représentant un système.
 
 	struct DE_API SystemItem {
 		SystemFunction function;					///< Fonction que le système doit exécuter.
@@ -54,6 +50,8 @@ namespace de {
 			/// @remark			Si le système est déjà désactivé, il ne sera pas désactivé une 2ème fois.
 			/// @param system	L'ID du système à désactiver.
 			static void disableSystem(system_id system);
+
+			static void velocitySystem();
 
 			static void colliderSystem();
 

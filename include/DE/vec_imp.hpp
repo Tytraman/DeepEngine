@@ -395,6 +395,20 @@ namespace de {
 	}
 
 	/*
+	===========
+	fvec2::norm
+	===========
+	*/
+	inline fvec2 fvec2::norm(const fvec2 &v)
+	{
+		float length = magn(v);
+		return {
+			v.x / length,
+			v.y / length
+		};
+	}
+
+	/*
 	============
 	fvec2::angle
 	============

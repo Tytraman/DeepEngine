@@ -192,6 +192,7 @@ namespace de {
 	====================================
 	*/
 	VelocityComponent::VelocityComponent()
+		: m_Velocity(0.0f, 0.0f)
 	{ }
 
 	/*
@@ -209,6 +210,20 @@ namespace de {
 		m_ComponentCount = id + 1;
 
 		return id;
+	}
+
+	/*
+	======================================
+	ComponentManager::getVelocityComponent
+	======================================
+	*/
+	VelocityComponent *ComponentManager::getVelocityComponent(component_id component)
+	{
+		const auto &it = m_VelocityComponents.find(component);
+		if(it == m_VelocityComponents.end())
+			return nullptr;
+
+		return &it->second;
 	}
 
 	/*
