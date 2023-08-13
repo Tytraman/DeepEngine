@@ -458,29 +458,31 @@ int main() {
 	if(!de::AudioDevice::init())
 		fprintf(stderr, "Unable to load audio device.\n");
 
-	de::AudioBuffer lePervBuffer;
+	de::AudioBuffer songBuffer;
 
-	if(!lePervBuffer.create("Carpenter_Brut-Le_Perv.wav")) {
+	if(!songBuffer.create("song.wav")) {
 		fprintf(stderr, "Unable to load sound.\n");
 		de::AudioDevice::shutdown();
 		return 1;
 	}
+
+	printf("Audio frequency: %d\nAudio bits: %d\nAudio channels: %d\nAudio size: %d\n", songBuffer.getFrequency(), songBuffer.getBits(), songBuffer.getChannels(), songBuffer.getSize());
 
 	de::AudioSource audioSource;
 
 	if(!audioSource.create()) {
 		fprintf(stderr, "Unable to create audio source.\n");
 
-		lePervBuffer.destroy();
+		songBuffer.destroy();
 		de::AudioDevice::shutdown();
 
 		return 1;
 	}
 
-	if(!audioSource.attachBuffer(lePervBuffer)) {
+	if(!audioSource.attachBuffer(songBuffer)) {
 		fprintf(stderr, "Unable to attach buffer to audio source.\n");
 
-		lePervBuffer.destroy();
+		songBuffer.destroy();
 		audioSource.destroy();
 		de::AudioDevice::shutdown();
 
@@ -491,7 +493,7 @@ int main() {
 	if(!audioListener.setPosition(de::fvec3(0.0f, 0.0f, 0.0f))) {
 		fprintf(stderr, "Unable to set listener position.\n");
 
-		lePervBuffer.destroy();
+		songBuffer.destroy();
 		audioSource.destroy();
 		de::AudioDevice::shutdown();
 
@@ -501,7 +503,7 @@ int main() {
 	if(!audioListener.setVelocity(de::fvec3(0.0f, 0.0f, 0.0f))) {
 		fprintf(stderr, "Unable to set listener velocity.\n");
 
-		lePervBuffer.destroy();
+		songBuffer.destroy();
 		audioSource.destroy();
 		de::AudioDevice::shutdown();
 
@@ -511,7 +513,7 @@ int main() {
 	if(!audioSource.play()) {
 		fprintf(stderr, "Unable to play sound.\n");
 
-		lePervBuffer.destroy();
+		songBuffer.destroy();
 		audioSource.destroy();
 		de::AudioDevice::shutdown();
 
@@ -575,12 +577,16 @@ int main() {
 	window.destroy();
 
 	logger.close();
-	de::Core::quit();
 
 	lua_close(L);
 
+	songBuffer.destroy();
+	audioSource.destroy();
 	de::AudioDevice::shutdown();
 
+	de::Core::quit();
+
 	printf("Good-bye!\n");
+
 	return 0;
 }

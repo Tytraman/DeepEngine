@@ -22,6 +22,12 @@ namespace de {
 	constexpr uint32_t ListSubChunkID = (('T' << 24) | ('S' << 16) | ('I' << 8) | ('L'));    ///< ID du sous chunk "LIST" qu'un fichier WAVE peut contenir.
 	constexpr uint32_t InfoSubChunkID = (('O' << 24) | ('F' << 16) | ('N' << 8) | ('I'));    ///< ID du sous chunk "INFO" qu'un fichier WAVE peut contenir.
 
+	constexpr uint16_t WaveFormatPCM        = 0x0001;
+	constexpr uint16_t WaveFormatIEEEFloat  = 0x0003;
+	constexpr uint16_t WaveFormatAlaw       = 0x0006;
+	constexpr uint16_t WaveFormatMulaw      = 0x0007;
+	constexpr uint16_t WaveFormatExtensible = 0xFFFE;
+
 	
 	DE_PACK(
 		/// @brief Structure décrivant l'en-tête d'un fichier RIFF.
@@ -38,12 +44,19 @@ namespace de {
 		uint32_t byteRate;
 		uint16_t blockAlign;
 		uint16_t bitsPerSample;
-		uint32_t nextChunkID;
-		uint32_t nextChunkSize;
+	});
+
+	DE_PACK(struct DE_API WaveFmtExtendChunk {
+		WaveFmtChunk fmtStandardChunk;
+		uint16_t extensionSize;
+		uint16_t validBitsPerSample;
+		uint32_t channelMask;
+		uint8_t guid[16];
 	});
 
 	DE_PACK(struct DE_API WaveListChunk {
 		uint32_t typeID;
+		uint32_t size;
 	});
 
 	/*
@@ -71,6 +84,11 @@ namespace de {
 
 			bool create(const char *filename);
 			void destroy();
+
+			int getFrequency() const;
+			int getBits() const;
+			int getChannels() const;
+			int getSize() const;
 
 		private:
 			ALuint m_Buffer;
@@ -107,6 +125,10 @@ namespace de {
 			bool setPosition(const fvec3 &pos);
 			bool setVelocity(const fvec3 &vel);
 			// bool setOrientation();
+
+			float getGain() const;
+			fvec3 getPosition() const;
+			fvec3 getVelocity() const;
 
 		private:
 
