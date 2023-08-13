@@ -4,19 +4,26 @@
 
 #include <DE/sys_win.hpp>
 
-DWORD de::SysWin::_tlsIndex = TLS_OUT_OF_INDEXES;
+namespace de {
+    DWORD SysWin::m_TLSIndex  = TLS_OUT_OF_INDEXES;
+}
+
+
 
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
     de::LocalThreadVar *local;
 
     switch(fdwReason) {
         default: break;
-        case DLL_PROCESS_ATTACH: {
-            de::SysWin::_tlsIndex = TlsAlloc();
 
-            if(de::SysWin::_tlsIndex == TLS_OUT_OF_INDEXES)
+        // Quand la DLL est attachée à un processus.
+        case DLL_PROCESS_ATTACH: {
+            de::SysWin::m_TLSIndex = TlsAlloc();
+
+            if(de::SysWin::m_TLSIndex == TLS_OUT_OF_INDEXES)
                 return FALSE;
         }
+        // Quand on un nouveau thread est attaché.
         case DLL_THREAD_ATTACH: {
             local = de::SysWin::createLocalThreadVar();
             local->functionCallbackList = new std::vector<std::string>();
@@ -31,6 +38,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
                 LocalFree((HLOCAL) local);
             }
         } break;
+        // Quand la DLL est détachée du processus.
         case DLL_PROCESS_DETACH: {
             local = de::SysWin::getLocalThreadVar();
 
@@ -40,7 +48,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
                 LocalFree((HLOCAL) local);
             }
 
-            TlsFree(de::SysWin::_tlsIndex);
+            TlsFree(de::SysWin::m_TLSIndex);
         } break;
     }
 
@@ -48,7 +56,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved) {
 }
 
 de::LocalThreadVar *de::SysWin::getLocalThreadVar(bool createIfNotExisting) {
-    LPVOID data = TlsGetValue(_tlsIndex);
+    LPVOID data = TlsGetValue(m_TLSIndex);
 
     if(data == NULL) {
         if(!createIfNotExisting)
@@ -68,7 +76,7 @@ de::LocalThreadVar *de::SysWin::createLocalThreadVar() {
     if(data == NULL)
         return NULL;
 
-    if(!TlsSetValue(_tlsIndex, data)) {
+    if(!TlsSetValue(m_TLSIndex, data)) {
         LocalFree((HLOCAL) data);
         return NULL;
     }

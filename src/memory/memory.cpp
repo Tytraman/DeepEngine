@@ -106,7 +106,7 @@ namespace de {
 	MemoryManager::free
 	===================
 	*/
-	void MemoryManager::free(mem_ptr memory)
+	void MemoryManager::free(const mem_ptr memory)
 	{
 		size_t index = g_MemoryTrack.find(memory);
 		if(index != nothing)

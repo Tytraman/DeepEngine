@@ -3,7 +3,7 @@
 
 #include <DE/def.h>
 #include <DE/types.hpp>
-#include <DE/output_stream.hpp>
+#include <DE/stream.hpp>
 
 #include <DE/def.h>
 #include <stddef.h>
@@ -14,8 +14,6 @@
 namespace de {
 
 	class DE_API Debug {
-
-		private:
 
 		public:
 			static bool addFunctionToCallbackList(const char *functionName, bool count = true);

@@ -60,6 +60,8 @@
 #define DE_MSVC 1
 #define DE_FUNCTION_NAME __FUNCTION__
 
+#define DE_PACK( __Declaration__ ) __pragma( pack(push, 1) ) __Declaration__ __pragma( pack(pop))
+
 #if DEEPENGINE_LIB
 #define DE_API __declspec(dllexport)
 #else

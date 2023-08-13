@@ -18,6 +18,8 @@
 #include <DE/ecs/entity.hpp>
 #include <DE/ecs/component.hpp>
 
+#include <DE/audio/audio.hpp>
+
 #include <lua.hpp>
 
 #define AUTHORS		"Tytraman"
@@ -451,6 +453,71 @@ int main() {
 
 	lua_State *L = luaL_newstate();
 
+	printf("pwd: %s\n", de::Core::getPwd());
+
+	if(!de::AudioDevice::init())
+		fprintf(stderr, "Unable to load audio device.\n");
+
+	de::AudioBuffer lePervBuffer;
+
+	if(!lePervBuffer.create("Carpenter_Brut-Le_Perv.wav")) {
+		fprintf(stderr, "Unable to load sound.\n");
+		de::AudioDevice::shutdown();
+		return 1;
+	}
+
+	de::AudioSource audioSource;
+
+	if(!audioSource.create()) {
+		fprintf(stderr, "Unable to create audio source.\n");
+
+		lePervBuffer.destroy();
+		de::AudioDevice::shutdown();
+
+		return 1;
+	}
+
+	if(!audioSource.attachBuffer(lePervBuffer)) {
+		fprintf(stderr, "Unable to attach buffer to audio source.\n");
+
+		lePervBuffer.destroy();
+		audioSource.destroy();
+		de::AudioDevice::shutdown();
+
+		return 1;
+	}
+
+	de::AudioListener &audioListener = de::AudioDevice::getListener();
+	if(!audioListener.setPosition(de::fvec3(0.0f, 0.0f, 0.0f))) {
+		fprintf(stderr, "Unable to set listener position.\n");
+
+		lePervBuffer.destroy();
+		audioSource.destroy();
+		de::AudioDevice::shutdown();
+
+		return 1;
+	}
+
+	if(!audioListener.setVelocity(de::fvec3(0.0f, 0.0f, 0.0f))) {
+		fprintf(stderr, "Unable to set listener velocity.\n");
+
+		lePervBuffer.destroy();
+		audioSource.destroy();
+		de::AudioDevice::shutdown();
+
+		return 1;
+	}
+
+	if(!audioSource.play()) {
+		fprintf(stderr, "Unable to play sound.\n");
+
+		lePervBuffer.destroy();
+		audioSource.destroy();
+		de::AudioDevice::shutdown();
+
+		return 1;
+	}
+
 	de::Window window(TARGET_MS, TARGET_FPS);
 	window.setEventCallback(eventCallback);
 	window.setUpdateCallback(updateCallback);
@@ -511,6 +578,8 @@ int main() {
 	de::Core::quit();
 
 	lua_close(L);
+
+	de::AudioDevice::shutdown();
 
 	printf("Good-bye!\n");
 	return 0;

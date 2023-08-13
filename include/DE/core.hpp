@@ -24,6 +24,8 @@ namespace de {
 			static uint64_t getCurrentTimeMillis();
 			static void sleep(uint32_t millis);
 
+			static const char *getPwd();
+
 	};
 
 	inline uint64_t Core::getTick() {

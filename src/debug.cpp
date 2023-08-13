@@ -45,7 +45,7 @@ bool de::Debug::writeToStream(OutputStream &stream) {
 		for(j = 0; j < i; ++j)
 			line.append("  ");
 		line.append("┗━ " + (*local->functionCallbackList)[i] + "\n");
-		if(!stream.write((uint8_t *) line.c_str(), line.size(), bytesWritten) || bytesWritten == 0)
+		if(!stream.write((uint8_t *) line.c_str(), line.size(), &bytesWritten) || bytesWritten == 0)
 			return false;
 	}
 
@@ -70,7 +70,7 @@ bool de::Debug::writeCountToStream(OutputStream &stream) {
 
 	for(const std::pair<const std::string, size_t> &it : ordered) {
 		line.assign(it.first + " -> " + std::to_string(it.second) + "\n");
-		if(!stream.write((uint8_t *) line.c_str(), line.size(), bytesWritten))
+		if(!stream.write((uint8_t *) line.c_str(), line.size(), &bytesWritten))
 			return false;
 	}
 

@@ -35,7 +35,7 @@ namespace de {
 			static mem_ptr realloc(mem_ptr memory, size_t newSize);
 
 			static void freeNoTrack(mem_ptr memory);
-			static void free(mem_ptr memory);
+			static void free(const mem_ptr memory);
 
 	};
 

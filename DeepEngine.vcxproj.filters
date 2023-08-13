@@ -61,6 +61,12 @@
     <Filter Include="Header Files\graphic">
       <UniqueIdentifier>{efe8f642-1853-423b-9e5c-016449bab18b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\audio">
+      <UniqueIdentifier>{d72c69b7-930c-476a-bdab-5a8f5669e224}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\audio">
+      <UniqueIdentifier>{a18306ce-7a56-4b23-aa1a-bd3fba7ef8bb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\DE\core.hpp">
@@ -90,10 +96,7 @@
     <ClInclude Include="include\DE\logger.hpp">
       <Filter>Header Files\debug</Filter>
     </ClInclude>
-    <ClInclude Include="include\DE\output_file_stream.hpp">
-      <Filter>Header Files\stream</Filter>
-    </ClInclude>
-    <ClInclude Include="include\DE\output_stream.hpp">
+    <ClInclude Include="include\DE\stream.hpp">
       <Filter>Header Files\stream</Filter>
     </ClInclude>
     <ClInclude Include="include\DE\c-wrapper\logger.h">
@@ -168,6 +171,9 @@
     <ClInclude Include="include\DE\ecs\ecs.hpp">
       <Filter>Header Files\ecs</Filter>
     </ClInclude>
+    <ClInclude Include="include\DE\audio\audio.hpp">
+      <Filter>Header Files\audio</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\core.cpp">
@@ -188,16 +194,10 @@
     <ClCompile Include="src\logger.cpp">
       <Filter>Source Files\debug</Filter>
     </ClCompile>
-    <ClCompile Include="src\output_file_stream.cpp">
-      <Filter>Source Files\stream</Filter>
-    </ClCompile>
     <ClCompile Include="src\window.cpp">
       <Filter>Source Files\windows</Filter>
     </ClCompile>
     <ClCompile Include="src\string_utils.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\debug.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\drawable.cpp">
@@ -238,6 +238,15 @@
     </ClCompile>
     <ClCompile Include="src\graphics\graphic.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="src\audio\stream.cpp">
+      <Filter>Source Files\stream</Filter>
+    </ClCompile>
+    <ClCompile Include="src\debug.cpp">
+      <Filter>Source Files\debug</Filter>
+    </ClCompile>
+    <ClCompile Include="include\DE\audio\audio.cpp">
+      <Filter>Source Files\audio</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

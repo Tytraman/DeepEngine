@@ -1,43 +1,54 @@
 #include <DE/logger.hpp>
 #include <DE/c-wrapper/logger.h>
 
-de::Logger::Logger(const char *filename)
-	: OutputFileStream(filename) {}
+#include <string>
 
-void de::Logger::add(const std::string &title, const std::string &text) {
-	std::string inf = "[";
-	appendTime(inf, "/", ":", " ");
-	inf.append("] [" + title + "] " + text);
-	OutputFileStream::operator<<(inf);
-}
+namespace de {
 
-void de::Logger::appendTime(std::string &dest, const char *dateSeparator, const char *timeSeparator, const char *separator) {
-	char digits[5];
+	Logger::Logger(const char *filename)
+	: OutputFileStream(filename)
+	{ }
+
+	void append_time(std::string &dest, const char *dateSeparator, const char *timeSeparator, const char *separator)
+	{
+		char digits[5];
 #ifdef DE_WINDOWS
-	SYSTEMTIME localTime;
-	GetLocalTime(&localTime);
-	snprintf(digits, sizeof(digits), "%02d", localTime.wDay);
-	dest.append(digits);
-	dest.append(dateSeparator);
-	snprintf(digits, sizeof(digits), "%02d", localTime.wMonth);
-	dest.append(digits);
-	dest.append(dateSeparator);
-	snprintf(digits, sizeof(digits), "%04d", localTime.wYear);
-	dest.append(digits);
+		SYSTEMTIME localTime;
+		GetLocalTime(&localTime);
+		snprintf(digits, sizeof(digits), "%02d", localTime.wDay);
+		dest.append(digits);
+		dest.append(dateSeparator);
+		snprintf(digits, sizeof(digits), "%02d", localTime.wMonth);
+		dest.append(digits);
+		dest.append(dateSeparator);
+		snprintf(digits, sizeof(digits), "%04d", localTime.wYear);
+		dest.append(digits);
 
-	dest.append(separator);
+		dest.append(separator);
 
-	snprintf(digits, sizeof(digits), "%02d", localTime.wHour);
-	dest.append(digits);
-	dest.append(timeSeparator);
-	snprintf(digits, sizeof(digits), "%02d", localTime.wMinute);
-	dest.append(digits);
-	dest.append(timeSeparator);
-	snprintf(digits, sizeof(digits), "%02d", localTime.wSecond);
-	dest.append(digits);
+		snprintf(digits, sizeof(digits), "%02d", localTime.wHour);
+		dest.append(digits);
+		dest.append(timeSeparator);
+		snprintf(digits, sizeof(digits), "%02d", localTime.wMinute);
+		dest.append(digits);
+		dest.append(timeSeparator);
+		snprintf(digits, sizeof(digits), "%02d", localTime.wSecond);
+		dest.append(digits);
 #else
 #error Implement this
 #endif
+	}
+
+	void Logger::add(const char *title, const char *text)
+	{
+		std::string inf = "[";
+		size_t bytesWritten;
+
+		append_time(inf, "/", ":", " ");
+		inf.append("] [" + std::string(title) + "] " + text);
+		write((const mem_ptr) inf.c_str(), inf.length(), &bytesWritten);
+	}
+
 }
 
 de_hlogger de_new_logger(const char *filename) {

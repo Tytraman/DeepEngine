@@ -217,15 +217,15 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);DEEPENGINE_LIB</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>stdc11</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)..\..\lib\C\SDL2\include;$(SolutionDir)..\..\libs\lua-5.4.6\src;$(SolutionDir)..\..\libs\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)..\..\lib\C\SDL2\include;$(SolutionDir)..\..\libs\lua-5.4.6\src;$(SolutionDir)..\..\libs\SDL2\include;$(SolutionDir)..\..\libs\openal-soft\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <ExceptionHandling>Sync</ExceptionHandling>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\..\libs\lua-5.4.6\lua\$(PlatformTarget)\Debug;$(SolutionDir)..\..\lib\C\SDL2\lib\$(PlatformTarget);$(SolutionDir)..\..\libs\SDL2\lib\$(PlatformTarget)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;lua.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\libs\openal-soft\libs\Win32;$(SolutionDir)..\..\libs\lua-5.4.6\lua\$(PlatformTarget)\Debug;$(SolutionDir)..\..\lib\C\SDL2\lib\$(PlatformTarget);$(SolutionDir)..\..\libs\SDL2\lib\$(PlatformTarget)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>OpenAL32.lib;SDL2.lib;lua.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AssemblyDebug>true</AssemblyDebug>
     </Link>
     <Lib>
@@ -350,15 +350,15 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);DEEPENGINE_LIB</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>stdc11</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)..\..\lib\C\SDL2\include;$(SolutionDir)..\..\libs\lua-5.4.6\src;$(SolutionDir)..\..\libs\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)..\..\lib\C\SDL2\include;$(SolutionDir)..\..\libs\lua-5.4.6\src;$(SolutionDir)..\..\libs\SDL2\include;$(SolutionDir)..\..\libs\openal-soft\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <ExceptionHandling>Sync</ExceptionHandling>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\..\libs\lua-5.4.6\lua\$(PlatformTarget)\Debug;$(SolutionDir)..\..\lib\C\SDL2\lib\$(PlatformTarget);$(SolutionDir)..\..\libs\SDL2\lib\$(PlatformTarget)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>SDL2.lib;lua.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\libs\openal-soft\libs\Win64;$(SolutionDir)..\..\libs\lua-5.4.6\lua\$(PlatformTarget)\Debug;$(SolutionDir)..\..\lib\C\SDL2\lib\$(PlatformTarget);$(SolutionDir)..\..\libs\SDL2\lib\$(PlatformTarget)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>OpenAL32.lib;SDL2.lib;lua.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AssemblyDebug>true</AssemblyDebug>
     </Link>
     <Lib>
@@ -439,6 +439,7 @@
     </Lib>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="include\DE\audio\audio.hpp" />
     <ClInclude Include="include\DE\c-wrapper\core.h" />
     <ClInclude Include="include\DE\c-wrapper\logger.h" />
     <ClInclude Include="include\DE\c-wrapper\output_stream.h" />
@@ -463,8 +464,7 @@
     <ClInclude Include="include\DE\mat.hpp" />
     <ClInclude Include="include\DE\memory\list.hpp" />
     <ClInclude Include="include\DE\memory\memory.hpp" />
-    <ClInclude Include="include\DE\output_file_stream.hpp" />
-    <ClInclude Include="include\DE\output_stream.hpp" />
+    <ClInclude Include="include\DE\stream.hpp" />
     <ClInclude Include="include\DE\renderer.hpp" />
     <ClInclude Include="include\DE\scene.hpp" />
     <ClInclude Include="include\DE\string_utils.hpp" />
@@ -476,6 +476,7 @@
     <ClInclude Include="include\DE\c-wrapper\debug.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="include\DE\audio\audio.cpp" />
     <ClCompile Include="src\color.cpp" />
     <ClCompile Include="src\ecs\component.cpp" />
     <ClCompile Include="src\ecs\entity.cpp" />
@@ -490,11 +491,11 @@
     <ClCompile Include="src\error.cpp" />
     <ClCompile Include="src\key.cpp" />
     <ClCompile Include="src\logger.cpp" />
-    <ClCompile Include="src\output_file_stream.cpp" />
     <ClCompile Include="src\renderer.cpp" />
     <ClCompile Include="src\core.cpp" />
     <ClCompile Include="include\DE\types.hpp" />
     <ClCompile Include="src\scene.cpp" />
+    <ClCompile Include="src\audio\stream.cpp" />
     <ClCompile Include="src\string_utils.cpp" />
     <ClCompile Include="src\sys_win.cpp" />
     <ClCompile Include="src\vec.cpp" />

@@ -22,7 +22,7 @@ namespace de {
 		friend BOOL WINAPI ::DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved);
 
 		private:
-			static DWORD _tlsIndex;
+			static DWORD m_TLSIndex;
 
 		public:
 			static LocalThreadVar *getLocalThreadVar(bool createIfNotExisting = false);
@@ -33,7 +33,7 @@ namespace de {
 	};
 
 	inline DWORD SysWin::getTlsIndex() {
-		return _tlsIndex;
+		return m_TLSIndex;
 	}
 
 }
