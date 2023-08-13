@@ -13,6 +13,7 @@ namespace de {
 	static std::unordered_map<component_id, TransformationComponent>	m_TransformationComponents;
 	static std::unordered_map<component_id, VelocityComponent>			m_VelocityComponents;
 	static std::unordered_map<component_id, ColliderComponent>			m_ColliderComponents;
+	static std::unordered_map<component_id, AccelerationComponent>      m_AccelerationComponents;
 	static std::unordered_map<component_id, HealthComponent>			m_HealthComponents;
 
 	/*
@@ -109,10 +110,10 @@ namespace de {
 	ComponentManager::deleteDrawableComponent
 	=========================================
 	*/
-	void ComponentManager::deleteDrawableComponent(component_id id)
+	void ComponentManager::deleteDrawableComponent(component_id component)
 	{
-		m_DrawableComponents.erase(id);
-		m_ComponentsType.erase(id);
+		m_DrawableComponents.erase(component);
+		m_ComponentsType.erase(component);
 	}
 
 	/*
@@ -180,10 +181,10 @@ namespace de {
 	ComponentManager::deleteTransformationComponent
 	===============================================
 	*/
-	void ComponentManager::deleteTransformationComponent(component_id id)
+	void ComponentManager::deleteTransformationComponent(component_id component)
 	{
-		m_TransformationComponents.erase(id);
-		m_ComponentsType.erase(id);
+		m_TransformationComponents.erase(component);
+		m_ComponentsType.erase(component);
 	}
 
 	/*
@@ -231,10 +232,10 @@ namespace de {
 	ComponentManager::deleteVelocityComponent
 	=========================================
 	*/
-	void ComponentManager::deleteVelocityComponent(component_id id)
+	void ComponentManager::deleteVelocityComponent(component_id component)
 	{
-		m_VelocityComponents.erase(id);
-		m_ComponentsType.erase(id);
+		m_VelocityComponents.erase(component);
+		m_ComponentsType.erase(component);
 	}
 
 	/*
@@ -282,11 +283,44 @@ namespace de {
 	ComponentManager::deleteColliderComponent
 	=========================================
 	*/
-	void ComponentManager::deleteColliderComponent(component_id id)
+	void ComponentManager::deleteColliderComponent(component_id component)
 	{
-		m_ColliderComponents.erase(id);
-		m_ComponentsType.erase(id);
+		m_ColliderComponents.erase(component);
+		m_ComponentsType.erase(component);
 	}
+
+
+	AccelerationComponent::AccelerationComponent(const fvec2 &_acceleration)
+		: acceleration(_acceleration)
+	{ }
+
+	component_id ComponentManager::createAccelerationComponent(const fvec2 &acceleration)
+	{
+		component_id id = m_ComponentCount;
+
+		m_AccelerationComponents.emplace(id, AccelerationComponent(acceleration));
+		m_ComponentsType[id] = AccelerationComponentType;
+
+		m_ComponentCount = id + 1;
+
+		return id;
+	}
+
+	AccelerationComponent *ComponentManager::getAccelerationComponent(component_id component)
+	{
+		const auto &it = m_AccelerationComponents.find(component);
+		if(it == m_AccelerationComponents.end())
+			return nullptr;
+
+		return &it->second;
+	}
+
+	void ComponentManager::deleteAccelerationComponent(component_id component)
+	{
+		m_AccelerationComponents.erase(component);
+		m_ComponentsType.erase(component);
+	}
+
 
 	/*
 	================================

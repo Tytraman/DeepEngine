@@ -45,7 +45,8 @@ namespace de {
 			Z = SDLK_z,
 
 			LCtrl  = SDLK_LCTRL,
-			LShift = SDLK_LSHIFT
+			LShift = SDLK_LSHIFT,
+			Space  = SDLK_SPACE
 		};
 	}
 

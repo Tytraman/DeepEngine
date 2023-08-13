@@ -96,8 +96,52 @@ namespace de {
 	}
 
 	/*
+	=================================
+	SystemManager::accelerationSystem
+	=================================
+	*/
+	void SystemManager::accelerationSystem()
+	{
+		scene_id sceneID = Scene::getActiveSceneID();
+
+		// Si aucune scène n'est active, cela ne sert à rien de continuer la procédure.
+		if(sceneID == badID)
+			return;
+
+		List entities(sizeof(entity_id));
+		entity_collection_id collectionID = Scene::getEntityCollection(sceneID);
+
+		// Query toutes les entités possédant une vélocité et une accélération.
+		EntityManager::query(collectionID, VelocityComponentType | AccelerationComponentType, 0, &entities);
+
+		size_t length = entities.getNumberOfElements();
+		size_t i;
+		entity_id entity;
+
+		// Itère à travers toutes les entités possédant une vélocité et une accélération.
+		for(i = 0; i < length; ++i) {
+			if(entities.getCopy(i, &entity)) {
+				component_id velCpnID = EntityManager::getComponentID(collectionID, entity, VelocityComponentType);
+				VelocityComponent *velCpn = ComponentManager::getVelocityComponent(velCpnID);
+
+				if(velCpn == nullptr)
+					continue;
+
+				component_id accCpnID = EntityManager::getComponentID(collectionID, entity, AccelerationComponentType);
+				AccelerationComponent *accCpn = ComponentManager::getAccelerationComponent(accCpnID);
+
+				if(accCpn == nullptr)
+					continue;
+
+				// Applique l'accélération à la vélocité.
+				velCpn->setVelocity(velCpn->getVelocity() + accCpn->acceleration);
+			}
+		}
+	}
+
+	/*
 	=============================
-	SystemManager::colliderSystem
+	SystemManager::velocitySystem
 	=============================
 	*/
 	void SystemManager::velocitySystem()

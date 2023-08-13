@@ -51,6 +51,8 @@ namespace de {
 			/// @param system	L'ID du système à désactiver.
 			static void disableSystem(system_id system);
 
+			static void accelerationSystem();
+
 			static void velocitySystem();
 
 			static void colliderSystem();

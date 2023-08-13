@@ -36,6 +36,7 @@
 
 #define PLAYER_SPAWN_X 200.0f
 #define PLAYER_SPAWN_Y 200.0f
+#define PLAYER_GRAVITY 0.30f
 
 #define RECT1_SPAWN_X  400.0f
 #define RECT1_SPAWN_Y  200.0f
@@ -177,64 +178,7 @@ void updateCallback(de::Window &window) {
 	playerTransformationComponent = de::ComponentManager::getTransformationComponent(playerTransformationComponentID);
 	playerColliderComponent       = de::ComponentManager::getColliderComponent(playerColliderComponentID);
 
-	if(de::Key::isPressed(de::key::LeftArrow)) {
-		float rotation = playerTransformationComponent->getRotation();
-		rotation -= 1.0f;
-		playerTransformationComponent->setRotation(rotation);
-	}
-
-	if(de::Key::isPressed(de::key::RightArrow)) {
-		float rotation = playerTransformationComponent->getRotation();
-		rotation += 1.0f;
-		playerTransformationComponent->setRotation(rotation);
-	}
-
-	if(de::Key::isPressed(de::key::UpArrow)) {
-		de::fvec2 scaling = playerTransformationComponent->getScaling();
-		scaling += 2.0f;
-		playerTransformationComponent->setScaling(scaling);
-	}
-
-	if(de::Key::isPressed(de::key::DownArrow)) {
-		de::fvec2 scaling = playerTransformationComponent->getScaling();
-		scaling -= 2.0f;
-		playerTransformationComponent->setScaling(scaling);
-	}
-
-	if(de::Key::isPressed(de::key::O)) {
-		de::fvec2 viewTranslation = scene->getViewTranslation();
-		viewTranslation.y -= 5.0f;
-		scene->setViewTranslation(viewTranslation);
-	}
-
-	if(de::Key::isPressed(de::key::K)) {
-		de::fvec2 viewTranslation = scene->getViewTranslation();
-		viewTranslation.x -= 5.0f;
-		scene->setViewTranslation(viewTranslation);
-	}
-
-	if(de::Key::isPressed(de::key::L)) {
-		de::fvec2 viewTranslation = scene->getViewTranslation();
-		viewTranslation.y += 5.0f;
-		scene->setViewTranslation(viewTranslation);
-	}
-
-	if(de::Key::isPressed(de::key::M)) {
-		de::fvec2 viewTranslation = scene->getViewTranslation();
-		viewTranslation.x += 5.0f;
-		scene->setViewTranslation(viewTranslation);
-	}
-
-	// Déplacer le rectangle vers le haut
-	if(de::Key::isPressed(de::key::Z)) {
-		de::fvec2 translation = playerTransformationComponent->getTranslation();
-		translation.y -= 5.0f;
-		playerTransformationComponent->setTranslation(translation);
-		if(playerColliderComponent != nullptr)
-			playerColliderComponent->contour.pos.y -= 5.0f;
-	}
-
-	// Déplacer le rectangle vers la gauche
+	// Déplacer le joueur vers la gauche
 	if(de::Key::isPressed(de::key::Q)) {
 		de::fvec2 translation = playerTransformationComponent->getTranslation();
 		translation.x -= 5.0f;
@@ -243,22 +187,29 @@ void updateCallback(de::Window &window) {
 			playerColliderComponent->contour.pos.x -= 5.0f;
 	}
 
-	// Déplacer le rectangle vers le bas
-	if(de::Key::isPressed(de::key::S)) {
-		de::fvec2 translation = playerTransformationComponent->getTranslation();
-		translation.y += 5.0f;
-		playerTransformationComponent->setTranslation(translation);
-		if(playerColliderComponent != nullptr)
-			playerColliderComponent->contour.pos.y += 5.0f;
-	}
-
-	// Déplacer le rectangle vers la droite
+	// Déplacer le joueur vers la droite
 	if(de::Key::isPressed(de::key::D)) {
 		de::fvec2 translation = playerTransformationComponent->getTranslation();
 		translation.x += 5.0f;
 		playerTransformationComponent->setTranslation(translation);
 		if(playerColliderComponent != nullptr)
 			playerColliderComponent->contour.pos.x += 5.0f;
+	}
+
+	// Faire sauter le joueur
+	if(de::Key::isPressed(de::key::Space)) {
+		de::component_id playerAccCpnID = de::EntityManager::getComponentID(g_Player, de::AccelerationComponentType);
+		de::component_id playerVelCpnID = de::EntityManager::getComponentID(g_Player, de::VelocityComponentType);
+
+		de::AccelerationComponent *playerAccCpn = de::ComponentManager::getAccelerationComponent(playerAccCpnID);
+		de::VelocityComponent *playerVelCpn = de::ComponentManager::getVelocityComponent(playerVelCpnID);
+
+		if(playerAccCpn->acceleration.y == 0.0f) {
+			de::fvec2 playerVel = playerVelCpn->getVelocity();
+			playerVel.y -= 10.0f;
+			playerVelCpn->setVelocity(playerVel);
+			playerAccCpn->acceleration.y = PLAYER_GRAVITY;
+		}
 	}
 
 	{
@@ -330,11 +281,16 @@ rewatch:
 	else if(playerID != de::badID) {
 		de::component_id playerTransformationComponentID = de::EntityManager::getComponentID(g_Player, de::TransformationComponentType);
 		de::component_id playerColliderComponentID = de::EntityManager::getComponentID(g_Player, de::ColliderComponentType);
+		de::component_id playerVelCpnID = de::EntityManager::getComponentID(g_Player, de::VelocityComponentType);
+		de::component_id playerAccCpnID = de::EntityManager::getComponentID(g_Player, de::AccelerationComponentType);
 
 		de::TransformationComponent *playerTransformationComponent = de::ComponentManager::getTransformationComponent(playerTransformationComponentID);
 		de::ColliderComponent *playerColliderComponent = de::ComponentManager::getColliderComponent(playerColliderComponentID);
+		de::VelocityComponent *playerVelCpn = de::ComponentManager::getVelocityComponent(playerVelCpnID);
+		de::AccelerationComponent *playerAccCpn = de::ComponentManager::getAccelerationComponent(playerAccCpnID);
 
 		de::fvec2 playerTranslation  = playerTransformationComponent->getTranslation();
+		de::fvec2 playerVel = playerVelCpn->getVelocity();
 
 		float colW = fabs(collision.w);
 		float colH = fabs(collision.h);
@@ -346,6 +302,8 @@ rewatch:
 
 		// Si la collision est plus petite en largeur, on déplace le joueur sur l'axe X.
 		if(colW < colH) {
+			playerVel.x = 0.0f;
+			playerAccCpn->acceleration.x = 0.0f;
 			// Si le joueur se déplace vers la droite.
 			if(diff.x > 0) {
 				playerTranslation.x -= colW;
@@ -365,6 +323,8 @@ rewatch:
 				playerTranslation.y -= colH;
 				playerTransformationComponent->setTranslation(playerTranslation);
 				playerColliderComponent->contour.pos.y -= colH;
+				playerVel.y = 0.0f;
+				playerAccCpn->acceleration.y = 0.0f;
 			// Si le joueur se déplace vers le haut.
 			}else {
 				playerTranslation.y += colH;
@@ -372,6 +332,8 @@ rewatch:
 				playerColliderComponent->contour.pos.y += colH;
 			}
 		}
+
+		playerVelCpn->setVelocity(playerVel);
 	}
 	// Si le rectangle 1 est entré en collision avec autre chose.
 	else if(rect1ID != de::badID) {
@@ -558,15 +520,11 @@ int main() {
 	de::Entity bottomRect  = de::Graphic::createRectangle(collectionID, de::fvec2(WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT - 100.0f), WINDOW_WIDTH - 100.0f, 20.0f, de::colora(0, 0, 255, 255), true);
 
 	g_Player = de::Graphic::createRectangle(collectionID, de::fvec2(PLAYER_SPAWN_X, PLAYER_SPAWN_Y), 50.0f, 50.0f, de::colora(255, 0, 0, 255), true);
-
-	de::component_id playerDrawableComponentID = de::EntityManager::getComponentID(g_Player, de::DrawableComponentType);
-	de::component_id playerTransformationComponentID = de::EntityManager::getComponentID(g_Player, de::TransformationComponentType);
-
-	de::DrawableComponent *playerDrawableComponent = de::ComponentManager::getDrawableComponent(playerDrawableComponentID);
-	de::TransformationComponent *playerTransformationComponent = de::ComponentManager::getTransformationComponent(playerTransformationComponentID);
-
-	de::fvec2 playerTranslation = playerTransformationComponent->getTranslation();
-	de::fvec2 playerScaling     = playerTransformationComponent->getScaling();
+	de::component_id playerVelCpnID = de::ComponentManager::createVelocityComponent();
+	de::component_id playerAccCpnID = de::ComponentManager::createAccelerationComponent(de::fvec2(0.0f, PLAYER_GRAVITY));
+	
+	de::EntityManager::attachComponent(g_Player, playerVelCpnID);
+	de::EntityManager::attachComponent(g_Player, playerAccCpnID);
 
 	de::Scene::setCurrentScene(sceneID);
 

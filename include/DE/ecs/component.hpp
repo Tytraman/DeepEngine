@@ -15,6 +15,7 @@ namespace de {
 	struct TransformationComponent;
 	struct VelocityComponent;
 	struct ColliderComponent;
+	struct AccelerationComponent;
 	struct HealthComponent;
 
 	class SystemManager;
@@ -47,6 +48,10 @@ namespace de {
 			static component_id createVelocityComponent();
 			static VelocityComponent *getVelocityComponent(component_id component);
 			static void deleteVelocityComponent(component_id id);
+
+			static component_id createAccelerationComponent(const fvec2 &acceleration);
+			static AccelerationComponent *getAccelerationComponent(component_id component);
+			static void deleteAccelerationComponent(component_id component);
 			
 			static component_id createHealthComponent(uint32_t pv, uint32_t max);
 			static HealthComponent *getHealthComponent(component_id component);
@@ -179,7 +184,18 @@ namespace de {
 		m_Velocity = vel;
 	}
 
-	constexpr component_type HealthComponentType = (1 << 4);
+	constexpr component_type AccelerationComponentType = (1 << 4);
+
+	struct DE_API AccelerationComponent {
+		fvec2 acceleration;
+
+		private:
+			AccelerationComponent(const fvec2 &acceleration);
+
+			friend ComponentManager;
+	};
+
+	constexpr component_type HealthComponentType = (1 << 5);
 
 	/// @struct HealthComponent
 	/// @brief	Composant indiquant qu'une entité possède une quantité de points de vie.

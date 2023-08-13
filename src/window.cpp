@@ -135,6 +135,9 @@ namespace de {
 				// Exécute les systèmes créés par l'utilisateur.
 				SystemManager::executeSystems();
 
+				// Applique l'accélération à toutes les entités en possédant.
+				SystemManager::accelerationSystem();
+
 				// Applique la vélocité à toutes les entités en possédant.
 				SystemManager::velocitySystem();
 
