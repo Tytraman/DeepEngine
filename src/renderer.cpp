@@ -1,6 +1,9 @@
 #include <DE/renderer.hpp>
 #include <DE/window.hpp>
 
+#include "imgui.h"
+#include "backends/imgui_impl_sdl2.h"
+#include "backends/imgui_impl_sdlrenderer2.h"
 
 /*
 ==================
@@ -119,6 +122,8 @@ Renderer::swapBuffers
 */
 void de::Renderer::swapBuffers() const
 {
+	ImGui::Render();
+	ImGui_ImplSDLRenderer2_RenderDrawData(ImGui::GetDrawData());
 	SDL_RenderPresent(_renderer);
 }
 

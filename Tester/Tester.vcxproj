@@ -187,13 +187,13 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>stdc11</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\lib\C\SDL2\include;$(SolutionDir)include;$(SolutionDir)..\..\libs\SDL2\include;$(SolutionDir)..\..\libs\openal-soft\include;$(SolutionDir)..\..\libs\lua-5.4.6\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\lib\C\SDL2\include;$(SolutionDir)include\imgui;$(SolutionDir)include;$(SolutionDir)..\..\libs\SDL2\include;$(SolutionDir)..\..\libs\openal-soft\include;$(SolutionDir)..\..\libs\lua-5.4.6\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>DeepEngine.lib;lua.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\..\libs\lua-5.4.6\lua\$(PlatformTarget)\Debug;$(OutDir)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\libs\lua-5.4.6\lua\$(PlatformTarget)\Debug;$(OutDir);$(SolutionDir)..\..\libs\SDL2\lib\$(PlatformTarget)\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -295,13 +295,13 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>stdc11</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\lib\C\SDL2\include;$(SolutionDir)include;$(SolutionDir)..\..\libs\SDL2\include;$(SolutionDir)..\..\libs\openal-soft\include;$(SolutionDir)..\..\libs\lua-5.4.6\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\lib\C\SDL2\include;$(SolutionDir)include\imgui;$(SolutionDir)include;$(SolutionDir)..\..\libs\SDL2\include;$(SolutionDir)..\..\libs\openal-soft\include;$(SolutionDir)..\..\libs\lua-5.4.6\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>DeepEngine.lib;lua.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(SolutionDir)..\..\libs\lua-5.4.6\lua\$(PlatformTarget)\Debug;$(OutDir)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(SolutionDir)..\..\libs\lua-5.4.6\lua\$(PlatformTarget)\Debug;$(OutDir);$(SolutionDir)..\..\libs\SDL2\lib\$(PlatformTarget)\</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

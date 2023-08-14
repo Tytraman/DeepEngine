@@ -6,6 +6,7 @@
 #include <DE/error.hpp>
 #include <DE/events.hpp>
 #include <DE/renderer.hpp>
+#include <DE/imgui/deimgui.hpp>
 
 #include <stdint.h>
 #include <string>
@@ -32,6 +33,7 @@ namespace de {
 			uint16_t        m_TargetMSPerUpdate;
 			uint16_t        m_TargetFPS;
 			bool            m_Running;
+			imgui_window_id m_ImGuiWindowID;
 
 		public:
 			Window(uint16_t targetMS, uint16_t targetFPS);

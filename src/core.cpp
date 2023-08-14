@@ -1,6 +1,7 @@
 #include <DE/core.hpp>
 #include <DE/memory/memory.hpp>
 #include <DE/c-wrapper/core.h>
+#include <DE/imgui/deimgui.hpp>
 
 #include <string>
 
@@ -27,7 +28,9 @@ namespace de {
 		return ErrorStatus::NoError;
 	}
 
-	void Core::quit() {
+	void Core::shutdown()
+	{
+		ImGuiWindow::shutdown();
 		SDL_Quit();
 	}
 

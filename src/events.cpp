@@ -1,6 +1,10 @@
 #include <DE/events.hpp>
 #include <DE/window.hpp>
 
+#include "imgui.h"
+#include "backends/imgui_impl_sdl2.h"
+#include "backends/imgui_impl_sdlrenderer2.h"
+
 namespace de {
 
 	struct devent_internal {
@@ -22,7 +26,10 @@ namespace de {
 
 	bool devent_s::pollEvent()
 	{
-		return SDL_PollEvent(((devent_internal *) this)->e);
+		if(SDL_PollEvent(((devent_internal *) this)->e))
+			return ImGui_ImplSDL2_ProcessEvent(((devent_internal *) this)->e);
+		else
+			return false;
 	}
 
 	uint32_t devent_s::getType() const

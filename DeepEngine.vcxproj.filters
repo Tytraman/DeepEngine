@@ -67,6 +67,18 @@
     <Filter Include="Source Files\audio">
       <UniqueIdentifier>{a18306ce-7a56-4b23-aa1a-bd3fba7ef8bb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\ImGui">
+      <UniqueIdentifier>{277c63f3-52ba-40dc-9350-6576f7f17bd5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ImGui">
+      <UniqueIdentifier>{e9858c8c-2513-4cbf-8cf1-9a31ab6b29e3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\DeImGui">
+      <UniqueIdentifier>{040349b7-904c-4a3b-8e23-f6e99e23359f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\DeImGui">
+      <UniqueIdentifier>{774fec5f-db48-4cec-bb78-7738e34841a8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\DE\core.hpp">
@@ -174,6 +186,33 @@
     <ClInclude Include="include\DE\audio\audio.hpp">
       <Filter>Header Files\audio</Filter>
     </ClInclude>
+    <ClInclude Include="include\imgui\imconfig.h">
+      <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\imgui_internal.h">
+      <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\imgui.h">
+      <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\imstb_rectpack.h">
+      <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\imstb_textedit.h">
+      <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\imstb_truetype.h">
+      <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\backends\imgui_impl_sdl2.h">
+      <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\imgui\backends\imgui_impl_sdlrenderer2.h">
+      <Filter>Header Files\ImGui</Filter>
+    </ClInclude>
+    <ClInclude Include="include\DE\imgui\deimgui.hpp">
+      <Filter>Header Files\DeImGui</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\core.cpp">
@@ -247,6 +286,30 @@
     </ClCompile>
     <ClCompile Include="include\DE\audio\audio.cpp">
       <Filter>Source Files\audio</Filter>
+    </ClCompile>
+    <ClCompile Include="include\imgui\imgui.cpp">
+      <Filter>Source Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="include\imgui\imgui_demo.cpp">
+      <Filter>Source Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="include\imgui\imgui_draw.cpp">
+      <Filter>Source Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="include\imgui\imgui_tables.cpp">
+      <Filter>Source Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="include\imgui\imgui_widgets.cpp">
+      <Filter>Source Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="include\imgui\backends\imgui_impl_sdl2.cpp">
+      <Filter>Source Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="include\imgui\backends\imgui_impl_sdlrenderer2.cpp">
+      <Filter>Source Files\ImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\imgui\deimgui.cpp">
+      <Filter>Source Files\DeImGui</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

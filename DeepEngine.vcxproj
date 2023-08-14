@@ -217,7 +217,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions);DEEPENGINE_LIB</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>stdc11</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)..\..\lib\C\SDL2\include;$(SolutionDir)..\..\libs\lua-5.4.6\src;$(SolutionDir)..\..\libs\SDL2\include;$(SolutionDir)..\..\libs\openal-soft\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)..\..\lib\C\SDL2\include;$(SolutionDir)..\..\libs\lua-5.4.6\src;$(SolutionDir)..\..\libs\SDL2\include;$(SolutionDir)..\..\libs\openal-soft\include;$(SolutionDir)include\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <ExceptionHandling>Sync</ExceptionHandling>
     </ClCompile>
@@ -350,7 +350,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions);DEEPENGINE_LIB</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>stdc11</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)..\..\lib\C\SDL2\include;$(SolutionDir)..\..\libs\lua-5.4.6\src;$(SolutionDir)..\..\libs\SDL2\include;$(SolutionDir)..\..\libs\openal-soft\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)include;$(SolutionDir)..\..\lib\C\SDL2\include;$(SolutionDir)..\..\libs\lua-5.4.6\src;$(SolutionDir)..\..\libs\SDL2\include;$(SolutionDir)..\..\libs\openal-soft\include;$(SolutionDir)include\imgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <RuntimeTypeInfo>false</RuntimeTypeInfo>
       <ExceptionHandling>Sync</ExceptionHandling>
     </ClCompile>
@@ -459,6 +459,7 @@
     <ClInclude Include="include\DE\graphic\graphic.hpp" />
     <ClInclude Include="include\DE\graphic\shape.hpp" />
     <ClInclude Include="include\DE\graphic\vertex.hpp" />
+    <ClInclude Include="include\DE\imgui\deimgui.hpp" />
     <ClInclude Include="include\DE\key.hpp" />
     <ClInclude Include="include\DE\logger.hpp" />
     <ClInclude Include="include\DE\mat.hpp" />
@@ -474,15 +475,31 @@
     <ClInclude Include="include\DE\window.hpp" />
     <ClInclude Include="include\DE\c-wrapper\string_utils.h" />
     <ClInclude Include="include\DE\c-wrapper\debug.h" />
+    <ClInclude Include="include\imgui\backends\imgui_impl_sdl2.h" />
+    <ClInclude Include="include\imgui\backends\imgui_impl_sdlrenderer2.h" />
+    <ClInclude Include="include\imgui\imconfig.h" />
+    <ClInclude Include="include\imgui\imgui.h" />
+    <ClInclude Include="include\imgui\imgui_internal.h" />
+    <ClInclude Include="include\imgui\imstb_rectpack.h" />
+    <ClInclude Include="include\imgui\imstb_textedit.h" />
+    <ClInclude Include="include\imgui\imstb_truetype.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\DE\audio\audio.cpp" />
+    <ClCompile Include="include\imgui\backends\imgui_impl_sdl2.cpp" />
+    <ClCompile Include="include\imgui\backends\imgui_impl_sdlrenderer2.cpp" />
+    <ClCompile Include="include\imgui\imgui.cpp" />
+    <ClCompile Include="include\imgui\imgui_demo.cpp" />
+    <ClCompile Include="include\imgui\imgui_draw.cpp" />
+    <ClCompile Include="include\imgui\imgui_tables.cpp" />
+    <ClCompile Include="include\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\color.cpp" />
     <ClCompile Include="src\ecs\component.cpp" />
     <ClCompile Include="src\ecs\entity.cpp" />
     <ClCompile Include="src\ecs\system.cpp" />
     <ClCompile Include="src\events.cpp" />
     <ClCompile Include="src\graphics\graphic.cpp" />
+    <ClCompile Include="src\imgui\deimgui.cpp" />
     <ClCompile Include="src\mat.cpp" />
     <ClCompile Include="src\memory\list.cpp" />
     <ClCompile Include="src\memory\memory.cpp" />

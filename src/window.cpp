@@ -5,6 +5,10 @@
 #include <DE/scene.hpp>
 #include <DE/ecs/system.hpp>
 
+#include "imgui.h"
+#include "backends/imgui_impl_sdl2.h"
+#include "backends/imgui_impl_sdlrenderer2.h"
+
 namespace de {
 
 	/*
@@ -14,14 +18,36 @@ namespace de {
 	*/
 	void Window::internalEventCallback(devent e)
 	{
+		static bool insertPressed = false;
+
 		// Vérifie le type d'évènement qui vient de se produire
 		switch(e->getType()) {
 			default: break;
-			case de::EventType::Window: {
+			case EventType::KeyDown: {
+				switch(e->getKeysym()) {
+					default: break;
+					case key::Insert: {
+						if(!insertPressed) {
+							insertPressed = true;
+							ImGuiWindow::setVisible(m_ImGuiWindowID, !ImGuiWindow::isVisible(m_ImGuiWindowID));
+						}
+					} break;
+				}
+			} break;
+			case EventType::KeyUp: {
+				switch(e->getKeysym()) {
+					default: break;
+					case key::Insert: {
+						if(insertPressed)
+							insertPressed = false;
+					} break;
+				}
+			} break;
+			case EventType::Window: {
 				// Vérifie le type d'évènement de fenêtre qui vient de se produire
 				switch(e->getWindowEventType()) {
 					default: break;
-					case de::events::WindowResized: {	// Redimension de la fenêtre
+					case events::WindowResized: {	// Redimension de la fenêtre
 						size newSize = e->getWindowSize();
 
 						// TODO: ajouter du code...
@@ -42,7 +68,8 @@ namespace de {
 		  m_UpdateCallback(nullptr),
 		  m_TargetMSPerUpdate(targetMS),
 		  m_TargetFPS(targetFPS),
-		  m_Running(false)
+		  m_Running(false),
+		  m_ImGuiWindowID(badID)
 	{ }
 
 	/*
@@ -61,6 +88,20 @@ namespace de {
 			return ErrorStatus::CreateRendererSDL;
 		}
 
+		// Initialise ImGui.
+		IMGUI_CHECKVERSION();
+		ImGui::CreateContext();
+
+		// Défini ImGui sur le mode sombre.
+		ImGui::StyleColorsDark();
+
+		// Initialise ImGui pour utiliser le Renderer de SDL2.
+		ImGui_ImplSDL2_InitForSDLRenderer(win.m_Window, win.m_Renderer.getRenderer());
+		ImGui_ImplSDLRenderer2_Init(win.m_Renderer.getRenderer());
+
+		win.m_ImGuiWindowID = ImGuiWindow::create("DeepEngine Debug Panel");
+		ImGuiWindow::addText(win.m_ImGuiWindowID, "Hello World!");
+
 		return ErrorStatus::NoError;
 	}
 
@@ -71,6 +112,12 @@ namespace de {
 	*/
 	void Window::destroy()
 	{
+		ImGuiWindow::destroy(m_ImGuiWindowID);
+
+		ImGui_ImplSDLRenderer2_Shutdown();
+		ImGui_ImplSDL2_Shutdown();
+		ImGui::DestroyContext();
+
 		// Détruit la fenêtre
 		SDL_DestroyWindow(m_Window);
 		m_Window = NULL;
@@ -110,6 +157,13 @@ namespace de {
 			elapsed = current - previous;	// Compte combien de temps s'est écoulé entre la dernière itération et maintenant.
 			previous = current;				// Sauvegarde le temps actuel pour qu'il devienne le temps précédent à la prochaine itération.
 			lag += elapsed;					// Plus le système est lent, et plus le lag sera élevé.
+
+
+			ImGui_ImplSDLRenderer2_NewFrame();
+			ImGui_ImplSDL2_NewFrame();
+			ImGui::NewFrame();
+
+			ImGuiWindow::render();
 
 			// Récupère les évènements système, les entrées utilisateurs etc...
 			// et exécute un callback s'il y en a un.
@@ -193,17 +247,17 @@ namespace de {
 	Window::defaultInputCallback
 	============================
 	*/
-	void de::Window::defaultInputCallback(Window &window, devent e)
+	void Window::defaultInputCallback(Window &window, devent e)
 	{
 		switch(e->getType()) {
 			default: break;
-			case de::events::Quit: {
+			case EventType::Quit: {
 				window.m_Running = false;
 			} break;
-			case de::events::KeyDown: {
+			case EventType::KeyDown: {
 				switch(e->getKeysym()) {
 					default: break;
-					case de::dkey::Esc: {
+					case key::Esc: {
 						window.m_Running = false;
 					} break;
 				}

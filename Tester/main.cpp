@@ -19,6 +19,7 @@
 #include <DE/ecs/component.hpp>
 
 #include <DE/audio/audio.hpp>
+#include <DE/imgui/deimgui.hpp>
 
 #include <lua.hpp>
 
@@ -178,7 +179,7 @@ void updateCallback(de::Window &window) {
 	playerTransformationComponent = de::ComponentManager::getTransformationComponent(playerTransformationComponentID);
 	playerColliderComponent       = de::ComponentManager::getColliderComponent(playerColliderComponentID);
 
-	// Déplacer le joueur vers la gauche
+	// Déplacer le joueur vers la gauche.
 	if(de::Key::isPressed(de::key::Q)) {
 		de::fvec2 translation = playerTransformationComponent->getTranslation();
 		translation.x -= 5.0f;
@@ -187,7 +188,7 @@ void updateCallback(de::Window &window) {
 			playerColliderComponent->contour.pos.x -= 5.0f;
 	}
 
-	// Déplacer le joueur vers la droite
+	// Déplacer le joueur vers la droite.
 	if(de::Key::isPressed(de::key::D)) {
 		de::fvec2 translation = playerTransformationComponent->getTranslation();
 		translation.x += 5.0f;
@@ -196,7 +197,7 @@ void updateCallback(de::Window &window) {
 			playerColliderComponent->contour.pos.x += 5.0f;
 	}
 
-	// Faire sauter le joueur
+	// Faire sauter le joueur.
 	if(de::Key::isPressed(de::key::Space)) {
 		de::component_id playerAccCpnID = de::EntityManager::getComponentID(g_Player, de::AccelerationComponentType);
 		de::component_id playerVelCpnID = de::EntityManager::getComponentID(g_Player, de::VelocityComponentType);
@@ -226,6 +227,7 @@ void updateCallback(de::Window &window) {
 	}
 
 end:
+
 	de::Debug::removeFunctionFromCallbackList();
 }
 
@@ -405,7 +407,7 @@ int main() {
 	de::Logger logger("supralog.log");
 	if(!logger.open()) {
 		fprintf(stderr, "Error when creating logger\n");
-		de::Core::quit();
+		de::Core::shutdown();
 		return 1;
 	}
 	g_Logger = &logger;
@@ -413,11 +415,14 @@ int main() {
 	de::Debug::addFunctionToCallbackList(DE_FUNCTION_NAME);
 	de::Debug::writeToStream(logger);
 
+
+	
+
 	lua_State *L = luaL_newstate();
 
 	printf("pwd: %s\n", de::Core::getPwd());
 
-	if(!de::AudioDevice::init())
+	/*if(!de::AudioDevice::init())
 		fprintf(stderr, "Unable to load audio device.\n");
 
 	de::AudioBuffer songBuffer;
@@ -480,7 +485,7 @@ int main() {
 		de::AudioDevice::shutdown();
 
 		return 1;
-	}
+	}*/
 
 	de::Window window(TARGET_MS, TARGET_FPS);
 	window.setEventCallback(eventCallback);
@@ -488,7 +493,7 @@ int main() {
 	errorStatus = de::Window::create(window, "DeepEngine Tester by " AUTHORS " [" BUILD_VER "]", de::size(WINDOW_WIDTH, WINDOW_HEIGHT));
 	if(errorStatus != de::ErrorStatus::NoError) {
 		de::DError::printError(errorStatus);
-		de::Core::quit();
+		de::Core::shutdown();
 		return 1;
 	}
 
@@ -538,11 +543,11 @@ int main() {
 
 	lua_close(L);
 
-	songBuffer.destroy();
+	/*songBuffer.destroy();
 	audioSource.destroy();
-	de::AudioDevice::shutdown();
+	de::AudioDevice::shutdown();*/
 
-	de::Core::quit();
+	de::Core::shutdown();
 
 	printf("Good-bye!\n");
 

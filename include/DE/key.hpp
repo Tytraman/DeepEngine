@@ -44,9 +44,11 @@ namespace de {
 			Y = SDLK_y,
 			Z = SDLK_z,
 
+			Esc    = SDLK_ESCAPE,
 			LCtrl  = SDLK_LCTRL,
 			LShift = SDLK_LSHIFT,
-			Space  = SDLK_SPACE
+			Space  = SDLK_SPACE,
+			Insert = SDLK_INSERT
 		};
 	}
 

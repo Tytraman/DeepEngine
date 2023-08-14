@@ -18,7 +18,7 @@ namespace de {
 
 			static uint32_t getMousePosition(int *x, int *y);
 
-			static void quit();
+			static void shutdown();
 
 			static uint64_t getTick();
 			static uint64_t getCurrentTimeMillis();

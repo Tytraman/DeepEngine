@@ -1,28 +1,49 @@
 #include <DE/string_utils.hpp>
+#include <DE/memory/memory.hpp>
+
 #include <DE/c-wrapper/string_utils.h>
 
-size_t de::StringUtils::copy(char *dest, size_t destSize, const char *source, size_t sourceLength) {
-	size_t len = 0;
-	
-	if(destSize == 0)
-		return 0;
+#include <string.h>
 
-	while(len < sourceLength) {
-		if(len == destSize - 1)
-			break;
-		dest[len] = source[len];
-		len++;
+namespace de {
+
+	size_t StringUtils::copy(char *dest, size_t destSize, const char *source, size_t sourceLength) {
+		size_t len = 0;
+	
+		if(destSize == 0)
+			return 0;
+
+		while(len < sourceLength) {
+			if(len == destSize - 1)
+				break;
+			dest[len] = source[len];
+			len++;
+		}
+
+		dest[len] = '\0';
+
+		return len;
 	}
 
-	dest[len] = '\0';
+	char *StringUtils::copy(const char *source)
+	{
+		size_t len = strlen(source);
+		char *dest = (char *) mem::alloc(len + 1);
 
-	return len;
-}
+		if(dest == nullptr)
+			return nullptr;
 
-int de::StringUtils::toUpper(int value) {
-	if(value >= 'a' && value <= 'z')
-		return value - 32;
-	return value;
+		memcpy(dest, source, len);
+		dest[len] = '\0';
+
+		return dest;
+	}
+
+	int StringUtils::toUpper(int value) {
+		if(value >= 'a' && value <= 'z')
+			return value - 32;
+		return value;
+	}
 }
 
 size_t de_string_utils_copy(char *dest, size_t destSize, const char *source, size_t sourceLength) {
