@@ -2,6 +2,7 @@
 #include <DE/memory/memory.hpp>
 #include <DE/c-wrapper/core.h>
 #include <DE/imgui/deimgui.hpp>
+#include <DE/scene.hpp>
 
 #include <string>
 
@@ -31,6 +32,7 @@ namespace de {
 	void Core::shutdown()
 	{
 		ImGuiWindow::shutdown();
+		Scene::shutdown();
 		SDL_Quit();
 	}
 

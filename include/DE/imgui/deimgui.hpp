@@ -7,29 +7,34 @@
 
 namespace de {
 
-	using imgui_element_type = uint32_t;
-
-	using imgui_element_id    = de_id;
-
-	using imgui_window_id  = de_id;
-	using imgui_element_id = de_id;
-
-	constexpr imgui_element_type ImGuiTextType = (1 << 0);
+	class Window;
 
 	class DE_API ImGuiWindow {
 
 		public:
-			static imgui_window_id create(const char *title);
-			static void destroy(imgui_window_id window);
-
-			static bool isVisible(imgui_window_id window);
-			static bool setVisible(imgui_window_id window, bool value);
-
-			static bool addText(imgui_window_id window, const char *text);
-
-			static void render();
-
+			static void init(Window &window);
 			static void shutdown();
+
+	};
+
+	using ImGuiDebugMenuView = uint32_t;
+
+	constexpr ImGuiDebugMenuView ImGuiDebugMenuHomeView     = (1 << 0);
+	constexpr ImGuiDebugMenuView ImGuiDebugMenuScenesView   = (1 << 1);
+	constexpr ImGuiDebugMenuView ImGuiDebugMenuEntitiesView = (1 << 2);
+
+	struct DE_API ImGuiDebugPanelOptions {
+		ImGuiDebugMenuView view;
+
+		ImGuiDebugPanelOptions(ImGuiDebugMenuView view = ImGuiDebugMenuHomeView);
+	};
+
+	class DE_API ImGuiDebugMenu {
+
+		public:
+			static void render(const Window *window);
+			static void addWindow(const Window *window);
+			static void removeWindow(const Window *window);
 
 	};
 

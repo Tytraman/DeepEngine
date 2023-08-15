@@ -6,6 +6,7 @@
 #include <DE/error.hpp>
 #include <DE/events.hpp>
 #include <DE/renderer.hpp>
+#include <DE/memory/list.hpp>
 #include <DE/imgui/deimgui.hpp>
 
 #include <stdint.h>
@@ -22,18 +23,21 @@ namespace de {
 	class DE_API Window {
 
 		public:
+			using PreEventCallback = void (*)(Window &window);
+
 			typedef void (*EventCallback)(Window &window, devent e);
 			typedef void (*UpdateCallback)(Window &window);
 
 		private:
-			SDL_Window     *m_Window;
-			EventCallback   m_EventCallback;
-			UpdateCallback  m_UpdateCallback;
-			Renderer		m_Renderer;
-			uint16_t        m_TargetMSPerUpdate;
-			uint16_t        m_TargetFPS;
-			bool            m_Running;
-			imgui_window_id m_ImGuiWindowID;
+			SDL_Window      *m_Window;
+			List             m_PreEventCallbacks;
+			EventCallback    m_EventCallback;
+			UpdateCallback   m_UpdateCallback;
+			Renderer		 m_Renderer;
+			uint16_t         m_TargetMSPerUpdate;
+			uint16_t         m_TargetFPS;
+			bool             m_Running;
+			bool             m_ShowDebugPanel;
 
 		public:
 			Window(uint16_t targetMS, uint16_t targetFPS);
@@ -50,11 +54,13 @@ namespace de {
 			
 			/// @brief Game Loop
 			void run();
+
+			bool addPreEventCallback(PreEventCallback callback);
 			
 			/// @brief			Récupère et retire l'évènement le plus vieux de la queue.
 			/// @return			Un \ref de::devent lorsqu'un évènement s'est produit ou \c nullptr s'il n'y a aucun évènement.
 			/// @remark			La valeur retournée par cette méthode doit être \c delete.
-			de::devent pollEvent() const;
+			devent pollEvent() const;
 
 			static void defaultInputCallback(Window &window, devent e);
 
@@ -67,6 +73,7 @@ namespace de {
 			uint32_t getHeight() const;
 			const char *getTitle() const;
 			const Renderer &getRenderer() const;
+			bool isShowingDebugPanel() const;
 
 
 			//===== SETTERS =====//
@@ -74,12 +81,22 @@ namespace de {
 			void setEventCallback(EventCallback callabck);
 			void setUpdateCallback(UpdateCallback callback);
 			void setTitle(const char *title) const;
+			void setShowingDebugPanel(bool value);
 
 		private:
 			void internalEventCallback(devent e);
+
 	};
 
-	
+	/*
+	===========================
+	Window::addPreEventCallback
+	===========================
+	*/
+	inline bool Window::addPreEventCallback(PreEventCallback callback)
+	{
+		return m_PreEventCallbacks.addCopy(&callback);
+	}
 
 	/*
 	=================
@@ -102,6 +119,16 @@ namespace de {
 	}
 
 	/*
+	===========================
+	Window::isShowingDebugPanel
+	===========================
+	*/
+	inline bool Window::isShowingDebugPanel() const
+	{
+		return m_ShowDebugPanel;
+	}
+
+	/*
 	========================
 	Window::setEventCallback
 	========================
@@ -119,6 +146,20 @@ namespace de {
 	inline void Window::setUpdateCallback(UpdateCallback callback)
 	{
 		m_UpdateCallback = callback;
+	}
+
+	/*
+	============================
+	Window::setShowingDebugPanel
+	============================
+	*/
+	inline void Window::setShowingDebugPanel(bool value)
+	{
+		m_ShowDebugPanel = value;
+		if(value)
+			ImGuiDebugMenu::addWindow(this);
+		else
+			ImGuiDebugMenu::removeWindow(this);
 	}
 
 }

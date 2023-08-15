@@ -28,7 +28,8 @@ namespace de {
 	}
 
 	enum events : uint32_t {
-		WindowResized	= SDL_WINDOWEVENT_RESIZED
+		WindowResized	= SDL_WINDOWEVENT_RESIZED,
+		WindowClosed    = SDL_WINDOWEVENT_CLOSE
 	};
 
 	enum MouseButton {

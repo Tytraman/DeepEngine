@@ -57,7 +57,7 @@ namespace de {
 
 			static void colliderSystem();
 
-			static void renderSystem(Renderer &renderer);
+			static void renderSystem(Renderer &renderer, scene_id sceneID);
 	};
 
 	/*

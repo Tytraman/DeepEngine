@@ -49,106 +49,13 @@ de::Entity g_Player = de::Entity::bad();
 de::Entity g_Rect1 = de::Entity::bad();
 de::ColliderComponent *g_Rect1ColliderComponent = nullptr;
 
-void eventCallback(de::Window &window, de::devent e) {
-	static bool mouseLeftClicked = false;
-	static int lastMouseX, lastMouseY;
+de::AudioSource g_AudioSource;
+de::AudioBuffer g_ImpactSoundBuffer;
 
-	uint32_t tt = e->getType();
-	switch(tt) {
-		default: break;
-		case de::EventType::MouseButtonDown: {
-			switch(e->getMouseButton()) {
-				case de::MouseButton::Left: {
-					mouseLeftClicked = true;
-					de::Core::getMousePosition(&lastMouseX, &lastMouseY);
-				} break;
-				case de::MouseButton::Right: {
-					de::scene_id sceneID = de::Scene::getActiveSceneID();
-					de::Scene *scene = de::Scene::getScene(sceneID);
-					de::entity_collection_id collectionID = de::Scene::getEntityCollection(sceneID);
-					int mouseX, mouseY;
-					de::Core::getMousePosition(&mouseX, &mouseY);
+static bool g_CollisionPlayerRectEnabled = true;
 
-					de::fvec2 mouse = de::fvec2(mouseX, mouseY) - scene->getViewTranslation();
-
-					printf("Right click (%f %f)\n", mouse.x, mouse.y);
-
-					if(g_Rect1ColliderComponent->contour.isInside(mouse))
-						de::EntityManager::destroyEntity(g_Rect1);
-				} break;
-			}
-		} break;
-		case de::EventType::MouseButtonUp: {
-			switch(e->getMouseButton()) {
-				case de::MouseButton::Left: {
-					mouseLeftClicked = false;
-				} break;
-			}
-		} break;
-		case de::EventType::MouseMotion: {
-			int mouseX, mouseY;
-			de::Core::getMousePosition(&mouseX, &mouseY);
-
-			// Si le clic gauche de la souris est pressé pendant que la souris est déplacée,
-			// déplace la caméra.
-			if(mouseLeftClicked) {
-				de::scene_id sceneID = de::Scene::getActiveSceneID();
-				if(sceneID != de::badID) {
-					de::Scene *scene = de::Scene::getScene(sceneID);
-					if(scene != nullptr) {
-						int xDiff = mouseX - lastMouseX;
-						int yDiff = mouseY - lastMouseY;
-
-						de::fvec2 viewTranslation = scene->getViewTranslation();
-						viewTranslation.x += xDiff;
-						viewTranslation.y += yDiff;
-						scene->setViewTranslation(viewTranslation);
-					}
-				}
-
-				lastMouseX = mouseX;
-				lastMouseY = mouseY;
-			}else {
-				//printf("Mouse: %d %d\n", mouseX, mouseY);
-			}
-		} break;
-		case de::EventType::MouseWheel: {
-			de::scene_id sceneID = de::Scene::getActiveSceneID();
-			if(sceneID != de::badID) {
-				de::Scene *scene = de::Scene::getScene(sceneID);
-				if(scene != nullptr) {
-					if(de::Key::isPressed(de::key::LShift)) {
-						// Permet de tourner sur l'axe Z l'angle de vue de la scène.
-						float viewAngle = scene->getViewAngle();
-						viewAngle += e->getMouseScrollY() * SCROLL_ROTATE_FACTOR;
-						scene->setViewAngle(viewAngle);
-					}else {
-						// Permet de zoomer sur la scène en modifiant le scale, mais ce n'est pas le meilleur moyen,
-						// il faudrait plutôt avancer sur l'axe Z du plan mais actuellement le moteur ne le permet pas.
-						de::fvec2 viewScale = scene->getViewScale();
-						float scroll;
-						if(e->getMouseScrollY() > 0)
-							scroll = SCROLL_SCALE_FACTOR_UP;
-						else
-							scroll = SCROLL_SCALE_FACTOR_DOWN;
-
-						viewScale *= scroll;
-						scene->setViewScale(viewScale);
-					}
-				}
-			}
-		} break;
-		case de::EventType::Window: {
-			uint32_t type = e->getWindowEventType();
-			switch(type) {
-				default: break;
-				case de::events::WindowResized: {
-					
-				} break;
-			}
-		} break;
-	}
-
+void eventCallback(de::Window &window, de::devent e)
+{
 	// Appelle le callback par défaut
 	de::Window::defaultInputCallback(window, e);
 }
@@ -275,9 +182,14 @@ rewatch:
 
 	// Collision entre le joueur et le rectangle 1.
 	if(playerID != de::badID && rect1ID != de::badID) {
-		playerID = de::badID;
-		diff = de::fvec2::inv(diff);
-		goto rewatch;
+		if(g_CollisionPlayerRectEnabled) {
+			if(diff.y <= 0 || diff.y <= fabs(diff.x)) {
+				playerID = de::badID;
+				diff = de::fvec2::inv(diff);
+				goto rewatch;
+			}else
+				g_CollisionPlayerRectEnabled = false;
+		}
 	}
 	// Si le joueur est entré en collision avec autre chose.
 	else if(playerID != de::badID) {
@@ -353,6 +265,8 @@ rewatch:
 		float colW = fabs(collision.w);
 		float colH = fabs(collision.h);
 
+		g_AudioSource.play();
+
 		// Une pratique assez courante de repositionner un objet pouvant se déplacer lorsqu'il touche un objet statique
 		// est de le déplacer par rapport à l'axe le plus petit du rectangle de collision,
 		// ainsi, si la largeur du rectangle de collision est plus petite que la hauteur, l'objet sera déplacé sur l'axe X, inversemment dans le cas
@@ -394,6 +308,49 @@ rewatch:
 	}
 }
 
+void collider_out_callback(de::entity_collection_id collectionID, de::entity_id entity1, de::entity_id entity2, const de::fvec2 &difference)
+{
+	de::entity_id playerID;
+	de::entity_id rect1ID;
+
+	// Diff permet de savoir dans quelle direction le joueur va.
+	de::fvec2 diff = difference;
+
+	// Vérifie si une des entités est le joueur ou le rectangle 1.
+	if(entity1 == g_Player.getEntityID()) {
+		playerID = entity1;
+
+		if(entity2 == g_Rect1.getEntityID()) {
+			rect1ID = entity2;
+		}else
+			rect1ID = de::badID;
+	}else if(entity2 == g_Player.getEntityID()) {
+		playerID = entity2;
+
+		if(entity1 == g_Rect1.getEntityID())
+			rect1ID = entity1;
+		else
+			rect1ID = de::badID;
+
+		diff = de::fvec2::inv(diff);
+	}else {
+		playerID = de::badID;
+
+		if(entity1 == g_Rect1.getEntityID()) {
+			rect1ID = entity1;
+		}else if(entity2 == g_Rect1.getEntityID()) {
+			rect1ID = entity2;
+			diff = de::fvec2::inv(diff);
+		}else
+			rect1ID = de::badID;
+	}
+
+	if(playerID != de::badID && rect1ID != de::badID) {
+		g_CollisionPlayerRectEnabled = true;
+	}
+}
+
+
 #undef main
 int main() {
 	de::ErrorStatus errorStatus;
@@ -415,42 +372,36 @@ int main() {
 	de::Debug::addFunctionToCallbackList(DE_FUNCTION_NAME);
 	de::Debug::writeToStream(logger);
 
-
-	
-
 	lua_State *L = luaL_newstate();
 
 	printf("pwd: %s\n", de::Core::getPwd());
 
-	/*if(!de::AudioDevice::init())
+	if(!de::AudioDevice::init())
 		fprintf(stderr, "Unable to load audio device.\n");
 
-	de::AudioBuffer songBuffer;
 
-	if(!songBuffer.create("song.wav")) {
+	if(!g_ImpactSoundBuffer.create("impact.wav")) {
 		fprintf(stderr, "Unable to load sound.\n");
 		de::AudioDevice::shutdown();
 		return 1;
 	}
 
-	printf("Audio frequency: %d\nAudio bits: %d\nAudio channels: %d\nAudio size: %d\n", songBuffer.getFrequency(), songBuffer.getBits(), songBuffer.getChannels(), songBuffer.getSize());
+	
 
-	de::AudioSource audioSource;
-
-	if(!audioSource.create()) {
+	if(!g_AudioSource.create()) {
 		fprintf(stderr, "Unable to create audio source.\n");
 
-		songBuffer.destroy();
+		g_ImpactSoundBuffer.destroy();
 		de::AudioDevice::shutdown();
 
 		return 1;
 	}
 
-	if(!audioSource.attachBuffer(songBuffer)) {
+	if(!g_AudioSource.attachBuffer(g_ImpactSoundBuffer)) {
 		fprintf(stderr, "Unable to attach buffer to audio source.\n");
 
-		songBuffer.destroy();
-		audioSource.destroy();
+		g_ImpactSoundBuffer.destroy();
+		g_AudioSource.destroy();
 		de::AudioDevice::shutdown();
 
 		return 1;
@@ -460,8 +411,8 @@ int main() {
 	if(!audioListener.setPosition(de::fvec3(0.0f, 0.0f, 0.0f))) {
 		fprintf(stderr, "Unable to set listener position.\n");
 
-		songBuffer.destroy();
-		audioSource.destroy();
+		g_ImpactSoundBuffer.destroy();
+		g_AudioSource.destroy();
 		de::AudioDevice::shutdown();
 
 		return 1;
@@ -470,22 +421,12 @@ int main() {
 	if(!audioListener.setVelocity(de::fvec3(0.0f, 0.0f, 0.0f))) {
 		fprintf(stderr, "Unable to set listener velocity.\n");
 
-		songBuffer.destroy();
-		audioSource.destroy();
+		g_ImpactSoundBuffer.destroy();
+		g_AudioSource.destroy();
 		de::AudioDevice::shutdown();
 
 		return 1;
 	}
-
-	if(!audioSource.play()) {
-		fprintf(stderr, "Unable to play sound.\n");
-
-		songBuffer.destroy();
-		audioSource.destroy();
-		de::AudioDevice::shutdown();
-
-		return 1;
-	}*/
 
 	de::Window window(TARGET_MS, TARGET_FPS);
 	window.setEventCallback(eventCallback);
@@ -497,9 +438,12 @@ int main() {
 		return 1;
 	}
 
-	de::scene_id sceneID = de::Scene::createScene();
+	de::ImGuiWindow::init(window);
+
+	de::scene_id sceneID = de::Scene::createScene("scn_main");
 	de::Scene *scene = de::Scene::getScene(sceneID);
 	scene->setColliderCallback(collider_callback);
+	scene->setColliderOutCallback(collider_out_callback);
 
 	de::entity_collection_id collectionID = de::Scene::getEntityCollection(sceneID);
 
@@ -507,7 +451,7 @@ int main() {
 
 	de::component_id rect1VelocityComponentID = de::ComponentManager::createVelocityComponent();
 	de::VelocityComponent *rect1VelocityComponent = de::ComponentManager::getVelocityComponent(rect1VelocityComponentID);
-	rect1VelocityComponent->setVelocity(de::fvec2(2.0f, 2.0f));
+	rect1VelocityComponent->setVelocity(de::fvec2(15.0f, 15.0f));
 	de::EntityManager::attachComponent(g_Rect1, rect1VelocityComponentID);
 
 	de::component_id rect1TransformationComponentID = de::EntityManager::getComponentID(g_Rect1, de::TransformationComponentType);
@@ -531,7 +475,9 @@ int main() {
 	de::EntityManager::attachComponent(g_Player, playerVelCpnID);
 	de::EntityManager::attachComponent(g_Player, playerAccCpnID);
 
-	de::Scene::setCurrentScene(sceneID);
+	de::Scene::setActiveScene(sceneID);
+
+	window.setShowingDebugPanel(true);
 
 	// Lance la boucle du jeu, bloquant.
 	window.run();

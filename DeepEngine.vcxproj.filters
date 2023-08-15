@@ -150,9 +150,6 @@
     <ClInclude Include="include\DE\mat.hpp">
       <Filter>Header Files\maths</Filter>
     </ClInclude>
-    <ClInclude Include="include\DE\scene.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="include\DE\vec_imp.hpp">
       <Filter>Header Files\maths</Filter>
     </ClInclude>
@@ -213,6 +210,9 @@
     <ClInclude Include="include\DE\imgui\deimgui.hpp">
       <Filter>Header Files\DeImGui</Filter>
     </ClInclude>
+    <ClInclude Include="include\DE\scene.hpp">
+      <Filter>Header Files\ecs</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\core.cpp">
@@ -250,9 +250,6 @@
     </ClCompile>
     <ClCompile Include="src\events.cpp">
       <Filter>Source Files\windows</Filter>
-    </ClCompile>
-    <ClCompile Include="src\scene.cpp">
-      <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\vec.cpp">
       <Filter>Source Files\maths</Filter>
@@ -310,6 +307,9 @@
     </ClCompile>
     <ClCompile Include="src\imgui\deimgui.cpp">
       <Filter>Source Files\DeImGui</Filter>
+    </ClCompile>
+    <ClCompile Include="src\scene.cpp">
+      <Filter>Source Files\ecs</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

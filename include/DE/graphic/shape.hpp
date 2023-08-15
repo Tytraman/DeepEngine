@@ -18,7 +18,7 @@ namespace de {
 		/// @param position Position du rectangle.
 		/// @param width    Largeur du rectangle.
 		/// @param height   Hauteur du rectangle.
-		Rect(const fvec2 &position, float width, float height);
+		Rect(const fvec2 &position = fvec2(0.0f, 0.0f), float width = 0.0f, float height = 0.0f);
 
 		/// @brief   Vérifie si un point se situe à l'intérieur du rectangle.
 		/// @param v Le vecteur décrivant le point.

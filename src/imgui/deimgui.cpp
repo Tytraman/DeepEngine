@@ -3,6 +3,8 @@
 #include <DE/memory/list.hpp>
 #include <DE/string_utils.hpp>
 #include <DE/vec.hpp>
+#include <DE/window.hpp>
+#include <DE/scene.hpp>
 
 #include <unordered_map>
 #include <string>
@@ -13,174 +15,135 @@
 
 namespace de {
 
-	struct ImGuiElement {
-		imgui_element_type type;
-		imgui_element_id elementID;
-	};
+	static std::unordered_map<const Window *, ImGuiDebugPanelOptions> m_DebugPanelOptions;
 
-	struct ImGuiText {
-			char *text;
-
-			ImGuiText(const char *text);
-	};
-
-	struct ImGuiWindowElement {
-		List elementsOrder;
-		std::unordered_map<imgui_element_id, ImGuiText> texts;
-		imgui_element_id nextElementID;
-
-		fvec2 pos;
-		fvec2 size;
-
-		std::string title;
-		bool visible;
-
-		ImGuiWindowElement(const char *title);
-	};
-
-	ImGuiText::ImGuiText(const char *_text)
-		: text(StringUtils::copy(_text))
+	ImGuiDebugPanelOptions::ImGuiDebugPanelOptions(ImGuiDebugMenuView _view)
+		: view(_view)
 	{ }
 
-	ImGuiWindowElement::ImGuiWindowElement(const char *_title)
-		: elementsOrder(sizeof(ImGuiElement)),
-		  nextElementID(0),
-		  pos(fvec2(0.0f, 0.0f)),
-		  size(fvec2(300.0f, 500.0f)),
-		  title(_title),
-		  visible(true)
-	{ }
-
-	static std::unordered_map<imgui_window_id, ImGuiWindowElement> m_Windows;
-	static imgui_window_id m_NextWindowID = 0;
-
-	static List m_WindowsOrder(sizeof(imgui_window_id));
-
-
-	imgui_window_id ImGuiWindow::create(const char *title)
+	void ImGuiWindow::init(Window &window)
 	{
-		imgui_window_id windowID = m_NextWindowID;
+		// Initialise ImGui.
+		IMGUI_CHECKVERSION();
+		ImGui::CreateContext();
 
-		if(!m_WindowsOrder.addCopy(&windowID))
-			return badID;
+		// Défini ImGui sur le mode sombre.
+		ImGui::StyleColorsDark();
 
-		m_Windows.emplace(windowID, ImGuiWindowElement(title));
+		SDL_Renderer *renderer = window.getRenderer().getRenderer();
 
-		m_NextWindowID++;
-
-		return windowID;
-	}
-
-	void ImGuiWindow::destroy(imgui_window_id window)
-	{
-		const auto &it = m_Windows.find(window);
-		
-		if(it == m_Windows.end())
-			return;
-
-		ImGuiWindowElement &win = it->second;
-
-		win.elementsOrder.free();
-
-		// Suppression de la m�moire allou�e pour stocker le texte.
-		for(auto &t : win.texts)
-			mem::free(t.second.text);
-	}
-
-	bool ImGuiWindow::isVisible(imgui_window_id window)
-	{
-		const auto &it = m_Windows.find(window);
-		
-		if(it == m_Windows.end())
-			return false;
-
-		return it->second.visible;
-	}
-
-	bool ImGuiWindow::setVisible(imgui_window_id window, bool value)
-	{
-		const auto &it = m_Windows.find(window);
-		
-		if(it == m_Windows.end())
-			return false;
-
-		it->second.visible = value;
-
-		return true;
-	}
-
-	bool ImGuiWindow::addText(imgui_window_id window, const char *text)
-	{
-		const auto &it = m_Windows.find(window);
-		
-		if(it == m_Windows.end())
-			return false;
-
-		ImGuiWindowElement &win = it->second;
-
-		imgui_element_id elementID = win.nextElementID;
-
-		ImGuiElement element = { ImGuiTextType, elementID };
-
-		if(!win.elementsOrder.addCopy(&element))
-			return false;
-
-		win.texts.emplace(elementID, ImGuiText(text));
-
-		win.nextElementID++;
-
-		return true;
-	}
-
-	void ImGuiWindow::render()
-	{
-		imgui_window_id windowID;
-		size_t i;
-		size_t length = m_WindowsOrder.getNumberOfElements();
-
-		for(i = 0; i < length; ++i) {
-			if(!m_WindowsOrder.getCopy(i, &windowID))
-				continue;
-
-			const auto &it = m_Windows.find(windowID);
-			if(it == m_Windows.end())
-				continue;
-
-			ImGuiWindowElement &window = it->second;
-
-			if(window.visible) {
-				ImGuiElement element;
-				size_t numberOfElements = window.elementsOrder.getNumberOfElements();
-				size_t j;
-
-				ImGui::SetNextWindowPos({ window.pos.x, window.pos.y });
-				ImGui::SetNextWindowSize({ window.size.x, window.size.y });
-				ImGui::Begin(window.title.c_str(), nullptr, ImGuiWindowFlags_NoCollapse);
-
-					for(j = 0; j < numberOfElements; ++j) {
-						if(!window.elementsOrder.getCopy(j, &element))
-							continue;
-
-						switch(element.type) {
-							default: break;
-							case ImGuiTextType: {
-								const auto &it = window.texts.find(element.elementID);
-								if(it == window.texts.end())
-									continue;
-
-								ImGui::Text(it->second.text);
-							} break;
-						}
-					}
-
-				ImGui::End();
-			}
-		}
+		// Initialise ImGui pour utiliser le Renderer de SDL2.
+		ImGui_ImplSDL2_InitForSDLRenderer(window.getWindow(), renderer);
+		ImGui_ImplSDLRenderer2_Init(renderer);
 	}
 
 	void ImGuiWindow::shutdown()
 	{
-		m_WindowsOrder.free();
+		ImGui_ImplSDLRenderer2_Shutdown();
+		ImGui_ImplSDL2_Shutdown();
+		ImGui::DestroyContext();
+	}
+
+
+
+	void __scenesEnumCallback(scene_id id, Scene &scene)
+	{
+		std::string text("[" + std::to_string(id) + std::string("] ") + scene.getName());
+		if(id == Scene::getActiveSceneID())
+			text += " (active)";
+
+		ImGui::AlignTextToFramePadding();
+		ImGui::Text(text.c_str()); ImGui::SameLine();
+		if(ImGui::Button(std::string("Supprimer##" + std::to_string(id)).c_str())) {
+			Scene::mustBeDeleted(id);
+		}
+		ImGui::SameLine();
+		if(ImGui::Button(std::string("Rendre active##" + std::to_string(id)).c_str())) {
+			Scene::setActiveScene(id);
+		}
+	}
+
+
+	void ImGuiDebugMenu::render(const Window *window)
+	{
+		const auto &it = m_DebugPanelOptions.find(window);
+		if(it == m_DebugPanelOptions.end())
+			return;
+
+		auto &options = it->second;
+
+		ImGui::SetNextWindowPos({ 0, 0 });
+		ImGui::SetNextWindowSize({ 500, 700 });
+		if(ImGui::Begin("DeepEngine Debug Menu", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_MenuBar)) {
+
+			if(ImGui::BeginMenuBar()) {
+				if(ImGui::BeginMenu("Vue")) {
+					if(ImGui::MenuItem("Accueil", nullptr, false, true)) {
+						options.view = ImGuiDebugMenuHomeView;
+					}
+					if(ImGui::MenuItem("Scènes", nullptr, false, true)) {
+						options.view = ImGuiDebugMenuScenesView;
+					}
+					if(ImGui::MenuItem("Entités", nullptr, false, true)) {
+						options.view = ImGuiDebugMenuEntitiesView;
+					}
+					ImGui::EndMenu();
+				}
+
+				ImGui::EndMenuBar();
+
+				switch(options.view) {
+					default: break;
+					case ImGuiDebugMenuHomeView: {
+						ImGui::Text("Bienvenue dans le moteur profond !");
+						ImGui::Spacing();
+
+						if(ImGui::CollapsingHeader("Utilisation")) {
+							ImGui::SeparatorText("Menu debug :");
+							ImGui::BulletText("Insert : afficher / cacher le menu debug.");
+						}
+					} break;
+					case ImGuiDebugMenuScenesView: {
+						static bool emptyNameBuffer = false;
+						static char nameBuffer[128] = "";
+						// Création d'une scène.
+						ImGui::InputText("Nom: ", nameBuffer, sizeof(nameBuffer)); ImGui::SameLine();
+						if(ImGui::Button("Créer une scène")) {
+							if(strlen(nameBuffer) == 0)
+								emptyNameBuffer = true;
+							else {
+								emptyNameBuffer = false;
+								Scene::createScene(nameBuffer);
+								nameBuffer[0] = '\0';
+							}
+						}
+
+						if(emptyNameBuffer)
+								ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Le nom de la scène ne peut pas être vide.");
+
+						ImGui::Spacing();
+
+						// Affiche toutes les scènes existantes.
+						if(ImGui::CollapsingHeader("Liste des scènes")) {
+							Scene::enumScenes(__scenesEnumCallback);
+						}
+					} break;
+				}
+			}
+
+			
+			ImGui::End();
+		}
+	}
+
+	void ImGuiDebugMenu::addWindow(const Window *window)
+	{
+		m_DebugPanelOptions.emplace(window, ImGuiDebugPanelOptions());
+	}
+
+	void ImGuiDebugMenu::removeWindow(const Window *window)
+	{
+		m_DebugPanelOptions.erase(window);
 	}
 
 }

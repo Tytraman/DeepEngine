@@ -1,11 +1,13 @@
 #include <DE/scene.hpp>
 #include <DE/ecs/entity.hpp>
+#include <DE/string_utils.hpp>
 
 #include <unordered_map>
 
 namespace de {
 
 	scene_id Scene::m_ActiveScene = badID;
+	List Scene::m_ScenesToDelete(sizeof(scene_id));
 
 	static std::unordered_map<scene_id, Scene> m_Scenes;
 
@@ -14,11 +16,11 @@ namespace de {
 	Scene::createScene
 	==================
 	*/
-	scene_id Scene::createScene()
+	scene_id Scene::createScene(const char *name)
 	{
 		scene_id id = (scene_id) m_Scenes.size();
 
-		m_Scenes.emplace(id, Scene());
+		m_Scenes.emplace(id, Scene(name));
 
 		return id;
 	}
@@ -30,7 +32,43 @@ namespace de {
 	*/
 	void Scene::deleteScene(scene_id scene)
 	{
+		Scene * s = getScene(scene);
+		if(s != nullptr)
+			mem::free(s->m_Name);
+
 		m_Scenes.erase(scene);
+	}
+
+	/*
+	======================
+	Scene::deleteAllScenes
+	======================
+	*/
+	void Scene::deleteAllScenes()
+	{
+		for(auto &it : m_Scenes)
+			mem::free(it.second.m_Name);
+
+		m_Scenes.clear();
+	}
+
+	/*
+	===================
+	Scene::deleteScenes
+	===================
+	*/
+	void Scene::deleteScenes()
+	{
+		size_t length = m_ScenesToDelete.getNumberOfElements();
+		size_t i;
+		scene_id scene;
+
+		for(i = 0; i < length; ++i) {
+			if(!m_ScenesToDelete.getCopy(i, &scene))
+			   continue;
+
+			deleteScene(scene);
+		}
 	}
 
 	/*
@@ -38,12 +76,14 @@ namespace de {
 	Scene::Scene
 	============
 	*/
-	Scene::Scene()
+	Scene::Scene(const char *name)
 		: m_EntityCollection(EntityManager::createEntityCollection()),
 		  m_ColliderCallback(nullptr),
+		  m_ColliderOutCallback(nullptr),
 		  m_ViewTranslation(0.0f, 0.0f),
 		  m_ViewScale(1.0f, 1.0f),
-		  m_ViewAngle(0.0f)
+		  m_ViewAngle(0.0f),
+		  m_Name(StringUtils::copy(name))
 	{ }
 
 	/*
@@ -61,18 +101,17 @@ namespace de {
 	}
 
 	/*
-	======================
-	Scene::attachComponent
-	======================
+	=================
+	Scene::enumScenes
+	=================
 	*/
-	/*void Scene::attachComponent(scene_id scene, entity_id entity, component_id component)
+	void Scene::enumScenes(EnumCallback callback)
 	{
-		const auto &s = m_Scenes.find(scene);
-		if(s == m_Scenes.end())
-			return;
+		for(auto &el : m_Scenes)
+			callback(el.first, el.second);
 
-		EntityManager::attachComponent(s->second.m_EntityCollection, entity, component);
-	}*/
+		deleteScenes();
+	}
 
 	/*
 	==========================

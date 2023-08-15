@@ -23,6 +23,7 @@ namespace de {
 	using scene_id = de_id;
 
 	using ColliderCallback = void (*)(entity_collection_id collectionID, entity_id entity1, entity_id entity2, const fvec2 &difference, const Rect &collision);
+	using ColliderOutCallback = void (*)(entity_collection_id collectionID, entity_id entity1, entity_id entity2, const fvec2 &difference);
 
 }
 

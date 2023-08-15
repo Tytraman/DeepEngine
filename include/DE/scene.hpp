@@ -13,34 +13,45 @@ namespace de {
 
 	class DE_API Scene {
 
+		using EnumCallback = void (*)(scene_id id, Scene &scene);
+
 		private:
 			static scene_id m_ActiveScene;
+			static List     m_ScenesToDelete;
 
-			ColliderCallback m_ColliderCallback;     ///< Callback lorsqu'une collision est détectée entre 2 entités.
+			ColliderCallback m_ColliderCallback;          ///< Callback lorsqu'une collision est détectée entre 2 entités.
+			ColliderOutCallback m_ColliderOutCallback;    ///< Callback lorsqu'une collision n'est plus détectée entre 2 entités.
+
 			entity_collection_id m_EntityCollection; ///< ID du gestionnaire d'entités de la scène.
 			fvec2 m_ViewTranslation;                 ///< La position de la vue relative à l'origine du plan.
 			fvec2 m_ViewScale;                       ///< Le zoom / déformation de la vue.
 			float m_ViewAngle;                       ///< L'angle de rotation de la vue relative à l'origine du plan.
+			char *m_Name;                            ///< Nom de la scène.
 
 		public:
+			static void shutdown();
+
 			/// @brief	Crée une scène.
 			/// @return L'ID de la scène nouvellement créée.
-			static scene_id createScene();
+			static scene_id createScene(const char *name);
 
 			/// @brief			Supprime une scène.
 			/// @param scene	L'ID de la scène à supprimer.
 			static void deleteScene(scene_id scene);
+			static void deleteAllScenes();
 
-			static void setCurrentScene(scene_id scene);
+			static bool mustBeDeleted(scene_id scene);
+			static void deleteScenes();
+
+			static void setActiveScene(scene_id scene);
 
 			/// @brief	Crée une entité dans la scène.
 			/// @return L'entité nouvellement créé.
 			static Entity createEntity(scene_id scene);
 
-			/// @brief				Attache un composant à l'entité appartenant à la scène.
-			/// @param entity		L'ID de l'entité à laquelle ajouter un composant.
-			/// @param component	L'ID du composant à ajouter.
-			//== static void attachComponent(scene_id scene, entity_id entity, component_id component);
+			static void enumScenes(EnumCallback callback);
+
+
 
 			//===== GETTERS =====//
 
@@ -59,6 +70,7 @@ namespace de {
 			static Scene *getScene(scene_id scene);
 
 			ColliderCallback getColliderCallback() const;
+			ColliderOutCallback getColliderOutCallback() const;
 
 			/// @brief  Récupère la position de la vue de la scène.
 			/// @return Le vecteur décrivant la translation de la vue.
@@ -72,25 +84,49 @@ namespace de {
 			/// @return L'angle de rotation de la vue de la scène.
 			float getViewAngle() const;
 
+			const char *getName() const;
+
 			//===== SETTERS =====//
 
 			void setColliderCallback(ColliderCallback callback);
+			void setColliderOutCallback(ColliderOutCallback callback);
 			void setViewTranslation(const fvec2 &vec);
 			void setViewScale(const fvec2 &vec);
 			void setViewAngle(float angle);
 
 			
 		private:
-			Scene();
+			Scene(const char *name);
 
 	};
+
+	/*
+	===============
+	Scene::shutdown
+	===============
+	*/
+	inline void Scene::shutdown()
+	{
+		m_ScenesToDelete.free();
+		deleteAllScenes();
+	}
+
+	/*
+	====================
+	Scene::mustBeDeleted
+	====================
+	*/
+	inline bool Scene::mustBeDeleted(scene_id scene)
+	{
+		return m_ScenesToDelete.addCopy(&scene);
+	}
 
 	/*
 	======================
 	Scene::setCurrentScene
 	======================
 	*/
-	inline void Scene::setCurrentScene(scene_id scene)
+	inline void Scene::setActiveScene(scene_id scene)
 	{
 		m_ActiveScene = scene;
 	}
@@ -113,6 +149,16 @@ namespace de {
 	inline ColliderCallback Scene::getColliderCallback() const
 	{
 		return m_ColliderCallback;
+	}
+
+	/*
+	=============================
+	Scene::getColliderOutCallback
+	=============================
+	*/
+	inline ColliderOutCallback Scene::getColliderOutCallback() const
+	{
+		return m_ColliderOutCallback;
 	}
 
 	/*
@@ -146,6 +192,16 @@ namespace de {
 	}
 
 	/*
+	==============
+	Scene::getName
+	==============
+	*/
+	inline const char *Scene::getName() const
+	{
+		return m_Name;
+	}
+
+	/*
 	==========================
 	Scene::setColliderCallback
 	==========================
@@ -153,6 +209,16 @@ namespace de {
 	inline void Scene::setColliderCallback(ColliderCallback callback)
 	{
 		m_ColliderCallback = callback;
+	}
+
+	/*
+	=============================
+	Scene::setColliderOutCallback
+	=============================
+	*/
+	inline void Scene::setColliderOutCallback(ColliderOutCallback callback)
+	{
+		m_ColliderOutCallback = callback;
 	}
 
 	/*

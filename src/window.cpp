@@ -28,8 +28,8 @@ namespace de {
 					default: break;
 					case key::Insert: {
 						if(!insertPressed) {
+							m_ShowDebugPanel = !m_ShowDebugPanel;
 							insertPressed = true;
-							ImGuiWindow::setVisible(m_ImGuiWindowID, !ImGuiWindow::isVisible(m_ImGuiWindowID));
 						}
 					} break;
 				}
@@ -64,12 +64,13 @@ namespace de {
 	*/
 	Window::Window(uint16_t targetMS, uint16_t targetFPS)
 		: m_Window(NULL),
+		  m_PreEventCallbacks(sizeof(PreEventCallback)),
 		  m_EventCallback(defaultInputCallback),
 		  m_UpdateCallback(nullptr),
 		  m_TargetMSPerUpdate(targetMS),
 		  m_TargetFPS(targetFPS),
 		  m_Running(false),
-		  m_ImGuiWindowID(badID)
+		  m_ShowDebugPanel(false)
 	{ }
 
 	/*
@@ -88,20 +89,6 @@ namespace de {
 			return ErrorStatus::CreateRendererSDL;
 		}
 
-		// Initialise ImGui.
-		IMGUI_CHECKVERSION();
-		ImGui::CreateContext();
-
-		// Défini ImGui sur le mode sombre.
-		ImGui::StyleColorsDark();
-
-		// Initialise ImGui pour utiliser le Renderer de SDL2.
-		ImGui_ImplSDL2_InitForSDLRenderer(win.m_Window, win.m_Renderer.getRenderer());
-		ImGui_ImplSDLRenderer2_Init(win.m_Renderer.getRenderer());
-
-		win.m_ImGuiWindowID = ImGuiWindow::create("DeepEngine Debug Panel");
-		ImGuiWindow::addText(win.m_ImGuiWindowID, "Hello World!");
-
 		return ErrorStatus::NoError;
 	}
 
@@ -112,15 +99,25 @@ namespace de {
 	*/
 	void Window::destroy()
 	{
-		ImGuiWindow::destroy(m_ImGuiWindowID);
-
-		ImGui_ImplSDLRenderer2_Shutdown();
-		ImGui_ImplSDL2_Shutdown();
-		ImGui::DestroyContext();
+		m_PreEventCallbacks.free();
 
 		// Détruit la fenêtre
 		SDL_DestroyWindow(m_Window);
 		m_Window = NULL;
+	}
+
+	void __executePreEventCallbacks(List *preEventCallbacks, Window &window)
+	{
+		size_t length = preEventCallbacks->getNumberOfElements();
+		size_t i;
+		Window::PreEventCallback callback;
+
+		for(i = 0; i < length; ++i) {
+			if(preEventCallbacks->getCopy(i, &callback)) {
+				if(callback != nullptr)
+					callback(window);
+			}
+		}
 	}
 
 	/*
@@ -158,12 +155,14 @@ namespace de {
 			previous = current;				// Sauvegarde le temps actuel pour qu'il devienne le temps précédent à la prochaine itération.
 			lag += elapsed;					// Plus le système est lent, et plus le lag sera élevé.
 
+			__executePreEventCallbacks(&m_PreEventCallbacks, *this);
 
 			ImGui_ImplSDLRenderer2_NewFrame();
 			ImGui_ImplSDL2_NewFrame();
 			ImGui::NewFrame();
 
-			ImGuiWindow::render();
+			if(m_ShowDebugPanel)
+				ImGuiDebugMenu::render(this);
 
 			// Récupère les évènements système, les entrées utilisateurs etc...
 			// et exécute un callback s'il y en a un.
@@ -205,7 +204,7 @@ namespace de {
 			}
 
 			// Fait le rendu final de la frame !
-			SystemManager::renderSystem(m_Renderer);
+			SystemManager::renderSystem(m_Renderer, sceneID);
 
 			end = Core::getTick();
 
@@ -251,8 +250,13 @@ namespace de {
 	{
 		switch(e->getType()) {
 			default: break;
-			case EventType::Quit: {
-				window.m_Running = false;
+			case EventType::Window: {
+				switch(e->getWindowEventType()) {
+					default: break;
+					case events::WindowClosed: {
+						window.m_Running = false;
+					} break;
+				}
 			} break;
 			case EventType::KeyDown: {
 				switch(e->getKeysym()) {
