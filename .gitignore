@@ -367,3 +367,4 @@ Debug-DLL
 Debug-lib
 DeepEngineDLL
 *.wav
+Tester/*.bmp

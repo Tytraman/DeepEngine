@@ -21,6 +21,9 @@
 #include <DE/audio/audio.hpp>
 #include <DE/imgui/deimgui.hpp>
 
+#include <DE/image/mypng.hpp>
+#include <DE/image/mybmp.hpp>
+
 #include <lua.hpp>
 
 #define AUTHORS		"Tytraman"
@@ -265,7 +268,7 @@ rewatch:
 		float colW = fabs(collision.w);
 		float colH = fabs(collision.h);
 
-		g_AudioSource.play();
+		//== g_AudioSource.play();
 
 		// Une pratique assez courante de repositionner un objet pouvant se déplacer lorsqu'il touche un objet statique
 		// est de le déplacer par rapport à l'axe le plus petit du rectangle de collision,
@@ -385,7 +388,6 @@ int main() {
 		de::AudioDevice::shutdown();
 		return 1;
 	}
-
 	
 
 	if(!g_AudioSource.create()) {
@@ -439,6 +441,41 @@ int main() {
 	}
 
 	de::ImGuiWindow::init(window);
+
+
+
+	de::MyPNG mypng;
+	if(mypng.loadFile("C:\\Users\\tytra\\Pictures\\test\\png\\2.png")) {
+
+		if(mypng.check()) {
+			if(mypng.readPNGInfo()) {
+				printf(
+					"=====[ Image ]=====\n"
+					"Dimension: %ux%u\n"
+					"Color type: %s\n"
+					"Color depth: %u\n"
+					"Bit depth: %d\n"
+					"Channels: %d\n",
+					mypng.width(), mypng.height(),
+					de::MyPNG::colorTypeName(mypng.colorType()),
+					mypng.colorDepth(),
+					mypng.bitDepth(),
+					mypng.channels()
+				);
+
+				if(mypng.readPNGImage()) {
+					de::MyBMP mybmp;
+					if(mybmp.create(mypng.width(), mypng.height(), mypng.colorDepth())) {
+						mybmp.setPNGImage(mypng);
+						mybmp.save("output.bmp");
+					}
+				}
+			}
+		}
+
+		mypng.destroy();
+	}
+
 
 	de::scene_id sceneID = de::Scene::createScene("scn_main");
 	de::Scene *scene = de::Scene::getScene(sceneID);

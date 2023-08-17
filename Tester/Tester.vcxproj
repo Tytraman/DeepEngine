@@ -171,7 +171,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>stdc11</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\lib\C\SDL2\include;$(SolutionDir)include;$(SolutionDir)..\..\libs\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\libs\zlib\1.2.13;$(SolutionDir)..\..\libs\libpng\1.6.40;$(SolutionDir)..\..\lib\C\SDL2\include;$(SolutionDir)include;$(SolutionDir)..\..\libs\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -187,7 +187,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>stdc11</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\lib\C\SDL2\include;$(SolutionDir)include\imgui;$(SolutionDir)include;$(SolutionDir)..\..\libs\SDL2\include;$(SolutionDir)..\..\libs\openal-soft\include;$(SolutionDir)..\..\libs\lua-5.4.6\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\libs\zlib\1.2.13;$(SolutionDir)..\..\libs\libpng\1.6.40;$(SolutionDir)..\..\lib\C\SDL2\include;$(SolutionDir)include\imgui;$(SolutionDir)include;$(SolutionDir)..\..\libs\SDL2\include;$(SolutionDir)..\..\libs\openal-soft\include;$(SolutionDir)..\..\libs\lua-5.4.6\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -225,7 +225,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>stdc11</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\lib\C\SDL2\include;$(SolutionDir)include;$(SolutionDir)..\..\libs\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\libs\zlib\1.2.13;$(SolutionDir)..\..\libs\libpng\1.6.40;$(SolutionDir)..\..\lib\C\SDL2\include;$(SolutionDir)include;$(SolutionDir)..\..\libs\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -245,7 +245,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>stdc11</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\lib\C\SDL2\include;$(SolutionDir)include;$(SolutionDir)..\..\libs\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\libs\zlib\1.2.13;$(SolutionDir)..\..\libs\libpng\1.6.40;$(SolutionDir)..\..\lib\C\SDL2\include;$(SolutionDir)include;$(SolutionDir)..\..\libs\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -279,7 +279,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>stdc11</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\lib\C\SDL2\include;$(SolutionDir)include;$(SolutionDir)..\..\libs\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\libs\zlib\1.2.13;$(SolutionDir)..\..\libs\libpng\1.6.40;$(SolutionDir)..\..\lib\C\SDL2\include;$(SolutionDir)include;$(SolutionDir)..\..\libs\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -295,7 +295,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>stdc11</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\lib\C\SDL2\include;$(SolutionDir)include\imgui;$(SolutionDir)include;$(SolutionDir)..\..\libs\SDL2\include;$(SolutionDir)..\..\libs\openal-soft\include;$(SolutionDir)..\..\libs\lua-5.4.6\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\libs\zlib\1.2.13;$(SolutionDir)..\..\libs\libpng\1.6.40;$(SolutionDir)..\..\lib\C\SDL2\include;$(SolutionDir)include\imgui;$(SolutionDir)include;$(SolutionDir)..\..\libs\SDL2\include;$(SolutionDir)..\..\libs\openal-soft\include;$(SolutionDir)..\..\libs\lua-5.4.6\src;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -333,7 +333,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>stdc11</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\lib\C\SDL2\include;$(SolutionDir)include;$(SolutionDir)..\..\libs\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\libs\zlib\1.2.13;$(SolutionDir)..\..\libs\libpng\1.6.40;$(SolutionDir)..\..\lib\C\SDL2\include;$(SolutionDir)include;$(SolutionDir)..\..\libs\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -353,7 +353,7 @@
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard_C>stdc11</LanguageStandard_C>
-      <AdditionalIncludeDirectories>$(SolutionDir)..\..\lib\C\SDL2\include;$(SolutionDir)include;$(SolutionDir)..\..\libs\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(SolutionDir)..\..\libs\zlib\1.2.13;$(SolutionDir)..\..\libs\libpng\1.6.40;$(SolutionDir)..\..\lib\C\SDL2\include;$(SolutionDir)include;$(SolutionDir)..\..\libs\SDL2\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

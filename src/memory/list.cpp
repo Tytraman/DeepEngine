@@ -94,6 +94,7 @@ namespace de {
 		mem::freeNoTrack(m_Data);
 		m_Data = nullptr;
 		m_NumberOfElements = 0;
+		m_Capacity = 0;
 	}
 
 	/*

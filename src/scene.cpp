@@ -69,6 +69,8 @@ namespace de {
 
 			deleteScene(scene);
 		}
+
+		m_ScenesToDelete.free();
 	}
 
 	/*
