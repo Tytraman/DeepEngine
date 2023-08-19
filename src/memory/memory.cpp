@@ -115,4 +115,32 @@ namespace de {
 		freeNoTrack(memory);
 	}
 
+	/*
+	========================
+	MemoryChunk::MemoryChunk
+	========================
+	*/
+	MemoryChunk::MemoryChunk(mem_ptr data, size_t size)
+		: m_Data(data),
+		  m_Size(size)
+	{ }
+
+	/*
+	===================
+	MemoryChunk::create
+	===================
+	*/
+	bool MemoryChunk::alloc(MemoryChunk &dest, size_t size)
+	{
+		mem_ptr data = mem::alloc(size);
+
+		if(data == nullptr)
+			return false;
+
+		dest.m_Data = data;
+		dest.m_Size = size;
+
+		return true;
+	}
+
 }

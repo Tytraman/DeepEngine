@@ -34,11 +34,16 @@ namespace de {
 
 		public:
 			virtual bool open() = 0;
+			virtual bool open(bool append);
 			virtual void close() = 0;
 			virtual bool write(const mem_ptr buffer, size_t size, size_t *bytesWritten) = 0;
 			
 	};
 
+	inline bool OutputStream::open(bool append)
+	{
+		return open();
+	}
 
 
 	class DE_API InputFileStream : public InputStream {
@@ -113,6 +118,7 @@ namespace de {
 		public:
 			OutputFileStream(const char *filename);
 			bool open() override;
+			bool open(bool append) override;
 			void close() override;
 			bool write(const mem_ptr buffer, size_t size, size_t *bytesWritten) override;
 
@@ -125,14 +131,27 @@ namespace de {
 
 	inline bool OutputFileStream::open()
 	{
+		return open(false);
+	}
+
+	inline bool OutputFileStream::open(bool append)
+	{
 #ifdef DE_WINDOWS
-		m_FD = CreateFileA(m_Filename, FILE_APPEND_DATA, FILE_SHARE_READ, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-		if(m_FD == INVALID_HANDLE_VALUE)
-			return false;
-		if(SetFilePointer(m_FD, 0l, nullptr, FILE_END) == INVALID_SET_FILE_POINTER) {
-			close();
-			return false;
+
+		if(append) {
+			m_FD = CreateFileA(m_Filename, FILE_APPEND_DATA, FILE_SHARE_READ, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+			if(m_FD == INVALID_HANDLE_VALUE)
+				return false;
+			if(SetFilePointer(m_FD, 0l, nullptr, FILE_END) == INVALID_SET_FILE_POINTER) {
+				close();
+				return false;
+			}
+		}else {
+			m_FD = CreateFileA(m_Filename, FILE_GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+			if(m_FD == INVALID_HANDLE_VALUE)
+				return false;
 		}
+		
 #else
 #error Implement this
 #endif

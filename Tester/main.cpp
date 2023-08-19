@@ -445,7 +445,7 @@ int main() {
 
 
 	de::MyPNG mypng;
-	if(mypng.loadFile("C:\\Users\\tytra\\Pictures\\test\\png\\2.png")) {
+	if(mypng.loadFile("C:\\Users\\tytra\\Pictures\\test\\png\\3.png")) {
 
 		if(mypng.check()) {
 			if(mypng.readPNGInfo()) {
@@ -464,8 +464,10 @@ int main() {
 				);
 
 				if(mypng.readPNGImage()) {
+					mypng.applyHorizontalMirrorEffect();
+					mypng.setChannelColor(de::ImageChannel::Red, 255);
 					de::MyBMP mybmp;
-					if(mybmp.create(mypng.width(), mypng.height(), mypng.colorDepth())) {
+					if(mybmp.create(mypng.width(), mypng.height(), mypng.colorDepth(), mypng.colorType())) {
 						mybmp.setPNGImage(mypng);
 						mybmp.save("output.bmp");
 					}

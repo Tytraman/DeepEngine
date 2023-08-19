@@ -459,6 +459,7 @@
     <ClInclude Include="include\DE\graphic\graphic.hpp" />
     <ClInclude Include="include\DE\graphic\shape.hpp" />
     <ClInclude Include="include\DE\graphic\vertex.hpp" />
+    <ClInclude Include="include\DE\image\image.hpp" />
     <ClInclude Include="include\DE\image\mybmp.hpp" />
     <ClInclude Include="include\DE\image\mypng.hpp" />
     <ClInclude Include="include\DE\imgui\deimgui.hpp" />

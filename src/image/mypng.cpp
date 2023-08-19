@@ -1,7 +1,6 @@
 #include <DE/image/mypng.hpp>
+#include <DE/stream.hpp>
 
-#include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 
 namespace de {
@@ -30,16 +29,14 @@ namespace de {
 	============
 	*/
 	MyPNG::MyPNG()
-		: m_Data(nullptr),
-		  m_Image(nullptr),
-		  m_Size(0),
+		: m_Image(nullptr),
 		  m_Position(0),
 		  m_PNG(nullptr),
 		  m_PNGInfo(nullptr),
 		  m_Width(0),
 		  m_Height(0),
 		  m_BitDepth(0),
-		  m_ColorType(MyPNGColorType::None),
+		  m_ColorType(ImageColorType::None),
 		  m_InterlaceType(0),
 		  m_Channels(0)
 	{ }
@@ -51,21 +48,35 @@ namespace de {
 	*/
 	bool MyPNG::loadFile(const char *filename)
 	{
-		FILE *file = NULL;
-		if(fopen_s(&file, filename, "rb") != 0)
+		InputFileStream ifs(filename);
+
+		// Libère la mémoire du MemoryChunk pour éviter de faire un memory leak si il contenait déjà des données.
+		m_MemoryChunk.free();
+
+		if(!ifs.open())
 			return false;
 
-		fseek(file, 0L, SEEK_END);
-		m_Size = ftell(file);
+		size_t size = ifs.getFileSize();
 
-		fseek(file, 0L, SEEK_SET);
-
-		m_Data = (uint8_t *) malloc(m_Size);
-		if(m_Data == NULL)
+		// Alloue de la mémoire pour le MemoryChunk.
+		mem_ptr data = mem::alloc(size);
+		if(data == nullptr) {
+			ifs.close();
 			return false;
+		}
 
-		fread(m_Data, sizeof(uint8_t), m_Size, file);
-		fclose(file);
+		m_MemoryChunk.setSize(size);
+		m_MemoryChunk.setData(data);
+
+		size_t bytesRead;
+
+		// Lit toutes les données du fichiers et les stock dans le MemoryChunk.
+		if(!ifs.readAll(data, &bytesRead)) {
+			ifs.close();
+			return false;
+		}
+
+		ifs.close();
 
 		return true;
 	}
@@ -82,15 +93,13 @@ namespace de {
 			size_t row;
 
 			for(row = 0; row < m_Height; ++row)
-				free(*(rowPointers + row));
+				mem::free(*(rowPointers + row));
 
-			free(rowPointers);
+			mem::free(rowPointers);
 		}
 
 		png_destroy_read_struct(&m_PNG, &m_PNGInfo, NULL);
-		free(m_Data);
-		m_Data = nullptr;
-		m_Size = 0;
+		m_MemoryChunk.free();
 		m_Position = 0;
 		m_PNG = nullptr;
 		m_PNGInfo = nullptr;
@@ -101,10 +110,10 @@ namespace de {
 	MyPNG::check
 	============
 	*/
-	bool MyPNG::check() const
+	bool MyPNG::check()
 	{
 		// Cette fonction vérifie si le buffer vaut bien bien la valeur de la signature du format PNG.
-		return !png_sig_cmp(m_Data, 0, 4);
+		return !png_sig_cmp((png_const_bytep) m_MemoryChunk.data(), 0, 4);
 	}
 
 	/*
@@ -151,7 +160,7 @@ namespace de {
 	*/
 	bool MyPNG::readPNGImage()
 	{
-		png_bytep *rowPointers = (png_bytep *) malloc(sizeof(png_bytep) * m_Height);
+		png_bytep *rowPointers = (png_bytep *) mem::alloc(sizeof(png_bytep) * m_Height);
 		uint32_t row;
 
 		if(rowPointers == NULL)
@@ -167,8 +176,10 @@ namespace de {
 #endif
 
 		// Pour chaque ligne de l'image.
-		for(row = 0; row < m_Height; ++row)
-			*(rowPointers + row) = (png_bytep) malloc(png_get_rowbytes(m_PNG, m_PNGInfo));
+		for(row = 0; row < m_Height; ++row) {
+			size_t rowSize = png_get_rowbytes(m_PNG, m_PNGInfo);
+			*(rowPointers + row) = (png_bytep) mem::alloc(rowSize);
+		}
 
 		for(pass = 0; pass < numberPassed; ++pass) {
 			for(row = 0; row < m_Height; ++row) {
@@ -183,27 +194,217 @@ namespace de {
 		return true;
 	}
 
+	void MyPNG::applyHorizontalMirrorEffect()
+	{
+		png_bytep *rowPointers = (png_bytep *) m_Image;
+		png_byte temp[4];
+		uint32_t row;
+		uint32_t column;
+		uint32_t columns = m_Width / 2;
+
+		// Pour chaque ligne de l'image.
+		for(row = 0; row < m_Height; ++row) {
+			for(column = 0; column < columns; ++column) {
+				memcpy(temp, *(rowPointers + row) + column * m_Channels, m_Channels);
+				memcpy(*(rowPointers + row) + column * m_Channels, *(rowPointers + row) + (m_Width - 1 - column) * m_Channels, m_Channels);
+				memcpy(*(rowPointers + row) + (m_Width - 1 - column) * m_Channels, temp, m_Channels);
+			}
+		}
+	}
+
+	void MyPNG::applyVerticalMirrorEffect()
+	{
+		png_bytep *rowPointers = (png_bytep *) m_Image;
+		png_byte temp[4];
+		uint32_t row;
+		uint32_t column;
+		uint32_t rows = m_Height / 2;
+
+		// Pour chaque colonne de l'image.
+		for(column = 0; column < m_Width; ++column) {
+			for(row = 0; row < rows; ++row) {
+				// Copie le pixel actuel dans une variable temporaire.
+				memcpy(temp, *(rowPointers + row) + column * m_Channels, m_Channels);
+
+				// Copie le pixel de l'autre côté à la place du pixel actuel.
+				memcpy(*(rowPointers + row) + column * m_Channels, *(rowPointers + m_Height - 1 - row) + column * m_Channels, m_Channels);
+
+				// Copie le pixel de la variable temporaire à la place du pixel de l'autre côte.
+				memcpy(*(rowPointers + m_Height - 1 - row) + column * m_Channels, temp, m_Channels);
+			}
+		}
+	}
+
+	void MyPNG::copyChannelColors(ImageChannel::t from, ImageChannel::t to)
+	{
+		png_bytep *rowPointers = (png_bytep *) m_Image;
+		png_bytep *currentRow;
+		uint32_t row;
+		uint32_t column;
+
+		// Inutile copier un channel vers le même channel.
+		if(from == to)
+			return;
+
+		uint8_t channelFrom;
+		uint8_t channelTo;
+
+		switch(from) {
+			default: return;
+			case ImageChannel::Red: {
+				channelFrom = 0;
+			} break;
+			case ImageChannel::Green: {
+				channelFrom = 1;
+			} break;
+			case ImageChannel::Blue: {
+				channelFrom = 2;
+			} break;
+			case ImageChannel::Alpha: {
+				channelFrom = 3;
+			} break;
+		}
+
+		switch(to) {
+			default: return;
+			case ImageChannel::Red: {
+				channelTo = 0;
+			} break;
+			case ImageChannel::Green: {
+				channelTo = 1;
+			} break;
+			case ImageChannel::Blue: {
+				channelTo = 2;
+			} break;
+			case ImageChannel::Alpha: {
+				channelTo = 3;
+			} break;
+		}
+
+		// Pour chaque ligne de l'image
+		for(row = 0; row < m_Height; ++row) {
+			currentRow = rowPointers + row;
+			// Pour chaque colonne de la ligne
+			for(column = 0; column < m_Width; ++column) {
+				*(*(currentRow) + column * m_Channels + channelTo) = *(*(currentRow) +column * m_Channels + channelFrom);
+			}
+		}
+	}
+
+	void MyPNG::swapChannelColors(ImageChannel::t channel1, ImageChannel::t channel2)
+	{
+		png_bytep *rowPointers = (png_bytep *) m_Image;
+		png_bytep *currentRow;
+		uint32_t row;
+		uint32_t column;
+		png_byte temp;
+
+		// Inutile copier un channel vers le même channel.
+		if(channel1 == channel2)
+			return;
+
+		uint8_t channelFrom;
+		uint8_t channelTo;
+
+		switch(channel1) {
+			default: return;
+			case ImageChannel::Red: {
+				channelFrom = 0;
+			} break;
+			case ImageChannel::Green: {
+				channelFrom = 1;
+			} break;
+			case ImageChannel::Blue: {
+				channelFrom = 2;
+			} break;
+			case ImageChannel::Alpha: {
+				channelFrom = 3;
+			} break;
+		}
+
+		switch(channel2) {
+			default: return;
+			case ImageChannel::Red: {
+				channelTo = 0;
+			} break;
+			case ImageChannel::Green: {
+				channelTo = 1;
+			} break;
+			case ImageChannel::Blue: {
+				channelTo = 2;
+			} break;
+			case ImageChannel::Alpha: {
+				channelTo = 3;
+			} break;
+		}
+
+		// Pour chaque ligne de l'image
+		for(row = 0; row < m_Height; ++row) {
+			currentRow = rowPointers + row;
+			// Pour chaque colonne de la ligne
+			for(column = 0; column < m_Width; ++column) {
+				temp = *(*(currentRow) +column * m_Channels + channelFrom);
+				*(*(currentRow) +column * m_Channels + channelFrom) = *(*(currentRow) + column * m_Channels + channelTo);
+				*(*(currentRow) + column * m_Channels + channelTo) = temp;
+			}
+		}
+	}
+
+	void MyPNG::setChannelColor(ImageChannel::t channel, uint8_t value)
+	{
+		uint8_t chan;
+		png_bytep *rowPointers = (png_bytep *) m_Image;
+		png_bytep *currentRow;
+		uint32_t row;
+		uint32_t column;
+
+		switch(channel) {
+			default: return;
+			case ImageChannel::Red: {
+				chan = 0;
+			} break;
+			case ImageChannel::Green: {
+				chan = 1;
+			} break;
+			case ImageChannel::Blue: {
+				chan = 2;
+			} break;
+			case ImageChannel::Alpha: {
+				chan = 3;
+			} break;
+		}
+
+		// Pour chaque ligne de l'image
+		for(row = 0; row < m_Height; ++row) {
+			currentRow = rowPointers + row;
+			// Pour chaque colonne de la ligne
+			for(column = 0; column < m_Width; ++column) {
+				*(*(currentRow) + column * m_Channels + chan) = value;
+			}
+		}
+	}
+
 	/*
 	====================
 	MyPNG::colorTypeName
 	====================
 	*/
-	const char *MyPNG::colorTypeName(MyPNGColorType::ColorType colorType)
+	const char *MyPNG::colorTypeName(ImageColorType::t colorType)
 	{
 		switch(colorType) {
 			default:
 				return "Unknown";
-			case MyPNGColorType::None:
+			case ImageColorType::None:
 				return "None";
-			case MyPNGColorType::Palette:
+			case ImageColorType::Palette:
 				return "Palette";
-			case MyPNGColorType::Gray:
+			case ImageColorType::Gray:
 				return "Grayscale";
-			case MyPNGColorType::RGB:
+			case ImageColorType::RGB:
 				return "RGB";
-			case MyPNGColorType::RGBA:
+			case ImageColorType::RGBA:
 				return "RGBA";
-			case MyPNGColorType::GA:
+			case ImageColorType::GA:
 				return "GA";
 		}
 	}

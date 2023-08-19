@@ -1,25 +1,9 @@
 #ifndef __DEEP_ENGINE_MYPNG_HPP__
 #define __DEEP_ENGINE_MYPNG_HPP__
 
-#include <DE/def.h>
-#include <DE/types.hpp>
-
-#include <png.h>
+#include <DE/image/image.hpp>
 
 namespace de {
-
-
-	namespace MyPNGColorType {
-		enum ColorType : int {
-			None    = -1,
-			Gray    = PNG_COLOR_TYPE_GRAY,
-			Palette = PNG_COLOR_TYPE_PALETTE,
-			RGB     = PNG_COLOR_TYPE_RGB,
-			RGBA    = PNG_COLOR_TYPE_RGBA,
-			GA      = PNG_COLOR_TYPE_GA
-		};
-	}
-	
 
 	class DE_API MyPNG {
 
@@ -36,10 +20,16 @@ namespace de {
 
 			/// @brief  Vérifie si les données chargées correspondent au format PNG.
 			/// @return  \c true si le format est PNG, sinon \c false.
-			bool check() const;
+			bool check();
 
 			bool readPNGInfo();
 			bool readPNGImage();
+
+			void applyHorizontalMirrorEffect();
+			void applyVerticalMirrorEffect();
+			void copyChannelColors(ImageChannel::t from, ImageChannel::t to);
+			void swapChannelColors(ImageChannel::t channel1, ImageChannel::t channel2);
+			void setChannelColor(ImageChannel::t channel, uint8_t value);
 
 			uint8_t *data();
 			size_t size() const;
@@ -47,7 +37,7 @@ namespace de {
 			uint32_t width() const;
 			uint32_t height() const;
 			int bitDepth() const;
-			MyPNGColorType::ColorType colorType() const;
+			ImageColorType::t colorType() const;
 			int interlaceType() const;
 			uint8_t channels() const;
 			uint32_t colorDepth() const;
@@ -55,12 +45,11 @@ namespace de {
 
 			void setPosition(size_t pos);
 
-			static const char *colorTypeName(MyPNGColorType::ColorType colorType);
+			static const char *colorTypeName(ImageColorType::t colorType);
 
 		private:
-			uint8_t *m_Data;
+			MemoryChunk m_MemoryChunk;
 			uint8_t *m_Image;
-			size_t   m_Size;
 			size_t   m_Position;
 
 			png_structp m_PNG;
@@ -69,7 +58,7 @@ namespace de {
 			uint32_t m_Width;
 			uint32_t m_Height;
 			int m_BitDepth;
-			MyPNGColorType::ColorType m_ColorType;
+			ImageColorType::t m_ColorType;
 			int m_InterlaceType;
 			uint8_t m_Channels;
 	};
@@ -81,7 +70,7 @@ namespace de {
 	*/
 	inline uint8_t *MyPNG::data()
 	{
-		return m_Data;
+		return (uint8_t *) m_MemoryChunk.data();
 	}
 
 	/*
@@ -91,7 +80,7 @@ namespace de {
 	*/
 	inline size_t MyPNG::size() const
 	{
-		return m_Size;
+		return m_MemoryChunk.size();
 	}
 
 	/*
@@ -139,7 +128,7 @@ namespace de {
 	MyPNG::colorType
 	================
 	*/
-	inline MyPNGColorType::ColorType MyPNG::colorType() const
+	inline ImageColorType::t MyPNG::colorType() const
 	{
 		return m_ColorType;
 	}

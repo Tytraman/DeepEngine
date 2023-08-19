@@ -68,11 +68,17 @@ namespace de {
 	*/
 	size_t List::find(void *toSearch)
 	{
+		// Si l'élément à rechercher pointe vers nullptr, ne continue pas la procédure.
+		if(toSearch == nullptr)
+			return nothing;
+
+		// Pointeur vers le tableau des éléments de la liste.
 		uint8_t *ptr = (uint8_t *) m_Data;
 		size_t elementSize = m_ElementSize;
 		size_t numberOfElements = m_NumberOfElements;
 		size_t index = 0;
 
+		// Vérifie pour chaque élément de la liste si la donnée est la même que celle recherchée.
 		while(index < numberOfElements) {
 			if(memcmp(ptr, toSearch, elementSize) == 0)
 				return index;
