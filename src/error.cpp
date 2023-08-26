@@ -15,6 +15,7 @@ void de::DError::printError(ErrorStatus status) {
 		DE_ERROR_CASE(InitSDL);
 		DE_ERROR_CASE(CreateWindowSDL);
 		DE_ERROR_CASE(CreateRendererSDL);
+		DE_ERROR_CASE(GLCreateContext);
 	)
 
 	printf("[%s] %s\n", DError::Error, error);

@@ -24,37 +24,28 @@ namespace de {
 	*/
 	Entity Graphic::createRectangle(entity_collection_id collectionID, const fvec2 &position, float width, float height, const colora &color, bool collidable)
 	{
-		component_id drawableComponentID = ComponentManager::createDrawableComponent();
+		component_id drawableComponentID       = ComponentManager::createDrawableComponent();
 		component_id transformationComponentID = ComponentManager::createTransformationComponent(position, fvec2(width, height), 0.0f);
 
 		DrawableComponent *drawableComponent = ComponentManager::getDrawableComponent(drawableComponentID);
 
-		Vertex v1;
-		v1.pos.x = -0.5f;
-		v1.pos.y = -0.5f;
-		v1.color = color;
+		float vPos[] = {
+			-0.5f,	-0.5f, color.R, color.G, color.B, color.A,
+			 0.5f,	-0.5f, color.R, color.G, color.B, color.A,
+			 0.5f,	 0.5f, color.R, color.G, color.B, color.A,
+			-0.5f,	-0.5f, color.R, color.G, color.B, color.A,
+			 0.5f,	 0.5f, color.R, color.G, color.B, color.A,
+			-0.5f,   0.5f, color.R, color.G, color.B, color.A
+		};
 
-		Vertex v2;
-		v2.pos.x = 0.5f;
-		v2.pos.y = -0.5f;
-		v2.color = color;
+		MemoryChunk chunk(vPos, sizeof(vPos));
 
-		Vertex v3;
-		v3.pos.x = 0.5f;
-		v3.pos.y = 0.5f;
-		v3.color = color;
-
-		Vertex v4;
-		v4.pos.x = -0.5f;
-		v4.pos.y = 0.5f;
-		v4.color = color;
-
-		drawableComponent->vertices.addCopy(&v1);
-		drawableComponent->vertices.addCopy(&v2);
-		drawableComponent->vertices.addCopy(&v3);
-		drawableComponent->vertices.addCopy(&v1);
-		drawableComponent->vertices.addCopy(&v3);
-		drawableComponent->vertices.addCopy(&v4);
+		drawableComponent->vbo.bind();
+		drawableComponent->vao.bind();
+		drawableComponent->vbo.transmitData(chunk);
+		drawableComponent->vbo.setVerticesNumber(6);
+		drawableComponent->vbo.addAttribute(0, GLAttribComponentsNumber::x2, GLType::Float, 6 * sizeof(float), 0);
+		drawableComponent->vbo.addAttribute(1, GLAttribComponentsNumber::x4, GLType::Float, 6 * sizeof(float), 2 * sizeof(float));
 
 		Entity entity = EntityManager::createEntity(collectionID);
 		EntityManager::attachComponent(entity, drawableComponentID);
@@ -87,24 +78,20 @@ namespace de {
 
 		DrawableComponent *drawableComponent = ComponentManager::getDrawableComponent(drawableComponentID);
 
-		Vertex v1;
-		v1.pos.x = 0.0f;
-		v1.pos.y = -0.5f;
-		v1.color = color;
+		float vPos[] = {
+			 0.0f, -0.5f, color.R, color.G, color.B, color.A,
+			 0.5f,  0.5f, color.R, color.G, color.B, color.A,
+			-0.5f,  0.5f, color.R, color.G, color.B, color.A
+		};
 
-		Vertex v2;
-		v2.pos.x = 0.5f;
-		v2.pos.y = 0.5f;
-		v2.color = color;
+		MemoryChunk chunk(vPos, sizeof(vPos));
 
-		Vertex v3;
-		v3.pos.x = -0.5f;
-		v3.pos.y = 0.5f;
-		v3.color = color;
-
-		drawableComponent->vertices.addCopy(&v1);
-		drawableComponent->vertices.addCopy(&v2);
-		drawableComponent->vertices.addCopy(&v3);
+		drawableComponent->vbo.bind();
+		drawableComponent->vao.bind();
+		drawableComponent->vbo.transmitData(chunk);
+		drawableComponent->vbo.setVerticesNumber(3);
+		drawableComponent->vbo.addAttribute(0, GLAttribComponentsNumber::x2, GLType::Float, 6 * sizeof(float), 0);
+		drawableComponent->vbo.addAttribute(1, GLAttribComponentsNumber::x4, GLType::Float, 6 * sizeof(float), 2 * sizeof(float));
 
 		Entity entity = EntityManager::createEntity(collectionID);
 		EntityManager::attachComponent(entity, drawableComponentID);

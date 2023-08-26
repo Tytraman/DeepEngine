@@ -4,10 +4,13 @@
 #include <DE/key.hpp>
 #include <DE/scene.hpp>
 #include <DE/ecs/system.hpp>
+#include <DE/rendering/opengl_utils.hpp>
+
+#include <glad/glad.h>
 
 #include "imgui.h"
 #include "backends/imgui_impl_sdl2.h"
-#include "backends/imgui_impl_sdlrenderer2.h"
+#include "backends/imgui_impl_opengl3.h"
 
 namespace de {
 
@@ -49,8 +52,7 @@ namespace de {
 					default: break;
 					case events::WindowResized: {	// Redimension de la fenêtre
 						size newSize = e->getWindowSize();
-
-						// TODO: ajouter du code...
+						GLCore::updateViewport(newSize.width, newSize.height);
 					} break;
 				}
 			} break;
@@ -80,14 +82,18 @@ namespace de {
 	*/
 	ErrorStatus Window::create(Window &win, const char *title, const size &size)
 	{
-		win.m_Window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, size.width, size.height, SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
+		win.m_Window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, size.width, size.height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 		if(win.m_Window == NULL)
 			return ErrorStatus::CreateWindowSDL;
 
-		if(Renderer::create(win.m_Renderer, win) != ErrorStatus::NoError) {
+		
+		if(!OpenGLRenderer::create(win.m_Renderer, win)) {
 			win.destroy();
-			return ErrorStatus::CreateRendererSDL;
+			return ErrorStatus::GLCreateContext;
 		}
+
+		gladLoadGL();
+		glViewport(0, 0, size.width, size.height);
 
 		return ErrorStatus::NoError;
 	}
@@ -157,7 +163,7 @@ namespace de {
 
 			__executePreEventCallbacks(&m_PreEventCallbacks, *this);
 
-			ImGui_ImplSDLRenderer2_NewFrame();
+			ImGui_ImplOpenGL3_NewFrame();
 			ImGui_ImplSDL2_NewFrame();
 			ImGui::NewFrame();
 

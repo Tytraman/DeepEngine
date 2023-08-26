@@ -35,6 +35,8 @@
 
 #define DE_WINDOWS 1
 
+#define DE_DEBUG_BREAK __debugbreak()
+
 #else
 // Pour le moment la librairie vise des plateformes sous Windows mais il est prévu
 // qu'elle soit disponible pour des systèmes sous Linux.
@@ -59,6 +61,8 @@
 #ifdef _MSC_VER
 #define DE_MSVC 1
 #define DE_FUNCTION_NAME __FUNCTION__
+#define DE_FILE_NAME __FILE__
+#define DE_LINE __LINE__
 
 #define DE_PACK( __Declaration__ ) __pragma( pack(push, 1) ) __Declaration__ __pragma( pack(pop))
 

@@ -19,7 +19,8 @@ namespace de {
 		InitSDL,
 		CreateWindowSDL,
 		CreateRendererSDL,
-		NoWindowFound
+		NoWindowFound,
+		GLCreateContext
 	};
 
 	class DE_API DError {

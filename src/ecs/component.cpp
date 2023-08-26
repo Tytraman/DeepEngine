@@ -32,47 +32,12 @@ namespace de {
 	====================================
 	*/
 	DrawableComponent::DrawableComponent()
-		: vertices(sizeof(Vertex)), flags(0)
+		: flags(0)
 	{ }
 
-	/*
-	==================================
-	DrawableComponent::calcRectContour
-	==================================
-	*/
-	Rect DrawableComponent::calcRectContour()
-	{
-		size_t length = vertices.getNumberOfElements();
-		size_t i;
-		Vertex *vertList = (Vertex *) vertices.getData();
-		Vertex *vert;
-
-		float topY    = vertList->pos.y;
-		float bottomY = vertList->pos.y;
-		float leftX   = vertList->pos.x;
-		float rightX  = vertList->pos.x;
-
-		// Itère à travers tous les sommets.
-		for(i = 1; i < length; ++i) {
-			vert = vertList + i;
-
-			// Top Y
-			if(vert->pos.y < topY)
-				topY = vert->pos.y;
-			// Bottom Y
-			else if(vert->pos.y > bottomY)
-				bottomY = vert->pos.y;
-
-			// Left X
-			if(vert->pos.x < leftX)
-				leftX = vert->pos.x;
-			// Right X
-			else if(vert->pos.x > rightX)
-				rightX = vert->pos.x;
-		}
-
-		return Rect(fvec2(leftX, topY), rightX - leftX, bottomY - topY);
-	}
+	DrawableComponent::DrawableComponent(const GLVBO &_vbo, const GLVAO &_vao)
+		: vbo(_vbo), vao(_vao)
+	{ }
 
 	/*
 	=========================================
@@ -84,6 +49,18 @@ namespace de {
 		component_id id = m_ComponentCount;
 
 		m_DrawableComponents.emplace(id, DrawableComponent());
+		m_ComponentsType[id] = DrawableComponentType;
+
+		m_ComponentCount = id + 1;
+
+		return id;
+	}
+
+	component_id ComponentManager::createDrawableComponent(const GLVBO &vbo, const GLVAO &vao)
+	{
+		component_id id = m_ComponentCount;
+
+		m_DrawableComponents.emplace(id, DrawableComponent(vbo, vao));
 		m_ComponentsType[id] = DrawableComponentType;
 
 		m_ComponentCount = id + 1;

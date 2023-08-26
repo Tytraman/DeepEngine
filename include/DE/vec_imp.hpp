@@ -449,9 +449,9 @@ namespace de {
 	inline fvec3 fvec3::mul(const fvec3 &vec, const fmat3x3 &mat)
 	{
 		return {
-			(vec.x * mat.x1) + (vec.y * mat.y1) + (vec.z * mat.z1),
-			(vec.x * mat.x2) + (vec.y * mat.y2) + (vec.z * mat.z2),
-			(vec.x * mat.x3) + (vec.y * mat.y3) + (vec.z * mat.z3)
+			(vec.x * mat[fmat3x3_index::x1]) + (vec.y * mat[fmat3x3_index::y1]) + (vec.z * mat[fmat3x3_index::z1]),
+			(vec.x * mat[fmat3x3_index::x2]) + (vec.y * mat[fmat3x3_index::y2]) + (vec.z * mat[fmat3x3_index::z2]),
+			(vec.x * mat[fmat3x3_index::x3]) + (vec.y * mat[fmat3x3_index::y3]) + (vec.z * mat[fmat3x3_index::z3])
 		};
 	}
 

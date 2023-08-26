@@ -15,6 +15,9 @@ namespace de {
 			static void init(Window &window);
 			static void shutdown();
 
+		private:
+			static bool m_Initialized;
+
 	};
 
 	using ImGuiDebugMenuView = uint32_t;

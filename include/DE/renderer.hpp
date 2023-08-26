@@ -92,6 +92,47 @@ namespace de {
 		return _color;
 	}
 
+	class DE_API OpenGLRenderer {
+
+		public:
+			OpenGLRenderer();
+
+			static bool create(OpenGLRenderer &dest, Window &window);
+
+			void clear() const;
+			void draw(unsigned int numberOfVertices) const;
+			void swapBuffers() const;
+
+			SDL_GLContext context();
+			SDL_Window *window();
+
+			colora clearColor() const;
+
+			void setClearColor(const colora color);
+
+		private:
+			SDL_GLContext m_Context;
+			SDL_Window *m_Window;
+
+			colora m_ClearColor;
+
+	};
+
+	inline SDL_GLContext OpenGLRenderer::context()
+	{
+		return m_Context;
+	}
+
+	inline SDL_Window *OpenGLRenderer::window()
+	{
+		return m_Window;
+	}
+
+	inline colora OpenGLRenderer::clearColor() const
+	{
+		return m_ClearColor;
+	}
+
 }
 
 #endif

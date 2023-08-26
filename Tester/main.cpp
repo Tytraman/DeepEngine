@@ -18,19 +18,15 @@
 #include <DE/ecs/entity.hpp>
 #include <DE/ecs/component.hpp>
 
-#include <DE/audio/audio.hpp>
 #include <DE/imgui/deimgui.hpp>
 
-#include <DE/image/mypng.hpp>
-#include <DE/image/mybmp.hpp>
-
-#include <lua.hpp>
+#include <DE/rendering/opengl_utils.hpp>
 
 #define AUTHORS		"Tytraman"
 #define BUILD_VER	"dev build 0.0.1"
 
-#define WINDOW_WIDTH	1000
-#define WINDOW_HEIGHT	750
+#define WINDOW_WIDTH	1745
+#define WINDOW_HEIGHT	980
 #define TARGET_MS		16
 #define TARGET_FPS		300
 
@@ -51,9 +47,6 @@ de::Entity g_Player = de::Entity::bad();
 
 de::Entity g_Rect1 = de::Entity::bad();
 de::ColliderComponent *g_Rect1ColliderComponent = nullptr;
-
-de::AudioSource g_AudioSource;
-de::AudioBuffer g_ImpactSoundBuffer;
 
 static bool g_CollisionPlayerRectEnabled = true;
 
@@ -375,60 +368,7 @@ int main() {
 	de::Debug::addFunctionToCallbackList(DE_FUNCTION_NAME);
 	de::Debug::writeToStream(logger);
 
-	lua_State *L = luaL_newstate();
-
 	printf("pwd: %s\n", de::Core::getPwd());
-
-	if(!de::AudioDevice::init())
-		fprintf(stderr, "Unable to load audio device.\n");
-
-
-	if(!g_ImpactSoundBuffer.create("impact.wav")) {
-		fprintf(stderr, "Unable to load sound.\n");
-		de::AudioDevice::shutdown();
-		return 1;
-	}
-	
-
-	if(!g_AudioSource.create()) {
-		fprintf(stderr, "Unable to create audio source.\n");
-
-		g_ImpactSoundBuffer.destroy();
-		de::AudioDevice::shutdown();
-
-		return 1;
-	}
-
-	if(!g_AudioSource.attachBuffer(g_ImpactSoundBuffer)) {
-		fprintf(stderr, "Unable to attach buffer to audio source.\n");
-
-		g_ImpactSoundBuffer.destroy();
-		g_AudioSource.destroy();
-		de::AudioDevice::shutdown();
-
-		return 1;
-	}
-
-	de::AudioListener &audioListener = de::AudioDevice::getListener();
-	if(!audioListener.setPosition(de::fvec3(0.0f, 0.0f, 0.0f))) {
-		fprintf(stderr, "Unable to set listener position.\n");
-
-		g_ImpactSoundBuffer.destroy();
-		g_AudioSource.destroy();
-		de::AudioDevice::shutdown();
-
-		return 1;
-	}
-
-	if(!audioListener.setVelocity(de::fvec3(0.0f, 0.0f, 0.0f))) {
-		fprintf(stderr, "Unable to set listener velocity.\n");
-
-		g_ImpactSoundBuffer.destroy();
-		g_AudioSource.destroy();
-		de::AudioDevice::shutdown();
-
-		return 1;
-	}
 
 	de::Window window(TARGET_MS, TARGET_FPS);
 	window.setEventCallback(eventCallback);
@@ -442,43 +382,6 @@ int main() {
 
 	de::ImGuiWindow::init(window);
 
-
-
-	de::MyPNG mypng;
-	if(mypng.loadFile("C:\\Users\\tytra\\Pictures\\test\\png\\3.png")) {
-
-		if(mypng.check()) {
-			if(mypng.readPNGInfo()) {
-				printf(
-					"=====[ Image ]=====\n"
-					"Dimension: %ux%u\n"
-					"Color type: %s\n"
-					"Color depth: %u\n"
-					"Bit depth: %d\n"
-					"Channels: %d\n",
-					mypng.width(), mypng.height(),
-					de::MyPNG::colorTypeName(mypng.colorType()),
-					mypng.colorDepth(),
-					mypng.bitDepth(),
-					mypng.channels()
-				);
-
-				if(mypng.readPNGImage()) {
-					mypng.applyHorizontalMirrorEffect();
-					mypng.setChannelColor(de::ImageChannel::Red, 255);
-					de::MyBMP mybmp;
-					if(mybmp.create(mypng.width(), mypng.height(), mypng.colorDepth(), mypng.colorType())) {
-						mybmp.setPNGImage(mypng);
-						mybmp.save("output.bmp");
-					}
-				}
-			}
-		}
-
-		mypng.destroy();
-	}
-
-
 	de::scene_id sceneID = de::Scene::createScene("scn_main");
 	de::Scene *scene = de::Scene::getScene(sceneID);
 	scene->setColliderCallback(collider_callback);
@@ -486,7 +389,98 @@ int main() {
 
 	de::entity_collection_id collectionID = de::Scene::getEntityCollection(sceneID);
 
-	g_Rect1 = de::Graphic::createRectangle(sceneID, de::fvec2(RECT1_SPAWN_X, RECT1_SPAWN_Y), 25.0f, 25.0f, de::colora(0, 255, 0, 255), true);
+	printf(
+		"====================[ OpenGL ]====================\n"
+		"Version: %s\n"
+		"Max vertex attribs: %d\n"
+		"==================================================\n",
+		
+		de::GLCore::version(),
+		de::GLCore::maxVertexAttribs()
+	);
+
+	de::Entity ent1 = de::Graphic::createRectangle(collectionID, de::fvec2(0.0f, 0.0f), 1.0f, 1.0f, de::colora(0, 0, 255, 255));
+	de::component_id ent1TransID = de::EntityManager::getComponentID(ent1, de::TransformationComponentType);
+	de::TransformationComponent *ent1Trans = de::ComponentManager::getTransformationComponent(ent1TransID);
+	ent1Trans->setRotation(10.0f);
+
+	//de::Entity ent2 = de::Graphic::createTriangle(collectionID, de::fvec2(50.0f, 25.0f), 70.0f, de::colora(255, 255, 0, 255));
+
+
+
+	de::InputFileStream vertIfs("..\\glsl\\default.vert");
+	if(!vertIfs.open()) {
+		fprintf(stderr, "Unable to open vertex shader file.\n");
+		return 1;
+	}
+
+	de::InputFileStream fragIfs("..\\glsl\\default.frag");
+	if(!fragIfs.open()) {
+		fprintf(stderr, "Unable to open fragment shader file.\n");
+		return 1;
+	}
+
+	de::MemoryChunk vertShader1;
+	de::MemoryChunk::alloc(vertShader1, vertIfs.getFileSize());
+	size_t bytesRead;
+
+	if(!vertIfs.readAll(vertShader1.data(), &bytesRead)) {
+		fprintf(stderr, "Can't read shader.\n");
+		vertIfs.close();
+		fragIfs.close();
+		return 1;
+	}
+
+	de::MemoryChunk fragShader1;
+	de::MemoryChunk::alloc(fragShader1, fragIfs.getFileSize());
+
+	if(!fragIfs.readAll(fragShader1.data(), &bytesRead)) {
+		fprintf(stderr, "Can't read shader.\n");
+		vertShader1.free();
+		vertIfs.close();
+		fragIfs.close();
+		return 1;
+	}
+	
+	de::GLShader vertShader(de::GLShaderType::Vertex);
+	de::GLShader fragShader(de::GLShaderType::Fragment);
+
+	vertShader.load(vertShader1);
+	fragShader.load(fragShader1);
+
+	vertShader1.free();
+	fragShader1.free();
+
+	if(!vertShader.compile()) {
+		vertIfs.close();
+		fragIfs.close();
+		return 1;
+	}
+
+	if(!fragShader.compile()) {
+		vertIfs.close();
+		fragIfs.close();
+		return 1;
+	}
+
+	vertIfs.close();
+	fragIfs.close();
+
+	de::GLProgram program;
+	program.attachShader(vertShader);
+	program.attachShader(fragShader);
+	if(!program.link()) {
+		vertShader.destroy();
+		fragShader.destroy();
+		return 1;
+	}
+
+	program.use();
+
+	vertShader.destroy();
+	fragShader.destroy();
+
+	/*g_Rect1 = de::Graphic::createRectangle(sceneID, de::fvec2(RECT1_SPAWN_X, RECT1_SPAWN_Y), 25.0f, 25.0f, de::colora(0, 255, 0, 255), true);
 
 	de::component_id rect1VelocityComponentID = de::ComponentManager::createVelocityComponent();
 	de::VelocityComponent *rect1VelocityComponent = de::ComponentManager::getVelocityComponent(rect1VelocityComponentID);
@@ -494,25 +488,20 @@ int main() {
 	de::EntityManager::attachComponent(g_Rect1, rect1VelocityComponentID);
 
 	de::component_id rect1TransformationComponentID = de::EntityManager::getComponentID(g_Rect1, de::TransformationComponentType);
-	de::component_id rect1ColliderComponentID = de::EntityManager::getComponentID(g_Rect1, de::ColliderComponentType);
+	de::component_id rect1ColliderComponentID = de::EntityManager::getComponentID(g_Rect1, de::ColliderComponentType);*/
 
-	de::TransformationComponent *rect1TransformationComponent = de::ComponentManager::getTransformationComponent(rect1TransformationComponentID);
-	g_Rect1ColliderComponent = de::ComponentManager::getColliderComponent(rect1ColliderComponentID);
+	/*de::TransformationComponent *rect1TransformationComponent = de::ComponentManager::getTransformationComponent(rect1TransformationComponentID);
+	g_Rect1ColliderComponent = de::ComponentManager::getColliderComponent(rect1ColliderComponentID);*/
 
-	de::fvec2 rect1Translation = rect1TransformationComponent->getTranslation();
-	de::fvec2 rect1Scaling     = rect1TransformationComponent->getScaling();
+	/*de::fvec2 rect1Translation = rect1TransformationComponent->getTranslation();
+	de::fvec2 rect1Scaling     = rect1TransformationComponent->getScaling();*/
 
-	de::Entity leftRect    = de::Graphic::createRectangle(collectionID, de::fvec2(40.0f, WINDOW_HEIGHT / 2.0f), 20.0f, WINDOW_HEIGHT - 100.0f, de::colora(255, 0, 255, 255), true);
-	de::Entity rightRect   = de::Graphic::createRectangle(collectionID, de::fvec2(WINDOW_WIDTH - 40.0f, WINDOW_HEIGHT / 2.0f), 20.0f, WINDOW_HEIGHT - 100.0f, de::colora(255, 0, 255, 255), true);
-	de::Entity topRect     = de::Graphic::createRectangle(collectionID, de::fvec2(WINDOW_WIDTH / 2.0f, 100.0f), WINDOW_WIDTH - 100.0f, 20.0f, de::colora(0, 0, 255, 255), true);
-	de::Entity bottomRect  = de::Graphic::createRectangle(collectionID, de::fvec2(WINDOW_WIDTH / 2.0f, WINDOW_HEIGHT - 100.0f), WINDOW_WIDTH - 100.0f, 20.0f, de::colora(0, 0, 255, 255), true);
-
-	g_Player = de::Graphic::createRectangle(collectionID, de::fvec2(PLAYER_SPAWN_X, PLAYER_SPAWN_Y), 50.0f, 50.0f, de::colora(255, 0, 0, 255), true);
+	/*g_Player = de::Graphic::createRectangle(collectionID, de::fvec2(PLAYER_SPAWN_X, PLAYER_SPAWN_Y), 50.0f, 50.0f, de::colora(255, 0, 0, 255), true);
 	de::component_id playerVelCpnID = de::ComponentManager::createVelocityComponent();
 	de::component_id playerAccCpnID = de::ComponentManager::createAccelerationComponent(de::fvec2(0.0f, PLAYER_GRAVITY));
 	
 	de::EntityManager::attachComponent(g_Player, playerVelCpnID);
-	de::EntityManager::attachComponent(g_Player, playerAccCpnID);
+	de::EntityManager::attachComponent(g_Player, playerAccCpnID);*/
 
 	de::Scene::setActiveScene(sceneID);
 
@@ -525,12 +514,6 @@ int main() {
 	window.destroy();
 
 	logger.close();
-
-	lua_close(L);
-
-	/*songBuffer.destroy();
-	audioSource.destroy();
-	de::AudioDevice::shutdown();*/
 
 	de::Core::shutdown();
 

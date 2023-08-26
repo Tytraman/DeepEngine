@@ -11,9 +11,11 @@
 
 #include "imgui.h"
 #include "backends/imgui_impl_sdl2.h"
-#include "backends/imgui_impl_sdlrenderer2.h"
+#include "backends/imgui_impl_opengl3.h"
 
 namespace de {
+
+	bool ImGuiWindow::m_Initialized = false;
 
 	static std::unordered_map<const Window *, ImGuiDebugPanelOptions> m_DebugPanelOptions;
 
@@ -30,18 +32,23 @@ namespace de {
 		// Défini ImGui sur le mode sombre.
 		ImGui::StyleColorsDark();
 
-		SDL_Renderer *renderer = window.getRenderer().getRenderer();
+		//SDL_Renderer *renderer = window.getRenderer().getRenderer();
 
 		// Initialise ImGui pour utiliser le Renderer de SDL2.
-		ImGui_ImplSDL2_InitForSDLRenderer(window.getWindow(), renderer);
-		ImGui_ImplSDLRenderer2_Init(renderer);
+		ImGui_ImplSDL2_InitForOpenGL(window.getWindow(), window.getRenderer().context());
+		ImGui_ImplOpenGL3_Init("#version 330 core");
+
+		m_Initialized = true;
 	}
 
 	void ImGuiWindow::shutdown()
 	{
-		ImGui_ImplSDLRenderer2_Shutdown();
-		ImGui_ImplSDL2_Shutdown();
-		ImGui::DestroyContext();
+		if(m_Initialized) {
+			ImGui_ImplSDL2_Shutdown();
+			ImGui::DestroyContext();
+
+			m_Initialized = false;
+		}
 	}
 
 

@@ -225,7 +225,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)..\..\libs\zlib\1.2.13\build\Debug;$(SolutionDir)..\..\libs\libpng\1.6.40\build\Debug;$(SolutionDir)..\..\libs\openal-soft\libs\Win32;$(SolutionDir)..\..\libs\lua-5.4.6\lua\$(PlatformTarget)\Debug;$(SolutionDir)..\..\lib\C\SDL2\lib\$(PlatformTarget);$(SolutionDir)..\..\libs\SDL2\lib\$(PlatformTarget)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>zlibd.lib;libpng16d.lib;OpenAL32.lib;SDL2.lib;lua.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;SDL2.lib;zlibd.lib;libpng16d.lib;OpenAL32.lib;lua.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AssemblyDebug>true</AssemblyDebug>
     </Link>
     <Lib>
@@ -358,7 +358,7 @@
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalLibraryDirectories>$(SolutionDir)..\..\libs\zlib\1.2.13\build\Debug;$(SolutionDir)..\..\libs\libpng\1.6.40\build\Debug;$(SolutionDir)..\..\libs\openal-soft\libs\Win64;$(SolutionDir)..\..\libs\lua-5.4.6\lua\$(PlatformTarget)\Debug;$(SolutionDir)..\..\lib\C\SDL2\lib\$(PlatformTarget);$(SolutionDir)..\..\libs\SDL2\lib\$(PlatformTarget)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>zlibd.lib;libpng16d.lib;OpenAL32.lib;SDL2.lib;lua.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;SDL2.lib;zlibd.lib;libpng16d.lib;OpenAL32.lib;lua.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AssemblyDebug>true</AssemblyDebug>
     </Link>
     <Lib>
@@ -468,6 +468,7 @@
     <ClInclude Include="include\DE\mat.hpp" />
     <ClInclude Include="include\DE\memory\list.hpp" />
     <ClInclude Include="include\DE\memory\memory.hpp" />
+    <ClInclude Include="include\DE\rendering\opengl_utils.hpp" />
     <ClInclude Include="include\DE\stream.hpp" />
     <ClInclude Include="include\DE\renderer.hpp" />
     <ClInclude Include="include\DE\scene.hpp" />
@@ -478,6 +479,8 @@
     <ClInclude Include="include\DE\window.hpp" />
     <ClInclude Include="include\DE\c-wrapper\string_utils.h" />
     <ClInclude Include="include\DE\c-wrapper\debug.h" />
+    <ClInclude Include="include\glad\glad.h" />
+    <ClInclude Include="include\imgui\backends\imgui_impl_opengl3.h" />
     <ClInclude Include="include\imgui\backends\imgui_impl_sdl2.h" />
     <ClInclude Include="include\imgui\backends\imgui_impl_sdlrenderer2.h" />
     <ClInclude Include="include\imgui\imconfig.h" />
@@ -489,6 +492,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="include\DE\audio\audio.cpp" />
+    <ClCompile Include="include\imgui\backends\imgui_impl_opengl3.cpp" />
     <ClCompile Include="include\imgui\backends\imgui_impl_sdl2.cpp" />
     <ClCompile Include="include\imgui\backends\imgui_impl_sdlrenderer2.cpp" />
     <ClCompile Include="include\imgui\imgui.cpp" />
@@ -501,6 +505,7 @@
     <ClCompile Include="src\ecs\entity.cpp" />
     <ClCompile Include="src\ecs\system.cpp" />
     <ClCompile Include="src\events.cpp" />
+    <ClCompile Include="src\glad\glad.c" />
     <ClCompile Include="src\graphics\graphic.cpp" />
     <ClCompile Include="src\image\mybmp.cpp" />
     <ClCompile Include="src\image\mypng.cpp" />
@@ -516,6 +521,7 @@
     <ClCompile Include="src\renderer.cpp" />
     <ClCompile Include="src\core.cpp" />
     <ClCompile Include="include\DE\types.hpp" />
+    <ClCompile Include="src\rendering\opengl_utils.cpp" />
     <ClCompile Include="src\scene.cpp" />
     <ClCompile Include="src\audio\stream.cpp" />
     <ClCompile Include="src\string_utils.cpp" />

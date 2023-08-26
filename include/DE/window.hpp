@@ -33,7 +33,7 @@ namespace de {
 			List             m_PreEventCallbacks;
 			EventCallback    m_EventCallback;
 			UpdateCallback   m_UpdateCallback;
-			Renderer		 m_Renderer;
+			OpenGLRenderer   m_Renderer;
 			uint16_t         m_TargetMSPerUpdate;
 			uint16_t         m_TargetFPS;
 			bool             m_Running;
@@ -72,7 +72,7 @@ namespace de {
 			uint32_t getWidth() const;
 			uint32_t getHeight() const;
 			const char *getTitle() const;
-			const Renderer &getRenderer() const;
+			OpenGLRenderer &getRenderer();
 			bool isShowingDebugPanel() const;
 
 
@@ -113,7 +113,7 @@ namespace de {
 	Window::getRenderer
 	===================
 	*/
-	inline const Renderer &Window::getRenderer() const
+	inline OpenGLRenderer &Window::getRenderer()
 	{
 		return m_Renderer;
 	}

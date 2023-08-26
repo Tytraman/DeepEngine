@@ -8,6 +8,7 @@
 #include <DE/memory/list.hpp>
 #include <DE/graphic/vertex.hpp>
 #include <DE/graphic/shape.hpp>
+#include <DE/rendering/opengl_utils.hpp>
 
 namespace de {
 
@@ -34,6 +35,7 @@ namespace de {
 			static component_type getType(component_id component);
 
 			static component_id createDrawableComponent();
+			static component_id createDrawableComponent(const GLVBO &vbo, const GLVAO &vao);
 			static DrawableComponent *getDrawableComponent(component_id component);
 			static void deleteDrawableComponent(component_id id);
 
@@ -67,13 +69,13 @@ namespace de {
 		static constexpr uint8_t FlagVisible =    (1 << 0);
 		static constexpr uint8_t FlagDrawVector = (1 << 1);
 
-		List vertices;	///< Contient la liste des sommets du composant de dessin.
+		GLVBO vbo;
+		GLVAO vao;
 		uint8_t flags;	///< Contient les options du composant de dessin.
-
-		Rect calcRectContour();
 		
 		private:
 			DrawableComponent();
+			DrawableComponent(const GLVBO &vbo, const GLVAO &vao);
 
 			friend ComponentManager;
 	};

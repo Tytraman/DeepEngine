@@ -3,6 +3,7 @@
 
 #include <DE/def.h>
 #include <DE/types.hpp>
+
 #include <DE/memory/list.hpp>
 #include <DE/ecs/ecs.hpp>
 #include <DE/renderer.hpp>
@@ -58,6 +59,7 @@ namespace de {
 			static void colliderSystem();
 
 			static void renderSystem(Renderer &renderer, scene_id sceneID);
+			static void renderSystem(OpenGLRenderer &renderer, scene_id sceneID);
 	};
 
 	/*
