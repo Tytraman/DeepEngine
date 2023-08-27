@@ -1,7 +1,8 @@
 #ifndef __DEEP_ENGINE_SYS_WIN_HPP__
 #define __DEEP_ENGINE_SYS_WIN_HPP__
 
-#include <DE/def.h>
+#include <DE/def.hpp>
+
 #include <string>
 #include <vector>
 #include <unordered_map>

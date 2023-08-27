@@ -1,7 +1,7 @@
 #ifndef __DEEP_ENGINE_STRING_UTILS_HPP__
 #define __DEEP_ENGINE_STRING_UTILS_HPP__
 
-#include <DE/def.h>
+#include <DE/def.hpp>
 #include <DE/types.hpp>
 
 namespace de {

@@ -1,7 +1,7 @@
 #ifndef __DEEP_ENGINE_LOGGER_H__
 #define __DEEP_ENGINE_LOGGER_H__
 
-#include <DE/def.h>
+#include <DE/def.hpp>
 
 // ======================= PURE C ========================= //
 // | Un simple wrapper qui utilise des pointeurs opaques. | //

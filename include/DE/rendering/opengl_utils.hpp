@@ -1,7 +1,7 @@
 #ifndef __DEEP_ENGINE_OPENGL_UTILS_HPP__
 #define __DEEP_ENGINE_OPENGL_UTILS_HPP__
 
-#include <DE/def.h>
+#include <DE/def.hpp>
 #include <DE/types.hpp>
 #include <DE/memory/memory.hpp>
 #include <DE/vec.hpp>
@@ -217,6 +217,7 @@ namespace de {
 			void send(float value);
 			void send(const fvec2 &vec);
 			void send(fmat3x3 &mat);
+			void send(fmat4x4 &mat);
 
 		private:
 			int m_Location;

@@ -2,7 +2,7 @@
 #include <math.h>
 #include <string>
 
-#include <DE/def.h>
+#include <DE/def.hpp>
 #include <DE/core.hpp>
 #include <DE/error.hpp>
 #include <DE/window.hpp>
@@ -12,8 +12,8 @@
 #include <DE/debug.hpp>
 #include <DE/vec.hpp>
 #include <DE/mat.hpp>
-#include <DE/scene.hpp>
-#include <DE/graphic/graphic.hpp>
+#include <DE/ecs/scene.hpp>
+#include <DE/graphics/graphic.hpp>
 
 #include <DE/ecs/entity.hpp>
 #include <DE/ecs/component.hpp>
@@ -84,7 +84,7 @@ void updateCallback(de::Window &window) {
 
 	// Déplacer le joueur vers la gauche.
 	if(de::Key::isPressed(de::key::Q)) {
-		de::fvec2 translation = playerTransformationComponent->getTranslation();
+		de::fvec3 translation = playerTransformationComponent->getTranslation();
 		translation.x -= 5.0f;
 		playerTransformationComponent->setTranslation(translation);
 		if(playerColliderComponent != nullptr)
@@ -93,7 +93,7 @@ void updateCallback(de::Window &window) {
 
 	// Déplacer le joueur vers la droite.
 	if(de::Key::isPressed(de::key::D)) {
-		de::fvec2 translation = playerTransformationComponent->getTranslation();
+		de::fvec3 translation = playerTransformationComponent->getTranslation();
 		translation.x += 5.0f;
 		playerTransformationComponent->setTranslation(translation);
 		if(playerColliderComponent != nullptr)
@@ -109,7 +109,7 @@ void updateCallback(de::Window &window) {
 		de::VelocityComponent *playerVelCpn = de::ComponentManager::getVelocityComponent(playerVelCpnID);
 
 		if(playerAccCpn->acceleration.y == 0.0f) {
-			de::fvec2 playerVel = playerVelCpn->getVelocity();
+			de::fvec3 playerVel = playerVelCpn->getVelocity();
 			playerVel.y -= 10.0f;
 			playerVelCpn->setVelocity(playerVel);
 			playerAccCpn->acceleration.y = PLAYER_GRAVITY;
@@ -199,8 +199,8 @@ rewatch:
 		de::VelocityComponent *playerVelCpn = de::ComponentManager::getVelocityComponent(playerVelCpnID);
 		de::AccelerationComponent *playerAccCpn = de::ComponentManager::getAccelerationComponent(playerAccCpnID);
 
-		de::fvec2 playerTranslation  = playerTransformationComponent->getTranslation();
-		de::fvec2 playerVel = playerVelCpn->getVelocity();
+		de::fvec3 playerTranslation  = playerTransformationComponent->getTranslation();
+		de::fvec3 playerVel = playerVelCpn->getVelocity();
 
 		float colW = fabs(collision.w);
 		float colH = fabs(collision.h);
@@ -255,8 +255,8 @@ rewatch:
 		de::ColliderComponent *rect1CollCpn = de::ComponentManager::getColliderComponent(rect1CollCpnID);
 		de::VelocityComponent *rect1VelCpn = de::ComponentManager::getVelocityComponent(rect1VelCpnID);
 
-		de::fvec2 rect1Transl = rect1TransfCpn->getTranslation();
-		de::fvec2 rect1Vel = rect1VelCpn->getVelocity();
+		de::fvec3 rect1Transl = rect1TransfCpn->getTranslation();
+		de::fvec3 rect1Vel = rect1VelCpn->getVelocity();
 
 		float colW = fabs(collision.w);
 		float colH = fabs(collision.h);
@@ -399,7 +399,7 @@ int main() {
 		de::GLCore::maxVertexAttribs()
 	);
 
-	de::Entity ent1 = de::Graphic::createRectangle(collectionID, de::fvec2(0.0f, 0.0f), 1.0f, 1.0f, de::colora(0, 0, 255, 255));
+	de::Entity ent1 = de::Graphic::createRectangle(collectionID, de::fvec3(0.0f, 0.0f, 0.0f), 1.0f, 1.0f, de::colora(0, 0, 255, 255));
 	de::component_id ent1TransID = de::EntityManager::getComponentID(ent1, de::TransformationComponentType);
 	de::TransformationComponent *ent1Trans = de::ComponentManager::getTransformationComponent(ent1TransID);
 	ent1Trans->setRotation(10.0f);
@@ -496,12 +496,12 @@ int main() {
 	/*de::fvec2 rect1Translation = rect1TransformationComponent->getTranslation();
 	de::fvec2 rect1Scaling     = rect1TransformationComponent->getScaling();*/
 
-	/*g_Player = de::Graphic::createRectangle(collectionID, de::fvec2(PLAYER_SPAWN_X, PLAYER_SPAWN_Y), 50.0f, 50.0f, de::colora(255, 0, 0, 255), true);
+	g_Player = de::Graphic::createRectangle(collectionID, de::fvec3(PLAYER_SPAWN_X, PLAYER_SPAWN_Y, 1.0f), 50.0f, 50.0f, de::colora(255, 0, 0, 255), true);
 	de::component_id playerVelCpnID = de::ComponentManager::createVelocityComponent();
 	de::component_id playerAccCpnID = de::ComponentManager::createAccelerationComponent(de::fvec2(0.0f, PLAYER_GRAVITY));
 	
 	de::EntityManager::attachComponent(g_Player, playerVelCpnID);
-	de::EntityManager::attachComponent(g_Player, playerAccCpnID);*/
+	de::EntityManager::attachComponent(g_Player, playerAccCpnID);
 
 	de::Scene::setActiveScene(sceneID);
 

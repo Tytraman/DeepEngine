@@ -1,10 +1,10 @@
 #ifndef __DEEP_ENGINE_ECS_HPP__
 #define __DEEP_ENGINE_ECS_HPP__
 
-#include <DE/def.h>
+#include <DE/def.hpp>
 #include <DE/types.hpp>
 #include <DE/vec.hpp>
-#include <DE/graphic/shape.hpp>
+#include <DE/graphics/shape.hpp>
 #include <DE/memory/list.hpp>
 
 namespace de {

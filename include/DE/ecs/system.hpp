@@ -1,7 +1,7 @@
 #ifndef __DEEP_ENGINE_SYSTEM_HPP__
 #define __DEEP_ENGINE_SYSTEM_HPP__
 
-#include <DE/def.h>
+#include <DE/def.hpp>
 #include <DE/types.hpp>
 
 #include <DE/memory/list.hpp>

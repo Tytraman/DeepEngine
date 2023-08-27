@@ -5,12 +5,11 @@ layout (location = 1) in vec4 aColor;
 
 out vec4 vertexColor;
 
-uniform mat3 model;
+uniform mat4 model;
+uniform mat4 view;
 
 void main()
 {
-	vec3 pos = model * vec3(aPos, 1.0f);
-
-	gl_Position = vec4(pos, 1.0f);
+	gl_Position = view * model * vec4(aPos, 0.0f, 1.0f);
 	vertexColor = aColor / 255;
 }

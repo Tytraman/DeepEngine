@@ -503,6 +503,68 @@ namespace de {
 		};
 	}
 
+	inline void fvec3::operator+=(const fvec3 &v)
+	{
+		*this = add(*this, v);
+	}
+
+	inline void fvec3::operator+=(float value)
+	{
+		*this = add(*this, value);
+	}
+
+	inline fvec2 fvec2::operator+(const fvec3 &v)
+	{
+		return add(*this, v);
+	}
+
+	inline void fvec2::operator+=(const fvec3 &v)
+	{
+		*this = add(*this, v);
+	}
+
+	inline fvec2 fvec2::add(const fvec2 &v1, const fvec3 &v2)
+	{
+		return {
+			v1.x + v2.x,
+			v1.y + v1.y
+		};
+	}
+
+	inline fvec3 fvec3::operator+(const fvec2 &v)
+	{
+		return add(*this, v);
+	}
+
+	inline fvec3 fvec3::add(const fvec3 &v1, const fvec2 &v2)
+	{
+		return {
+			v1.x + v2.x,
+			v1.y + v2.y,
+			v1.z
+		};
+	}
+
+	inline fvec3 fvec3::normalize(const fvec3 &v)
+	{
+		float length = fvec3::magn(v);
+
+		return {
+			v.x / length,
+			v.y / length,
+			v.z / length
+		};
+	}
+
+	inline fvec3 fvec3::cross(const fvec3 &v1, const fvec3 &v2)
+	{
+		return {
+			v1.y * v2.z - v1.z * v2.y,
+			v1.z * v2.x - v1.x * v2.z,
+			v1.x * v2.y - v1.y * v2.x
+		};
+	}
+
 }
 
 #endif

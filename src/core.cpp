@@ -2,7 +2,7 @@
 #include <DE/memory/memory.hpp>
 #include <DE/c-wrapper/core.h>
 #include <DE/imgui/deimgui.hpp>
-#include <DE/scene.hpp>
+#include <DE/ecs/scene.hpp>
 
 #include <string>
 

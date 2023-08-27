@@ -1,11 +1,10 @@
 #ifndef __DEEP_ENGINE_DEBUG_HPP__
 #define __DEEP_ENGINE_DEBUG_HPP__
 
-#include <DE/def.h>
+#include <DE/def.hpp>
 #include <DE/types.hpp>
 #include <DE/stream.hpp>
 
-#include <DE/def.h>
 #include <stddef.h>
 #include <string>
 #include <vector>

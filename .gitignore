@@ -363,8 +363,4 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # ==================== #
-Debug-DLL
-Debug-lib
-DeepEngineDLL
-*.wav
-Tester/*.bmp
+build

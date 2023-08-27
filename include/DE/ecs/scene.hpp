@@ -1,32 +1,20 @@
 #ifndef __DEEP_ENGINE_SCENE_HPP__
 #define __DEEP_ENGINE_SCENE_HPP__
 
-#include <DE/def.h>
+#include <DE/def.hpp>
 #include <DE/types.hpp>
 #include <DE/ecs/ecs.hpp>
 #include <DE/ecs/entity.hpp>
 #include <DE/memory/list.hpp>
 #include <DE/vec.hpp>
-#include <DE/graphic/shape.hpp>
+#include <DE/graphics/shape.hpp>
+#include <DE/rendering/camera.hpp>
 
 namespace de {
 
 	class DE_API Scene {
 
 		using EnumCallback = void (*)(scene_id id, Scene &scene);
-
-		private:
-			static scene_id m_ActiveScene;
-			static List     m_ScenesToDelete;
-
-			ColliderCallback m_ColliderCallback;          ///< Callback lorsqu'une collision est détectée entre 2 entités.
-			ColliderOutCallback m_ColliderOutCallback;    ///< Callback lorsqu'une collision n'est plus détectée entre 2 entités.
-
-			entity_collection_id m_EntityCollection; ///< ID du gestionnaire d'entités de la scène.
-			fvec2 m_ViewTranslation;                 ///< La position de la vue relative à l'origine du plan.
-			fvec2 m_ViewScale;                       ///< Le zoom / déformation de la vue.
-			float m_ViewAngle;                       ///< L'angle de rotation de la vue relative à l'origine du plan.
-			char *m_Name;                            ///< Nom de la scène.
 
 		public:
 			static void shutdown();
@@ -72,17 +60,7 @@ namespace de {
 			ColliderCallback getColliderCallback() const;
 			ColliderOutCallback getColliderOutCallback() const;
 
-			/// @brief  Récupère la position de la vue de la scène.
-			/// @return Le vecteur décrivant la translation de la vue.
-			fvec2 getViewTranslation() const;
-
-			/// @brief  Récupère le zoom / déformation de la vue de la scène.
-			/// @return Le vecteur décrivant le zoom / déformation de la vue.
-			fvec2 getViewScale() const;
-
-			/// @brief  Récupère l'angle de rotation de la vue de la scène.
-			/// @return L'angle de rotation de la vue de la scène.
-			float getViewAngle() const;
+			Camera &getCamera();
 
 			const char *getName() const;
 
@@ -90,13 +68,20 @@ namespace de {
 
 			void setColliderCallback(ColliderCallback callback);
 			void setColliderOutCallback(ColliderOutCallback callback);
-			void setViewTranslation(const fvec2 &vec);
-			void setViewScale(const fvec2 &vec);
-			void setViewAngle(float angle);
 
 			
 		private:
 			Scene(const char *name);
+			
+			static scene_id m_ActiveScene;
+			static List     m_ScenesToDelete;
+
+			ColliderCallback m_ColliderCallback;          ///< Callback lorsqu'une collision est détectée entre 2 entités.
+			ColliderOutCallback m_ColliderOutCallback;    ///< Callback lorsqu'une collision n'est plus détectée entre 2 entités.
+
+			entity_collection_id m_EntityCollection;      ///< ID du gestionnaire d'entités de la scène.
+			Camera m_Camera;
+			char *m_Name;							      ///< Nom de la scène.
 
 	};
 
@@ -161,34 +146,9 @@ namespace de {
 		return m_ColliderOutCallback;
 	}
 
-	/*
-	=========================
-	Scene::getViewTranslation
-	=========================
-	*/
-	inline fvec2 Scene::getViewTranslation() const
+	inline Camera &Scene::getCamera()
 	{
-		return m_ViewTranslation;
-	}
-
-	/*
-	===================
-	Scene::getViewScale
-	===================
-	*/
-	inline fvec2 Scene::getViewScale() const
-	{
-		return m_ViewScale;
-	}
-
-	/*
-	===================
-	Scene::getViewAngle
-	===================
-	*/
-	inline float Scene::getViewAngle() const
-	{
-		return m_ViewAngle;
+		return m_Camera;
 	}
 
 	/*
@@ -219,36 +179,6 @@ namespace de {
 	inline void Scene::setColliderOutCallback(ColliderOutCallback callback)
 	{
 		m_ColliderOutCallback = callback;
-	}
-
-	/*
-	=========================
-	Scene::setViewTranslation
-	=========================
-	*/
-	inline void Scene::setViewTranslation(const fvec2 &vec)
-	{
-		m_ViewTranslation = vec;
-	}
-
-	/*
-	===================
-	Scene::setViewScale
-	===================
-	*/
-	inline void Scene::setViewScale(const fvec2 &vec)
-	{
-		m_ViewScale = vec;
-	}
-
-	/*
-	===================
-	Scene::setViewAngle
-	===================
-	*/
-	inline void Scene::setViewAngle(float angle)
-	{
-		m_ViewAngle = angle;
 	}
 
 }

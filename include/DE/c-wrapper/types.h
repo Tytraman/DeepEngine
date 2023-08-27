@@ -1,7 +1,7 @@
 #ifndef __DEEP_ENGINE_TYPES_H__
 #define __DEEP_ENGINE_TYPES_H__
 
-#include <DE/def.h>
+#include <DE/def.hpp>
 
 typedef struct de_cpp_string_s de_cpp_string_t, *de_cpp_hstring;
 

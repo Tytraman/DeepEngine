@@ -1,4 +1,4 @@
-#include <DE/scene.hpp>
+#include <DE/ecs/scene.hpp>
 #include <DE/ecs/entity.hpp>
 #include <DE/string_utils.hpp>
 
@@ -82,9 +82,7 @@ namespace de {
 		: m_EntityCollection(EntityManager::createEntityCollection()),
 		  m_ColliderCallback(nullptr),
 		  m_ColliderOutCallback(nullptr),
-		  m_ViewTranslation(0.0f, 0.0f),
-		  m_ViewScale(1.0f, 1.0f),
-		  m_ViewAngle(0.0f),
+		  m_Camera(fvec3(0.5f, 0.5f, 0.0f), fvec3(0.0f, 0.0f, -1.0f)),
 		  m_Name(StringUtils::copy(name))
 	{ }
 

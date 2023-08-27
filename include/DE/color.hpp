@@ -1,7 +1,7 @@
 #ifndef __DEEP_ENGINE_COLOR_HPP__
 #define __DEEP_ENGINE_COLOR_HPP__
 
-#include <DE/def.h>
+#include <DE/def.hpp>
 
 #include <stdint.h>
 

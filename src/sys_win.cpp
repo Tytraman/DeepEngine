@@ -1,4 +1,4 @@
-#include <DE/def.h>
+#include <DE/def.hpp>
 
 #if DE_WINDOWS
 

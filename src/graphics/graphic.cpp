@@ -1,5 +1,5 @@
-#include <DE/graphic/graphic.hpp>
-#include <DE/graphic/vertex.hpp>
+#include <DE/graphics/graphic.hpp>
+#include <DE/graphics/vertex.hpp>
 
 #include <DE/ecs/entity.hpp>
 #include <DE/ecs/component.hpp>
@@ -22,10 +22,10 @@ namespace de {
 	Scene::attachComponent
 	======================
 	*/
-	Entity Graphic::createRectangle(entity_collection_id collectionID, const fvec2 &position, float width, float height, const colora &color, bool collidable)
+	Entity Graphic::createRectangle(entity_collection_id collectionID, const fvec3 &position, float width, float height, const colora &color, bool collidable)
 	{
 		component_id drawableComponentID       = ComponentManager::createDrawableComponent();
-		component_id transformationComponentID = ComponentManager::createTransformationComponent(position, fvec2(width, height), 0.0f);
+		component_id transformationComponentID = ComponentManager::createTransformationComponent(position, fvec3(width, height, 1.0f), 0.0f);
 
 		DrawableComponent *drawableComponent = ComponentManager::getDrawableComponent(drawableComponentID);
 
@@ -71,10 +71,10 @@ namespace de {
 	Scene::createTriangle
 	=====================
 	*/
-	Entity Graphic::createTriangle(entity_collection_id collectionID, const fvec2 &position, float radius, const colora &color)
+	Entity Graphic::createTriangle(entity_collection_id collectionID, const fvec3 &position, float radius, const colora &color)
 	{
 		component_id drawableComponentID = ComponentManager::createDrawableComponent();
-		component_id transformationComponentID = ComponentManager::createTransformationComponent(position, fvec2(radius, radius), 0.0f);
+		component_id transformationComponentID = ComponentManager::createTransformationComponent(position, fvec3(radius, radius, 1.0f), 0.0f);
 
 		DrawableComponent *drawableComponent = ComponentManager::getDrawableComponent(drawableComponentID);
 

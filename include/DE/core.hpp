@@ -1,7 +1,7 @@
 #ifndef __DEEP_ENGINE_CORE_HPP__
 #define __DEEP_ENGINE_CORE_HPP__
 
-#include <DE/def.h>
+#include <DE/def.hpp>
 #include <DE/error.hpp>
 
 #include <stdint.h>

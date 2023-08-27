@@ -151,6 +151,16 @@ namespace de {
 	}
 
 	/*
+	===============
+	GLUniform::send
+	===============
+	*/
+	void GLUniform::send(fmat4x4 &mat)
+	{
+		DE_GL_CALL(glUniformMatrix4fv(m_Location, 1, GL_TRUE, mat.ptr()));
+	}
+
+	/*
 	==================
 	GLShader::GLShader
 	==================

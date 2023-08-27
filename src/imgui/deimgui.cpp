@@ -4,14 +4,14 @@
 #include <DE/string_utils.hpp>
 #include <DE/vec.hpp>
 #include <DE/window.hpp>
-#include <DE/scene.hpp>
+#include <DE/ecs/scene.hpp>
 
 #include <unordered_map>
 #include <string>
 
-#include "imgui.h"
-#include "backends/imgui_impl_sdl2.h"
-#include "backends/imgui_impl_opengl3.h"
+#include <imgui.h>
+#include <backends/imgui_impl_sdl2.h>
+#include <backends/imgui_impl_opengl3.h>
 
 namespace de {
 

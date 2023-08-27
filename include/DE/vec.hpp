@@ -1,15 +1,20 @@
 #ifndef __DEEP_ENGINE_VEC_HPP__
 #define __DEEP_ENGINE_VEC_HPP__
 
-#include <DE/def.h>
+#include <DE/def.hpp>
 
 #include <stdint.h>
 
 namespace de {
 
 	class Renderer;
+
+	struct fvec2;
+	struct fvec3;
+
 	struct fmat2x2;
 	struct fmat3x3;
+	struct fmat4x4;
 
 	namespace Vec2Direction {
 		enum e : uint8_t {
@@ -127,6 +132,10 @@ namespace de {
 		/// @remark   Voir \ref add(const fvec2 &v1, const fvec2 &v2).
 		/// @return   Le vecteur résultant de ce calcul.
 		static fvec2 add(const fvec2 &v1, const vec2 &v2);
+
+		fvec2 operator+(const fvec3 &v);
+		void operator+=(const fvec3 &v);
+		static fvec2 add(const fvec2 &v1, const fvec3 &v2);
 
 		/// @brief            Additionne un vecteur avec une constante et retourne le résultat.
 		/// @param vec        Vecteur.
@@ -254,6 +263,10 @@ namespace de {
 		/// @return           Le vecteur résultant du calcul d'addition entre un vecteur et une valeur constante.
 		fvec3 operator+(float valueToAdd) const;
 
+		void operator+=(const fvec3 &v);
+
+		void operator+=(float value);
+
 		/// @brief   Surcharge qui retourne le résultat de cette fonction : \ref sub(const fvec3 &v1, const fvec3 &v2).
 		/// @param v Le vecteur à soustraire du vecteur courant.
 		/// @return  Le vecteur résultant du calcul de soustraction entre 2 vecteurs.
@@ -295,6 +308,9 @@ namespace de {
 		///                   <div style="clear:both"></div>
 		/// @return           Le vecteur résultant de ce calcul.
 		static fvec3 add(const fvec3 &v, float valueToAdd);
+
+		fvec3 operator+(const fvec2 &v);
+		static fvec3 add(const fvec3 &v1, const fvec2 &v2);
 
 		/// @brief    Retourne le résultat de la soustraction d'un vecteur par un autre.
 		/// @param v1 Vecteur 1.
@@ -372,6 +388,11 @@ namespace de {
 		/// @param v Le vecteur à inverser.
 		/// @return  Le vecteur inversé.
 		static fvec3 inv(const fvec3 &v);
+
+		static fvec3 normalize(const fvec3 &v);
+
+		static fvec3 cross(const fvec3 &v1, const fvec3 &v2);
+
 	};
 
 }

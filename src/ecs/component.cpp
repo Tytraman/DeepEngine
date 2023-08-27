@@ -1,5 +1,5 @@
 #include <DE/ecs/component.hpp>
-#include <DE/graphic/graphic.hpp>
+#include <DE/graphics/graphic.hpp>
 #include <DE/mat.hpp>
 
 #include <unordered_map>
@@ -36,7 +36,7 @@ namespace de {
 	{ }
 
 	DrawableComponent::DrawableComponent(const GLVBO &_vbo, const GLVAO &_vao)
-		: vbo(_vbo), vao(_vao)
+		: vbo(_vbo), vao(_vao), flags(0)
 	{ }
 
 	/*
@@ -98,36 +98,16 @@ namespace de {
 	TransformationComponent::TransformationComponent
 	================================================
 	*/
-	TransformationComponent::TransformationComponent(const fvec2 &translation, const fvec2 &scaling, float rotation)
-		: m_Translation(translation), m_Scaling(scaling), m_Rotation(rotation), m_LastMovement(0.0f, 0.0f)
+	TransformationComponent::TransformationComponent(const fvec3 &translation, const fvec3 &scaling, float rotation)
+		: m_Translation(translation), m_Scaling(scaling), m_Rotation(rotation), m_LastMovement(0.0f, 0.0f, 0.0f)
 	{ }
-
-	/*
-	================================================
-	TransformationComponent::applyAABBTransformation
-	================================================
-	*/
-	void TransformationComponent::applyAABBTransformation(Rect &rectangle) const
-	{
-		fmat3x3 trans = fmat3x3::translate(fmat3x3(), m_Translation);
-		        trans = fmat3x3::scale(trans, m_Scaling);
-
-		fvec3 vec(rectangle.pos.x, rectangle.pos.y, 1.0f);
-		vec = vec * trans;
-
-		rectangle.pos.x = vec.x;
-		rectangle.pos.y = vec.y;
-
-		rectangle.w *= m_Scaling.x;
-		rectangle.h *= m_Scaling.y;
-	}
 
 	/*
 	===============================================
 	ComponentManager::createTransformationComponent
 	===============================================
 	*/
-	component_id ComponentManager::createTransformationComponent(const fvec2 &translation, const fvec2 &scaling, float rotation)
+	component_id ComponentManager::createTransformationComponent(const fvec3 &translation, const fvec3 &scaling, float rotation)
 	{
 		component_id id = m_ComponentCount;
 
@@ -170,7 +150,7 @@ namespace de {
 	====================================
 	*/
 	VelocityComponent::VelocityComponent()
-		: m_Velocity(0.0f, 0.0f)
+		: m_Velocity(0.0f, 0.0f, 0.0f)
 	{ }
 
 	/*

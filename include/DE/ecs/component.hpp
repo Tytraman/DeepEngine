@@ -1,13 +1,13 @@
 #ifndef __DEEP_ENGINE_COMPONENT_HPP__
 #define __DEEP_ENGINE_COMPONENT_HPP__
 
-#include <DE/def.h>
+#include <DE/def.hpp>
 #include <DE/types.hpp>
 #include <DE/ecs/ecs.hpp>
 #include <DE/vec.hpp>
 #include <DE/memory/list.hpp>
-#include <DE/graphic/vertex.hpp>
-#include <DE/graphic/shape.hpp>
+#include <DE/graphics/vertex.hpp>
+#include <DE/graphics/shape.hpp>
 #include <DE/rendering/opengl_utils.hpp>
 
 namespace de {
@@ -39,7 +39,7 @@ namespace de {
 			static DrawableComponent *getDrawableComponent(component_id component);
 			static void deleteDrawableComponent(component_id id);
 
-			static component_id createTransformationComponent(const fvec2 &translation, const fvec2 &scaling = fvec2(1.0f, 1.0f), float rotation = 0.0f);
+			static component_id createTransformationComponent(const fvec3 &translation, const fvec3 &scaling = fvec3(1.0f, 1.0f, 1.0f), float rotation = 0.0f);
 			static TransformationComponent *getTransformationComponent(component_id component);
 			static void deleteTransformationComponent(component_id id);
 
@@ -87,36 +87,34 @@ namespace de {
 	struct DE_API TransformationComponent {
 		
 		public:
-			void applyAABBTransformation(Rect &rectangle) const;
-
-			fvec2 getTranslation() const;
-			fvec2 getScaling() const;
+			fvec3 getTranslation() const;
+			fvec3 getScaling() const;
 			float getRotation() const;
-			fvec2 getLastMovement() const;
+			fvec3 getLastMovement() const;
 
-			void setTranslation(const fvec2 &translation);
-			void setScaling(const fvec2 &scaling);
+			void setTranslation(const fvec3 &translation);
+			void setScaling(const fvec3 &scaling);
 			void setRotation(float rotation);
 
 		private:
-			fvec2 m_Translation;
-			fvec2 m_Scaling;
+			fvec3 m_Translation;
+			fvec3 m_Scaling;
 			float m_Rotation;
 
-			fvec2 m_LastMovement;
+			fvec3 m_LastMovement;
 
-			TransformationComponent(const fvec2 &translation, const fvec2 &scaling, float rotation);
+			TransformationComponent(const fvec3 &translation, const fvec3 &scaling, float rotation);
 
 			friend ComponentManager;
 			friend SystemManager;
 	};
 
-	inline fvec2 TransformationComponent::getTranslation() const
+	inline fvec3 TransformationComponent::getTranslation() const
 	{
 		return m_Translation;
 	}
 
-	inline fvec2 TransformationComponent::getScaling() const
+	inline fvec3 TransformationComponent::getScaling() const
 	{
 		return m_Scaling;
 	}
@@ -126,18 +124,18 @@ namespace de {
 		return m_Rotation;
 	}
 
-	inline fvec2 TransformationComponent::getLastMovement() const
+	inline fvec3 TransformationComponent::getLastMovement() const
 	{
 		return m_LastMovement;
 	}
 
-	inline void TransformationComponent::setTranslation(const fvec2 &translation)
+	inline void TransformationComponent::setTranslation(const fvec3 &translation)
 	{
 		m_LastMovement += m_Translation - translation;
 		m_Translation = translation;
 	}
 
-	inline void TransformationComponent::setScaling(const fvec2 &scaling)
+	inline void TransformationComponent::setScaling(const fvec3 &scaling)
 	{
 		m_Scaling = scaling;
 	}
@@ -165,23 +163,23 @@ namespace de {
 	constexpr component_type VelocityComponentType = (1 << 3);
 	struct DE_API VelocityComponent {
 		public:
-			fvec2 getVelocity() const;
-			void setVelocity(const fvec2 &vel);
+			fvec3 getVelocity() const;
+			void setVelocity(const fvec3 &vel);
 
 		private:
-			fvec2 m_Velocity;
+			fvec3 m_Velocity;
 
 			VelocityComponent();
 
 			friend ComponentManager;
 	};
 
-	inline fvec2 VelocityComponent::getVelocity() const
+	inline fvec3 VelocityComponent::getVelocity() const
 	{
 		return m_Velocity;
 	}
 
-	inline void VelocityComponent::setVelocity(const fvec2 &vel)
+	inline void VelocityComponent::setVelocity(const fvec3 &vel)
 	{
 		m_Velocity = vel;
 	}

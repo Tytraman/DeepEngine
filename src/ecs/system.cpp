@@ -2,7 +2,7 @@
 #include <DE/ecs/component.hpp>
 #include <DE/ecs/system.hpp>
 
-#include <DE/scene.hpp>
+#include <DE/ecs/scene.hpp>
 #include <DE/mat.hpp>
 
 #include <unordered_map>
@@ -182,8 +182,8 @@ namespace de {
 					continue;
 
 				// Applique la vélocité sur la transformation.
-				fvec2 translation = transformationComponent->getTranslation();
-				fvec2 velocity = velocityComponent->getVelocity();
+				fvec3 translation = transformationComponent->getTranslation();
+				fvec3 velocity = velocityComponent->getVelocity();
 				translation += velocity;
 				transformationComponent->setTranslation(translation);
 
@@ -415,6 +415,10 @@ namespace de {
 
 		// Si aucune scène n'est active, cela ne sert à rien de continuer la procédure.
 		if(sceneID != badID) {
+			Scene *scene = Scene::getScene(sceneID);
+
+			const Camera &cam = scene->getCamera();
+
 			List entities(sizeof(entity_id));
 			entity_collection_id collection = Scene::getEntityCollection(sceneID);
 
@@ -439,12 +443,15 @@ namespace de {
 					DrawableComponent *drawableComponent = ComponentManager::getDrawableComponent(drawableComponentID);
 					TransformationComponent *transformationComponent = ComponentManager::getTransformationComponent(transformationComponentID);
 
-					if(uniModel.find(GLProgram::currentlyBound(), "model")) {
-						fmat3x3 model = fmat3x3::translate(fmat3x3(), transformationComponent->m_Translation);
-								model = fmat3x3::rotate(model, transformationComponent->m_Rotation);
-								model = fmat3x3::scale(model, transformationComponent->m_Scaling);
+					if(uniModel.find(programID, "model")) {
+						fmat4x4 model = fmat4x4::translate(fmat4x4(), transformationComponent->m_Translation);
+								model = fmat4x4::rotate(model, transformationComponent->m_Rotation);
+								model = fmat4x4::scale(model, transformationComponent->m_Scaling);
 
 						uniModel.send(model);
+
+						if(uniModel.find(programID, "view"))
+							uniModel.send(cam.lookAt());
 					}
 
 					drawableComponent->vao.bind();

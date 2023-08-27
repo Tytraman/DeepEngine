@@ -1,7 +1,8 @@
 #ifndef __DEEP_ENGINE_STRING_UTILS_H__
 #define __DEEP_ENGINE_STRING_UTILS_H__
 
-#include <DE/def.h>
+#include <DE/def.hpp>
+
 #include <stddef.h>
 
 // ======= PURE C ======= //

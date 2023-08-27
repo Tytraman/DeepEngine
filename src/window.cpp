@@ -1,8 +1,8 @@
 #include <DE/window.hpp>
-#include <DE/def.h>
+#include <DE/def.hpp>
 #include <DE/core.hpp>
 #include <DE/key.hpp>
-#include <DE/scene.hpp>
+#include <DE/ecs/scene.hpp>
 #include <DE/ecs/system.hpp>
 #include <DE/rendering/opengl_utils.hpp>
 
