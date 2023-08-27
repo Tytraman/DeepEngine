@@ -86,7 +86,7 @@ target_compile_definitions(${DE_PROJECT} PRIVATE DEEPENGINE_LIB=1)
 # ==========[ Creation UI ]========== #
 
 file(GLOB CUI_SOURCES
-	"${CMAKE_CURRENT_LIST_DIR}/Tester/*.cpp" "${CMAKE_CURRENT_LIST_DIR}/Tester/*.c"
+	"${CMAKE_CURRENT_LIST_DIR}/CreationUI/*.cpp" "${CMAKE_CURRENT_LIST_DIR}/CreationUI/*.c"
 )
 
 add_executable(${CUI_PROJECT} ${CUI_SOURCES})
