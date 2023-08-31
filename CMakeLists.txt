@@ -80,7 +80,8 @@ target_link_libraries(${DE_PROJECT}
 )
 
 target_compile_definitions(${DE_PROJECT} PRIVATE DEEPENGINE_LIB=1)
-
+add_compile_definitions(PRIVATE DE_AUTHORS="Tytraman")
+add_compile_definitions(PRIVATE DE_VERSION="dev build 0.0.1")
 
 
 # ==========[ Creation UI ]========== #

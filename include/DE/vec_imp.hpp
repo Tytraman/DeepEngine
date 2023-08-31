@@ -565,6 +565,11 @@ namespace de {
 		};
 	}
 
+	inline void fvec3::operator-=(const fvec3 &v)
+	{
+		*this = sub(*this, v);
+	}
+
 }
 
 #endif

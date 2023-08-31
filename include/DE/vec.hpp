@@ -277,6 +277,8 @@ namespace de {
 		/// @return           Le vecteur résultant du calcul de soustraction entre un vecteur et une valeur constante.
 		fvec3 operator-(float valueToSub) const;
 
+		void operator-=(const fvec3 &v);
+
 		/// @brief        Surcharge qui retourne le résultat de cette fonction : \ref scale(const fvec3 &v, float scalar).
 		/// @param scalar La valeur scalaire à multiplier au vecteur courant.
 		/// @return       Le vecteur résultant de la multiplication scalaire entre un vecteur et une constante.

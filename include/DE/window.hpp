@@ -62,6 +62,8 @@ namespace de {
 			/// @remark			La valeur retournée par cette méthode doit être \c delete.
 			devent pollEvent() const;
 
+			void setCursorPos(int x, int y);
+
 			static void defaultInputCallback(Window &window, devent e);
 
 
@@ -155,7 +157,6 @@ namespace de {
 	*/
 	inline void Window::setShowingDebugPanel(bool value)
 	{
-		m_ShowDebugPanel = value;
 		if(value)
 			ImGuiDebugMenu::addWindow(this);
 		else

@@ -1,6 +1,7 @@
 #include <DE/ecs/entity.hpp>
 #include <DE/ecs/component.hpp>
 #include <DE/ecs/system.hpp>
+#include <DE/window.hpp>
 
 #include <DE/ecs/scene.hpp>
 #include <DE/mat.hpp>
@@ -409,6 +410,8 @@ namespace de {
 
 	void SystemManager::renderSystem(OpenGLRenderer &renderer, scene_id sceneID)
 	{
+		Window *window = renderer.window();
+
 		// Nettoie l'écran en le remplissant de la couleur noire.
 		renderer.setClearColor( { 0, 0, 0, 255 } );
 		renderer.clear();
@@ -445,13 +448,20 @@ namespace de {
 
 					if(uniModel.find(programID, "model")) {
 						fmat4x4 model = fmat4x4::translate(fmat4x4(), transformationComponent->m_Translation);
-								model = fmat4x4::rotate(model, transformationComponent->m_Rotation);
+								model = fmat4x4::rotateX(model, transformationComponent->m_RotationX);
+								model = fmat4x4::rotateY(model, transformationComponent->m_RotationY);
+								model = fmat4x4::rotateZ(model, transformationComponent->m_RotationZ);
 								model = fmat4x4::scale(model, transformationComponent->m_Scaling);
 
 						uniModel.send(model);
 
-						if(uniModel.find(programID, "view"))
+						if(uniModel.find(programID, "view")) {
 							uniModel.send(cam.lookAt());
+
+							if(uniModel.find(programID, "proj")) {
+								uniModel.send(fmat4x4::perspective(fmat4x4(), 45.0f, (float) window->getWidth() / (float) window->getHeight(), 0.1f, 100.0f));
+							}
+						}
 					}
 
 					drawableComponent->vao.bind();

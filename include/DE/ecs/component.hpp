@@ -89,62 +89,128 @@ namespace de {
 		public:
 			fvec3 getTranslation() const;
 			fvec3 getScaling() const;
-			float getRotation() const;
-			fvec3 getLastMovement() const;
+			float getRotationX() const;
+			float getRotationY() const;
+			float getRotationZ() const;
 
 			void setTranslation(const fvec3 &translation);
 			void setScaling(const fvec3 &scaling);
-			void setRotation(float rotation);
+			void setRotationX(float rotation);
+			void setRotationY(float rotation);
+			void setRotationZ(float rotation);
 
 		private:
 			fvec3 m_Translation;
 			fvec3 m_Scaling;
-			float m_Rotation;
+			float m_RotationX;
+			float m_RotationY;
+			float m_RotationZ;
 
-			fvec3 m_LastMovement;
-
-			TransformationComponent(const fvec3 &translation, const fvec3 &scaling, float rotation);
+			TransformationComponent(const fvec3 &translation, const fvec3 &scaling, float rotationX = 0.0f, float rotationY = 0.0f, float rotationZ = 0.0f);
 
 			friend ComponentManager;
 			friend SystemManager;
 	};
 
+	/*
+	=======================================
+	TransformationComponent::getTranslation
+	=======================================
+	*/
 	inline fvec3 TransformationComponent::getTranslation() const
 	{
 		return m_Translation;
 	}
 
+	/*
+	===================================
+	TransformationComponent::getScaling
+	===================================
+	*/
 	inline fvec3 TransformationComponent::getScaling() const
 	{
 		return m_Scaling;
 	}
 
-	inline float TransformationComponent::getRotation() const
+	/*
+	=====================================
+	TransformationComponent::getRotationX
+	=====================================
+	*/
+	inline float TransformationComponent::getRotationX() const
 	{
-		return m_Rotation;
+		return m_RotationX;
 	}
 
-	inline fvec3 TransformationComponent::getLastMovement() const
+	/*
+	=====================================
+	TransformationComponent::getRotationY
+	=====================================
+	*/
+	inline float TransformationComponent::getRotationY() const
 	{
-		return m_LastMovement;
+		return m_RotationY;
 	}
 
+	/*
+	=====================================
+	TransformationComponent::getRotationZ
+	=====================================
+	*/
+	inline float TransformationComponent::getRotationZ() const
+	{
+		return m_RotationZ;
+	}
+
+	/*
+	=======================================
+	TransformationComponent::setTranslation
+	=======================================
+	*/
 	inline void TransformationComponent::setTranslation(const fvec3 &translation)
 	{
-		m_LastMovement += m_Translation - translation;
 		m_Translation = translation;
 	}
 
+	/*
+	===================================
+	TransformationComponent::setScaling
+	===================================
+	*/
 	inline void TransformationComponent::setScaling(const fvec3 &scaling)
 	{
 		m_Scaling = scaling;
 	}
 
-	inline void TransformationComponent::setRotation(float rotation)
+	/*
+	=====================================
+	TransformationComponent::setRotationX
+	=====================================
+	*/
+	inline void TransformationComponent::setRotationX(float rotation)
 	{
-		m_Rotation = rotation;
+		m_RotationX = rotation;
 	}
 
+	/*
+	=====================================
+	TransformationComponent::setRotationY
+	=====================================
+	*/
+	inline void TransformationComponent::setRotationY(float rotation)
+	{
+		m_RotationY = rotation;
+	}
+
+	/*
+	=====================================
+	TransformationComponent::setRotationZ
+	=====================================
+	*/
+	inline void TransformationComponent::setRotationZ(float rotation)
+	{
+		m_RotationZ = rotation;
+	}
 
 	constexpr component_type ColliderComponentType = (1 << 2);
 

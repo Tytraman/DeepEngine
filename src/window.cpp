@@ -32,6 +32,8 @@ namespace de {
 					case key::Insert: {
 						if(!insertPressed) {
 							m_ShowDebugPanel = !m_ShowDebugPanel;
+							SDL_SetRelativeMouseMode((SDL_bool) !m_ShowDebugPanel);
+							setCursorPos(getWidth() / 2, getHeight() / 2);
 							insertPressed = true;
 						}
 					} break;
@@ -86,14 +88,19 @@ namespace de {
 		if(win.m_Window == NULL)
 			return ErrorStatus::CreateWindowSDL;
 
+		SDL_SetRelativeMouseMode(SDL_TRUE);
+		win.setCursorPos(win.getWidth() / 2, win.getHeight() / 2);
 		
-		if(!OpenGLRenderer::create(win.m_Renderer, win)) {
+		if(!OpenGLRenderer::create(win.m_Renderer, &win)) {
 			win.destroy();
 			return ErrorStatus::GLCreateContext;
 		}
 
 		gladLoadGL();
 		glViewport(0, 0, size.width, size.height);
+
+		// Permet de tester la profondeur lors du rendu afin de ne pas superposer les triangles.
+		DE_GL_CALL(glEnable(GL_DEPTH_TEST));
 
 		return ErrorStatus::NoError;
 	}
@@ -319,6 +326,11 @@ namespace de {
 	void Window::setTitle(const char *title) const
 	{
 		SDL_SetWindowTitle(m_Window, title);
+	}
+
+	void Window::setCursorPos(int x, int y)
+	{
+		SDL_WarpMouseInWindow(m_Window, x, y);
 	}
 
 }

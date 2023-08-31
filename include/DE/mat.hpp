@@ -86,7 +86,9 @@ namespace de {
 
 		static fmat4x4 translate(const fmat4x4 &mat, const fvec3 &vec);
 		static fmat4x4 scale(const fmat4x4 &mat, const fvec3 &vec);
-		static fmat4x4 rotate(const fmat4x4 &mat, float degrees);
+		static fmat4x4 rotateX(const fmat4x4 &mat, float degrees);
+		static fmat4x4 rotateY(const fmat4x4 &mat, float degrees);
+		static fmat4x4 rotateZ(const fmat4x4 &mat, float degrees);
 		static fmat4x4 perspective(const fmat4x4 &mat, float fovy, float aspectRatio, float znear, float zfar);
 
 	};
@@ -173,11 +175,49 @@ namespace de {
 	}
 
 	/*
-	===============
-	fmat4x4::rotate
-	===============
+	================
+	fmat4x4::rotateX
+	================
 	*/
-	inline fmat4x4 fmat4x4::rotate(const fmat4x4 &mat, float degrees)
+	inline fmat4x4 fmat4x4::rotateX(const fmat4x4 &mat, float degrees)
+	{
+		float rad = DE_DEG_RAD(degrees);
+		return mul(
+			mat,
+			{
+				1.0f,  0.0f,       0.0f,      0.0f,
+				0.0f,  cosf(rad), -sinf(rad), 0.0f,
+				0.0f,  sinf(rad),  cosf(rad), 0.0f,
+				0.0f,  0.0f,       0.0f,      1.0f
+			}
+		);
+	}
+
+	/*
+	================
+	fmat4x4::rotateY
+	================
+	*/
+	inline fmat4x4 fmat4x4::rotateY(const fmat4x4 &mat, float degrees)
+	{
+		float rad = DE_DEG_RAD(degrees);
+		return mul(
+			mat,
+			{
+				 cosf(rad), 0.0f, sinf(rad), 0.0f,
+				 0.0f,      1.0f, 0.0f,      0.0f,
+				-sinf(rad), 0.0f, cosf(rad), 0.0f,
+				 0.0f,      0.0f, 0.0f,      1.0f
+			}
+		);
+	}
+
+	/*
+	================
+	fmat4x4::rotateZ
+	================
+	*/
+	inline fmat4x4 fmat4x4::rotateZ(const fmat4x4 &mat, float degrees)
 	{
 		float rad = DE_DEG_RAD(degrees);
 		return mul(

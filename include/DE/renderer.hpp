@@ -97,14 +97,14 @@ namespace de {
 		public:
 			OpenGLRenderer();
 
-			static bool create(OpenGLRenderer &dest, Window &window);
+			static bool create(OpenGLRenderer &dest, Window *window);
 
 			void clear() const;
 			void draw(unsigned int numberOfVertices) const;
 			void swapBuffers() const;
 
 			SDL_GLContext context();
-			SDL_Window *window();
+			Window *window();
 
 			colora clearColor() const;
 
@@ -112,7 +112,7 @@ namespace de {
 
 		private:
 			SDL_GLContext m_Context;
-			SDL_Window *m_Window;
+			Window *m_Window;
 
 			colora m_ClearColor;
 
@@ -123,7 +123,7 @@ namespace de {
 		return m_Context;
 	}
 
-	inline SDL_Window *OpenGLRenderer::window()
+	inline Window *OpenGLRenderer::window()
 	{
 		return m_Window;
 	}

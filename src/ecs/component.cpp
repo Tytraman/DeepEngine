@@ -98,8 +98,12 @@ namespace de {
 	TransformationComponent::TransformationComponent
 	================================================
 	*/
-	TransformationComponent::TransformationComponent(const fvec3 &translation, const fvec3 &scaling, float rotation)
-		: m_Translation(translation), m_Scaling(scaling), m_Rotation(rotation), m_LastMovement(0.0f, 0.0f, 0.0f)
+	TransformationComponent::TransformationComponent(const fvec3 &translation, const fvec3 &scaling, float rotationX, float rotationY, float rotationZ)
+		: m_Translation(translation),
+		  m_Scaling(scaling),
+		  m_RotationX(rotationX),
+		  m_RotationY(rotationY),
+		  m_RotationZ(rotationZ)
 	{ }
 
 	/*
