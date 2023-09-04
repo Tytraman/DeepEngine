@@ -42,6 +42,7 @@ namespace de {
 			uint8_t channels() const;
 			uint32_t colorDepth() const;
 			uint8_t *image();
+			mem_ptr rawImage();
 
 			void setPosition(size_t pos);
 

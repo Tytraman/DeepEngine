@@ -58,7 +58,6 @@ namespace de {
 
 			static void colliderSystem();
 
-			static void renderSystem(Renderer &renderer, scene_id sceneID);
 			static void renderSystem(OpenGLRenderer &renderer, scene_id sceneID);
 	};
 

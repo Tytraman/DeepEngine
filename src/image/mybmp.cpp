@@ -13,7 +13,10 @@ namespace de {
 	============
 	*/
 	MyBMP::MyBMP()
-		: m_RowSize(0)
+		: m_RowSize(0),
+		  m_Width(0),
+		  m_Height(0),
+		  m_ColorType(ImageColorType::None)
 	{ }
 
 	/*
@@ -63,6 +66,10 @@ namespace de {
 
 		m_MemoryChunk.setData(data);
 		m_MemoryChunk.setSize(size);
+
+		m_Width  = width;
+		m_Height = height;
+		m_ColorType = colorType;
 
 		BMPFileHeader *bmpFileHeader = (BMPFileHeader *) data;
 
@@ -124,10 +131,10 @@ namespace de {
 
 	/*
 	==================
-	MyBMP::setPNGImage
+	MyBMP::convertFrom
 	==================
 	*/
-	void MyBMP::setPNGImage(MyPNG &png)
+	void MyBMP::convertFrom(MyPNG &png)
 	{
 		png_bytep *rowPointers = (png_bytep *) png.image();
 		size_t rows = png.height();

@@ -194,6 +194,36 @@ namespace de {
 		return true;
 	}
 
+	mem_ptr MyPNG::rawImage()
+	{
+		png_bytep *rowPointers = (png_bytep *) m_Image;
+		size_t rows = m_Height;
+		size_t columns  = m_Width;
+		png_bytep *r = rowPointers + rows - 1;
+
+		uint8_t *memData = (uint8_t *) m_MemoryChunk.data();
+
+		uint8_t b;
+
+		size_t row, column;
+
+		mem_ptr buffer = mem::alloc(m_Width * m_Height * m_Channels);
+		uint8_t *data = (uint8_t *) buffer;
+
+		// Parcourt toutes les lignes.
+		for(row = 0; row < rows; ++row, --r) {
+			// Parcourt toutes les colonnes de la ligne en cours.
+			for(column = 0; column < columns; ++column) {
+				for(b = 0; b < m_Channels; ++b)
+					*(data + b) = (*r)[column * m_Channels + b];
+					
+				data += m_Channels;
+			}
+		}
+
+		return buffer;
+	}
+
 	void MyPNG::applyHorizontalMirrorEffect()
 	{
 		png_bytep *rowPointers = (png_bytep *) m_Image;

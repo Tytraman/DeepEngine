@@ -6,6 +6,7 @@
 #include <DE/memory/memory.hpp>
 #include <DE/vec.hpp>
 #include <DE/mat.hpp>
+#include <DE/image/image.hpp>
 
 #include <glad/glad.h>
 
@@ -50,92 +51,75 @@ namespace de {
 		};
 	}
 
+	namespace GLTextureWrap {
+		enum t : int {
+			Repeat         = GL_REPEAT,
+			MirroredRepeat = GL_MIRRORED_REPEAT,
+			ClampToEdge    = GL_CLAMP_TO_EDGE,
+			ClampToBorder  = GL_CLAMP_TO_BORDER
+		};
+	}
+
+	namespace GLTextureFilter {
+		enum t : int {
+			Nearest = GL_NEAREST,
+			Linear  = GL_LINEAR
+		};
+	}
+
+	using gl_vbo = unsigned int;
+
 	/// @brief Vertex Buffer Object
 	class DE_API GLVBO {
 
 		public:
-			GLVBO();
-
-			void bind();
-			void addAttribute(unsigned int index, GLAttribComponentsNumber::t componentsNumber, GLType::t type, int stride, int offset);
+			
+			static gl_vbo create();
+			static void bind(gl_vbo vbo);
+			static void addAttribute(unsigned int index, GLAttribComponentsNumber::t componentsNumber, GLType::t type, int stride, int offset);
+			static void setVerticesNumber(unsigned int number);
 
 			static void transmitData(MemoryChunk &data);
 
-			void setVerticesNumber(unsigned int number);
-
-			/// @brief  Récupère l'ID du VBO.
-			/// @return L'ID du VBO.
-			unsigned int id() const;
-
 			/// @brief  Récupère le nombre de sommets que le VBO possède.
 			/// @return Le nombre de sommets que le VBO possède.
-			unsigned int verticesNumber() const;
+			static unsigned int getVerticesNumber();
+
+			static unsigned int getVerticesNumber(gl_vbo vbo);
 
 			/// @brief  Demande à OpenGL quel est le VBO actuellement lié.
 			/// @return L'ID du VBO actuellement lié.
 			static unsigned int currentlyBound();
 
 		private:
-			unsigned int m_VBO;
-			unsigned int m_VerticesNumber;
+			static gl_vbo m_CurrentlyBound;
+
+			GLVBO() = delete;
 
 	};
 
-	/*
-	========================
-	GLVBO::setVerticesNumber
-	========================
-	*/
-	inline void GLVBO::setVerticesNumber(unsigned int number)
+	inline unsigned int GLVBO::currentlyBound()
 	{
-		m_VerticesNumber = number;
+		return m_CurrentlyBound;
 	}
 
-	/*
-	=========
-	GLVBO::id
-	=========
-	*/
-	inline unsigned int GLVBO::id() const
-	{
-		return m_VBO;
-	}
-
-	/*
-	=====================
-	GLVBO::verticesNumber
-	=====================
-	*/
-	inline unsigned int GLVBO::verticesNumber() const
-	{
-		return m_VerticesNumber;
-	}
+	using gl_vao = unsigned int;
 
 	class DE_API GLVAO {
 
 		public:
-			GLVAO();
 
-			void bind();
-
-			unsigned int id() const;
+			static gl_vao create();
+			static void bind(gl_vao vao);
 
 			static unsigned int currentlyBound();
 
 		private:
-			unsigned int m_VAO;
+			static gl_vao m_CurrentlyBound;
+
+			GLVAO() = delete;
 
 	};
-
-	/*
-	=========
-	GLVAO::id
-	=========
-	*/
-	inline unsigned int GLVAO::id() const
-	{
-		return m_VAO;
-	}
 
 	namespace GLShaderType {
 
@@ -201,6 +185,11 @@ namespace de {
 		return m_Program;
 	}
 
+	/*
+	=========================
+	GLProgram::currentlyBound
+	=========================
+	*/
 	inline unsigned int GLProgram::currentlyBound()
 	{
 		return m_CurrentlyBound;
@@ -215,6 +204,7 @@ namespace de {
 			bool find(const GLProgram &program, const char *name);
 
 			void send(float value);
+			void send(int value);
 			void send(const fvec2 &vec);
 			void send(fmat3x3 &mat);
 			void send(fmat4x4 &mat);
@@ -224,9 +214,48 @@ namespace de {
 
 	};
 
+	/*
+	===============
+	GLUniform::find
+	===============
+	*/
 	inline bool GLUniform::find(const GLProgram &program, const char *name)
 	{
 		return find(program.id(), name);
+	}
+
+	using gl_texture = unsigned int;
+
+	class DE_API GLTexture {
+
+		public:
+			static gl_texture create();
+			static void bind(gl_texture texture, uint8_t unit);
+
+			static void setTextureWrappingS(GLTextureWrap::t mode);
+			static void setTextureWrappingT(GLTextureWrap::t mode);
+			static void setTextureFiltering(GLTextureFilter::t mode);
+
+			static void transmitTexture(mem_ptr data, int width, int height, ImageColorType::t colorType);
+
+			static gl_texture getWhiteTexture();
+			static void setWhiteTexture(gl_texture texture);
+
+		private:
+			static gl_texture m_WhiteTex;
+
+			GLTexture() = delete;
+
+	};
+
+	inline gl_texture GLTexture::getWhiteTexture()
+	{
+		return m_WhiteTex;
+	}
+
+	inline void GLTexture::setWhiteTexture(gl_texture texture)
+	{
+		m_WhiteTex = texture;
 	}
 
 	class DE_API GLError {
@@ -250,6 +279,8 @@ namespace de {
 
 	};
 
+	
+
 	class DE_API GLCore {
 
 		public:
@@ -261,6 +292,8 @@ namespace de {
 			/// @brief  Récupère le nombre d'attributs de vertex maximal gérée par la carte graphique.
 			/// @return Le nombre d'attributs de vertex maximal gérée par la carte graphique.
 			static int maxVertexAttribs();
+
+			static int maxTextureImageUnits();
 
 			/// @brief        Met à jour le viewport d'OpenGL.
 			/// @param width  Largeur du viewport.

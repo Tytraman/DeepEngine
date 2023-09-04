@@ -8,13 +8,13 @@ namespace de {
 
 	component_id ComponentManager::m_ComponentCount = 0;
 
-	static std::unordered_map<component_id, component_type>				m_ComponentsType;
-	static std::unordered_map<component_id, DrawableComponent>			m_DrawableComponents;
-	static std::unordered_map<component_id, TransformationComponent>	m_TransformationComponents;
-	static std::unordered_map<component_id, VelocityComponent>			m_VelocityComponents;
-	static std::unordered_map<component_id, ColliderComponent>			m_ColliderComponents;
-	static std::unordered_map<component_id, AccelerationComponent>      m_AccelerationComponents;
-	static std::unordered_map<component_id, HealthComponent>			m_HealthComponents;
+	static std::unordered_map<component_id, component_type>          m_ComponentsType;
+	static std::unordered_map<component_id, DrawableComponent>       m_DrawableComponents;
+	static std::unordered_map<component_id, TransformationComponent> m_TransformationComponents;
+	static std::unordered_map<component_id, VelocityComponent>       m_VelocityComponents;
+	static std::unordered_map<component_id, ColliderComponent>       m_ColliderComponents;
+	static std::unordered_map<component_id, AccelerationComponent>   m_AccelerationComponents;
+	static std::unordered_map<component_id, HealthComponent>         m_HealthComponents;
 
 	/*
 	=========================
@@ -32,11 +32,24 @@ namespace de {
 	====================================
 	*/
 	DrawableComponent::DrawableComponent()
-		: flags(0)
+		: vbo(GLVBO::create()),
+		  vao(GLVAO::create()),
+		  flags(0),
+		  texture(0),
+		  textureUnit(0)
 	{ }
 
-	DrawableComponent::DrawableComponent(const GLVBO &_vbo, const GLVAO &_vao)
-		: vbo(_vbo), vao(_vao), flags(0)
+	/*
+	====================================
+	DrawableComponent::DrawableComponent
+	====================================
+	*/
+	DrawableComponent::DrawableComponent(gl_vbo _vbo, gl_vao _vao, gl_texture _texture, uint8_t _textureUnit)
+		: vbo(_vbo),
+		  vao(_vao),
+		  flags(0),
+		  texture(_texture),
+		  textureUnit(_textureUnit)
 	{ }
 
 	/*
@@ -56,11 +69,16 @@ namespace de {
 		return id;
 	}
 
-	component_id ComponentManager::createDrawableComponent(const GLVBO &vbo, const GLVAO &vao)
+	/*
+	=========================================
+	ComponentManager::createDrawableComponent
+	=========================================
+	*/
+	component_id ComponentManager::createDrawableComponent(gl_vbo vbo, gl_vao vao, gl_texture texture, uint8_t textureUnit)
 	{
 		component_id id = m_ComponentCount;
 
-		m_DrawableComponents.emplace(id, DrawableComponent(vbo, vao));
+		m_DrawableComponents.emplace(id, DrawableComponent(vbo, vao, texture, textureUnit));
 		m_ComponentsType[id] = DrawableComponentType;
 
 		m_ComponentCount = id + 1;

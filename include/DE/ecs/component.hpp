@@ -35,7 +35,7 @@ namespace de {
 			static component_type getType(component_id component);
 
 			static component_id createDrawableComponent();
-			static component_id createDrawableComponent(const GLVBO &vbo, const GLVAO &vao);
+			static component_id createDrawableComponent(gl_vbo vbo, gl_vao vao, gl_texture texture = 0, uint8_t textureUnit = 0);
 			static DrawableComponent *getDrawableComponent(component_id component);
 			static void deleteDrawableComponent(component_id id);
 
@@ -69,13 +69,15 @@ namespace de {
 		static constexpr uint8_t FlagVisible =    (1 << 0);
 		static constexpr uint8_t FlagDrawVector = (1 << 1);
 
-		GLVBO vbo;
-		GLVAO vao;
-		uint8_t flags;	///< Contient les options du composant de dessin.
+		gl_vbo vbo;
+		gl_vao vao;
+		uint8_t flags;       ///< Contient les options du composant de dessin.
+		gl_texture texture;
+		uint8_t textureUnit;
 		
 		private:
 			DrawableComponent();
-			DrawableComponent(const GLVBO &vbo, const GLVAO &vao);
+			DrawableComponent(gl_vbo vbo, gl_vao vao, gl_texture texture = 0, uint8_t textureUnit = 0);
 
 			friend ComponentManager;
 	};

@@ -2,23 +2,33 @@
 #include <DE/string_utils.hpp>
 
 #include <stdio.h>
+#include <unordered_map>
 
 #include <glad/glad.h>
 
 namespace de {
 
+	gl_vbo GLVBO::m_CurrentlyBound   = 0;
+	gl_vao GLVAO::m_CurrentlyBound   = 0;
+	gl_texture GLTexture::m_WhiteTex = 0;
+
 	unsigned int GLProgram::m_CurrentlyBound = 0;
 
+	static std::unordered_map<gl_vbo, int> m_VBONumberOfVertices;
+
 	/*
-	============
-	GLVBO::GLVBO
-	============
+	=============
+	GLVBO::create
+	=============
 	*/
-	GLVBO::GLVBO()
-		: m_VerticesNumber(0)
+	gl_vbo GLVBO::create()
 	{
-		m_VBO = 0;
-		DE_GL_CALL(glGenBuffers(1, &m_VBO));
+		gl_vbo vbo = 0;
+		DE_GL_CALL(glGenBuffers(1, &vbo));
+
+		m_VBONumberOfVertices.emplace(vbo, 0);
+
+		return vbo;
 	}
 
 	/*
@@ -26,9 +36,47 @@ namespace de {
 	GLVBO::bind
 	===========
 	*/
-	void GLVBO::bind()
+	void GLVBO::bind(gl_vbo vbo)
 	{
-		DE_GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, m_VBO));
+		DE_GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, vbo));
+		
+		m_CurrentlyBound = vbo;
+	}
+
+	/*
+	========================
+	GLVBO::setVerticesNumber
+	========================
+	*/
+	void GLVBO::setVerticesNumber(unsigned int number)
+	{
+		const auto &it = m_VBONumberOfVertices.find(m_CurrentlyBound);
+		if(it != m_VBONumberOfVertices.end())
+			it->second = number;
+	}
+
+	/*
+	========================
+	GLVBO::getVerticesNumber
+	========================
+	*/
+	unsigned int GLVBO::getVerticesNumber()
+	{
+		return getVerticesNumber(m_CurrentlyBound);
+	}
+
+	/*
+	========================
+	GLVBO::getVerticesNumber
+	========================
+	*/
+	unsigned int GLVBO::getVerticesNumber(gl_vbo vbo)
+	{
+		const auto &it = m_VBONumberOfVertices.find(vbo);
+		if(it == m_VBONumberOfVertices.end())
+			return 0;
+
+		return it->second;
 	}
 
 	/*
@@ -53,26 +101,15 @@ namespace de {
 	}
 
 	/*
-	=====================
-	GLVBO::currentlyBound
-	=====================
+	=============
+	GLVAO::create
+	=============
 	*/
-	unsigned int GLVBO::currentlyBound()
+	gl_vao GLVAO::create()
 	{
-		unsigned int val = 0;
-		DE_GL_CALL(glGetIntegerv(GL_ARRAY_BUFFER_BINDING, (int *) &val));
-		return val;
-	}
-
-	/*
-	============
-	GLVAO::GLVAO
-	============
-	*/
-	GLVAO::GLVAO()
-	{
-		m_VAO = 0;
-		DE_GL_CALL(glGenVertexArrays(1, &m_VAO));
+		gl_vao vao = 0;
+		DE_GL_CALL(glGenVertexArrays(1, &vao));
+		return vao;
 	}
 
 	/*
@@ -80,9 +117,11 @@ namespace de {
 	GLVAO::bind
 	===========
 	*/
-	void GLVAO::bind()
+	void GLVAO::bind(gl_vao vao)
 	{
-		DE_GL_CALL(glBindVertexArray(m_VAO));
+		DE_GL_CALL(glBindVertexArray(vao));
+
+		m_CurrentlyBound = vao;
 	}
 
 	/*
@@ -128,6 +167,16 @@ namespace de {
 	void GLUniform::send(float value)
 	{
 		DE_GL_CALL(glUniform1f(m_Location, value));
+	}
+
+	/*
+	===============
+	GLUniform::send
+	===============
+	*/
+	void GLUniform::send(int value)
+	{
+		DE_GL_CALL(glUniform1i(m_Location, value));
 	}
 
 	/*
@@ -313,11 +362,31 @@ namespace de {
         }
 	}
 
+	/*
+	===============
+	GLCore::version
+	===============
+	*/
 	const char *GLCore::version()
 	{
 		return (const char *) glGetString(GL_VERSION);
 	}
 
+	/*
+	======================
+	GLCore::updateViewport
+	======================
+	*/
+	void GLCore::updateViewport(int width, int height)
+	{
+		glViewport(0, 0, width, height);
+	}
+
+	/*
+	========================
+	GLCore::maxVertexAttribs
+	========================
+	*/
 	int GLCore::maxVertexAttribs()
 	{
 		int val = 0;
@@ -325,9 +394,89 @@ namespace de {
 		return val;
 	}
 
-	void GLCore::updateViewport(int width, int height)
+	/*
+	============================
+	GLCore::maxTextureImageUnits
+	============================
+	*/
+	int GLCore::maxTextureImageUnits()
 	{
-		glViewport(0, 0, width, height);
+		int val = 0;
+		DE_GL_CALL(glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &val));
+		return val;
+	}
+
+	gl_texture GLTexture::create()
+	{
+		gl_texture texture = 0;
+		DE_GL_CALL(glGenTextures(1, &texture));
+		return texture;
+	}
+
+	/*
+	===============
+	GLTexture::bind
+	===============
+	*/
+	void GLTexture::bind(gl_texture texture, uint8_t unit)
+	{
+		DE_GL_CALL(glActiveTexture(GL_TEXTURE0 + unit));
+		DE_GL_CALL(glBindTexture(GL_TEXTURE_2D, texture));
+	}
+
+	/*
+	==============================
+	GLTexture::setTextureWrappingS
+	==============================
+	*/
+	void GLTexture::setTextureWrappingS(GLTextureWrap::t mode)
+	{
+		DE_GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, mode));
+	}
+
+	/*
+	==============================
+	GLTexture::setTextureWrappingT
+	==============================
+	*/
+	void GLTexture::setTextureWrappingT(GLTextureWrap::t mode)
+	{
+		DE_GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, mode));
+	}
+
+	/*
+	==============================
+	GLTexture::setTextureFiltering
+	==============================
+	*/
+	void GLTexture::setTextureFiltering(GLTextureFilter::t mode)
+	{
+		DE_GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, mode));
+		DE_GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mode));
+	}
+
+	/*
+	==========================
+	GLTexture::transmitTexture
+	==========================
+	*/
+	void GLTexture::transmitTexture(mem_ptr data, int width, int height, ImageColorType::t colorType)
+	{
+		GLenum internalFormat;
+		GLenum type;
+		switch(colorType) {
+			default: return;
+			case ImageColorType::RGB: {
+				internalFormat = GL_RGB8;
+				type = GL_RGB;
+			}break;
+			case ImageColorType::RGBA: {
+				internalFormat = GL_RGBA8;
+				type = GL_RGBA;
+			} break;
+		}
+
+		DE_GL_CALL(glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, type, GL_UNSIGNED_BYTE, data));
 	}
 
 }

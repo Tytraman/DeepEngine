@@ -7,6 +7,7 @@
 #include <DE/color.hpp>
 #include <DE/vec.hpp>
 #include <DE/graphics/shape.hpp>
+#include <DE/rendering/opengl_utils.hpp>
 
 namespace de {
 
@@ -21,6 +22,8 @@ namespace de {
 			/// @param color           Couleur du rectangle.
 			/// @return                L'entité nouvellement créée ou \ref Entity::bad() si une erreur est survenue.
 			static Entity createRectangle(entity_collection_id collectionID, const fvec3 &position, float width, float height, const colora &color, bool collidable = false);
+
+			static Entity createRectangleTexture(entity_collection_id collectionID, const fvec3 &position, float width, float height, const colora &color, gl_texture texture, uint8_t textureUnit, bool collidable = false);
 
 			static Entity create3DRectangle(entity_collection_id collectionID, const fvec3 &position, float width, float height, float length, const colora &color1, const colora &color2, const colora &color3, const colora &color4, const colora &color5, const colora &color6, bool collidable = false);
 

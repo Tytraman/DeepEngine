@@ -58,14 +58,48 @@ namespace de {
 			bool create(int32_t width, int32_t height, uint16_t colorDepth, ImageColorType::t colorType);
 			void destroy();
 
-			void setPNGImage(MyPNG &png);
+			void convertFrom(MyPNG &png);
 			bool save(const char *filename);
+
+			int32_t getWidth() const;
+			int32_t getHeight() const;
+			ImageColorType::t getColorType() const;
+			mem_ptr data();
+			mem_ptr image();
 
 		private:
 			MemoryChunk m_MemoryChunk;
 			uint32_t m_RowSize;
+			int32_t m_Width;
+			int32_t m_Height;
+			ImageColorType::t m_ColorType;
 
 	};
+
+	inline int32_t MyBMP::getWidth() const
+	{
+		return m_Width;
+	}
+
+	inline int32_t MyBMP::getHeight() const
+	{
+		return m_Height;
+	}
+
+	inline ImageColorType::t MyBMP::getColorType() const
+	{
+		return m_ColorType;
+	}
+
+	inline mem_ptr MyBMP::data()
+	{
+		return m_MemoryChunk.data();
+	}
+
+	inline mem_ptr MyBMP::image()
+	{
+		return (uint8_t *) m_MemoryChunk.data() + ((BMPFileHeader *) m_MemoryChunk.data())->imageDataOffset;
+	}
 
 }
 

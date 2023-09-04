@@ -102,6 +102,28 @@ namespace de {
 		// Permet de tester la profondeur lors du rendu afin de ne pas superposer les triangles.
 		DE_GL_CALL(glEnable(GL_DEPTH_TEST));
 
+		// Active la fonctionnalité d'OpenGL qui permet de gérer la transparence des couleurs lorsque nécessaire.
+		DE_GL_CALL(glEnable(GL_BLEND));
+		DE_GL_CALL(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+
+		// Une fois qu'OpenGL a bien été initialisé,
+		// on crée une texture blanche de 1x1 par défaut.
+
+		uint8_t colors[] = {
+			255, 255, 255, 255
+		};
+
+		gl_texture whiteTex = GLTexture::create();
+		GLTexture::bind(whiteTex, 0);
+
+		GLTexture::setTextureWrappingS(GLTextureWrap::Repeat);
+		GLTexture::setTextureWrappingT(GLTextureWrap::Repeat);
+		GLTexture::setTextureFiltering(GLTextureFilter::Nearest);
+
+		GLTexture::transmitTexture(colors, 1, 1, ImageColorType::RGBA);
+
+		GLTexture::setWhiteTexture(whiteTex);
+
 		return ErrorStatus::NoError;
 	}
 

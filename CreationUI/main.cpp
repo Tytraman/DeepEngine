@@ -14,6 +14,8 @@
 #include <DE/mat.hpp>
 #include <DE/ecs/scene.hpp>
 #include <DE/graphics/graphic.hpp>
+#include <DE/image/mypng.hpp>
+#include <DE/image/mybmp.hpp>
 
 #include <DE/ecs/entity.hpp>
 #include <DE/ecs/component.hpp>
@@ -134,7 +136,7 @@ void update_callback(de::Window &window) {
 
 	// Augmentation de la vitesse de déplacement de la caméra.
 	if(de::Key::isPressed(de::key::LShift)) {
-		cameraSpeed += 0.05f;
+		cameraSpeed += 0.10f;
 	}
 
 	// Déplacer la caméra vers l'avant.
@@ -430,11 +432,59 @@ int main() {
 		"====================[ OpenGL ]====================\n"
 		"Version: %s\n"
 		"Max vertex attribs: %d\n"
+		"Max texture image units: %d\n"
 		"==================================================\n",
 		
 		de::GLCore::version(),
-		de::GLCore::maxVertexAttribs()
+		de::GLCore::maxVertexAttribs(),
+		de::GLCore::maxTextureImageUnits()
 	);
+
+	de::MyPNG pngTest;
+
+	// Charge l'image PNG.
+	if(!pngTest.loadFile("..\\resources\\textures\\test.png")) {
+		fprintf(stderr, "Unable to load texture test.png\n");
+		return 1;
+	}
+
+	// Vérifie que ce soit bien un fichier au format PNG.
+	if(!pngTest.check()) {
+		fprintf(stderr, "Texture test.png is not in PNG format.\n");
+		pngTest.destroy();
+		return 1;
+	}
+
+	if(!pngTest.readPNGInfo()) {
+		fprintf(stderr, "Unable to read image info.\n");
+		pngTest.destroy();
+		return 1;
+	}
+
+	if(!pngTest.readPNGImage()) {
+		fprintf(stderr, "Unable to read image.\n");
+		pngTest.destroy();
+		return 1;
+	}
+	pngTest.applyVerticalMirrorEffect();
+
+	printf("Image color type: %s\n", de::MyPNG::colorTypeName(pngTest.colorType()));
+	
+	de::gl_texture texture1 = de::GLTexture::create();
+	de::GLTexture::bind(texture1, 0);
+
+	de::GLTexture::setTextureWrappingS(de::GLTextureWrap::Repeat);
+	de::GLTexture::setTextureWrappingT(de::GLTextureWrap::Repeat);
+	de::GLTexture::setTextureFiltering(de::GLTextureFilter::Nearest);
+
+	de::mem_ptr image = pngTest.rawImage();
+	de::GLTexture::transmitTexture(image, pngTest.width(), pngTest.height(), pngTest.colorType());
+	de::mem::free(image);
+
+	de::Entity ent1 = de::Graphic::createRectangleTexture(collectionID, de::fvec3(0.0f, 0.0f, -5.0f), 5.0f, 5.0f, de::colora(255, 255, 255, 255), texture1, 0);
+	de::Entity ent2 = de::Graphic::createRectangle(collectionID, de::fvec3(-10.0f, 0.0f, -5.0f), 2.0f, 2.0f, de::colora(0, 200, 0, 255));
+
+	pngTest.destroy();
 
 	size_t i, j;
 	for(i = 0; i < 50; ++i) {
