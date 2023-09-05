@@ -443,32 +443,12 @@ int main() {
 	de::MyPNG pngTest;
 
 	// Charge l'image PNG.
-	if(!pngTest.loadFile("..\\resources\\textures\\test.png")) {
-		fprintf(stderr, "Unable to load texture test.png\n");
+	if(!pngTest.loadAndRead("..\\resources\\textures\\test.png")) {
+		fprintf(stderr, "Unable to load image file.\n");
 		return 1;
 	}
 
-	// Vérifie que ce soit bien un fichier au format PNG.
-	if(!pngTest.check()) {
-		fprintf(stderr, "Texture test.png is not in PNG format.\n");
-		pngTest.destroy();
-		return 1;
-	}
-
-	if(!pngTest.readPNGInfo()) {
-		fprintf(stderr, "Unable to read image info.\n");
-		pngTest.destroy();
-		return 1;
-	}
-
-	if(!pngTest.readPNGImage()) {
-		fprintf(stderr, "Unable to read image.\n");
-		pngTest.destroy();
-		return 1;
-	}
 	pngTest.applyVerticalMirrorEffect();
-
-	printf("Image color type: %s\n", de::MyPNG::colorTypeName(pngTest.colorType()));
 	
 	de::gl_texture texture1 = de::GLTexture::create();
 	de::GLTexture::bind(texture1, 0);
@@ -481,20 +461,82 @@ int main() {
 	de::GLTexture::transmitTexture(image, pngTest.width(), pngTest.height(), pngTest.colorType());
 	de::mem::free(image);
 
-	de::Entity ent1 = de::Graphic::createRectangleTexture(collectionID, de::fvec3(0.0f, 0.0f, -5.0f), 5.0f, 5.0f, de::colora(255, 255, 255, 255), texture1, 0);
-	de::Entity ent2 = de::Graphic::createRectangle(collectionID, de::fvec3(-10.0f, 0.0f, -5.0f), 2.0f, 2.0f, de::colora(0, 200, 0, 255));
-
 	pngTest.destroy();
 
-	size_t i, j;
-	for(i = 0; i < 50; ++i) {
-		float x = 2.0f * i;
-		for(j = 0; j < 50; ++j) {
-			float y = 2.0f * j;
-			de::Entity ent = de::Graphic::create3DRectangle(collectionID, de::fvec3(x, 0.0f, y), 1.0f, 1.0f, 1.0f, de::colora(255, 0, 0, 255), de::colora(0, 255, 0, 255), de::colora(0, 0, 255, 255), de::colora(255, 0, 255, 255), de::colora(0, 255, 255, 255), de::colora(255, 255, 0, 255));
-			g_Cubes.addCopy(&ent);
-		}
+	de::MyPNG pngSkyboxLeft;
+	de::MyPNG pngSkyboxFront;
+	de::MyPNG pngSkyboxRight;
+	de::MyPNG pngSkyboxBack;
+	de::MyPNG pngSkyboxBottom;
+	de::MyPNG pngSkyboxTop;
+
+	// Charge les images de la skybox
+	if(!pngSkyboxLeft.loadAndRead("..\\resources\\textures\\skybox_left.png")) {
+		fprintf(stderr, "Unable to load 'skybox_left'.\n");
+		return 1;
 	}
+
+	if(!pngSkyboxFront.loadAndRead("..\\resources\\textures\\skybox_front.png")) {
+		fprintf(stderr, "Unable to load 'skybox_front'.\n");
+		return 1;
+	}
+
+	if(!pngSkyboxRight.loadAndRead("..\\resources\\textures\\skybox_right.png")) {
+		fprintf(stderr, "Unable to load 'skybox_right'.\n");
+		return 1;
+	}
+
+	if(!pngSkyboxBack.loadAndRead("..\\resources\\textures\\skybox_back.png")) {
+		fprintf(stderr, "Unable to load 'skybox_back'.\n");
+		return 1;
+	}
+
+	if(!pngSkyboxBottom.loadAndRead("..\\resources\\textures\\skybox_bottom.png")) {
+		fprintf(stderr, "Unable to load 'skybox_bottom'.\n");
+		return 1;
+	}
+
+	if(!pngSkyboxTop.loadAndRead("..\\resources\\textures\\skybox_top.png")) {
+		fprintf(stderr, "Unable to load 'skybox_top'.\n");
+		return 1;
+	}
+
+	pngSkyboxLeft.applyVerticalMirrorEffect();
+	pngSkyboxLeft.applyHorizontalMirrorEffect();
+
+	pngSkyboxFront.applyVerticalMirrorEffect();
+	pngSkyboxFront.applyHorizontalMirrorEffect();
+
+	pngSkyboxRight.applyVerticalMirrorEffect();
+	pngSkyboxRight.applyHorizontalMirrorEffect();
+
+	pngSkyboxBack.applyVerticalMirrorEffect();
+	pngSkyboxBack.applyHorizontalMirrorEffect();
+
+	//pngSkyboxBottom.applyVerticalMirrorEffect();
+	//pngSkyboxTop.applyVerticalMirrorEffect();
+
+	de::mem_ptr imageLeft   = pngSkyboxLeft.rawImage();
+	de::mem_ptr imageFront  = pngSkyboxFront.rawImage();
+	de::mem_ptr imageRight  = pngSkyboxRight.rawImage();
+	de::mem_ptr imageBack   = pngSkyboxBack.rawImage();
+	de::mem_ptr imageBottom = pngSkyboxBottom.rawImage();
+	de::mem_ptr imageTop    = pngSkyboxTop.rawImage();
+
+	de::gl_texture skybox = de::GLTexture::create();
+	de::GLTexture::bindCubemaps(skybox);
+	de::GLTexture::setTextureWrappingSCubemaps(de::GLTextureWrap::ClampToEdge);
+	de::GLTexture::setTextureWrappingTCubemaps(de::GLTextureWrap::ClampToEdge);
+	de::GLTexture::setTextureWrappingRCubemaps(de::GLTextureWrap::ClampToEdge);
+	de::GLTexture::setTextureFilteringCubemaps(de::GLTextureFilter::Linear);
+	de::GLTexture::transmitTextureCubemaps(imageLeft, imageFront, imageRight, imageBack, imageBottom, imageTop, pngSkyboxLeft.width(), pngSkyboxLeft.height(), pngSkyboxLeft.colorType());
+
+	de::mem::free(imageLeft);
+	de::mem::free(imageFront);
+	de::mem::free(imageRight);
+	de::mem::free(imageBack);
+	de::mem::free(imageBottom);
+	de::mem::free(imageTop);
 
 	de::InputFileStream vertIfs("..\\glsl\\default.vert");
 	if(!vertIfs.open()) {
@@ -534,22 +576,22 @@ int main() {
 
 	((char *) fragShader1.data())[fragShader1.size() - 1] = '\0';
 	
-	de::GLShader vertShader(de::GLShaderType::Vertex);
-	de::GLShader fragShader(de::GLShaderType::Fragment);
+	de::gl_shader vertShader = de::GLShader::create(de::GLShaderType::Vertex);
+	de::gl_shader fragShader = de::GLShader::create(de::GLShaderType::Fragment);
 
-	vertShader.load(vertShader1);
-	fragShader.load(fragShader1);
+	de::GLShader::load(vertShader, vertShader1);
+	de::GLShader::load(fragShader, fragShader1);
 
 	vertShader1.free();
 	fragShader1.free();
 
-	if(!vertShader.compile()) {
+	if(!de::GLShader::compile(vertShader)) {
 		vertIfs.close();
 		fragIfs.close();
 		return 1;
 	}
 
-	if(!fragShader.compile()) {
+	if(!de::GLShader::compile(fragShader)) {
 		vertIfs.close();
 		fragIfs.close();
 		return 1;
@@ -558,19 +600,115 @@ int main() {
 	vertIfs.close();
 	fragIfs.close();
 
-	de::GLProgram program;
-	program.attachShader(vertShader);
-	program.attachShader(fragShader);
-	if(!program.link()) {
-		vertShader.destroy();
-		fragShader.destroy();
+	de::gl_program program = de::GLProgram::create();
+	de::GLProgram::attachShader(program, vertShader);
+	de::GLProgram::attachShader(program, fragShader);
+
+	if(!de::GLProgram::link(program)) {
+		de::GLShader::destroy(vertShader);
+		de::GLShader::destroy(fragShader);
 		return 1;
 	}
 
-	program.use();
+	de::GLProgram::use(program);
 
-	vertShader.destroy();
-	fragShader.destroy();
+	de::GLShader::destroy(vertShader);
+	de::GLShader::destroy(fragShader);
+
+
+	de::InputFileStream skyboxVert("..\\glsl\\skybox.vert");
+	if(!skyboxVert.open()) {
+		fprintf(stderr, "Unable to open vertex shader file.\n");
+		return 1;
+	}
+
+	de::InputFileStream skyboxFrag("..\\glsl\\skybox.frag");
+	if(!skyboxFrag.open()) {
+		fprintf(stderr, "Unable to open fragment shader file.\n");
+		return 1;
+	}
+
+	de::MemoryChunk skyboxVertChk;
+	de::MemoryChunk::alloc(skyboxVertChk, skyboxVert.getFileSize() + 1);
+	de::MemoryChunk skyboxFragChk;
+	de::MemoryChunk::alloc(skyboxFragChk, skyboxFrag.getFileSize() + 1);
+
+	if(!skyboxVert.readAll(skyboxVertChk.data(), &bytesRead)) {
+		fprintf(stderr, "Can't read shader.\n");
+		skyboxVertChk.free();
+		skyboxFragChk.free();
+
+		skyboxVert.close();
+		skyboxFrag.close();
+		return 1;
+	}
+
+	if(!skyboxFrag.readAll(skyboxFragChk.data(), &bytesRead)) {
+		fprintf(stderr, "Can't read shader.\n");
+		skyboxVertChk.free();
+		skyboxFragChk.free();
+
+		skyboxVert.close();
+		skyboxFrag.close();
+		return 1;
+	}
+
+	skyboxVert.close();
+	skyboxFrag.close();
+
+	((char *) skyboxVertChk.data())[skyboxVertChk.size() - 1] = '\0';
+	((char *) skyboxFragChk.data())[skyboxFragChk.size() - 1] = '\0';
+
+	de::gl_shader skyboxVertShader = de::GLShader::create(de::GLShaderType::Vertex);
+	de::gl_shader skyboxFragShader = de::GLShader::create(de::GLShaderType::Fragment);
+
+	de::GLShader::load(skyboxVertShader, skyboxVertChk);
+	de::GLShader::load(skyboxFragShader, skyboxFragChk);
+
+	skyboxVertChk.free();
+	skyboxFragChk.free();
+
+	if(!de::GLShader::compile(skyboxVertShader)) {
+		return 1;
+	}
+
+	if(!de::GLShader::compile(skyboxFragShader)) {
+		return 1;
+	}
+
+	de::gl_program skyboxProgram = de::GLProgram::create();
+	de::GLProgram::attachShader(skyboxProgram, skyboxVertShader);
+	de::GLProgram::attachShader(skyboxProgram, skyboxFragShader);
+
+	if(!de::GLProgram::link(skyboxProgram)) {
+		de::GLShader::destroy(skyboxVertShader);
+		de::GLShader::destroy(skyboxFragShader);
+		return 1;
+	}
+
+	de::GLProgram::use(skyboxProgram);
+
+	de::GLShader::destroy(skyboxVertShader);
+	de::GLShader::destroy(skyboxFragShader);
+
+
+	
+
+	de::Entity ent1 = de::Graphic::createRectangleTexture(program, collectionID, de::fvec3(0.0f, 0.0f, -5.0f), 5.0f, 5.0f, de::colora(255, 255, 255, 255), texture1, 0);
+	de::Entity ent2 = de::Graphic::createRectangle(program, collectionID, de::fvec3(-10.0f, 0.0f, -5.0f), 2.0f, 2.0f, de::colora(0, 200, 0, 255));
+
+	size_t i, j;
+	for(i = 0; i < 50; ++i) {
+		float x = 2.0f * i;
+		for(j = 0; j < 50; ++j) {
+			float y = 2.0f * j;
+			de::Entity ent = de::Graphic::create3DRectangle(program, collectionID, de::fvec3(x, 0.0f, y), 1.0f, 1.0f, 1.0f, de::colora(255, 0, 0, 255), de::colora(0, 255, 0, 255), de::colora(0, 0, 255, 255), de::colora(255, 0, 255, 255), de::colora(0, 255, 255, 255), de::colora(255, 255, 0, 255));
+			g_Cubes.addCopy(&ent);
+		}
+	}
+
+	// Affiche la skybox à la fin pour optimiser les appelles au fragment shader = FPS++
+	de::Entity skyboxEnt = de::Graphic::createCubemap(skyboxProgram, collectionID, de::fvec3(0.0f, 0.0f, 0.0f), 200.0f, 200.0f, 200.0f, skybox, 0);
 
 	de::Scene::setActiveScene(sceneID);
 

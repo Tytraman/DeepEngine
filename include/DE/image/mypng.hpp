@@ -25,6 +25,8 @@ namespace de {
 			bool readPNGInfo();
 			bool readPNGImage();
 
+			bool loadAndRead(const char *filename);
+
 			void applyHorizontalMirrorEffect();
 			void applyVerticalMirrorEffect();
 			void copyChannelColors(ImageChannel::t from, ImageChannel::t to);

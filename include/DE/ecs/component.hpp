@@ -20,6 +20,9 @@ namespace de {
 	struct HealthComponent;
 
 	class SystemManager;
+	class Window;
+	class Camera;
+	class OpenGLRenderer;
 
 	/// @class ComponentManager
 	/// @brief Permet la gestion de composants.
@@ -35,7 +38,7 @@ namespace de {
 			static component_type getType(component_id component);
 
 			static component_id createDrawableComponent();
-			static component_id createDrawableComponent(gl_vbo vbo, gl_vao vao, gl_texture texture = 0, uint8_t textureUnit = 0);
+			static component_id createDrawableComponent(gl_program program, gl_vbo vbo, gl_vao vao, gl_texture texture = 0, uint8_t textureUnit = 0);
 			static DrawableComponent *getDrawableComponent(component_id component);
 			static void deleteDrawableComponent(component_id id);
 
@@ -61,23 +64,26 @@ namespace de {
 
 	};
 
+	using DrawableRenderCallback = void (*)(OpenGLRenderer &renderer, DrawableComponent *drawable, TransformationComponent *transformation, Window *window, Camera *camera);
+
 	constexpr component_type DrawableComponentType = (1 << 0);
 
 	/// @struct DrawableComponent
 	/// @brief	Composant indiquant qu'une entité peut dessiner une forme.
 	struct DE_API DrawableComponent {
-		static constexpr uint8_t FlagVisible =    (1 << 0);
-		static constexpr uint8_t FlagDrawVector = (1 << 1);
-
 		gl_vbo vbo;
 		gl_vao vao;
-		uint8_t flags;       ///< Contient les options du composant de dessin.
 		gl_texture texture;
 		uint8_t textureUnit;
+		gl_program program;
+		DrawableRenderCallback renderCallback;
+
+		static void classicRenderCallback(OpenGLRenderer &renderer, DrawableComponent *drawable, TransformationComponent *transformation, Window *window, Camera *camera);
+		static void skyboxRenderCallback(OpenGLRenderer &renderer, DrawableComponent *drawable, TransformationComponent *transformation, Window *window, Camera *camera);
 		
 		private:
 			DrawableComponent();
-			DrawableComponent(gl_vbo vbo, gl_vao vao, gl_texture texture = 0, uint8_t textureUnit = 0);
+			DrawableComponent(gl_program program, gl_vbo vbo, gl_vao vao, gl_texture texture = 0, uint8_t textureUnit = 0);
 
 			friend ComponentManager;
 	};

@@ -21,19 +21,54 @@ namespace de {
 			/// @param height          Hauteur du rectangle.
 			/// @param color           Couleur du rectangle.
 			/// @return                L'entité nouvellement créée ou \ref Entity::bad() si une erreur est survenue.
-			static Entity createRectangle(entity_collection_id collectionID, const fvec3 &position, float width, float height, const colora &color, bool collidable = false);
+			static Entity createRectangle(gl_program program, entity_collection_id collectionID, const fvec3 &position, float width, float height, const colora &color, bool collidable = false);
+			static Entity createRectangleTexture(gl_program program, entity_collection_id collectionID, const fvec3 &position, float width, float height, const colora &color, gl_texture texture, uint8_t textureUnit, bool collidable = false);
 
-			static Entity createRectangleTexture(entity_collection_id collectionID, const fvec3 &position, float width, float height, const colora &color, gl_texture texture, uint8_t textureUnit, bool collidable = false);
+			static Entity create3DRectangle(
+				gl_program program,
+				entity_collection_id collectionID,
+				const fvec3 &position,
+				float width,
+				float height,
+				float length,
+				const colora &color1,
+				const colora &color2,
+				const colora &color3,
+				const colora &color4,
+				const colora &color5,
+				const colora &color6,
+				bool collidable = false
+			);
+			
+			static Entity create3DRectangleTexture(
+				gl_program program,
+				entity_collection_id collectionID,
+				const fvec3 &position,
+				float width,
+				float height,
+				float length,
+				const colora &color1,
+				const colora &color2,
+				const colora &color3,
+				const colora &color4,
+				const colora &color5,
+				const colora &color6,
+				gl_texture texture,
+				uint8_t textureUnit,
+				bool collidable = false
+			);
 
-			static Entity create3DRectangle(entity_collection_id collectionID, const fvec3 &position, float width, float height, float length, const colora &color1, const colora &color2, const colora &color3, const colora &color4, const colora &color5, const colora &color6, bool collidable = false);
-
-			/// @brief          Crée un triangle dans la scène spécifiée.
-			/// @param scene    ID de la scène dans laquelle créer le triangle.
-			/// @param position Position à laquelle se situera le triangle.
-			/// @param radius   Taille du triangle.
-			/// @param color    Couleur du triangle.
-			/// @return         L'ID de l'entité nouvellement créée ou \ref badID si une erreur est survenue.
-			static Entity createTriangle(entity_collection_id collectionID, const fvec3 &position, float radius, const colora &color);
+			static Entity createCubemap(
+				gl_program program,
+				entity_collection_id collectionID,
+				const fvec3 &position,
+				float width,
+				float height,
+				float length,
+				gl_texture texture,
+				uint8_t textureUnit,
+				bool collidable = false
+			);
 
 	};
 

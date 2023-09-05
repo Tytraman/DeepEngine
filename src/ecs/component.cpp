@@ -1,6 +1,7 @@
 #include <DE/ecs/component.hpp>
 #include <DE/graphics/graphic.hpp>
 #include <DE/mat.hpp>
+#include <DE/window.hpp>
 
 #include <unordered_map>
 
@@ -15,6 +16,72 @@ namespace de {
 	static std::unordered_map<component_id, ColliderComponent>       m_ColliderComponents;
 	static std::unordered_map<component_id, AccelerationComponent>   m_AccelerationComponents;
 	static std::unordered_map<component_id, HealthComponent>         m_HealthComponents;
+
+	void DrawableComponent::classicRenderCallback(OpenGLRenderer &renderer, DrawableComponent *drawable, TransformationComponent *transformation, Window *window, Camera *camera)
+	{
+		GLUniform uniModel;
+
+		GLProgram::use(drawable->program);
+		GLVAO::bind(drawable->vao);
+
+		GLTexture::bind(drawable->texture, drawable->textureUnit);
+		if(uniModel.find(drawable->program, "myTex"))
+			uniModel.send(0);
+
+		if(uniModel.find(drawable->program, "model")) {
+			fmat4x4 model = fmat4x4::translate(fmat4x4(), transformation->getTranslation());
+					model = fmat4x4::rotateX(model, transformation->getRotationX());
+					model = fmat4x4::rotateY(model, transformation->getRotationY());
+					model = fmat4x4::rotateZ(model, transformation->getRotationZ());
+					model = fmat4x4::scale(model, transformation->getScaling());
+
+			uniModel.send(model);
+
+			if(uniModel.find(drawable->program, "view")) {
+				uniModel.send(camera->lookAt());
+
+				if(uniModel.find(drawable->program, "proj")) {
+					uniModel.send(fmat4x4::perspective(fmat4x4(), 45.0f, (float) window->getWidth() / (float) window->getHeight(), 0.1f, 1000.0f));
+				}
+			}
+		}
+
+		renderer.draw(GLVBO::getVerticesNumber(drawable->vbo));
+	}
+
+	void DrawableComponent::skyboxRenderCallback(OpenGLRenderer &renderer, DrawableComponent *drawable, TransformationComponent *transformation, Window *window, Camera *camera)
+	{
+		GLUniform uniModel;
+
+		GLCore::enableDepthMask(false);
+		GLCore::setDepthFunction(GLDepthFunction::Lequal);
+
+		GLProgram::use(drawable->program);
+		GLVAO::bind(drawable->vao);
+
+		GLTexture::bindCubemaps(drawable->texture);
+
+		if(uniModel.find(drawable->program, "skybox")) {
+			uniModel.send(0);
+
+			if(uniModel.find(drawable->program, "view")) {
+				fmat4x4 view = camera->lookAt();
+				view[fmat4x4_index::w1] = 0.0f;
+				view[fmat4x4_index::w2] = 0.0f;
+				view[fmat4x4_index::w3] = 0.0f;
+
+				uniModel.send(view);
+
+				if(uniModel.find(drawable->program, "proj")) {
+					uniModel.send(fmat4x4::perspective(fmat4x4(), 45.0f, (float) window->getWidth() / (float) window->getHeight(), 0.1f, 1000.0f));
+				}
+			}
+		}
+
+		renderer.draw(GLVBO::getVerticesNumber(drawable->vbo));
+		GLCore::setDepthFunction(GLDepthFunction::Less);
+		GLCore::enableDepthMask(true);
+	}
 
 	/*
 	=========================
@@ -34,9 +101,10 @@ namespace de {
 	DrawableComponent::DrawableComponent()
 		: vbo(GLVBO::create()),
 		  vao(GLVAO::create()),
-		  flags(0),
 		  texture(0),
-		  textureUnit(0)
+		  textureUnit(0),
+		  program(0),
+		  renderCallback(nullptr)
 	{ }
 
 	/*
@@ -44,12 +112,13 @@ namespace de {
 	DrawableComponent::DrawableComponent
 	====================================
 	*/
-	DrawableComponent::DrawableComponent(gl_vbo _vbo, gl_vao _vao, gl_texture _texture, uint8_t _textureUnit)
+	DrawableComponent::DrawableComponent(gl_program _program, gl_vbo _vbo, gl_vao _vao, gl_texture _texture, uint8_t _textureUnit)
 		: vbo(_vbo),
 		  vao(_vao),
-		  flags(0),
 		  texture(_texture),
-		  textureUnit(_textureUnit)
+		  textureUnit(_textureUnit),
+		  program(_program),
+		  renderCallback(nullptr)
 	{ }
 
 	/*
@@ -74,11 +143,11 @@ namespace de {
 	ComponentManager::createDrawableComponent
 	=========================================
 	*/
-	component_id ComponentManager::createDrawableComponent(gl_vbo vbo, gl_vao vao, gl_texture texture, uint8_t textureUnit)
+	component_id ComponentManager::createDrawableComponent(gl_program program, gl_vbo vbo, gl_vao vao, gl_texture texture, uint8_t textureUnit)
 	{
 		component_id id = m_ComponentCount;
 
-		m_DrawableComponents.emplace(id, DrawableComponent(vbo, vao, texture, textureUnit));
+		m_DrawableComponents.emplace(id, DrawableComponent(program, vbo, vao, texture, textureUnit));
 		m_ComponentsType[id] = DrawableComponentType;
 
 		m_ComponentCount = id + 1;

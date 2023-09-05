@@ -48,6 +48,7 @@ namespace de {
 		fmat3x3 operator*(const fmat3x3 &mat) const;
 		float operator[](size_t index) const;
 
+
 		float *ptr();
 
 		static fvec3 mul(const fmat3x3 &mat, const fvec3 &vec);
@@ -81,6 +82,7 @@ namespace de {
 
 		fmat4x4 operator*(const fmat4x4 &mat) const;
 		float operator[](size_t index) const;
+		float &operator[](size_t index);
 
 		float *ptr();
 
@@ -124,6 +126,11 @@ namespace de {
 	===================
 	*/
 	inline float fmat4x4::operator[](size_t index) const
+	{
+		return data[index];
+	}
+
+	inline float &fmat4x4::operator[](size_t index)
 	{
 		return data[index];
 	}

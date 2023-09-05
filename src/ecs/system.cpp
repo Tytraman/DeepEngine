@@ -326,7 +326,7 @@ namespace de {
 		if(sceneID != badID) {
 			Scene *scene = Scene::getScene(sceneID);
 
-			const Camera &cam = scene->getCamera();
+			Camera &cam = scene->getCamera();
 
 			List entities(sizeof(entity_id));
 			entity_collection_id collection = Scene::getEntityCollection(sceneID);
@@ -340,10 +340,6 @@ namespace de {
 			component_id transformationComponentID;
 			size_t i;
 
-			GLUniform uniModel;
-
-			unsigned int programID = GLProgram::currentlyBound();
-
 			for(i = 0; i < length; ++i) {
 				if(entities.getCopy(i, &entity)) {
 					drawableComponentID       = EntityManager::getComponentID(collection, entity, DrawableComponentType);
@@ -352,31 +348,10 @@ namespace de {
 					DrawableComponent *drawableComponent = ComponentManager::getDrawableComponent(drawableComponentID);
 					TransformationComponent *transformationComponent = ComponentManager::getTransformationComponent(transformationComponentID);
 
-					GLTexture::bind(drawableComponent->texture, drawableComponent->textureUnit);
-					if(uniModel.find(programID, "myTex"))
-						uniModel.send(0);
+					if(drawableComponent->renderCallback != nullptr)
+						drawableComponent->renderCallback(renderer, drawableComponent, transformationComponent, window, &cam);
 
-					if(uniModel.find(programID, "model")) {
-						fmat4x4 model = fmat4x4::translate(fmat4x4(), transformationComponent->m_Translation);
-								model = fmat4x4::rotateX(model, transformationComponent->m_RotationX);
-								model = fmat4x4::rotateY(model, transformationComponent->m_RotationY);
-								model = fmat4x4::rotateZ(model, transformationComponent->m_RotationZ);
-								model = fmat4x4::scale(model, transformationComponent->m_Scaling);
-
-						uniModel.send(model);
-
-						if(uniModel.find(programID, "view")) {
-							uniModel.send(cam.lookAt());
-
-							if(uniModel.find(programID, "proj")) {
-								uniModel.send(fmat4x4::perspective(fmat4x4(), 45.0f, (float) window->getWidth() / (float) window->getHeight(), 0.1f, 100.0f));
-							}
-						}
-					}
-
-					GLVAO::bind(drawableComponent->vao);
-
-					renderer.draw(GLVBO::getVerticesNumber(drawableComponent->vbo));
+					
 				}
 			}
 		}

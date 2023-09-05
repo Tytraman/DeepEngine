@@ -22,8 +22,11 @@ namespace de {
 	void Window::internalEventCallback(devent e)
 	{
 		static bool insertPressed = false;
+		static bool f11Pressed    = false;
+		static int lastWindowWidth  = getWidth();
+		static int lastWindowHeight = getHeight();
 
-		// Vérifie le type d'évènement qui vient de se produire
+		// Vérifie le type d'évènement qui vient de se produire.
 		switch(e->getType()) {
 			default: break;
 			case EventType::KeyDown: {
@@ -37,6 +40,26 @@ namespace de {
 							insertPressed = true;
 						}
 					} break;
+					case key::F11: {
+						if(!f11Pressed) {
+							if(SDL_GetWindowFlags(m_Window) & SDL_WINDOW_FULLSCREEN) {
+								SDL_SetWindowFullscreen(m_Window, 0);
+								SDL_SetWindowSize(m_Window, lastWindowWidth, lastWindowHeight);
+								GLCore::updateViewport(lastWindowWidth, lastWindowHeight);
+							}else {
+								SDL_DisplayMode DM;
+								SDL_GetCurrentDisplayMode(0, &DM);
+
+								lastWindowWidth  = getWidth();
+								lastWindowHeight = getHeight();
+								
+								SDL_SetWindowSize(m_Window, DM.w, DM.h);
+								GLCore::updateViewport(DM.w, DM.h);
+								SDL_SetWindowFullscreen(m_Window, SDL_WINDOW_FULLSCREEN);
+							}
+							f11Pressed = true;
+						}
+					} break;
 				}
 			} break;
 			case EventType::KeyUp: {
@@ -45,6 +68,10 @@ namespace de {
 					case key::Insert: {
 						if(insertPressed)
 							insertPressed = false;
+					} break;
+					case key::F11: {
+						if(f11Pressed)
+							f11Pressed = false;
 					} break;
 				}
 			} break;
@@ -55,6 +82,7 @@ namespace de {
 					case events::WindowResized: {	// Redimension de la fenêtre
 						size newSize = e->getWindowSize();
 						GLCore::updateViewport(newSize.width, newSize.height);
+						//printf("Window resized: %dx%d\n", newSize.width, newSize.height);
 					} break;
 				}
 			} break;

@@ -194,6 +194,34 @@ namespace de {
 		return true;
 	}
 
+	/*
+	==================
+	MyPNG::loadAndRead
+	==================
+	*/
+	bool MyPNG::loadAndRead(const char *filename)
+	{
+		if(!loadFile(filename))
+			return false;
+
+		if(!check()) {
+			destroy();
+			return false;
+		}
+
+		if(!readPNGInfo()) {
+			destroy();
+			return false;
+		}
+
+		if(!readPNGImage()) {
+			destroy();
+			return false;
+		}
+
+		return true;
+	}
+
 	mem_ptr MyPNG::rawImage()
 	{
 		png_bytep *rowPointers = (png_bytep *) m_Image;

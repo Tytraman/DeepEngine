@@ -210,23 +210,24 @@ namespace de {
 	}
 
 	/*
-	==================
-	GLShader::GLShader
-	==================
+	================
+	GLShader::create
+	================
 	*/
-	GLShader::GLShader(GLShaderType::t shaderType)
-		: m_Shader(DE_GL_CALLV(glCreateShader((shaderType == GLShaderType::Vertex ? GL_VERTEX_SHADER : GL_FRAGMENT_SHADER))))
-	{ }
+	gl_shader GLShader::create(GLShaderType::t shaderType)
+	{
+		return DE_GL_CALLV(glCreateShader((shaderType == GLShaderType::Vertex ? GL_VERTEX_SHADER : GL_FRAGMENT_SHADER)));
+	}
 
 	/*
 	==============
 	GLShader::load
 	==============
 	*/
-	void GLShader::load(MemoryChunk &program)
+	void GLShader::load(gl_shader shader, MemoryChunk &program)
 	{
 		char *source = (char *) program.data();
-		DE_GL_CALL(glShaderSource(m_Shader, 1, &source, NULL));
+		DE_GL_CALL(glShaderSource(shader, 1, &source, NULL));
 	}
 
 	/*
@@ -234,16 +235,16 @@ namespace de {
 	GLShader::compile
 	=================
 	*/
-	bool GLShader::compile()
+	bool GLShader::compile(gl_shader shader)
 	{
 		int  success;
 		char infoLog[512];
 
-		DE_GL_CALL(glCompileShader(m_Shader));
-		DE_GL_CALL(glGetShaderiv(m_Shader, GL_COMPILE_STATUS, &success));
+		DE_GL_CALL(glCompileShader(shader));
+		DE_GL_CALL(glGetShaderiv(shader, GL_COMPILE_STATUS, &success));
 
 		if(!success) {
-			DE_GL_CALL(glGetShaderInfoLog(m_Shader, 512, NULL, infoLog));
+			DE_GL_CALL(glGetShaderInfoLog(shader, 512, NULL, infoLog));
 			fprintf(stderr, "GLSL compilation error:\n%s\n", infoLog);
 
 			return false;
@@ -257,28 +258,29 @@ namespace de {
 	GLShader::destroy
 	=================
 	*/
-	void GLShader::destroy()
+	void GLShader::destroy(gl_shader shader)
 	{
-		DE_GL_CALL(glDeleteShader(m_Shader));
+		DE_GL_CALL(glDeleteShader(shader));
 	}
 
 	/*
-	====================
-	GLProgram::GLProgram
-	====================
+	=================
+	GLProgram::create
+	=================
 	*/
-	GLProgram::GLProgram()
-		: m_Program(DE_GL_CALLV(glCreateProgram()))
-	{ }
+	gl_program GLProgram::create()
+	{
+		return DE_GL_CALLV(glCreateProgram());
+	}
 
 	/*
 	=======================
 	GLProgram::attachShader
 	=======================
 	*/
-	void GLProgram::attachShader(const GLShader &shader)
+	void GLProgram::attachShader(gl_program program, gl_shader shader)
 	{
-		DE_GL_CALL(glAttachShader(m_Program, shader.id()));
+		DE_GL_CALL(glAttachShader(program, shader));
 	}
 
 	/*
@@ -286,16 +288,16 @@ namespace de {
 	GLProgram::link
 	===============
 	*/
-	bool GLProgram::link() const
+	bool GLProgram::link(gl_program program)
 	{
 		int  success;
 		char infoLog[512];
 
-		DE_GL_CALL(glLinkProgram(m_Program));
-		DE_GL_CALL(glGetProgramiv(m_Program, GL_LINK_STATUS, &success));
+		DE_GL_CALL(glLinkProgram(program));
+		DE_GL_CALL(glGetProgramiv(program, GL_LINK_STATUS, &success));
 
 		if(!success) {
-			DE_GL_CALL(glGetProgramInfoLog(m_Program, sizeof(infoLog), NULL, infoLog));
+			DE_GL_CALL(glGetProgramInfoLog(program, sizeof(infoLog), NULL, infoLog));
 			fprintf(stderr, "GLSL link error:\n%s\n", infoLog);
 
 			return false;
@@ -309,10 +311,10 @@ namespace de {
 	GLProgram::use
 	==============
 	*/
-	void GLProgram::use() const
+	void GLProgram::use(gl_program program)
 	{
-		DE_GL_CALL(glUseProgram(m_Program));
-		m_CurrentlyBound = m_Program;
+		DE_GL_CALL(glUseProgram(program));
+		m_CurrentlyBound = program;
 	}
 
 	/*
@@ -406,6 +408,31 @@ namespace de {
 		return val;
 	}
 
+	/*
+	=======================
+	GLCore::enableDepthMask
+	=======================
+	*/
+	void GLCore::enableDepthMask(bool value)
+	{
+		DE_GL_CALL(glDepthMask(value));
+	}
+
+	/*
+	========================
+	GLCore::setDepthFunction
+	========================
+	*/
+	void GLCore::setDepthFunction(GLDepthFunction::t func)
+	{
+		DE_GL_CALL(glDepthFunc(func));
+	}
+
+	/*
+	==============
+	GLCore::create
+	==============
+	*/
 	gl_texture GLTexture::create()
 	{
 		gl_texture texture = 0;
@@ -422,6 +449,16 @@ namespace de {
 	{
 		DE_GL_CALL(glActiveTexture(GL_TEXTURE0 + unit));
 		DE_GL_CALL(glBindTexture(GL_TEXTURE_2D, texture));
+	}
+
+	/*
+	=======================
+	GLTexture::bindCubemaps
+	=======================
+	*/
+	void GLTexture::bindCubemaps(gl_texture texture)
+	{
+		DE_GL_CALL(glBindTexture(GL_TEXTURE_CUBE_MAP, texture));
 	}
 
 	/*
@@ -446,6 +483,16 @@ namespace de {
 
 	/*
 	==============================
+	GLTexture::setTextureWrappingR
+	==============================
+	*/
+	void GLTexture::setTextureWrappingR(GLTextureWrap::t mode)
+	{
+		DE_GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, mode));
+	}
+
+	/*
+	==============================
 	GLTexture::setTextureFiltering
 	==============================
 	*/
@@ -456,6 +503,47 @@ namespace de {
 	}
 
 	/*
+	======================================
+	GLTexture::setTextureWrappingSCubemaps
+	======================================
+	*/
+	void GLTexture::setTextureWrappingSCubemaps(GLTextureWrap::t mode)
+	{
+		DE_GL_CALL(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, mode));
+	}
+
+	/*
+	======================================
+	GLTexture::setTextureWrappingTCubemaps
+	======================================
+	*/
+	void GLTexture::setTextureWrappingTCubemaps(GLTextureWrap::t mode)
+	{
+		DE_GL_CALL(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, mode));
+	}
+
+	/*
+	======================================
+	GLTexture::setTextureWrappingRCubemaps
+	======================================
+	*/
+	void GLTexture::setTextureWrappingRCubemaps(GLTextureWrap::t mode)
+	{
+		DE_GL_CALL(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, mode));
+	}
+
+	/*
+	======================================
+	GLTexture::setTextureFilteringCubemaps
+	======================================
+	*/
+	void GLTexture::setTextureFilteringCubemaps(GLTextureFilter::t mode)
+	{
+		DE_GL_CALL(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, mode));
+		DE_GL_CALL(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, mode));
+	}
+
+	/*
 	==========================
 	GLTexture::transmitTexture
 	==========================
@@ -463,20 +551,55 @@ namespace de {
 	void GLTexture::transmitTexture(mem_ptr data, int width, int height, ImageColorType::t colorType)
 	{
 		GLenum internalFormat;
-		GLenum type;
+		GLenum format;
 		switch(colorType) {
 			default: return;
 			case ImageColorType::RGB: {
 				internalFormat = GL_RGB8;
-				type = GL_RGB;
+				format = GL_RGB;
 			}break;
 			case ImageColorType::RGBA: {
 				internalFormat = GL_RGBA8;
-				type = GL_RGBA;
+				format = GL_RGBA;
 			} break;
 		}
 
-		DE_GL_CALL(glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, type, GL_UNSIGNED_BYTE, data));
+		DE_GL_CALL(glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, data));
+	}
+
+	/*
+	==================================
+	GLTexture::transmitTextureCubemaps
+	==================================
+	*/
+	void GLTexture::transmitTextureCubemaps(mem_ptr left, mem_ptr front, mem_ptr right, mem_ptr back, mem_ptr bottom, mem_ptr top, int width, int height, ImageColorType::t colorType)
+	{
+		GLenum internalFormat;
+		GLenum format;
+		switch(colorType) {
+			default: return;
+			case ImageColorType::RGB: {
+				internalFormat = GL_RGB8;
+				format = GL_RGB;
+			}break;
+			case ImageColorType::RGBA: {
+				internalFormat = GL_RGBA8;
+				format = GL_RGBA;
+			} break;
+		}
+
+		// Gauche
+		DE_GL_CALL(glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_X, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, left));
+		// Avant
+		DE_GL_CALL(glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Z, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, front));
+		// Droite
+		DE_GL_CALL(glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, right));
+		// Arrière
+		DE_GL_CALL(glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Z, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, back));
+		// Dessous
+		DE_GL_CALL(glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, bottom));
+		// Dessus
+		DE_GL_CALL(glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, top));
 	}
 
 }

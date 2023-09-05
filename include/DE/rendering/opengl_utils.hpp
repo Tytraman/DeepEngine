@@ -67,6 +67,13 @@ namespace de {
 		};
 	}
 
+	namespace GLDepthFunction {
+		enum t {
+			Less   = GL_LESS,
+			Lequal = GL_EQUAL
+		};
+	}
+
 	using gl_vbo = unsigned int;
 
 	/// @brief Vertex Buffer Object
@@ -98,6 +105,11 @@ namespace de {
 
 	};
 
+	/*
+	=====================
+	GLVBO::currentlyBound
+	=====================
+	*/
 	inline unsigned int GLVBO::currentlyBound()
 	{
 		return m_CurrentlyBound;
@@ -130,60 +142,40 @@ namespace de {
 
 	}
 
+	using gl_shader = unsigned int;
+
 	class DE_API GLShader {
 
 		public:
-			GLShader(GLShaderType::t shaderType);
+			static gl_shader create(GLShaderType::t shaderType);
 
-			void load(MemoryChunk &program);
-			bool compile();
-			void destroy();
-
-			unsigned int id() const;
+			static void load(gl_shader shader, MemoryChunk &program);
+			static bool compile(gl_shader shader);
+			static void destroy(gl_shader shader);
 
 		private:
-			unsigned int m_Shader;
-
+			GLShader() = delete;
 	};
 
-	/*
-	============
-	GLShader::id
-	============
-	*/
-	inline unsigned int GLShader::id() const
-	{
-		return m_Shader;
-	}
+	using gl_program = unsigned int;
 
 	class DE_API GLProgram {
 
 		public:
-			GLProgram();
+			static gl_program create();
 
-			void attachShader(const GLShader &shader);
-			bool link() const;
-			void use() const;
+			static void attachShader(gl_program program, gl_shader shader);
+			static bool link(gl_program program);
+			static void use(gl_program program);
 
-			unsigned int id() const;
 			static unsigned int currentlyBound();
 
 		private:
-			unsigned int m_Program;
+			GLProgram() = delete;
 
 			static unsigned int m_CurrentlyBound;
 
 	};
-
-	/*
-	=============
-	GLProgram::id
-	=============
-	*/
-	inline unsigned int GLProgram::id() const
-	{
-		return m_Program;
-	}
 
 	/*
 	=========================
@@ -200,8 +192,7 @@ namespace de {
 		public:
 			GLUniform();
 
-			bool find(unsigned int program, const char *name);
-			bool find(const GLProgram &program, const char *name);
+			bool find(gl_program program, const char *name);
 
 			void send(float value);
 			void send(int value);
@@ -214,16 +205,6 @@ namespace de {
 
 	};
 
-	/*
-	===============
-	GLUniform::find
-	===============
-	*/
-	inline bool GLUniform::find(const GLProgram &program, const char *name)
-	{
-		return find(program.id(), name);
-	}
-
 	using gl_texture = unsigned int;
 
 	class DE_API GLTexture {
@@ -231,12 +212,20 @@ namespace de {
 		public:
 			static gl_texture create();
 			static void bind(gl_texture texture, uint8_t unit);
+			static void bindCubemaps(gl_texture texture);
 
 			static void setTextureWrappingS(GLTextureWrap::t mode);
 			static void setTextureWrappingT(GLTextureWrap::t mode);
+			static void setTextureWrappingR(GLTextureWrap::t mode);
 			static void setTextureFiltering(GLTextureFilter::t mode);
 
+			static void setTextureWrappingSCubemaps(GLTextureWrap::t mode);
+			static void setTextureWrappingTCubemaps(GLTextureWrap::t mode);
+			static void setTextureWrappingRCubemaps(GLTextureWrap::t mode);
+			static void setTextureFilteringCubemaps(GLTextureFilter::t mode);
+
 			static void transmitTexture(mem_ptr data, int width, int height, ImageColorType::t colorType);
+			static void transmitTextureCubemaps(mem_ptr left, mem_ptr front, mem_ptr right, mem_ptr back, mem_ptr bottom, mem_ptr top, int width, int height, ImageColorType::t colorType);
 
 			static gl_texture getWhiteTexture();
 			static void setWhiteTexture(gl_texture texture);
@@ -248,15 +237,31 @@ namespace de {
 
 	};
 
+	/*
+	==========================
+	GLTexture::getWhiteTexture
+	==========================
+	*/
 	inline gl_texture GLTexture::getWhiteTexture()
 	{
 		return m_WhiteTex;
 	}
 
+	/*
+	==========================
+	GLTexture::setWhiteTexture
+	==========================
+	*/
 	inline void GLTexture::setWhiteTexture(gl_texture texture)
 	{
 		m_WhiteTex = texture;
 	}
+
+	class DE_API GLCubemaps {
+
+
+
+	};
 
 	class DE_API GLError {
 
@@ -279,8 +284,6 @@ namespace de {
 
 	};
 
-	
-
 	class DE_API GLCore {
 
 		public:
@@ -299,6 +302,12 @@ namespace de {
 			/// @param width  Largeur du viewport.
 			/// @param height Hauteur du viewport.
 			static void updateViewport(int width, int height);
+
+			/// @brief Active ou désactive la vérification sur l'axe Z.
+			/// @param value 
+			static void enableDepthMask(bool value);
+
+			static void setDepthFunction(GLDepthFunction::t func);
 
 	};
 
