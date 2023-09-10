@@ -5,6 +5,7 @@
 #include <DE/types.hpp>
 #include <DE/ecs/ecs.hpp>
 #include <DE/memory/list.hpp>
+#include <DE/memory/hash_table.hpp>
 
 namespace de {
 
@@ -33,21 +34,43 @@ namespace de {
 
 	};
 
+	using EntityEnumCallback = void (*)(entity_collection_id collection, entity_id entity);
+
+	/*
+	===========
+	Entity::bad
+	===========
+	*/
 	inline Entity Entity::bad()
 	{
 		return Entity(badID, badID);
 	}
 
+	/*
+	============
+	Entity::isOK
+	============
+	*/
 	inline bool Entity::isOK() const
 	{
 		return (m_CollectionID != badID && m_EntityID != badID);
 	}
 
+	/*
+	=======================
+	Entity::getCollectionID
+	=======================
+	*/
 	inline scene_id Entity::getCollectionID() const
 	{
 		return m_CollectionID;
 	}
 
+	/*
+	===================
+	Entity::getEntityID
+	===================
+	*/
 	inline entity_id Entity::getEntityID() const
 	{
 		return m_EntityID;
@@ -61,6 +84,9 @@ namespace de {
 			EntityManager(const EntityManager &) = delete;
 			EntityManager(const EntityManager &&) = delete;
 
+			static void enumEntities(entity_collection_id collection, EntityEnumCallback callback);
+			static size_t getNumberOfEntities(entity_collection_id collection);
+
 			static entity_collection_id createEntityCollection();
 
 			/// @brief	Crée une entité.
@@ -69,6 +95,11 @@ namespace de {
 
 			/// @brief		Supprime une entité de la liste.
 			static void destroyEntity(const Entity &entity);
+			static void destroyEntity(entity_collection_id collection, entity_id entity);
+			static void destroyAllEntities(entity_collection_id collection);
+
+			static bool mustBeDeleted(entity_collection_id collection, entity_id entity);
+			static void deleteEntities();
 
 			/// @brief				Attache un composant à une entité.
 			/// @param entity		L'entité à laquelle attacher le composant.
@@ -82,11 +113,21 @@ namespace de {
 			/// @param dest						Pointeur vers la liste qui stockera les entités répondant aux conditions.
 			static void query(entity_collection_id collection, component_type componentTypesToInclude, component_type componentTypesToExclude, List *dest);
 
-			static component_id getComponentID(entity_collection_id collectionID, entity_id entityID, component_type componentType);
+			static component_id getComponentID(entity_collection_id collection, entity_id entity, component_type componentType);
 			static component_id getComponentID(const Entity &entity, component_type componentType);
+
+		private:
+			static HashTable m_Collections;
+			static HashTable m_NextEntityID;
+			static HashTable m_EntitiesToDelete;
 
 	};
 
+	/*
+	=============================
+	EntityManager::getComponentID
+	=============================
+	*/
 	inline component_id EntityManager::getComponentID(const Entity &entity, component_type componentType)
 	{
 		return getComponentID(entity.m_CollectionID, entity.m_EntityID, componentType);

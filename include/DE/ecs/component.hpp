@@ -8,6 +8,7 @@
 #include <DE/memory/list.hpp>
 #include <DE/graphics/vertex.hpp>
 #include <DE/graphics/shape.hpp>
+#include <DE/memory/hash_table.hpp>
 #include <DE/rendering/opengl_utils.hpp>
 
 namespace de {
@@ -28,13 +29,10 @@ namespace de {
 	/// @brief Permet la gestion de composants.
 	class DE_API ComponentManager {
 
-		private:
-			static component_id m_ComponentCount;	///< Comptabilise le nombre total de composants créés.
-
 		public:
-			/// @brief				Récupère le type du composant spécifié.
-			/// @param component	L'ID du composant auquel récupérer le type.
-			/// @return				Le type du composant.
+			/// @brief           Récupère le type du composant spécifié.
+			/// @param component L'ID du composant auquel récupérer le type.
+			/// @return          Le type du composant.
 			static component_type getType(component_id component);
 
 			static component_id createDrawableComponent();
@@ -62,7 +60,143 @@ namespace de {
 			static HealthComponent *getHealthComponent(component_id component);
 			static void deleteHealthComponent(component_id id);
 
+		private:
+			static component_id m_ComponentCount;    ///< Comptabilise le nombre total de composants créés.
+			static HashTable m_ComponentsType;
+			static HashTable m_DrawableComponents;
+			static HashTable m_TransformationComponents;
+			static HashTable m_VelocityComponents;
+			static HashTable m_ColliderComponents;
+			static HashTable m_AccelerationComponents;
+			static HashTable m_HealthComponents;
+
 	};
+
+	/*
+	======================================
+	ComponentManager::getDrawableComponent
+	======================================
+	*/
+	inline DrawableComponent *ComponentManager::getDrawableComponent(component_id component)
+	{
+		return (DrawableComponent *) m_DrawableComponents.getPtr(component);
+	}
+
+	/*
+	============================================
+	ComponentManager::getTransformationComponent
+	============================================
+	*/
+	inline TransformationComponent *ComponentManager::getTransformationComponent(component_id component)
+	{
+		return (TransformationComponent *) m_TransformationComponents.getPtr(component);
+	}
+
+	/*
+	======================================
+	ComponentManager::getVelocityComponent
+	======================================
+	*/
+	inline VelocityComponent *ComponentManager::getVelocityComponent(component_id component)
+	{
+		return (VelocityComponent *) m_VelocityComponents.getPtr(component);
+	}
+
+	/*
+	======================================
+	ComponentManager::getColliderComponent
+	======================================
+	*/
+	inline ColliderComponent *ComponentManager::getColliderComponent(component_id component)
+	{
+		return (ColliderComponent *) m_ColliderComponents.getPtr(component);
+	}
+
+	/*
+	==========================================
+	ComponentManager::getAccelerationComponent
+	==========================================
+	*/
+	inline AccelerationComponent *ComponentManager::getAccelerationComponent(component_id component)
+	{
+		return (AccelerationComponent *) m_AccelerationComponents.getPtr(component);
+	}
+
+	/*
+	====================================
+	ComponentManager::getHealthComponent
+	====================================
+	*/
+	inline HealthComponent *ComponentManager::getHealthComponent(component_id component)
+	{
+		return (HealthComponent *) m_HealthComponents.getPtr(component);
+	}
+
+	/*
+	=========================================
+	ComponentManager::deleteDrawableComponent
+	=========================================
+	*/
+	inline void ComponentManager::deleteDrawableComponent(component_id component)
+	{
+		m_DrawableComponents.destroy(component);
+		m_ComponentsType.destroy(component);
+	}
+
+	/*
+	===============================================
+	ComponentManager::deleteTransformationComponent
+	===============================================
+	*/
+	inline void ComponentManager::deleteTransformationComponent(component_id component)
+	{
+		m_TransformationComponents.destroy(component);
+		m_ComponentsType.destroy(component);
+	}
+
+	/*
+	=========================================
+	ComponentManager::deleteVelocityComponent
+	=========================================
+	*/
+	inline void ComponentManager::deleteVelocityComponent(component_id component)
+	{
+		m_VelocityComponents.destroy(component);
+		m_ComponentsType.destroy(component);
+	}
+
+	/*
+	=========================================
+	ComponentManager::deleteColliderComponent
+	=========================================
+	*/
+	inline void ComponentManager::deleteColliderComponent(component_id component)
+	{
+		m_ColliderComponents.destroy(component);
+		m_ComponentsType.destroy(component);
+	}
+
+	/*
+	=============================================
+	ComponentManager::deleteAccelerationComponent
+	=============================================
+	*/
+	inline void ComponentManager::deleteAccelerationComponent(component_id component)
+	{
+		m_AccelerationComponents.destroy(component);
+		m_ComponentsType.destroy(component);
+	}
+
+	/*
+	=======================================
+	ComponentManager::deleteHealthComponent
+	=======================================
+	*/
+	inline void ComponentManager::deleteHealthComponent(component_id id)
+	{
+		m_HealthComponents.destroy(id);
+		m_ComponentsType.destroy(id);
+	}
 
 	using DrawableRenderCallback = void (*)(OpenGLRenderer &renderer, DrawableComponent *drawable, TransformationComponent *transformation, Window *window, Camera *camera);
 

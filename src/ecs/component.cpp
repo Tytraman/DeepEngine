@@ -7,41 +7,77 @@
 
 namespace de {
 
+	void destroy_drawable_callback(mem_ptr ptr)
+	{
+		DrawableComponent *drawable = (DrawableComponent *) ptr;
+
+		GLVAO::destroy(drawable->vao);
+		GLVBO::destroy(drawable->vbo);
+	}
+
 	component_id ComponentManager::m_ComponentCount = 0;
 
-	static std::unordered_map<component_id, component_type>          m_ComponentsType;
-	static std::unordered_map<component_id, DrawableComponent>       m_DrawableComponents;
-	static std::unordered_map<component_id, TransformationComponent> m_TransformationComponents;
-	static std::unordered_map<component_id, VelocityComponent>       m_VelocityComponents;
-	static std::unordered_map<component_id, ColliderComponent>       m_ColliderComponents;
-	static std::unordered_map<component_id, AccelerationComponent>   m_AccelerationComponents;
-	static std::unordered_map<component_id, HealthComponent>         m_HealthComponents;
+	HashTable ComponentManager::m_ComponentsType(sizeof(component_type), 1000);
+	HashTable ComponentManager::m_DrawableComponents(sizeof(DrawableComponent), 1000, StringUtils::hash, destroy_drawable_callback);
+	HashTable ComponentManager::m_TransformationComponents(sizeof(TransformationComponent), 1000);
+	HashTable ComponentManager::m_VelocityComponents(sizeof(VelocityComponent), 1000);
+	HashTable ComponentManager::m_ColliderComponents(sizeof(ColliderComponent), 1000);
+	HashTable ComponentManager::m_AccelerationComponents(sizeof(AccelerationComponent), 1000);
+	HashTable ComponentManager::m_HealthComponents(sizeof(HealthComponent), 1000);
 
+	/*
+	========================================
+	DrawableComponent::classicRenderCallback
+	========================================
+	*/
 	void DrawableComponent::classicRenderCallback(OpenGLRenderer &renderer, DrawableComponent *drawable, TransformationComponent *transformation, Window *window, Camera *camera)
 	{
 		GLUniform uniModel;
 
-		GLProgram::use(drawable->program);
-		GLVAO::bind(drawable->vao);
+		gl_program program = drawable->program;
+		gl_vao vao = drawable->vao;
+		gl_texture texture = drawable->texture;
+		uint8_t textureUnit = drawable->textureUnit;
 
-		GLTexture::bind(drawable->texture, drawable->textureUnit);
+		// Pas besoin d'indiquer à OpenGL d'utiliser un programme qui est déjà en cours d'utilisation.
+		if(program != GLProgram::currentlyBound())
+			GLProgram::use(drawable->program);
+
+		// Pas besoin d'indiquer à OpenGL d'utiliser un VAO qui est déjà en cours d'utilisation.
+		if(vao != GLVAO::currentlyBound())
+			GLVAO::bind(drawable->vao);
+
+		// Pas besoin d'indiquer à OpenGL d'utiliser une texture si elle est déjà en cours d'utilisation.
+		if(texture != GLTexture::currentlyBound() || textureUnit != GLTexture::currentUnit())
+			GLTexture::bind(drawable->texture, drawable->textureUnit);
+
 		if(uniModel.find(drawable->program, "myTex"))
 			uniModel.send(0);
 
-		if(uniModel.find(drawable->program, "model")) {
-			fmat4x4 model = fmat4x4::translate(fmat4x4(), transformation->getTranslation());
-					model = fmat4x4::rotateX(model, transformation->getRotationX());
-					model = fmat4x4::rotateY(model, transformation->getRotationY());
-					model = fmat4x4::rotateZ(model, transformation->getRotationZ());
-					model = fmat4x4::scale(model, transformation->getScaling());
+		if(uniModel.find(drawable->program, "mTrs")) {
+			uniModel.send(transformation->getTranslation());
 
-			uniModel.send(model);
+			if(uniModel.find(drawable->program, "mRotX")) {
+				uniModel.send(transformation->getRotationX());
 
-			if(uniModel.find(drawable->program, "view")) {
-				uniModel.send(camera->lookAt());
+				if(uniModel.find(drawable->program, "mRotY")) {
+					uniModel.send(transformation->getRotationY());
 
-				if(uniModel.find(drawable->program, "proj")) {
-					uniModel.send(fmat4x4::perspective(fmat4x4(), 45.0f, (float) window->getWidth() / (float) window->getHeight(), 0.1f, 1000.0f));
+					if(uniModel.find(drawable->program, "mRotZ")) {
+						uniModel.send(transformation->getRotationZ());
+
+						if(uniModel.find(drawable->program, "mScl")) {
+							uniModel.send(transformation->getScaling());
+
+							if(uniModel.find(drawable->program, "view")) {
+								uniModel.send(camera->lookAt());
+
+								if(uniModel.find(drawable->program, "proj")) {
+									uniModel.send(fmat4x4::perspective(fmat4x4(), 45.0f, (float) window->getWidth() / (float) window->getHeight(), 0.1f, 1000.0f));
+								}
+							}
+						}
+					}
 				}
 			}
 		}
@@ -49,6 +85,11 @@ namespace de {
 		renderer.draw(GLVBO::getVerticesNumber(drawable->vbo));
 	}
 
+	/*
+	=======================================
+	DrawableComponent::skyboxRenderCallback
+	=======================================
+	*/
 	void DrawableComponent::skyboxRenderCallback(OpenGLRenderer &renderer, DrawableComponent *drawable, TransformationComponent *transformation, Window *window, Camera *camera)
 	{
 		GLUniform uniModel;
@@ -90,7 +131,11 @@ namespace de {
 	*/
 	component_type ComponentManager::getType(component_id component)
 	{
-		return m_ComponentsType[component];
+		mem_ptr ptr = m_ComponentsType.getPtr(component);
+		if(ptr == nullptr)
+			return 0;
+
+		return *((component_type *) ptr);
 	}
 
 	/*
@@ -129,9 +174,11 @@ namespace de {
 	component_id ComponentManager::createDrawableComponent()
 	{
 		component_id id = m_ComponentCount;
+		DrawableComponent drawable;
+		component_type type = DrawableComponentType;
 
-		m_DrawableComponents.emplace(id, DrawableComponent());
-		m_ComponentsType[id] = DrawableComponentType;
+		m_DrawableComponents.insertCopy(id, &drawable);
+		m_ComponentsType.insertCopy(id, &type);
 
 		m_ComponentCount = id + 1;
 
@@ -146,38 +193,15 @@ namespace de {
 	component_id ComponentManager::createDrawableComponent(gl_program program, gl_vbo vbo, gl_vao vao, gl_texture texture, uint8_t textureUnit)
 	{
 		component_id id = m_ComponentCount;
+		DrawableComponent drawable(program, vbo, vao, texture, textureUnit);
+		component_type type = DrawableComponentType;
 
-		m_DrawableComponents.emplace(id, DrawableComponent(program, vbo, vao, texture, textureUnit));
-		m_ComponentsType[id] = DrawableComponentType;
+		m_DrawableComponents.insertCopy(id, &drawable);
+		m_ComponentsType.insertCopy(id, &type);
 
 		m_ComponentCount = id + 1;
 
 		return id;
-	}
-
-	/*
-	======================================
-	ComponentManager::getDrawableComponent
-	======================================
-	*/
-	DrawableComponent *ComponentManager::getDrawableComponent(component_id component)
-	{
-		const auto &it = m_DrawableComponents.find(component);
-		if(it == m_DrawableComponents.end())
-			return nullptr;
-
-		return &it->second;
-	}
-
-	/*
-	=========================================
-	ComponentManager::deleteDrawableComponent
-	=========================================
-	*/
-	void ComponentManager::deleteDrawableComponent(component_id component)
-	{
-		m_DrawableComponents.erase(component);
-		m_ComponentsType.erase(component);
 	}
 
 	/*
@@ -201,38 +225,15 @@ namespace de {
 	component_id ComponentManager::createTransformationComponent(const fvec3 &translation, const fvec3 &scaling, float rotation)
 	{
 		component_id id = m_ComponentCount;
+		TransformationComponent transformation(translation, scaling, rotation);
+		component_type type = TransformationComponentType;
 
-		m_TransformationComponents.emplace(id, TransformationComponent(translation, scaling, rotation));
-		m_ComponentsType[id] = TransformationComponentType;
+		m_TransformationComponents.insertCopy(id, &transformation);
+		m_ComponentsType.insertCopy(id, &type);
 
 		m_ComponentCount = id + 1;
 
 		return id;
-	}
-
-	/*
-	============================================
-	ComponentManager::getTransformationComponent
-	============================================
-	*/
-	TransformationComponent *ComponentManager::getTransformationComponent(component_id component)
-	{
-		const auto &it = m_TransformationComponents.find(component);
-		if(it == m_TransformationComponents.end())
-			return nullptr;
-
-		return &it->second;
-	}
-
-	/*
-	===============================================
-	ComponentManager::deleteTransformationComponent
-	===============================================
-	*/
-	void ComponentManager::deleteTransformationComponent(component_id component)
-	{
-		m_TransformationComponents.erase(component);
-		m_ComponentsType.erase(component);
 	}
 
 	/*
@@ -252,38 +253,15 @@ namespace de {
 	component_id ComponentManager::createVelocityComponent()
 	{
 		component_id id = m_ComponentCount;
+		VelocityComponent velocity;
+		component_type type = VelocityComponentType;
 
-		m_VelocityComponents.emplace(id, VelocityComponent());
-		m_ComponentsType[id] = VelocityComponentType;
+		m_VelocityComponents.insertCopy(id, &velocity);
+		m_ComponentsType.insertCopy(id, &type);
 
 		m_ComponentCount = id + 1;
 
 		return id;
-	}
-
-	/*
-	======================================
-	ComponentManager::getVelocityComponent
-	======================================
-	*/
-	VelocityComponent *ComponentManager::getVelocityComponent(component_id component)
-	{
-		const auto &it = m_VelocityComponents.find(component);
-		if(it == m_VelocityComponents.end())
-			return nullptr;
-
-		return &it->second;
-	}
-
-	/*
-	=========================================
-	ComponentManager::deleteVelocityComponent
-	=========================================
-	*/
-	void ComponentManager::deleteVelocityComponent(component_id component)
-	{
-		m_VelocityComponents.erase(component);
-		m_ComponentsType.erase(component);
 	}
 
 	/*
@@ -303,9 +281,11 @@ namespace de {
 	component_id ComponentManager::createColliderComponent()
 	{
 		component_id id = m_ComponentCount;
+		ColliderComponent collider;
+		component_type type = ColliderComponentType;
 
-		m_ColliderComponents.emplace(id, ColliderComponent());
-		m_ComponentsType[id] = ColliderComponentType;
+		m_ColliderComponents.insertCopy(id, &collider);
+		m_ComponentsType.insertCopy(id, &type);
 
 		m_ComponentCount = id + 1;
 
@@ -313,62 +293,32 @@ namespace de {
 	}
 
 	/*
-	======================================
-	ComponentManager::getColliderComponent
-	======================================
+	============================================
+	AccelerationComponent::AccelerationComponent
+	============================================
 	*/
-	ColliderComponent *ComponentManager::getColliderComponent(component_id component)
-	{
-		const auto &it = m_ColliderComponents.find(component);
-		if(it == m_ColliderComponents.end())
-			return nullptr;
-
-		return &it->second;
-	}
-
-	/*
-	=========================================
-	ComponentManager::deleteColliderComponent
-	=========================================
-	*/
-	void ComponentManager::deleteColliderComponent(component_id component)
-	{
-		m_ColliderComponents.erase(component);
-		m_ComponentsType.erase(component);
-	}
-
-
 	AccelerationComponent::AccelerationComponent(const fvec2 &_acceleration)
 		: acceleration(_acceleration)
 	{ }
 
+	/*
+	=============================================
+	ComponentManager::createAccelerationComponent
+	=============================================
+	*/
 	component_id ComponentManager::createAccelerationComponent(const fvec2 &acceleration)
 	{
 		component_id id = m_ComponentCount;
+		AccelerationComponent acc(acceleration);
+		component_type type = AccelerationComponentType;
 
-		m_AccelerationComponents.emplace(id, AccelerationComponent(acceleration));
-		m_ComponentsType[id] = AccelerationComponentType;
+		m_AccelerationComponents.insertCopy(id, &acc);
+		m_ComponentsType.insertCopy(id, &type);
 
 		m_ComponentCount = id + 1;
 
 		return id;
 	}
-
-	AccelerationComponent *ComponentManager::getAccelerationComponent(component_id component)
-	{
-		const auto &it = m_AccelerationComponents.find(component);
-		if(it == m_AccelerationComponents.end())
-			return nullptr;
-
-		return &it->second;
-	}
-
-	void ComponentManager::deleteAccelerationComponent(component_id component)
-	{
-		m_AccelerationComponents.erase(component);
-		m_ComponentsType.erase(component);
-	}
-
 
 	/*
 	================================
@@ -396,24 +346,15 @@ namespace de {
 	component_id ComponentManager::createHealthComponent(uint32_t pv, uint32_t max)
 	{
 		component_id id = m_ComponentCount;
+		HealthComponent health(pv, max);
+		component_type type = HealthComponentType;
 
-		m_HealthComponents.emplace(id, HealthComponent(pv, max));
-		m_ComponentsType[id] = HealthComponentType;
+		m_HealthComponents.insertCopy(id, &health);
+		m_ComponentsType.insertCopy(id, &type);
 
 		m_ComponentCount = id + 1;
 
 		return id;
-	}
-
-	/*
-	=======================================
-	ComponentManager::deleteHealthComponent
-	=======================================
-	*/
-	void ComponentManager::deleteHealthComponent(component_id id)
-	{
-		m_HealthComponents.erase(id);
-		m_ComponentsType.erase(id);
 	}
 
 }

@@ -1,4 +1,5 @@
 #include <DE/stream.hpp>
+#include <DE/string_utils.hpp>
 
 #include <string.h>
 
@@ -56,6 +57,11 @@ namespace de {
 			m_Filename[length] = '\0';
 		}else
 			m_Filename = nullptr;
+	}
+
+	InputFileStream::InputFileStream(const wchar_t *filename)
+	{
+		m_Filename = (char *) StringUtils::copy(filename);
 	}
 
 	/*

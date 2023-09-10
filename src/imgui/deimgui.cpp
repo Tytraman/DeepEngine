@@ -19,10 +19,20 @@ namespace de {
 
 	static std::unordered_map<const Window *, ImGuiDebugPanelOptions> m_DebugPanelOptions;
 
+	/*
+	==============================================
+	ImGuiDebugPanelOptions::ImGuiDebugPanelOptions
+	==============================================
+	*/
 	ImGuiDebugPanelOptions::ImGuiDebugPanelOptions(ImGuiDebugMenuView _view)
 		: view(_view)
 	{ }
 
+	/*
+	=================
+	ImGuiWindow::init
+	=================
+	*/
 	void ImGuiWindow::init(Window &window)
 	{
 		// Initialise ImGui.
@@ -41,6 +51,11 @@ namespace de {
 		m_Initialized = true;
 	}
 
+	/*
+	=====================
+	ImGuiWindow::shutdown
+	=====================
+	*/
 	void ImGuiWindow::shutdown()
 	{
 		if(m_Initialized) {
@@ -51,9 +66,7 @@ namespace de {
 		}
 	}
 
-
-
-	void __scenesEnumCallback(scene_id id, Scene &scene)
+	void scenes_enum_callback(scene_id id, Scene &scene)
 	{
 		std::string text("[" + std::to_string(id) + std::string("] ") + scene.getName());
 		if(id == Scene::getActiveSceneID())
@@ -70,7 +83,22 @@ namespace de {
 		}
 	}
 
+	void entities_enum_callback(entity_collection_id collection, entity_id entity)
+	{
+		std::string text("[" + std::to_string(entity) + "]");
 
+		ImGui::AlignTextToFramePadding();
+		ImGui::Text(text.c_str()); ImGui::SameLine();
+		if(ImGui::Button(std::string("Supprimer##" + std::to_string(entity)).c_str())) {
+			EntityManager::mustBeDeleted(collection, entity);
+		}
+	}
+
+	/*
+	======================
+	ImGuiDebugMenu::render
+	======================
+	*/
 	void ImGuiDebugMenu::render(const Window *window)
 	{
 		const auto &it = m_DebugPanelOptions.find(window);
@@ -78,6 +106,9 @@ namespace de {
 			return;
 
 		auto &options = it->second;
+
+		scene_id scene = Scene::getActiveSceneID();
+		entity_collection_id collection = Scene::getEntityCollection(scene);
 
 		ImGui::SetNextWindowPos({ 0, 0 });
 		ImGui::SetNextWindowSize({ 500, 700 });
@@ -99,8 +130,10 @@ namespace de {
 
 				ImGui::EndMenuBar();
 
+				// Affiche un panel différent selon la vue sélectionnée.
 				switch(options.view) {
 					default: break;
+					// Accueil.
 					case ImGuiDebugMenuHomeView: {
 						ImGui::Text("Bienvenue dans le moteur profond !");
 						ImGui::Spacing();
@@ -110,6 +143,7 @@ namespace de {
 							ImGui::BulletText("Insert : afficher / cacher le menu debug.");
 						}
 					} break;
+					// Menu des scènes.
 					case ImGuiDebugMenuScenesView: {
 						static bool emptyNameBuffer = false;
 						static char nameBuffer[128] = "";
@@ -126,13 +160,27 @@ namespace de {
 						}
 
 						if(emptyNameBuffer)
-								ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Le nom de la scène ne peut pas être vide.");
+							ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Le nom de la scène ne peut pas être vide.");
 
 						ImGui::Spacing();
 
 						// Affiche toutes les scènes existantes.
 						if(ImGui::CollapsingHeader("Liste des scènes")) {
-							Scene::enumScenes(__scenesEnumCallback);
+							Scene::enumScenes(scenes_enum_callback);
+						}
+					} break;
+					case ImGuiDebugMenuEntitiesView: {
+						// Affiche le nombre d'entités de la scène.
+						ImGui::Text(std::string("Nombre d'entités: " + std::to_string(EntityManager::getNumberOfEntities(collection))).c_str()); ImGui::SameLine();
+						if(ImGui::Button("Tout supprimer")) {
+							EntityManager::destroyAllEntities(collection);
+						}
+
+						ImGui::Spacing();
+
+						// Affiche toutes les entités de la scène.
+						if(ImGui::CollapsingHeader("Liste des entités de la scène")) {
+							EntityManager::enumEntities(collection, entities_enum_callback);
 						}
 					} break;
 				}
@@ -143,11 +191,21 @@ namespace de {
 		}
 	}
 
+	/*
+	=========================
+	ImGuiDebugMenu::addWindow
+	=========================
+	*/
 	void ImGuiDebugMenu::addWindow(const Window *window)
 	{
 		m_DebugPanelOptions.emplace(window, ImGuiDebugPanelOptions());
 	}
 
+	/*
+	============================
+	ImGuiDebugMenu::removeWindow
+	============================
+	*/
 	void ImGuiDebugMenu::removeWindow(const Window *window)
 	{
 		m_DebugPanelOptions.erase(window);

@@ -48,12 +48,14 @@ namespace de {
 
 	class DE_API InputFileStream : public InputStream {
 
-		private:
-			char *m_Filename;
-
 		public:
 			InputFileStream(const char *filename);
+			InputFileStream(const wchar_t *filename);
+
+
 			bool open() override;
+			bool openW();
+
 			void close() override;
 			bool read(mem_ptr dest, size_t size, size_t *bytesRead) override;
 			bool readAll(mem_ptr dest, size_t *bytesRead) override;
@@ -63,6 +65,9 @@ namespace de {
 
 			void setFilename(const char *filename);
 
+		private:
+			char *m_Filename;
+
 	};
 
 
@@ -70,6 +75,19 @@ namespace de {
 	{
 #if DE_WINDOWS
 		m_FD = CreateFileA(m_Filename, FILE_GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		if(m_FD == INVALID_HANDLE_VALUE)
+			return false;
+#else
+#error Need implementation.
+#endif
+
+		return true;
+	}
+
+	inline bool InputFileStream::openW()
+	{
+#if DE_WINDOWS
+		m_FD = CreateFileW((wchar_t *) m_Filename, FILE_GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 		if(m_FD == INVALID_HANDLE_VALUE)
 			return false;
 #else

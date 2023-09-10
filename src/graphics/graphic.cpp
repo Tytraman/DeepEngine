@@ -142,50 +142,65 @@ namespace de {
 		drawableComponent->renderCallback = DrawableComponent::classicRenderCallback;
 
 		float vPos[] = {
-			// Face avant
 
+			// Face avant
 			-0.5f, -0.5f, -0.5f, color1.R, color1.G, color1.B, color1.A, 0.0f, 1.0f,  // Haut gauche
-			 0.5f, -0.5f, -0.5f, color1.R, color1.G, color1.B, color1.A, 1.0f, 1.0f,  // Haut droite
 			 0.5f,  0.5f, -0.5f, color1.R, color1.G, color1.B, color1.A, 1.0f, 0.0f,  // Bas droite
+			 0.5f, -0.5f, -0.5f, color1.R, color1.G, color1.B, color1.A, 1.0f, 1.0f,  // Haut droite
+			 
 			-0.5f, -0.5f, -0.5f, color1.R, color1.G, color1.B, color1.A, 1.0f, 0.0f,  // Haut gauche
-			 0.5f,  0.5f, -0.5f, color1.R, color1.G, color1.B, color1.A, 0.0f, 0.0f,  // Bas droite
 			-0.5f,  0.5f, -0.5f, color1.R, color1.G, color1.B, color1.A, 0.0f, 1.0f,  // Bas gauche
+			 0.5f,  0.5f, -0.5f, color1.R, color1.G, color1.B, color1.A, 0.0f, 0.0f,  // Bas droite
+			
+			// Face arrière
+			 0.5f, -0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 0.0f, 1.0f,  // Haut gauche
+			-0.5f,  0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 1.0f, 0.0f,  // Bas droite
+			-0.5f, -0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 1.0f, 1.0f,  // Haut droite
+
+			 0.5f, -0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 1.0f, 0.0f,  // Haut gauche
+			 0.5f,  0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 0.0f, 1.0f,  // Bas gauche
+			-0.5f,  0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 0.0f, 0.0f,  // Bas droite
 			
 
-			-0.5f, -0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 0.0f, 1.0f,
-			 0.5f, -0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 1.0f, 1.0f,
-			 0.5f,  0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 1.0f, 0.0f,
-			 0.5f,  0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 1.0f, 0.0f,
-			-0.5f,  0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 0.0f, 0.0f,
-			-0.5f, -0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 0.0f, 1.0f,
+			// Face droite
+			-0.5f,  0.5f,  0.5f, color3.R, color3.G, color3.B, color3.A, 0.0f, 1.0f,  // Bas gauche
+			-0.5f,  0.5f, -0.5f, color3.R, color3.G, color3.B, color3.A, 1.0f, 1.0f,  // Bas droite
+			-0.5f, -0.5f, -0.5f, color3.R, color3.G, color3.B, color3.A, 1.0f, 0.0f,  // Haut droite
 
-			-0.5f,  0.5f,  0.5f, color3.R, color3.G, color3.B, color3.A, 0.0f, 1.0f,
-			-0.5f,  0.5f, -0.5f, color3.R, color3.G, color3.B, color3.A, 1.0f, 1.0f,
-			-0.5f, -0.5f, -0.5f, color3.R, color3.G, color3.B, color3.A, 1.0f, 0.0f,
-			-0.5f, -0.5f, -0.5f, color3.R, color3.G, color3.B, color3.A, 1.0f, 0.0f,
-			-0.5f, -0.5f,  0.5f, color3.R, color3.G, color3.B, color3.A, 0.0f, 0.0f,
-			-0.5f,  0.5f,  0.5f, color3.R, color3.G, color3.B, color3.A, 0.0f, 1.0f,
+			-0.5f, -0.5f, -0.5f, color3.R, color3.G, color3.B, color3.A, 1.0f, 0.0f,  // Haut droite
+			-0.5f, -0.5f,  0.5f, color3.R, color3.G, color3.B, color3.A, 0.0f, 0.0f,  // Haut gauche
+			-0.5f,  0.5f,  0.5f, color3.R, color3.G, color3.B, color3.A, 0.0f, 1.0f,  // Bas gauche
 
-			 0.5f,  0.5f,  0.5f, color4.R, color4.G, color4.B, color4.A, 0.0f, 1.0f,
-			 0.5f,  0.5f, -0.5f, color4.R, color4.G, color4.B, color4.A, 1.0f, 1.0f,
-			 0.5f, -0.5f, -0.5f, color4.R, color4.G, color4.B, color4.A, 1.0f, 0.0f,
-			 0.5f, -0.5f, -0.5f, color4.R, color4.G, color4.B, color4.A, 1.0f, 0.0f,
-			 0.5f, -0.5f,  0.5f, color4.R, color4.G, color4.B, color4.A, 0.0f, 0.0f,
-			 0.5f,  0.5f,  0.5f, color4.R, color4.G, color4.B, color4.A, 0.0f, 1.0f,
 
-			-0.5f, -0.5f, -0.5f, color5.R, color5.G, color5.B, color5.A, 0.0f, 1.0f,
-			 0.5f, -0.5f, -0.5f, color5.R, color5.G, color5.B, color5.A, 1.0f, 1.0f,
-			 0.5f, -0.5f,  0.5f, color5.R, color5.G, color5.B, color5.A, 1.0f, 0.0f,
-			 0.5f, -0.5f,  0.5f, color5.R, color5.G, color5.B, color5.A, 1.0f, 0.0f,
-			-0.5f, -0.5f,  0.5f, color5.R, color5.G, color5.B, color5.A, 0.0f, 0.0f,
-			-0.5f, -0.5f, -0.5f, color5.R, color5.G, color5.B, color5.A, 0.0f, 1.0f,
+			// Face gauche
+			 0.5f,  0.5f,  0.5f, color4.R, color4.G, color4.B, color4.A, 0.0f, 1.0f,  // Bas droite
+			 0.5f, -0.5f, -0.5f, color4.R, color4.G, color4.B, color4.A, 1.0f, 0.0f,  // Haut gauche
+			 0.5f,  0.5f, -0.5f, color4.R, color4.G, color4.B, color4.A, 1.0f, 1.0f,  // Bas gauche
 
-			-0.5f,  0.5f, -0.5f, color6.R, color6.G, color6.B, color6.A, 0.0f, 1.0f,
-			 0.5f,  0.5f, -0.5f, color6.R, color6.G, color6.B, color6.A, 1.0f, 1.0f,
-			 0.5f,  0.5f,  0.5f, color6.R, color6.G, color6.B, color6.A, 1.0f, 0.0f,
-			 0.5f,  0.5f,  0.5f, color6.R, color6.G, color6.B, color6.A, 1.0f, 0.0f,
-			-0.5f,  0.5f,  0.5f, color6.R, color6.G, color6.B, color6.A, 0.0f, 0.0f,
-			-0.5f,  0.5f, -0.5f, color6.R, color6.G, color6.B, color6.A, 0.0f, 1.0f
+			 0.5f, -0.5f, -0.5f, color4.R, color4.G, color4.B, color4.A, 1.0f, 0.0f,  // Haut gauche
+			 0.5f,  0.5f,  0.5f, color4.R, color4.G, color4.B, color4.A, 0.0f, 1.0f,  // Bas droite
+			 0.5f, -0.5f,  0.5f, color4.R, color4.G, color4.B, color4.A, 0.0f, 0.0f,  // Haut droite
+
+
+			// Face bas
+			0.5f, -0.5f,  0.5f, color5.R, color5.G, color5.B, color5.A, 1.0f, 0.0f,  // Bas droite
+			-0.5f, -0.5f, -0.5f, color5.R, color5.G, color5.B, color5.A, 0.0f, 1.0f,  // Haut gauche
+			 0.5f, -0.5f, -0.5f, color5.R, color5.G, color5.B, color5.A, 1.0f, 1.0f,  // Haut droite
+
+			 -0.5f, -0.5f, -0.5f, color5.R, color5.G, color5.B, color5.A, 0.0f, 1.0f,  // Haut gauche
+			 0.5f, -0.5f,  0.5f, color5.R, color5.G, color5.B, color5.A, 1.0f, 0.0f,  // Bas droite
+			-0.5f, -0.5f,  0.5f, color5.R, color5.G, color5.B, color5.A, 0.0f, 0.0f,  // Bas gauche
+			
+
+			// Face haut
+			-0.5f,  0.5f, -0.5f, color6.R, color6.G, color6.B, color6.A, 0.0f, 1.0f,  // Haut gauche
+			 0.5f,  0.5f,  0.5f, color6.R, color6.G, color6.B, color6.A, 1.0f, 0.0f,  // Bas droite
+			 0.5f,  0.5f, -0.5f, color6.R, color6.G, color6.B, color6.A, 1.0f, 1.0f,  // Haut droite
+
+			 0.5f,  0.5f,  0.5f, color6.R, color6.G, color6.B, color6.A, 1.0f, 0.0f,  // Bas droite
+			-0.5f,  0.5f, -0.5f, color6.R, color6.G, color6.B, color6.A, 0.0f, 1.0f,   // Haut gauche
+			-0.5f,  0.5f,  0.5f, color6.R, color6.G, color6.B, color6.A, 0.0f, 0.0f  // Bas gauche
+			
 		};
 
 		MemoryChunk chunk(vPos, sizeof(vPos));
@@ -233,47 +248,65 @@ namespace de {
 		drawableComponent->renderCallback = DrawableComponent::classicRenderCallback;
 
 		float vPos[] = {
+
+			// Face avant
 			-0.5f, -0.5f, -0.5f, color1.R, color1.G, color1.B, color1.A, 0.0f, 1.0f,  // Haut gauche
+			 0.5f,  0.5f, -0.5f, color1.R, color1.G, color1.B, color1.A, 1.0f, 0.0f,  // Bas droite
 			 0.5f, -0.5f, -0.5f, color1.R, color1.G, color1.B, color1.A, 1.0f, 1.0f,  // Haut droite
-			 0.5f,  0.5f, -0.5f, color1.R, color1.G, color1.B, color1.A, 1.0f, 0.0f,  // Bas droite
-			 0.5f,  0.5f, -0.5f, color1.R, color1.G, color1.B, color1.A, 1.0f, 0.0f,  // Bas droite
-			-0.5f,  0.5f, -0.5f, color1.R, color1.G, color1.B, color1.A, 0.0f, 0.0f,  // Bas gauche
-			-0.5f, -0.5f, -0.5f, color1.R, color1.G, color1.B, color1.A, 0.0f, 1.0f,  // Haut gauche
+			 
+			-0.5f, -0.5f, -0.5f, color1.R, color1.G, color1.B, color1.A, 1.0f, 0.0f,  // Haut gauche
+			-0.5f,  0.5f, -0.5f, color1.R, color1.G, color1.B, color1.A, 0.0f, 1.0f,  // Bas gauche
+			 0.5f,  0.5f, -0.5f, color1.R, color1.G, color1.B, color1.A, 0.0f, 0.0f,  // Bas droite
+			
+			// Face arrière
+			 0.5f, -0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 0.0f, 1.0f,  // Haut gauche
+			-0.5f,  0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 1.0f, 0.0f,  // Bas droite
+			-0.5f, -0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 1.0f, 1.0f,  // Haut droite
 
-			-0.5f, -0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 0.0f, 1.0f,
-			 0.5f, -0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 1.0f, 1.0f,
-			 0.5f,  0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 1.0f, 0.0f,
-			 0.5f,  0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 1.0f, 0.0f,
-			-0.5f,  0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 0.0f, 0.0f,
-			-0.5f, -0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 0.0f, 1.0f,
+			 0.5f, -0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 1.0f, 0.0f,  // Haut gauche
+			 0.5f,  0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 0.0f, 1.0f,  // Bas gauche
+			-0.5f,  0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 0.0f, 0.0f,  // Bas droite
+			
 
-			-0.5f,  0.5f,  0.5f, color3.R, color3.G, color3.B, color3.A, 0.0f, 1.0f,
-			-0.5f,  0.5f, -0.5f, color3.R, color3.G, color3.B, color3.A, 1.0f, 1.0f,
-			-0.5f, -0.5f, -0.5f, color3.R, color3.G, color3.B, color3.A, 1.0f, 0.0f,
-			-0.5f, -0.5f, -0.5f, color3.R, color3.G, color3.B, color3.A, 1.0f, 0.0f,
-			-0.5f, -0.5f,  0.5f, color3.R, color3.G, color3.B, color3.A, 0.0f, 0.0f,
-			-0.5f,  0.5f,  0.5f, color3.R, color3.G, color3.B, color3.A, 0.0f, 1.0f,
+			// Face droite
+			-0.5f,  0.5f,  0.5f, color3.R, color3.G, color3.B, color3.A, 0.0f, 1.0f,  // Bas gauche
+			-0.5f,  0.5f, -0.5f, color3.R, color3.G, color3.B, color3.A, 1.0f, 1.0f,  // Bas droite
+			-0.5f, -0.5f, -0.5f, color3.R, color3.G, color3.B, color3.A, 1.0f, 0.0f,  // Haut droite
 
-			 0.5f,  0.5f,  0.5f, color4.R, color4.G, color4.B, color4.A, 0.0f, 1.0f,
-			 0.5f,  0.5f, -0.5f, color4.R, color4.G, color4.B, color4.A, 1.0f, 1.0f,
-			 0.5f, -0.5f, -0.5f, color4.R, color4.G, color4.B, color4.A, 1.0f, 0.0f,
-			 0.5f, -0.5f, -0.5f, color4.R, color4.G, color4.B, color4.A, 1.0f, 0.0f,
-			 0.5f, -0.5f,  0.5f, color4.R, color4.G, color4.B, color4.A, 0.0f, 0.0f,
-			 0.5f,  0.5f,  0.5f, color4.R, color4.G, color4.B, color4.A, 0.0f, 1.0f,
+			-0.5f, -0.5f, -0.5f, color3.R, color3.G, color3.B, color3.A, 1.0f, 0.0f,  // Haut droite
+			-0.5f, -0.5f,  0.5f, color3.R, color3.G, color3.B, color3.A, 0.0f, 0.0f,  // Haut gauche
+			-0.5f,  0.5f,  0.5f, color3.R, color3.G, color3.B, color3.A, 0.0f, 1.0f,  // Bas gauche
 
-			-0.5f, -0.5f, -0.5f, color5.R, color5.G, color5.B, color5.A, 0.0f, 1.0f,
-			 0.5f, -0.5f, -0.5f, color5.R, color5.G, color5.B, color5.A, 1.0f, 1.0f,
-			 0.5f, -0.5f,  0.5f, color5.R, color5.G, color5.B, color5.A, 1.0f, 0.0f,
-			 0.5f, -0.5f,  0.5f, color5.R, color5.G, color5.B, color5.A, 1.0f, 0.0f,
-			-0.5f, -0.5f,  0.5f, color5.R, color5.G, color5.B, color5.A, 0.0f, 0.0f,
-			-0.5f, -0.5f, -0.5f, color5.R, color5.G, color5.B, color5.A, 0.0f, 1.0f,
 
-			-0.5f,  0.5f, -0.5f, color6.R, color6.G, color6.B, color6.A, 0.0f, 1.0f,
-			 0.5f,  0.5f, -0.5f, color6.R, color6.G, color6.B, color6.A, 1.0f, 1.0f,
-			 0.5f,  0.5f,  0.5f, color6.R, color6.G, color6.B, color6.A, 1.0f, 0.0f,
-			 0.5f,  0.5f,  0.5f, color6.R, color6.G, color6.B, color6.A, 1.0f, 0.0f,
-			-0.5f,  0.5f,  0.5f, color6.R, color6.G, color6.B, color6.A, 0.0f, 0.0f,
-			-0.5f,  0.5f, -0.5f, color6.R, color6.G, color6.B, color6.A, 0.0f, 1.0f
+			// Face gauche
+			 0.5f,  0.5f,  0.5f, color4.R, color4.G, color4.B, color4.A, 0.0f, 1.0f,  // Bas droite
+			 0.5f, -0.5f, -0.5f, color4.R, color4.G, color4.B, color4.A, 1.0f, 0.0f,  // Haut gauche
+			 0.5f,  0.5f, -0.5f, color4.R, color4.G, color4.B, color4.A, 1.0f, 1.0f,  // Bas gauche
+
+			 0.5f, -0.5f, -0.5f, color4.R, color4.G, color4.B, color4.A, 1.0f, 0.0f,  // Haut gauche
+			 0.5f,  0.5f,  0.5f, color4.R, color4.G, color4.B, color4.A, 0.0f, 1.0f,  // Bas droite
+			 0.5f, -0.5f,  0.5f, color4.R, color4.G, color4.B, color4.A, 0.0f, 0.0f,  // Haut droite
+
+
+			// Face bas
+			0.5f, -0.5f,  0.5f, color5.R, color5.G, color5.B, color5.A, 1.0f, 0.0f,  // Bas droite
+			-0.5f, -0.5f, -0.5f, color5.R, color5.G, color5.B, color5.A, 0.0f, 1.0f,  // Haut gauche
+			 0.5f, -0.5f, -0.5f, color5.R, color5.G, color5.B, color5.A, 1.0f, 1.0f,  // Haut droite
+
+			 -0.5f, -0.5f, -0.5f, color5.R, color5.G, color5.B, color5.A, 0.0f, 1.0f,  // Haut gauche
+			 0.5f, -0.5f,  0.5f, color5.R, color5.G, color5.B, color5.A, 1.0f, 0.0f,  // Bas droite
+			-0.5f, -0.5f,  0.5f, color5.R, color5.G, color5.B, color5.A, 0.0f, 0.0f,  // Bas gauche
+			
+
+			// Face haut
+			-0.5f,  0.5f, -0.5f, color6.R, color6.G, color6.B, color6.A, 0.0f, 1.0f,  // Haut gauche
+			 0.5f,  0.5f,  0.5f, color6.R, color6.G, color6.B, color6.A, 1.0f, 0.0f,  // Bas droite
+			 0.5f,  0.5f, -0.5f, color6.R, color6.G, color6.B, color6.A, 1.0f, 1.0f,  // Haut droite
+
+			 0.5f,  0.5f,  0.5f, color6.R, color6.G, color6.B, color6.A, 1.0f, 0.0f,  // Bas droite
+			-0.5f,  0.5f, -0.5f, color6.R, color6.G, color6.B, color6.A, 0.0f, 1.0f,   // Haut gauche
+			-0.5f,  0.5f,  0.5f, color6.R, color6.G, color6.B, color6.A, 0.0f, 0.0f  // Bas gauche
+			
 		};
 
 		MemoryChunk chunk(vPos, sizeof(vPos));
@@ -328,10 +361,14 @@ namespace de {
 		float vPos[] = {
 			-1.0f,  1.0f, -1.0f,
 			-1.0f, -1.0f, -1.0f,
-			 1.0f, -1.0f, -1.0f,
+			1.0f, -1.0f, -1.0f,
+			
+
 			 1.0f, -1.0f, -1.0f,
 			 1.0f,  1.0f, -1.0f,
-			-1.0f,  1.0f, -1.0f,
+			 -1.0f,  1.0f, -1.0f,
+			 
+
 
 			-1.0f, -1.0f,  1.0f,
 			-1.0f, -1.0f, -1.0f,
@@ -339,6 +376,7 @@ namespace de {
 			-1.0f,  1.0f, -1.0f,
 			-1.0f,  1.0f,  1.0f,
 			-1.0f, -1.0f,  1.0f,
+
 
 			1.0f, -1.0f, -1.0f,
 			1.0f, -1.0f,  1.0f,
@@ -347,12 +385,14 @@ namespace de {
 			1.0f,  1.0f, -1.0f,
 			1.0f, -1.0f, -1.0f,
 
+
 			-1.0f, -1.0f,  1.0f,
 			-1.0f,  1.0f,  1.0f,
 			 1.0f,  1.0f,  1.0f,
 			 1.0f,  1.0f,  1.0f,
 			 1.0f, -1.0f,  1.0f,
 			-1.0f, -1.0f,  1.0f,
+
 
 			-1.0f,  1.0f, -1.0f,
 			 1.0f,  1.0f, -1.0f,
@@ -361,12 +401,14 @@ namespace de {
 			-1.0f,  1.0f,  1.0f,
 			-1.0f,  1.0f, -1.0f,
 
+
 			-1.0f, -1.0f, -1.0f,
 			-1.0f, -1.0f,  1.0f,
 			 1.0f, -1.0f, -1.0f,
 			 1.0f, -1.0f, -1.0f,
 			-1.0f, -1.0f,  1.0f,
 			 1.0f, -1.0f,  1.0f
+
 		};
 
 		MemoryChunk chunk(vPos, sizeof(vPos));

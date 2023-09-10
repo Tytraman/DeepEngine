@@ -8,13 +8,24 @@
 
 namespace de {
 
+	void programs_hashtable_free_element_callback(mem_ptr ptr)
+	{
+		GLProgram::destroy(*((gl_program *) ptr));
+	}
+
 	gl_vbo GLVBO::m_CurrentlyBound   = 0;
 	gl_vao GLVAO::m_CurrentlyBound   = 0;
+
 	gl_texture GLTexture::m_WhiteTex = 0;
+	gl_texture GLTexture::m_CurrentlyBound = 0;
+	uint8_t GLTexture::m_CurrentUnit = 0;
 
 	unsigned int GLProgram::m_CurrentlyBound = 0;
+	HashTable GLProgram::m_Programs(sizeof(gl_program), 100, StringUtils::hash, programs_hashtable_free_element_callback);
 
 	static std::unordered_map<gl_vbo, int> m_VBONumberOfVertices;
+
+	
 
 	/*
 	=============
@@ -41,6 +52,16 @@ namespace de {
 		DE_GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, vbo));
 		
 		m_CurrentlyBound = vbo;
+	}
+
+	/*
+	==============
+	GLVBO::destroy
+	==============
+	*/
+	void GLVBO::destroy(gl_vbo vbo)
+	{
+		DE_GL_CALL(glDeleteBuffers(1, &vbo));
 	}
 
 	/*
@@ -125,15 +146,13 @@ namespace de {
 	}
 
 	/*
-	=====================
-	GLVAO::currentlyBound
-	=====================
+	==============
+	GLVAO::destroy
+	==============
 	*/
-	unsigned int GLVAO::currentlyBound()
+	void GLVAO::destroy(gl_vao vao)
 	{
-		unsigned int val = 0;
-		DE_GL_CALL(glGetIntegerv(GL_VERTEX_ARRAY_BINDING, (int *) &val));
-		return val;
+		DE_GL_CALL(glDeleteVertexArrays(1, &vao));
 	}
 
 	/*
@@ -187,6 +206,16 @@ namespace de {
 	void GLUniform::send(const fvec2 &vec)
 	{
 		DE_GL_CALL(glUniform2f(m_Location, vec.x, vec.y));
+	}
+
+	/*
+	===============
+	GLUniform::send
+	===============
+	*/
+	void GLUniform::send(const fvec3 &vec)
+	{
+		DE_GL_CALL(glUniform3f(m_Location, vec.x, vec.y, vec.z));
 	}
 
 	/*
@@ -268,9 +297,27 @@ namespace de {
 	GLProgram::create
 	=================
 	*/
-	gl_program GLProgram::create()
+	gl_program GLProgram::create(const char *name)
 	{
-		return DE_GL_CALLV(glCreateProgram());
+		gl_program program = DE_GL_CALLV(glCreateProgram());
+
+		m_Programs.insertCopy(name, &program);
+
+		return program;
+	}
+
+	/*
+	==============
+	GLProgram::get
+	==============
+	*/
+	gl_program GLProgram::get(const char *name)
+	{
+		mem_ptr ptr = m_Programs.getPtr(name);
+		if(ptr == nullptr)
+			return 0;
+
+		return *((gl_program *) ptr);
 	}
 
 	/*
@@ -316,6 +363,19 @@ namespace de {
 		DE_GL_CALL(glUseProgram(program));
 		m_CurrentlyBound = program;
 	}
+
+	/*
+	==================
+	GLProgram::destroy
+	==================
+	*/
+	void GLProgram::destroy(gl_program program)
+	{
+		m_Programs.destroy(program);
+		DE_GL_CALL(glDeleteProgram(program));
+	}
+
+	
 
 	/*
 	====================
@@ -429,9 +489,19 @@ namespace de {
 	}
 
 	/*
-	==============
-	GLCore::create
-	==============
+	===================
+	GLCore::setCullFace
+	===================
+	*/
+	void GLCore::setCullFace(GLCullFace::t cullFace)
+	{
+		DE_GL_CALL(glCullFace(cullFace));
+	}
+
+	/*
+	=================
+	GLTexture::create
+	=================
 	*/
 	gl_texture GLTexture::create()
 	{
@@ -449,6 +519,9 @@ namespace de {
 	{
 		DE_GL_CALL(glActiveTexture(GL_TEXTURE0 + unit));
 		DE_GL_CALL(glBindTexture(GL_TEXTURE_2D, texture));
+
+		m_CurrentlyBound = texture;
+		m_CurrentUnit = unit;
 	}
 
 	/*
@@ -459,6 +532,8 @@ namespace de {
 	void GLTexture::bindCubemaps(gl_texture texture)
 	{
 		DE_GL_CALL(glBindTexture(GL_TEXTURE_CUBE_MAP, texture));
+
+		m_CurrentlyBound = texture;
 	}
 
 	/*

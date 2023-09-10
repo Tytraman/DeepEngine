@@ -3,6 +3,16 @@
 namespace de {
 
 	/*
+	==========================
+	ListIterator::ListIterator
+	==========================
+	*/
+	ListIterator::ListIterator(mem_ptr ptr, size_t elementSize)
+		: m_Ptr(ptr),
+		  m_ElementSize(elementSize)
+	{ }
+
+	/*
 	==========
 	List::List
 	==========
@@ -37,6 +47,43 @@ namespace de {
 	}
 
 	/*
+	================
+	List::addNothing
+	================
+	*/
+	bool List::addNothing()
+	{
+		if(growIfNeeded() != MemoryStatus::OK)
+			return false;
+
+		m_NumberOfElements++;
+
+		return true;
+	}
+
+	/*
+	=============
+	List::reserve
+	=============
+	*/
+	bool List::reserve(size_t numberOfElements)
+	{
+		if(numberOfElements == m_NumberOfElements)
+			return true;
+
+		size_t newCapacity = numberOfElements / m_CapacityStep + 1;
+		mem_ptr ptr = mem::reallocNoTrack(m_Data, newCapacity * m_ElementSize);
+
+		if(ptr == nullptr)
+			return false;
+
+		m_Data = ptr;
+		m_Capacity = newCapacity;
+
+		return true;
+	}
+
+	/*
 	=============
 	List::getCopy
 	=============
@@ -49,6 +96,19 @@ namespace de {
 		memcpy(dest, (uint8_t *) m_Data + index * m_ElementSize, m_ElementSize);
 
 		return true;
+	}
+
+	/*
+	============
+	List::getPtr
+	============
+	*/
+	mem_ptr List::getPtr(size_t index)
+	{
+		if(index >= m_NumberOfElements)
+			return nullptr;
+
+		return (uint8_t *) m_Data + index * m_ElementSize;
 	}
 
 	/*
@@ -113,7 +173,9 @@ namespace de {
 		// Obtient le nombre d'éléments pour atteindre la fin de la liste.
 		size_t diff = m_NumberOfElements - index;
 
-		memmove((uint8_t *) m_Data + index, (uint8_t *) m_Data + index + 1, diff * m_ElementSize);
+		memmove((uint8_t *) m_Data + index * m_ElementSize, (uint8_t *) m_Data + (index + 1) * m_ElementSize, diff * m_ElementSize);
+
+		--m_NumberOfElements;
 	}
 
 	/*

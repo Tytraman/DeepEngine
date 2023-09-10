@@ -40,7 +40,6 @@ namespace de {
 			static void enumScenes(EnumCallback callback);
 
 
-
 			//===== GETTERS =====//
 
 			/// @brief       Récupère l'ID de la collection d'entités liée à la scène spécifiée.

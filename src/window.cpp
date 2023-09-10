@@ -46,6 +46,7 @@ namespace de {
 								SDL_SetWindowFullscreen(m_Window, 0);
 								SDL_SetWindowSize(m_Window, lastWindowWidth, lastWindowHeight);
 								GLCore::updateViewport(lastWindowWidth, lastWindowHeight);
+								setCursorPos(getWidth() / 2, getHeight() / 2);
 							}else {
 								SDL_DisplayMode DM;
 								SDL_GetCurrentDisplayMode(0, &DM);
@@ -56,6 +57,7 @@ namespace de {
 								SDL_SetWindowSize(m_Window, DM.w, DM.h);
 								GLCore::updateViewport(DM.w, DM.h);
 								SDL_SetWindowFullscreen(m_Window, SDL_WINDOW_FULLSCREEN);
+								setCursorPos(getWidth() / 2, getHeight() / 2);
 							}
 							f11Pressed = true;
 						}
@@ -133,6 +135,10 @@ namespace de {
 		// Active la fonctionnalité d'OpenGL qui permet de gérer la transparence des couleurs lorsque nécessaire.
 		DE_GL_CALL(glEnable(GL_BLEND));
 		DE_GL_CALL(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
+
+		DE_GL_CALL(glEnable(GL_CULL_FACE));
+		GLCore::setCullFace(GLCullFace::Back);
+		DE_GL_CALL(glFrontFace(GL_CCW));
 
 		// Une fois qu'OpenGL a bien été initialisé,
 		// on crée une texture blanche de 1x1 par défaut.
@@ -283,9 +289,9 @@ namespace de {
 				startTime = endTime;
 			}
 
-			elapsed = end - current;
+			/*elapsed = end - current;
 			if(elapsed < desiredDelta)
-				Core::sleep((uint32_t) ((uint64_t ) desiredDelta - elapsed));
+				Core::sleep((uint32_t) ((uint64_t ) desiredDelta - elapsed));*/
 		}
 	}
 

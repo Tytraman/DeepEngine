@@ -328,34 +328,38 @@ namespace de {
 
 			Camera &cam = scene->getCamera();
 
-			List entities(sizeof(entity_id));
+			static List entities(sizeof(entity_id));
 			entity_collection_id collection = Scene::getEntityCollection(sceneID);
 
 			// Récupère toutes les entités dessinables et ayant une transformation.
 			EntityManager::query(collection, DrawableComponentType | TransformationComponentType, 0, &entities);
 
-			size_t length = entities.getNumberOfElements();
-			entity_id entity;
+			entity_id *entity;
 			component_id drawableComponentID;
 			component_id transformationComponentID;
-			size_t i;
 
-			for(i = 0; i < length; ++i) {
-				if(entities.getCopy(i, &entity)) {
-					drawableComponentID       = EntityManager::getComponentID(collection, entity, DrawableComponentType);
-					transformationComponentID = EntityManager::getComponentID(collection, entity, TransformationComponentType);
+			// Parcourt toutes les entités précédemment récupérées.
+			for(mem_ptr ptr : entities) {
+				entity = (entity_id *) ptr;
 
-					DrawableComponent *drawableComponent = ComponentManager::getDrawableComponent(drawableComponentID);
-					TransformationComponent *transformationComponent = ComponentManager::getTransformationComponent(transformationComponentID);
+				// Récupère les composants de l'entité.
+				drawableComponentID       = EntityManager::getComponentID(collection, *entity, DrawableComponentType);
+				transformationComponentID = EntityManager::getComponentID(collection, *entity, TransformationComponentType);
 
-					if(drawableComponent->renderCallback != nullptr)
-						drawableComponent->renderCallback(renderer, drawableComponent, transformationComponent, window, &cam);
+				DrawableComponent *drawableComponent = ComponentManager::getDrawableComponent(drawableComponentID);
+				TransformationComponent *transformationComponent = ComponentManager::getTransformationComponent(transformationComponentID);
 
-					
-				}
+				// La façon dont un drawable est rendu peut être différente selon leur type, donc on utilise une fonction de callback.
+				if(drawableComponent->renderCallback != nullptr)
+					drawableComponent->renderCallback(renderer, drawableComponent, transformationComponent, window, &cam);
 			}
+
+			// Remet le compteur à 0 sans libérer la mémoire afin d'économiser des performances au détriment de la mémoire.
+			// Solution temporaire avant d'en trouver une meilleure.
+			entities.empty();
 		}
 
+		// C'est ce qui permet de mettre à jour les pixels de l'écran.
 		renderer.swapBuffers();
 	}
 

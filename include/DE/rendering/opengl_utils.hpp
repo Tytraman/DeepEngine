@@ -7,6 +7,7 @@
 #include <DE/vec.hpp>
 #include <DE/mat.hpp>
 #include <DE/image/image.hpp>
+#include <DE/memory/hash_table.hpp>
 
 #include <glad/glad.h>
 
@@ -69,8 +70,22 @@ namespace de {
 
 	namespace GLDepthFunction {
 		enum t {
-			Less   = GL_LESS,
-			Lequal = GL_EQUAL
+			Always   = GL_ALWAYS,
+			Never    = GL_NEVER,
+			Less     = GL_LESS,
+			Equal    = GL_EQUAL,
+			Lequal   = GL_LEQUAL,
+			Greater  = GL_GREATER,
+			NotEqual = GL_NOTEQUAL,
+			Gequal   = GL_GEQUAL
+		};
+	}
+
+	namespace GLCullFace {
+		enum t {
+			Back         = GL_BACK,
+			Front        = GL_FRONT,
+			FrontAndBack = GL_FRONT_AND_BACK
 		};
 	}
 
@@ -83,6 +98,7 @@ namespace de {
 			
 			static gl_vbo create();
 			static void bind(gl_vbo vbo);
+			static void destroy(gl_vbo vbo);
 			static void addAttribute(unsigned int index, GLAttribComponentsNumber::t componentsNumber, GLType::t type, int stride, int offset);
 			static void setVerticesNumber(unsigned int number);
 
@@ -120,11 +136,11 @@ namespace de {
 	class DE_API GLVAO {
 
 		public:
-
 			static gl_vao create();
 			static void bind(gl_vao vao);
+			static void destroy(gl_vao vao);
 
-			static unsigned int currentlyBound();
+			static gl_vao currentlyBound();
 
 		private:
 			static gl_vao m_CurrentlyBound;
@@ -132,6 +148,16 @@ namespace de {
 			GLVAO() = delete;
 
 	};
+
+	/*
+	=====================
+	GLVAO::currentlyBound
+	=====================
+	*/
+	inline gl_vao GLVAO::currentlyBound()
+	{
+		return m_CurrentlyBound;
+	}
 
 	namespace GLShaderType {
 
@@ -162,27 +188,42 @@ namespace de {
 	class DE_API GLProgram {
 
 		public:
-			static gl_program create();
+			static gl_program create(const char *name);
+			static gl_program get(const char *name);
 
 			static void attachShader(gl_program program, gl_shader shader);
 			static bool link(gl_program program);
 			static void use(gl_program program);
+			static void destroy(gl_program program);
 
-			static unsigned int currentlyBound();
+			static void destroyAllPrograms();
+
+			static gl_program currentlyBound();
 
 		private:
 			GLProgram() = delete;
 
-			static unsigned int m_CurrentlyBound;
+			static gl_program m_CurrentlyBound;
+			static HashTable m_Programs;
 
 	};
+
+	/*
+	=============================
+	GLProgram::destroyAllPrograms
+	=============================
+	*/
+	inline void GLProgram::destroyAllPrograms()
+	{
+		m_Programs.freeElements();
+	}
 
 	/*
 	=========================
 	GLProgram::currentlyBound
 	=========================
 	*/
-	inline unsigned int GLProgram::currentlyBound()
+	inline gl_program GLProgram::currentlyBound()
 	{
 		return m_CurrentlyBound;
 	}
@@ -197,6 +238,7 @@ namespace de {
 			void send(float value);
 			void send(int value);
 			void send(const fvec2 &vec);
+			void send(const fvec3 &vec);
 			void send(fmat3x3 &mat);
 			void send(fmat4x4 &mat);
 
@@ -230,12 +272,38 @@ namespace de {
 			static gl_texture getWhiteTexture();
 			static void setWhiteTexture(gl_texture texture);
 
+			static gl_texture currentlyBound();
+			static uint8_t currentUnit();
+
 		private:
 			static gl_texture m_WhiteTex;
+
+			static gl_texture m_CurrentlyBound;
+			static uint8_t m_CurrentUnit;
 
 			GLTexture() = delete;
 
 	};
+
+	/*
+	=========================
+	GLTexture::currentlyBound
+	=========================
+	*/
+	inline gl_texture GLTexture::currentlyBound()
+	{
+		return m_CurrentlyBound;
+	}
+
+	/*
+	======================
+	GLTexture::currentUnit
+	======================
+	*/
+	inline uint8_t GLTexture::currentUnit()
+	{
+		return m_CurrentUnit;
+	}
 
 	/*
 	==========================
@@ -256,12 +324,6 @@ namespace de {
 	{
 		m_WhiteTex = texture;
 	}
-
-	class DE_API GLCubemaps {
-
-
-
-	};
 
 	class DE_API GLError {
 
@@ -308,6 +370,8 @@ namespace de {
 			static void enableDepthMask(bool value);
 
 			static void setDepthFunction(GLDepthFunction::t func);
+
+			static void setCullFace(GLCullFace::t cullFace);
 
 	};
 
