@@ -1,0 +1,624 @@
+\hypertarget{structde_1_1fvec2}{}\doxysection{de\+::fvec2 Struct Reference}
+\label{structde_1_1fvec2}\index{de::fvec2@{de::fvec2}}
+
+
+Vecteur à 2 dimensions avec des composantes de type flottant.  
+
+
+
+
+{\ttfamily \#include $<$vec.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structde_1_1fvec2_adb87757a4dccb88363762ddfd73397e7}{fvec2}} (float \mbox{\hyperlink{structde_1_1fvec2_adb0b1372559d46e5ea3a0b41351a7389}{x}}=0.\+0f, float \mbox{\hyperlink{structde_1_1fvec2_a98ea815f09a9f49ca5011cbc6790e1a0}{y}}=0.\+0f)
+\begin{DoxyCompactList}\small\item\em Constructeur de vecteurs à 2 dimensions de type flottant. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{structde_1_1fvec2_a23b4832b2d4a536ead9c565f7534e262}{draw}} (\mbox{\hyperlink{classde_1_1_renderer}{Renderer}} \&renderer) const
+\begin{DoxyCompactList}\small\item\em Trace le vecteur à partir de l\textquotesingle{}origine. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \mbox{\hyperlink{structde_1_1fvec2_a4f528cf8a92d0e0e314934a58738583d}{operator+}} (const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&vec) const
+\begin{DoxyCompactList}\small\item\em Surcharge qui retourne le résultat de cette fonction \+: \mbox{\hyperlink{structde_1_1fvec2_a6e213691054a329471aa100704f9630a}{add(const fvec2 \&v1, const fvec2 \&v2)}}. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \mbox{\hyperlink{structde_1_1fvec2_a402d293ce9e0ea905360480940887db2}{operator+}} (const \mbox{\hyperlink{structde_1_1vec2}{vec2}} \&vec) const
+\begin{DoxyCompactList}\small\item\em Surcharge qui retourne le résultat de cette fonction \+: \mbox{\hyperlink{structde_1_1fvec2_ad6553f3e9e058523ed0eaa0e877fb7ad}{add(const fvec2 \&v1, const vec2 \&v2)}}. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \mbox{\hyperlink{structde_1_1fvec2_a4040b3d03ba77a1d05e51775d437e44e}{operator+}} (float value\+To\+Add) const
+\begin{DoxyCompactList}\small\item\em Surcharge qui retourne le résultat de cette fonction \+: \mbox{\hyperlink{structde_1_1fvec2_afb3e44990c1ce561ac4e5256698f753b}{add(const fvec2 \&v, float value\+To\+Add)}}. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \mbox{\hyperlink{structde_1_1fvec2_a3d6e85dad3f6bf0e72373f42896e2836}{operator-\/}} (const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&v) const
+\begin{DoxyCompactList}\small\item\em Surcharge qui retourne le résultat de cette fonction \+: \mbox{\hyperlink{structde_1_1fvec2_a57ff172c29cb6bf06778e86e7037bec2}{sub(const fvec2 \&v1, const fvec2 \&v2)}}. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \mbox{\hyperlink{structde_1_1fvec2_aca45c6432c9c81f121960a47acce5c4a}{operator-\/}} (float value\+To\+Sub) const
+\begin{DoxyCompactList}\small\item\em Surcharge qui retourne le résultat de cette fonction \+: \mbox{\hyperlink{structde_1_1fvec2_a80ef457bc4f2793dee40176f8193dd63}{sub(const fvec2 \&v, float value\+To\+Sub)}}. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \mbox{\hyperlink{structde_1_1fvec2_a03b20d2aff5d900c09cec9a32cee8ca0}{operator$\ast$}} (float scalar) const
+\begin{DoxyCompactList}\small\item\em Surcharge qui retourne le résultat de cette fonction \+: \mbox{\hyperlink{structde_1_1fvec2_a2646e11f65140c77e55a1d135dc718b9}{scale(const fvec2 \&v, float scalar)}}. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \mbox{\hyperlink{structde_1_1fvec2_a68b37b81361a500b21f056ab8a57e20b}{operator$\ast$}} (const \mbox{\hyperlink{structde_1_1fmat2x2}{fmat2x2}} \&mat) const
+\begin{DoxyCompactList}\small\item\em Surcharge qui retourne le résultat de cette fonction \+: \mbox{\hyperlink{structde_1_1fvec2_a25f1d65c7ef9636b26eff1fb82340063}{mul(const fvec2 \&v, const fmat2x2 \&mat)}}. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{structde_1_1fvec2_aff436d5a7140a8914da8d2f510f2e306}{operator-\/=}} (float value)
+\begin{DoxyCompactList}\small\item\em Surcharge qui effectue cette fonction \+: \mbox{\hyperlink{structde_1_1fvec2_a80ef457bc4f2793dee40176f8193dd63}{sub(const fvec2 \&v, float value\+To\+Sub)}} sur le vecteur courant. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{structde_1_1fvec2_a2042fc5c74be37a9a028c44a0b09ad38}{operator+=}} (const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&v)
+\begin{DoxyCompactList}\small\item\em Surcharge qui effectue cette fonction \mbox{\hyperlink{structde_1_1fvec2_ad6553f3e9e058523ed0eaa0e877fb7ad}{add(const fvec2 \&v1, const vec2 \&v2)}} sur le vecteur courant. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{structde_1_1fvec2_a5627103ab4d13b8abec8fb4954f0660f}{operator+=}} (float value)
+\begin{DoxyCompactList}\small\item\em Surcharge qui effectue cette fonction \+: \mbox{\hyperlink{structde_1_1fvec2_afb3e44990c1ce561ac4e5256698f753b}{add(const fvec2 \&v, float value\+To\+Add)}} sur le vecteur courant. \end{DoxyCompactList}\item 
+void \mbox{\hyperlink{structde_1_1fvec2_aefc5456016cfd0a74751b9ec2de9e937}{operator$\ast$=}} (float scalar)
+\begin{DoxyCompactList}\small\item\em Surcharge qui effectue cette fonction \+: \mbox{\hyperlink{structde_1_1fvec2_a2646e11f65140c77e55a1d135dc718b9}{scale(const fvec2 \&v, float scalar)}} sur le vecteur courant. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{structde_1_1fvec2_a9f595abb23c39f6fe9eb00ab07c2c10d}\label{structde_1_1fvec2_a9f595abb23c39f6fe9eb00ab07c2c10d}} 
+\mbox{\hyperlink{structde_1_1fvec2}{fvec2}} {\bfseries operator+} (const \mbox{\hyperlink{structde_1_1fvec3}{fvec3}} \&v)
+\item 
+\mbox{\Hypertarget{structde_1_1fvec2_a9a04ca7c823b9f2f9740e54c4c9e3a52}\label{structde_1_1fvec2_a9a04ca7c823b9f2f9740e54c4c9e3a52}} 
+void {\bfseries operator+=} (const \mbox{\hyperlink{structde_1_1fvec3}{fvec3}} \&v)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \mbox{\hyperlink{structde_1_1fvec2_a6e213691054a329471aa100704f9630a}{add}} (const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&v1, const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&v2)
+\begin{DoxyCompactList}\small\item\em Additionne 2 vecteurs entre eux et retourne le résultat. \end{DoxyCompactList}\item 
+static \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \mbox{\hyperlink{structde_1_1fvec2_ad6553f3e9e058523ed0eaa0e877fb7ad}{add}} (const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&v1, const \mbox{\hyperlink{structde_1_1vec2}{vec2}} \&v2)
+\begin{DoxyCompactList}\small\item\em Additionne 2 vecteurs entre eux et retourne le résultat. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{structde_1_1fvec2_adf957948b8a555c6c4dc0783a36bb765}\label{structde_1_1fvec2_adf957948b8a555c6c4dc0783a36bb765}} 
+static \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} {\bfseries add} (const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&v1, const \mbox{\hyperlink{structde_1_1fvec3}{fvec3}} \&v2)
+\item 
+static \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \mbox{\hyperlink{structde_1_1fvec2_afb3e44990c1ce561ac4e5256698f753b}{add}} (const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&v, float value\+To\+Add)
+\begin{DoxyCompactList}\small\item\em Additionne un vecteur avec une constante et retourne le résultat. \end{DoxyCompactList}\item 
+static \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \mbox{\hyperlink{structde_1_1fvec2_a57ff172c29cb6bf06778e86e7037bec2}{sub}} (const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&v1, const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&v2)
+\begin{DoxyCompactList}\small\item\em Retourne le résultat de la soustraction d\textquotesingle{}un vecteur par un autre. \end{DoxyCompactList}\item 
+static \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \mbox{\hyperlink{structde_1_1fvec2_a80ef457bc4f2793dee40176f8193dd63}{sub}} (const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&v, float value\+To\+Sub)
+\begin{DoxyCompactList}\small\item\em Retourne le résultat de la soustraction d\textquotesingle{}un vecteur par une constante. \end{DoxyCompactList}\item 
+static \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \mbox{\hyperlink{structde_1_1fvec2_a2646e11f65140c77e55a1d135dc718b9}{scale}} (const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&v, float scalar)
+\begin{DoxyCompactList}\small\item\em Retourne la multiplication scalaire entre un vecteur et une constante. \end{DoxyCompactList}\item 
+static float \mbox{\hyperlink{structde_1_1fvec2_afa42150707104d6262dc76a8163147bc}{dot}} (const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&v1, const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&v2)
+\begin{DoxyCompactList}\small\item\em Retourne le résultat du produit scalaire entre 2 vecteurs. \end{DoxyCompactList}\item 
+static float \mbox{\hyperlink{structde_1_1fvec2_abf4b06e06282bd01f9b586834634da84}{magn}} (const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&v)
+\begin{DoxyCompactList}\small\item\em Retourne la magnitude {\itshape (la longueur)} d\textquotesingle{}un vecteur. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{structde_1_1fvec2_a0ae10c6f63ccc3afd70af1a770fdc2a7}\label{structde_1_1fvec2_a0ae10c6f63ccc3afd70af1a770fdc2a7}} 
+static \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} {\bfseries norm} (const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&v)
+\item 
+static float \mbox{\hyperlink{structde_1_1fvec2_aceb49d776d3ac435606dcdd616f9cf92}{angle}} (const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&v1, const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&v2)
+\begin{DoxyCompactList}\small\item\em Retourne l\textquotesingle{}angle en degrés entre 2 vecteurs. \end{DoxyCompactList}\item 
+static \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \mbox{\hyperlink{structde_1_1fvec2_a25f1d65c7ef9636b26eff1fb82340063}{mul}} (const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&v, const \mbox{\hyperlink{structde_1_1fmat2x2}{fmat2x2}} \&mat)
+\begin{DoxyCompactList}\small\item\em Retourne le résultat de la multiplication entre un vecteur et une matrice. \end{DoxyCompactList}\item 
+static \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \mbox{\hyperlink{structde_1_1fvec2_ae6099b81573e5a75e64a793a77b2bc7e}{inv}} (const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&v)
+\begin{DoxyCompactList}\small\item\em Retourne le vecteur avec une direction opposé à celui passé en paramètre. \end{DoxyCompactList}\item 
+static \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \mbox{\hyperlink{structde_1_1fvec2_a4d25220eeb324655e8d1710a2e40eedf}{interpolateX}} (const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&v1, const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&v2, float \mbox{\hyperlink{structde_1_1fvec2_a98ea815f09a9f49ca5011cbc6790e1a0}{y}})
+\begin{DoxyCompactList}\small\item\em Fait une interpolation linéaire entre 2 vecteurs pour récupérer la composante X à une valeur Y. \end{DoxyCompactList}\item 
+static \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \mbox{\hyperlink{structde_1_1fvec2_a8777e78fd127cbddff0dbbe9731b42f0}{interpolateY}} (const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&v1, const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&v2, float \mbox{\hyperlink{structde_1_1fvec2_adb0b1372559d46e5ea3a0b41351a7389}{x}})
+\begin{DoxyCompactList}\small\item\em Fait une interpolation linéaire entre 2 vecteurs pour récupérer la composante Y à une valeur X. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structde_1_1fvec2_adb0b1372559d46e5ea3a0b41351a7389}\label{structde_1_1fvec2_adb0b1372559d46e5ea3a0b41351a7389}} 
+float \mbox{\hyperlink{structde_1_1fvec2_adb0b1372559d46e5ea3a0b41351a7389}{x}}
+\begin{DoxyCompactList}\small\item\em Composante X du vecteur. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{structde_1_1fvec2_a98ea815f09a9f49ca5011cbc6790e1a0}\label{structde_1_1fvec2_a98ea815f09a9f49ca5011cbc6790e1a0}} 
+float \mbox{\hyperlink{structde_1_1fvec2_a98ea815f09a9f49ca5011cbc6790e1a0}{y}}
+\begin{DoxyCompactList}\small\item\em Composante Y du vecteur. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Vecteur à 2 dimensions avec des composantes de type flottant. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{structde_1_1fvec2_adb87757a4dccb88363762ddfd73397e7}\label{structde_1_1fvec2_adb87757a4dccb88363762ddfd73397e7}} 
+\index{de::fvec2@{de::fvec2}!fvec2@{fvec2}}
+\index{fvec2@{fvec2}!de::fvec2@{de::fvec2}}
+\doxysubsubsection{\texorpdfstring{fvec2()}{fvec2()}}
+{\footnotesize\ttfamily de\+::fvec2\+::fvec2 (\begin{DoxyParamCaption}\item[{float}]{x = {\ttfamily 0.0f},  }\item[{float}]{y = {\ttfamily 0.0f} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Constructeur de vecteurs à 2 dimensions de type flottant. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em x} & Valeur de la composante X. \\
+\hline
+{\em y} & Valeur de la composante Y. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{structde_1_1fvec2_afb3e44990c1ce561ac4e5256698f753b}\label{structde_1_1fvec2_afb3e44990c1ce561ac4e5256698f753b}} 
+\index{de::fvec2@{de::fvec2}!add@{add}}
+\index{add@{add}!de::fvec2@{de::fvec2}}
+\doxysubsubsection{\texorpdfstring{add()}{add()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} de\+::fvec2\+::add (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&}]{v,  }\item[{float}]{value\+To\+Add }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Additionne un vecteur avec une constante et retourne le résultat. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em vec} & Vecteur. \\
+\hline
+{\em value\+To\+Add} & Constante. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+La formule d\textquotesingle{}addition entre un vecteur et une constante est comme suit \+:~\newline
+   
+\end{DoxyRemark}
+\begin{DoxyReturn}{Returns}
+Le vecteur résultant de ce calcul. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{structde_1_1fvec2_a6e213691054a329471aa100704f9630a}\label{structde_1_1fvec2_a6e213691054a329471aa100704f9630a}} 
+\index{de::fvec2@{de::fvec2}!add@{add}}
+\index{add@{add}!de::fvec2@{de::fvec2}}
+\doxysubsubsection{\texorpdfstring{add()}{add()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} de\+::fvec2\+::add (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&}]{v1,  }\item[{const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&}]{v2 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Additionne 2 vecteurs entre eux et retourne le résultat. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em v1} & Vecteur 1. \\
+\hline
+{\em v2} & Vecteur 2. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+La formule d\textquotesingle{}addition de 2 vecteurs est comme suit \+:~\newline
+   
+\end{DoxyRemark}
+\begin{DoxyReturn}{Returns}
+Le vecteur résultant de ce calcul. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{structde_1_1fvec2_ad6553f3e9e058523ed0eaa0e877fb7ad}\label{structde_1_1fvec2_ad6553f3e9e058523ed0eaa0e877fb7ad}} 
+\index{de::fvec2@{de::fvec2}!add@{add}}
+\index{add@{add}!de::fvec2@{de::fvec2}}
+\doxysubsubsection{\texorpdfstring{add()}{add()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} de\+::fvec2\+::add (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&}]{v1,  }\item[{const \mbox{\hyperlink{structde_1_1vec2}{vec2}} \&}]{v2 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Additionne 2 vecteurs entre eux et retourne le résultat. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em v1} & Vecteur 1. \\
+\hline
+{\em v2} & Vecteur 2. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+Voir \mbox{\hyperlink{structde_1_1fvec2_a6e213691054a329471aa100704f9630a}{add(const fvec2 \&v1, const fvec2 \&v2)}}. 
+\end{DoxyRemark}
+\begin{DoxyReturn}{Returns}
+Le vecteur résultant de ce calcul. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{structde_1_1fvec2_aceb49d776d3ac435606dcdd616f9cf92}\label{structde_1_1fvec2_aceb49d776d3ac435606dcdd616f9cf92}} 
+\index{de::fvec2@{de::fvec2}!angle@{angle}}
+\index{angle@{angle}!de::fvec2@{de::fvec2}}
+\doxysubsubsection{\texorpdfstring{angle()}{angle()}}
+{\footnotesize\ttfamily float de\+::fvec2\+::angle (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&}]{v1,  }\item[{const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&}]{v2 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Retourne l\textquotesingle{}angle en degrés entre 2 vecteurs. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em v1} & Vecteur 1. \\
+\hline
+{\em v2} & Vecteur 2. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+La formule pour calculer l\textquotesingle{}angle entre 2 vecteurs est la suivante \+:~\newline
+   
+\end{DoxyRemark}
+\begin{DoxyReturn}{Returns}
+L\textquotesingle{}angle en degrés entre ces 2 vecteurs. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{structde_1_1fvec2_afa42150707104d6262dc76a8163147bc}\label{structde_1_1fvec2_afa42150707104d6262dc76a8163147bc}} 
+\index{de::fvec2@{de::fvec2}!dot@{dot}}
+\index{dot@{dot}!de::fvec2@{de::fvec2}}
+\doxysubsubsection{\texorpdfstring{dot()}{dot()}}
+{\footnotesize\ttfamily float de\+::fvec2\+::dot (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&}]{v1,  }\item[{const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&}]{v2 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Retourne le résultat du produit scalaire entre 2 vecteurs. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em v1} & Vecteur 1. \\
+\hline
+{\em v2} & Vecteur 2. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+Les formules du produit scalaire entre 2 vecteurs sont comme suit \+:~\newline
+   ~\newline
+ Définition algébrique, utilisée par le moteur.   ~\newline
+ Définition géométrique.    
+\end{DoxyRemark}
+\begin{DoxyReturn}{Returns}
+Le résultat du calcul. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{structde_1_1fvec2_a23b4832b2d4a536ead9c565f7534e262}\label{structde_1_1fvec2_a23b4832b2d4a536ead9c565f7534e262}} 
+\index{de::fvec2@{de::fvec2}!draw@{draw}}
+\index{draw@{draw}!de::fvec2@{de::fvec2}}
+\doxysubsubsection{\texorpdfstring{draw()}{draw()}}
+{\footnotesize\ttfamily void de\+::fvec2\+::draw (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{classde_1_1_renderer}{Renderer}} \&}]{renderer }\end{DoxyParamCaption}) const}
+
+
+
+Trace le vecteur à partir de l\textquotesingle{}origine. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em renderer} & Le renderer qui s\textquotesingle{}occupe de dessiner la ligne. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{structde_1_1fvec2_a4d25220eeb324655e8d1710a2e40eedf}\label{structde_1_1fvec2_a4d25220eeb324655e8d1710a2e40eedf}} 
+\index{de::fvec2@{de::fvec2}!interpolateX@{interpolateX}}
+\index{interpolateX@{interpolateX}!de::fvec2@{de::fvec2}}
+\doxysubsubsection{\texorpdfstring{interpolateX()}{interpolateX()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} de\+::fvec2\+::interpolateX (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&}]{v1,  }\item[{const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&}]{v2,  }\item[{float}]{y }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Fait une interpolation linéaire entre 2 vecteurs pour récupérer la composante X à une valeur Y. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em v1} & Vecteur 1. \\
+\hline
+{\em v2} & Vecteur 2. \\
+\hline
+{\em y} & La valeur Y à laquelle interpoler X. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+La valeur d\textquotesingle{}interpolation X entre ces 2 vecteurs. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{structde_1_1fvec2_a8777e78fd127cbddff0dbbe9731b42f0}\label{structde_1_1fvec2_a8777e78fd127cbddff0dbbe9731b42f0}} 
+\index{de::fvec2@{de::fvec2}!interpolateY@{interpolateY}}
+\index{interpolateY@{interpolateY}!de::fvec2@{de::fvec2}}
+\doxysubsubsection{\texorpdfstring{interpolateY()}{interpolateY()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} de\+::fvec2\+::interpolateY (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&}]{v1,  }\item[{const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&}]{v2,  }\item[{float}]{x }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Fait une interpolation linéaire entre 2 vecteurs pour récupérer la composante Y à une valeur X. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em v1} & Vecteur 1. \\
+\hline
+{\em v2} & Vecteur 2. \\
+\hline
+{\em x} & La valeur X à laquelle interpoler Y. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+La valeur d\textquotesingle{}interpolation Y entre ces 2 vecteurs. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{structde_1_1fvec2_ae6099b81573e5a75e64a793a77b2bc7e}\label{structde_1_1fvec2_ae6099b81573e5a75e64a793a77b2bc7e}} 
+\index{de::fvec2@{de::fvec2}!inv@{inv}}
+\index{inv@{inv}!de::fvec2@{de::fvec2}}
+\doxysubsubsection{\texorpdfstring{inv()}{inv()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} de\+::fvec2\+::inv (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Retourne le vecteur avec une direction opposé à celui passé en paramètre. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & Le vecteur à inverser. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Le vecteur inversé. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{structde_1_1fvec2_abf4b06e06282bd01f9b586834634da84}\label{structde_1_1fvec2_abf4b06e06282bd01f9b586834634da84}} 
+\index{de::fvec2@{de::fvec2}!magn@{magn}}
+\index{magn@{magn}!de::fvec2@{de::fvec2}}
+\doxysubsubsection{\texorpdfstring{magn()}{magn()}}
+{\footnotesize\ttfamily float de\+::fvec2\+::magn (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Retourne la magnitude {\itshape (la longueur)} d\textquotesingle{}un vecteur. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & Vecteur. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+La formule permettant de calculer la magnitude d\textquotesingle{}un vecteur est la suivante \+:~\newline
+   
+\end{DoxyRemark}
+\begin{DoxyReturn}{Returns}
+La magnitude du vecteur. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{structde_1_1fvec2_a25f1d65c7ef9636b26eff1fb82340063}\label{structde_1_1fvec2_a25f1d65c7ef9636b26eff1fb82340063}} 
+\index{de::fvec2@{de::fvec2}!mul@{mul}}
+\index{mul@{mul}!de::fvec2@{de::fvec2}}
+\doxysubsubsection{\texorpdfstring{mul()}{mul()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} de\+::fvec2\+::mul (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&}]{v,  }\item[{const \mbox{\hyperlink{structde_1_1fmat2x2}{fmat2x2}} \&}]{mat }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Retourne le résultat de la multiplication entre un vecteur et une matrice. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & Vecteur. \\
+\hline
+{\em mat} & Matrice. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+La formule de multiplication entre un vecteur et une matrice est la suivante \+:~\newline
+   
+\end{DoxyRemark}
+\begin{DoxyReturn}{Returns}
+Le vecteur résultant de ce calcul. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{structde_1_1fvec2_a68b37b81361a500b21f056ab8a57e20b}\label{structde_1_1fvec2_a68b37b81361a500b21f056ab8a57e20b}} 
+\index{de::fvec2@{de::fvec2}!operator$\ast$@{operator$\ast$}}
+\index{operator$\ast$@{operator$\ast$}!de::fvec2@{de::fvec2}}
+\doxysubsubsection{\texorpdfstring{operator$\ast$()}{operator*()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} de\+::fvec2\+::operator$\ast$ (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structde_1_1fmat2x2}{fmat2x2}} \&}]{mat }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Surcharge qui retourne le résultat de cette fonction \+: \mbox{\hyperlink{structde_1_1fvec2_a25f1d65c7ef9636b26eff1fb82340063}{mul(const fvec2 \&v, const fmat2x2 \&mat)}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em mat} & La matrice à multiplier au vecteur courant. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Le vecteur résultant de la multiplication entre un vecteur et une matrice. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{structde_1_1fvec2_a03b20d2aff5d900c09cec9a32cee8ca0}\label{structde_1_1fvec2_a03b20d2aff5d900c09cec9a32cee8ca0}} 
+\index{de::fvec2@{de::fvec2}!operator$\ast$@{operator$\ast$}}
+\index{operator$\ast$@{operator$\ast$}!de::fvec2@{de::fvec2}}
+\doxysubsubsection{\texorpdfstring{operator$\ast$()}{operator*()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} de\+::fvec2\+::operator$\ast$ (\begin{DoxyParamCaption}\item[{float}]{scalar }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Surcharge qui retourne le résultat de cette fonction \+: \mbox{\hyperlink{structde_1_1fvec2_a2646e11f65140c77e55a1d135dc718b9}{scale(const fvec2 \&v, float scalar)}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em scalar} & La valeur scalaire à multiplier au vecteur courant. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Le vecteur résultant de la multiplication scalaire entre un vecteur et une constante. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{structde_1_1fvec2_aefc5456016cfd0a74751b9ec2de9e937}\label{structde_1_1fvec2_aefc5456016cfd0a74751b9ec2de9e937}} 
+\index{de::fvec2@{de::fvec2}!operator$\ast$=@{operator$\ast$=}}
+\index{operator$\ast$=@{operator$\ast$=}!de::fvec2@{de::fvec2}}
+\doxysubsubsection{\texorpdfstring{operator$\ast$=()}{operator*=()}}
+{\footnotesize\ttfamily void de\+::fvec2\+::operator$\ast$= (\begin{DoxyParamCaption}\item[{float}]{scalar }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Surcharge qui effectue cette fonction \+: \mbox{\hyperlink{structde_1_1fvec2_a2646e11f65140c77e55a1d135dc718b9}{scale(const fvec2 \&v, float scalar)}} sur le vecteur courant. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em scalar} & Le scalaire à multiplier sur le vecteur courant. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{structde_1_1fvec2_a4f528cf8a92d0e0e314934a58738583d}\label{structde_1_1fvec2_a4f528cf8a92d0e0e314934a58738583d}} 
+\index{de::fvec2@{de::fvec2}!operator+@{operator+}}
+\index{operator+@{operator+}!de::fvec2@{de::fvec2}}
+\doxysubsubsection{\texorpdfstring{operator+()}{operator+()}\hspace{0.1cm}{\footnotesize\ttfamily [1/3]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} de\+::fvec2\+::operator+ (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&}]{vec }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Surcharge qui retourne le résultat de cette fonction \+: \mbox{\hyperlink{structde_1_1fvec2_a6e213691054a329471aa100704f9630a}{add(const fvec2 \&v1, const fvec2 \&v2)}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em vec} & Le vecteur à additionner avec le vecteur courant. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Le vecteur résultant du calcul d\textquotesingle{}addition entre 2 vecteurs. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{structde_1_1fvec2_a402d293ce9e0ea905360480940887db2}\label{structde_1_1fvec2_a402d293ce9e0ea905360480940887db2}} 
+\index{de::fvec2@{de::fvec2}!operator+@{operator+}}
+\index{operator+@{operator+}!de::fvec2@{de::fvec2}}
+\doxysubsubsection{\texorpdfstring{operator+()}{operator+()}\hspace{0.1cm}{\footnotesize\ttfamily [2/3]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} de\+::fvec2\+::operator+ (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structde_1_1vec2}{vec2}} \&}]{vec }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Surcharge qui retourne le résultat de cette fonction \+: \mbox{\hyperlink{structde_1_1fvec2_ad6553f3e9e058523ed0eaa0e877fb7ad}{add(const fvec2 \&v1, const vec2 \&v2)}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em vec} & Le vecteur à additionner avec le vecteur courant. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Le vecteur résultant du calcul d\textquotesingle{}addition entre 2 vecteurs. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{structde_1_1fvec2_a4040b3d03ba77a1d05e51775d437e44e}\label{structde_1_1fvec2_a4040b3d03ba77a1d05e51775d437e44e}} 
+\index{de::fvec2@{de::fvec2}!operator+@{operator+}}
+\index{operator+@{operator+}!de::fvec2@{de::fvec2}}
+\doxysubsubsection{\texorpdfstring{operator+()}{operator+()}\hspace{0.1cm}{\footnotesize\ttfamily [3/3]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} de\+::fvec2\+::operator+ (\begin{DoxyParamCaption}\item[{float}]{value\+To\+Add }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Surcharge qui retourne le résultat de cette fonction \+: \mbox{\hyperlink{structde_1_1fvec2_afb3e44990c1ce561ac4e5256698f753b}{add(const fvec2 \&v, float value\+To\+Add)}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value\+To\+Add} & La valeur à ajouter au vecteur courant. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Le vecteur résultant du calcul d\textquotesingle{}addition entre un vecteur et une valeur constante. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{structde_1_1fvec2_a2042fc5c74be37a9a028c44a0b09ad38}\label{structde_1_1fvec2_a2042fc5c74be37a9a028c44a0b09ad38}} 
+\index{de::fvec2@{de::fvec2}!operator+=@{operator+=}}
+\index{operator+=@{operator+=}!de::fvec2@{de::fvec2}}
+\doxysubsubsection{\texorpdfstring{operator+=()}{operator+=()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily void de\+::fvec2\+::operator+= (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&}]{v }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Surcharge qui effectue cette fonction \mbox{\hyperlink{structde_1_1fvec2_ad6553f3e9e058523ed0eaa0e877fb7ad}{add(const fvec2 \&v1, const vec2 \&v2)}} sur le vecteur courant. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & Le vecteur à ajouter au vecteur courant. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{structde_1_1fvec2_a5627103ab4d13b8abec8fb4954f0660f}\label{structde_1_1fvec2_a5627103ab4d13b8abec8fb4954f0660f}} 
+\index{de::fvec2@{de::fvec2}!operator+=@{operator+=}}
+\index{operator+=@{operator+=}!de::fvec2@{de::fvec2}}
+\doxysubsubsection{\texorpdfstring{operator+=()}{operator+=()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily void de\+::fvec2\+::operator+= (\begin{DoxyParamCaption}\item[{float}]{value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Surcharge qui effectue cette fonction \+: \mbox{\hyperlink{structde_1_1fvec2_afb3e44990c1ce561ac4e5256698f753b}{add(const fvec2 \&v, float value\+To\+Add)}} sur le vecteur courant. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & La valeur à ajouter au vecteur courant. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{structde_1_1fvec2_a3d6e85dad3f6bf0e72373f42896e2836}\label{structde_1_1fvec2_a3d6e85dad3f6bf0e72373f42896e2836}} 
+\index{de::fvec2@{de::fvec2}!operator-\/@{operator-\/}}
+\index{operator-\/@{operator-\/}!de::fvec2@{de::fvec2}}
+\doxysubsubsection{\texorpdfstring{operator-\/()}{operator-()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} de\+::fvec2\+::operator-\/ (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&}]{v }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Surcharge qui retourne le résultat de cette fonction \+: \mbox{\hyperlink{structde_1_1fvec2_a57ff172c29cb6bf06778e86e7037bec2}{sub(const fvec2 \&v1, const fvec2 \&v2)}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & Le vecteur à soustraire du vecteur courant. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Le vecteur résultant du calcul de soustraction entre 2 vecteurs. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{structde_1_1fvec2_aca45c6432c9c81f121960a47acce5c4a}\label{structde_1_1fvec2_aca45c6432c9c81f121960a47acce5c4a}} 
+\index{de::fvec2@{de::fvec2}!operator-\/@{operator-\/}}
+\index{operator-\/@{operator-\/}!de::fvec2@{de::fvec2}}
+\doxysubsubsection{\texorpdfstring{operator-\/()}{operator-()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} de\+::fvec2\+::operator-\/ (\begin{DoxyParamCaption}\item[{float}]{value\+To\+Sub }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Surcharge qui retourne le résultat de cette fonction \+: \mbox{\hyperlink{structde_1_1fvec2_a80ef457bc4f2793dee40176f8193dd63}{sub(const fvec2 \&v, float value\+To\+Sub)}}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value\+To\+Sub} & La valeur à retirer du vecteur courant. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Le vecteur résultant du calcul de soustraction entre un vecteur et une valeur constante. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{structde_1_1fvec2_aff436d5a7140a8914da8d2f510f2e306}\label{structde_1_1fvec2_aff436d5a7140a8914da8d2f510f2e306}} 
+\index{de::fvec2@{de::fvec2}!operator-\/=@{operator-\/=}}
+\index{operator-\/=@{operator-\/=}!de::fvec2@{de::fvec2}}
+\doxysubsubsection{\texorpdfstring{operator-\/=()}{operator-=()}}
+{\footnotesize\ttfamily void de\+::fvec2\+::operator-\/= (\begin{DoxyParamCaption}\item[{float}]{value }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Surcharge qui effectue cette fonction \+: \mbox{\hyperlink{structde_1_1fvec2_a80ef457bc4f2793dee40176f8193dd63}{sub(const fvec2 \&v, float value\+To\+Sub)}} sur le vecteur courant. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & La valeur à retirer du vecteur courant. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{structde_1_1fvec2_a2646e11f65140c77e55a1d135dc718b9}\label{structde_1_1fvec2_a2646e11f65140c77e55a1d135dc718b9}} 
+\index{de::fvec2@{de::fvec2}!scale@{scale}}
+\index{scale@{scale}!de::fvec2@{de::fvec2}}
+\doxysubsubsection{\texorpdfstring{scale()}{scale()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} de\+::fvec2\+::scale (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&}]{v,  }\item[{float}]{scalar }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Retourne la multiplication scalaire entre un vecteur et une constante. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & Vecteur. \\
+\hline
+{\em scalar} & Constante. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+La formule de la multiplication scalaire entre un vecteur et une constante est comme suit \+:~\newline
+   Cela permet d\textquotesingle{}agrandir / réduire la longueur d\textquotesingle{}un vecteur et / ou de changer sa direction. 
+\end{DoxyRemark}
+\begin{DoxyReturn}{Returns}
+Le vecteur résultant de ce calcul. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{structde_1_1fvec2_a80ef457bc4f2793dee40176f8193dd63}\label{structde_1_1fvec2_a80ef457bc4f2793dee40176f8193dd63}} 
+\index{de::fvec2@{de::fvec2}!sub@{sub}}
+\index{sub@{sub}!de::fvec2@{de::fvec2}}
+\doxysubsubsection{\texorpdfstring{sub()}{sub()}\hspace{0.1cm}{\footnotesize\ttfamily [1/2]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} de\+::fvec2\+::sub (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&}]{v,  }\item[{float}]{value\+To\+Sub }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Retourne le résultat de la soustraction d\textquotesingle{}un vecteur par une constante. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & Vecteur. \\
+\hline
+{\em value\+To\+Sub} & Constante. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+La formule de soustraction entre un vecteur et une constante est comme suit \+:~\newline
+   
+\end{DoxyRemark}
+\begin{DoxyReturn}{Returns}
+Le vecteur résultant de ce calcul. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{structde_1_1fvec2_a57ff172c29cb6bf06778e86e7037bec2}\label{structde_1_1fvec2_a57ff172c29cb6bf06778e86e7037bec2}} 
+\index{de::fvec2@{de::fvec2}!sub@{sub}}
+\index{sub@{sub}!de::fvec2@{de::fvec2}}
+\doxysubsubsection{\texorpdfstring{sub()}{sub()}\hspace{0.1cm}{\footnotesize\ttfamily [2/2]}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} de\+::fvec2\+::sub (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&}]{v1,  }\item[{const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&}]{v2 }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Retourne le résultat de la soustraction d\textquotesingle{}un vecteur par un autre. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em v1} & Vecteur 1. \\
+\hline
+{\em v2} & Vecteur 2. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyRemark}{Remarks}
+La formule de soustraction de 2 vecteurs est comme suit \+:~\newline
+   
+\end{DoxyRemark}
+\begin{DoxyReturn}{Returns}
+Le vecteur résultant de ce calcul. 
+\end{DoxyReturn}
+
+
+The documentation for this struct was generated from the following files\+:\begin{DoxyCompactItemize}
+\item 
+include/\+D\+E/vec.\+hpp\item 
+include/\+D\+E/vec\+\_\+imp.\+hpp\end{DoxyCompactItemize}

@@ -1,0 +1,491 @@
+#ifndef __DEEP_ENGINE_LIST_HPP__
+#define __DEEP_ENGINE_LIST_HPP__
+
+#include <DE/def.hpp>
+#include <DE/types.hpp>
+#include <DE/memory/memory.hpp>
+
+namespace de
+{
+
+    template<typename Type>
+    class list_iterator
+    {
+
+        public:
+            using TypePtr = Type*;
+            using ConstTypePtr = const Type*;
+            using TypeRef = Type&;
+            using ConstTypeRef = const Type&;
+
+        public:
+            list_iterator(TypePtr ptr);
+
+            list_iterator<Type> &operator++();
+            list_iterator<Type> operator++(int);
+
+            list_iterator<Type> &operator--();
+            list_iterator<Type> operator--(int);
+
+            TypeRef operator[](size_t index);
+            TypeRef operator*();
+
+            bool operator==(const list_iterator<Type> &other) const;
+            bool operator!=(const list_iterator<Type> &other) const;
+
+        private:
+            TypePtr m_Ptr;
+
+    };
+
+    /*
+	==================================
+	list_iterator<Type>::list_iterator
+	==================================
+	*/
+    template<typename Type>
+    list_iterator<Type>::list_iterator(TypePtr ptr)
+        : m_Ptr(ptr)
+    { }
+
+    /*
+	===============================
+	list_iterator<Type>::operator++
+	===============================
+	*/
+    template<typename Type>
+    list_iterator<Type> &list_iterator<Type>::operator++()
+    {
+        m_Ptr++;
+
+        return *this;
+    }
+
+    /*
+	===============================
+	list_iterator<Type>::operator++
+	===============================
+	*/
+    template<typename Type>
+    list_iterator<Type> list_iterator<Type>::operator++(int)
+    {
+        // Retourne une copie de l'état avant modification de l'itérateur.
+        auto it = *this;
+
+        ++(*this);
+
+        return it;
+    }
+
+    /*
+	===============================
+	list_iterator<Type>::operator--
+	===============================
+	*/
+    template<typename Type>
+    list_iterator<Type> &list_iterator<Type>::operator--()
+    {
+        m_Ptr--;
+
+        return *this;
+    }
+
+    /*
+	===============================
+	list_iterator<Type>::operator--
+	===============================
+	*/
+    template<typename Type>
+    list_iterator<Type> list_iterator<Type>::operator--(int)
+    {
+        // Retourne une copie de l'état avant modification de l'itérateur.
+        auto it = *this;
+
+        --(*this);
+
+        return it;
+    }
+
+    /*
+	===============================
+	list_iterator<Type>::operator[]
+	===============================
+	*/
+    template<typename Type>
+    typename list_iterator<Type>::TypeRef list_iterator<Type>::operator[](size_t index)
+    {
+        return *(m_Ptr + index);
+    }
+
+    /*
+	==============================
+	list_iterator<Type>::operator*
+	==============================
+	*/
+    template<typename Type>
+    typename list_iterator<Type>::TypeRef list_iterator<Type>::operator*()
+    {
+        return *m_Ptr;
+    }
+
+    /*
+	===============================
+	list_iterator<Type>::operator==
+	===============================
+	*/
+    template<typename Type>
+    bool list_iterator<Type>::operator==(const list_iterator<Type> &other) const
+    {
+        return m_Ptr == other.m_Ptr;
+    }
+
+    /*
+	===============================
+	list_iterator<Type>::operator!=
+	===============================
+	*/
+    template<typename Type>
+    bool list_iterator<Type>::operator!=(const list_iterator<Type> &other) const
+    {
+        return m_Ptr != other.m_Ptr;
+    }
+
+    template<typename Type>
+    class list
+    {
+        public:
+            using TypePtr = Type*;
+            using ConstTypePtr = const Type*;
+            using TypeRef = Type&;
+            using ConstTypeRef = const Type&;
+
+            static constexpr size_t nothing = -1;
+
+        public:
+            list(uint32_t capacityStep = 10);
+            ~list();
+
+            void init(uint32_t capacityStep = 10);
+
+            bool add(ConstTypeRef element);
+            bool add(Type &&element);
+            bool add();
+
+            bool remove(size_t index);
+
+            size_t find(ConstTypeRef toSearch) const;
+
+            bool reserve(size_t numberOfElements);
+
+            void empty();
+            void free();
+
+            list_iterator<Type> begin();
+            list_iterator<Type> end();
+
+            size_t   getCapacity()         const;
+            uint32_t getCapacityStep()     const;
+            size_t   getNumberOfElements() const;
+            TypeRef operator[](size_t index);
+
+            void setCapacityStep(size_t size);
+
+        private:
+            Type     *m_Data;
+            size_t    m_Capacity;
+            uint32_t  m_CapacityStep;
+            size_t    m_NumberOfElements;
+
+            bool growIfNeeded();
+
+    };
+
+    /*
+	================
+	list<Type>::list
+	================
+	*/
+    template<typename Type>
+    list<Type>::list(uint32_t capacityStep)
+        : m_Data(nullptr),
+          m_Capacity(0),
+          m_CapacityStep(capacityStep),
+          m_NumberOfElements(0)
+    { }
+
+    /*
+	=================
+	list<Type>::~list
+	=================
+	*/
+    template<typename Type>
+    list<Type>::~list()
+    {
+        if(m_Data != nullptr)
+            free();
+    }
+
+    template<typename Type>
+    void list<Type>::init(uint32_t capacityStep)
+    {
+        m_Data = nullptr;
+        m_Capacity = 0;
+        m_CapacityStep = capacityStep;
+        m_NumberOfElements = 0;
+    }
+
+    /*
+	===============
+	list<Type>::add
+	===============
+	*/
+    template<typename Type>
+    bool list<Type>::add(ConstTypeRef element)
+    {
+        // Augmente la taille du buffer si nécessaire.
+        if(!growIfNeeded())
+            return false;
+
+        // Déplace ou copie l'élément dans la case mémoire.
+        m_Data[m_NumberOfElements] = element;
+        m_NumberOfElements++;
+
+        return true;
+    }
+
+    /*
+	===============
+	list<Type>::add
+	===============
+	*/
+    template<typename Type>
+    bool list<Type>::add(Type &&element)
+    {
+        // Augmente la taille du buffer si nécessaire.
+        if(!growIfNeeded())
+            return false;
+
+        // Déplace ou copie l'élément dans la case mémoire.
+        m_Data[m_NumberOfElements] = rvalue_cast(element);
+        m_NumberOfElements++;
+
+        return true;
+    }
+
+    /*
+	===============
+	list<Type>::add
+	===============
+	*/
+    template<typename Type>
+    bool list<Type>::add()
+    {
+        if(!growIfNeeded())
+			return false;
+
+		m_NumberOfElements++;
+
+		return true;
+    }
+
+    /*
+	==================
+	list<Type>::remove
+	==================
+	*/
+    template<typename Type>
+    bool list<Type>::remove(size_t index)
+    {
+        if(index >= m_NumberOfElements)
+            return false;
+
+        // Obtient le nombre d'éléments pour atteindre la fin de la liste.
+		size_t diff = m_NumberOfElements - index - 1;
+        size_t size = sizeof(Type);
+        size_t numberOfBytesToMove = diff * size;
+
+		memmove(m_Data + index, m_Data + (index + 1), numberOfBytesToMove);
+
+		m_NumberOfElements--;
+
+        return true;
+    }
+
+    /*
+	================
+	list<Type>::find
+	================
+	*/
+    template<typename Type>
+    size_t list<Type>::find(ConstTypeRef toSearch) const
+    {
+        // Pointeur vers le tableau des éléments de la liste.
+		uint8_t *ptr = (uint8_t *) m_Data;
+		size_t elementSize = sizeof(Type);
+		size_t numberOfElements = m_NumberOfElements;
+		size_t index = 0;
+        ConstTypePtr element = &toSearch;
+
+		// Vérifie pour chaque élément de la liste si la donnée est la même que celle recherchée.
+		while(index < numberOfElements) {
+			if(memcmp(ptr, element, elementSize) == 0)
+				return index;
+
+			ptr += elementSize;
+			index++;
+		}
+
+		return list::nothing;
+    }
+
+    /*
+	===================
+	list<Type>::reserve
+	===================
+	*/
+    template<typename Type>
+    bool list<Type>::reserve(size_t numberOfElements)
+    {
+        if(numberOfElements == m_NumberOfElements)
+			return true;
+
+		size_t newCapacity = (numberOfElements / m_CapacityStep + 1) * m_CapacityStep;
+		mem_ptr ptr = mem::reallocNoTrack(m_Data, newCapacity * sizeof(Type));
+
+		if(ptr == nullptr)
+			return false;
+
+		m_Data = static_cast<TypePtr>(ptr);
+		m_Capacity = newCapacity;
+        m_NumberOfElements = numberOfElements;
+
+		return true;
+    }
+
+    /*
+	=================
+	list<Type>::empty
+	=================
+	*/
+    template<typename Type>
+    void list<Type>::empty()
+    {
+        m_Data = nullptr;
+        m_NumberOfElements = 0;
+        m_Capacity = 0;
+    }
+
+    /*
+	================
+	list<Type>::free
+	================
+	*/
+    template<typename Type>
+    void list<Type>::free()
+    {
+        mem::freeNoTrack(m_Data);
+        m_Data = nullptr;
+        m_NumberOfElements = 0;
+        m_Capacity = 0;
+    }
+
+    /*
+	=================
+	list<Type>::begin
+	=================
+	*/
+    template<typename Type>
+    list_iterator<Type> list<Type>::begin()
+    {
+        return list_iterator(m_Data);
+    }
+
+    /*
+	===============
+	list<Type>::end
+	===============
+	*/
+    template<typename Type>
+    list_iterator<Type> list<Type>::end()
+    {
+        return list_iterator(m_Data + m_NumberOfElements);
+    }
+
+    /*
+	=======================
+	list<Type>::getCapacity
+	=======================
+	*/
+    template<typename Type>
+    size_t list<Type>::getCapacity() const
+    {
+        return m_Capacity;
+    }
+
+    /*
+	===========================
+	list<Type>::getCapacityStep
+	===========================
+	*/
+    template<typename Type>
+    uint32_t list<Type>::getCapacityStep() const
+    {
+        return m_Capacity;
+    }
+
+    /*
+	===============================
+	list<Type>::getNumberOfElements
+	===============================
+	*/
+    template<typename Type>
+    size_t list<Type>::getNumberOfElements() const
+    {
+        return m_NumberOfElements;
+    }
+
+    /*
+	======================
+	list<Type>::operator[]
+	======================
+	*/
+    template<typename Type>
+    typename list<Type>::TypeRef list<Type>::operator[](size_t index)
+    {
+        return m_Data[index];
+    }
+
+    /*
+	========================
+	list<Type>::growIfNeeded
+	========================
+	*/
+    template<typename Type>
+    bool list<Type>::growIfNeeded()
+    {
+        // Si le nombre d'éléments présents dans la liste est supérieur à la capacité,
+		// on augmente celle-ci du pas attribué.
+		if(m_NumberOfElements >= m_Capacity)
+        {
+			size_t newCapacity = m_Capacity + m_CapacityStep;
+			mem_ptr ptr = mem::reallocNoTrack(m_Data, newCapacity * sizeof(Type));
+
+			if(ptr == nullptr)
+				return false;
+
+			m_Data = (TypePtr) ptr;
+			m_Capacity = newCapacity;
+		}
+
+        return true;
+    }
+
+    template<typename Type>
+    inline void list<Type>::setCapacityStep(size_t size)
+    {
+        m_CapacityStep = size;
+    }
+
+}
+
+#endif

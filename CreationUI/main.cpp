@@ -14,10 +14,18 @@
 #include <DE/mat.hpp>
 #include <DE/ecs/scene.hpp>
 #include <DE/graphics/graphic.hpp>
-#include <DE/image/mypng.hpp>
-#include <DE/image/mybmp.hpp>
+#include <DE/image/png.hpp>
+#include <DE/image/bmp.hpp>
 #include <DE/resources.hpp>
 #include <DE/memory/hash_table.hpp>
+#include <DE/memory/memory.hpp>
+#include <DE/string.hpp>
+
+extern "C" {
+
+#include <DE/memory/windows_internal.h>
+
+}
 
 #include <DE/ecs/entity.hpp>
 #include <DE/ecs/component.hpp>
@@ -42,23 +50,24 @@
 #define RECT1_SPAWN_X  400.0f
 #define RECT1_SPAWN_Y  200.0f
 
-de::Logger *g_Logger = nullptr;
-
-void event_callback(de::Window &window, de::devent e)
+void event_callback(de::window &window, de::devent e)
 {
-	switch(e->getType()) {
+	switch(e->getType())
+    {
 		default: break;
-		case de::EventType::MouseMotion: {
-			if(!window.isShowingDebugPanel()) {
-				de::scene_id sceneID = de::Scene::getActiveSceneID();
+		case de::event_type::MouseMotion:
+        {
+			if(!window.isShowingDebugPanel())
+            {
+				de::scene_id sceneID = de::scene::getActiveSceneID();
 				if(sceneID == de::badID)
 					break;
 
-				de::Scene *scene = de::Scene::getScene(sceneID);
+				de::scene *scene = de::scene::getScene(sceneID);
 				if(scene == nullptr)
 					break;
 
-				de::Camera &camera = de::Scene::getScene(de::Scene::getActiveSceneID())->getCamera();
+				de::Camera &camera = de::scene::getScene(de::scene::getActiveSceneID())->getCamera();
 				float yaw   = camera.yaw();
 				float pitch = camera.pitch();
 
@@ -89,26 +98,27 @@ void event_callback(de::Window &window, de::devent e)
 	}
 
 	// Appelle le callback par défaut
-	de::Window::defaultInputCallback(window, e);
+	de::window::defaultInputCallback(window, e);
 }
 
 // Fonction appelée en boucle dans la boucle du jeu,
 // pour mettre à jour toutes les valeurs du jeu
-void update_callback(de::Window &window) {
-	de::Debug::addFunctionToCallbackList(DE_FUNCTION_NAME);
+void update_callback(de::window &win)
+{
+	de::debug::addFunctionToCallbackList(DE_FUNCTION_NAME);
 
-	de::scene_id sceneID = de::Scene::getActiveSceneID();
+	de::scene_id sceneID = de::scene::getActiveSceneID();
 	de::entity_collection_id collectionID;
-	de::Scene *scene;
+	de::scene *scene;
 
 	if(sceneID == de::badID)
 		goto end;
 
-	scene = de::Scene::getScene(sceneID);
+	scene = de::scene::getScene(sceneID);
 	if(scene == nullptr)
 		goto end;
 
-	collectionID = de::Scene::getEntityCollection(sceneID);
+	collectionID = de::scene::getEntityCollection(sceneID);
 
 	float cameraSpeed = 0.05f;
 
@@ -118,40 +128,47 @@ void update_callback(de::Window &window) {
 	de::fvec3 cameraRight = de::fvec3::normalize(de::fvec3::cross(cameraFront, camera.up()));
 
 	size_t entityIndex;
-	de::Entity entity = de::Entity::bad();
+	de::entity entity = de::entity::bad();
 
 	// Augmentation de la vitesse de déplacement de la caméra.
-	if(de::Key::isPressed(de::key::LShift)) {
+	if(de::key::isPressed(de::dkey::LShift))
+    {
 		cameraSpeed += 0.10f;
 	}
 
 	// Déplacer la caméra vers l'avant.
-	if(de::Key::isPressed(de::key::Z)) {
+	if(de::key::isPressed(de::dkey::Z))
+    {
 		camera.moveForward(cameraSpeed);
 	}
 
 	// Déplacer la caméra vers la gauche.
-	if(de::Key::isPressed(de::key::Q)) {
+	if(de::key::isPressed(de::dkey::Q))
+    {
 		camera.moveLeft(cameraSpeed);
 	}
 
 	// Déplacer la caméra vers la droite.
-	if(de::Key::isPressed(de::key::D)) {
+	if(de::key::isPressed(de::dkey::D))
+    {
 		camera.moveRight(cameraSpeed);
 	}
 
 	// Déplacer la caméra vers l'arrière.
-	if(de::Key::isPressed(de::key::S)) {
+	if(de::key::isPressed(de::dkey::S))
+    {
 		camera.moveBackward(cameraSpeed);
 	}
 
 	// Fait monter la caméra.
-	if(de::Key::isPressed(de::key::Space)) {
+	if(de::key::isPressed(de::dkey::Space))
+    {
 		camera.moveUp(cameraSpeed);
 	}
 
 	// Fait descendre la caméra.
-	if(de::Key::isPressed(de::key::LCtrl)) {
+	if(de::key::isPressed(de::dkey::LCtrl))
+    {
 		camera.moveDown(cameraSpeed);
 	}
 
@@ -159,12 +176,12 @@ void update_callback(de::Window &window) {
 
 end:
 
-	de::Debug::removeFunctionFromCallbackList();
+	de::debug::removeFunctionFromCallbackList();
 }
 
-void collider_callback(de::entity_collection_id collectionID, de::entity_id entity1, de::entity_id entity2, const de::fvec2 &difference, const de::Rect &collision)
+void collider_callback(de::entity_collection_id collectionID, de::entity_id entity1, de::entity_id entity2, const de::fvec2 &difference, const de::rect &collision)
 {
-	de::scene_id sceneID = de::Scene::getActiveSceneID();
+	de::scene_id sceneID = de::scene::getActiveSceneID();
 
 //	// Diff permet de savoir dans quelle direction le joueur va.
 //	de::fvec2 diff = difference;
@@ -371,48 +388,48 @@ void collider_out_callback(de::entity_collection_id collectionID, de::entity_id 
 	//}
 }
 
+#include <type_traits>
 
 #undef main
-int main() {
-	de::ErrorStatus errorStatus;
+int main()
+{
+	de::error_status errorStatus;
 
-	errorStatus = de::Core::init();
-	if(errorStatus != de::ErrorStatus::NoError) {
-		de::DError::printError(errorStatus);
+	errorStatus = de::core::init();
+	if(errorStatus != de::error_status::NoError)
+    {
+		de::error::printError(errorStatus);
 		return 1;
 	}
 
-	de::Logger logger("supralog.log");
-	if(!logger.open()) {
-		fprintf(stderr, "Error when creating logger\n");
-		de::Core::shutdown();
-		return 1;
-	}
-	g_Logger = &logger;
+	printf("pwd: %s\n", de::core::getPwd());
 
-	de::Debug::addFunctionToCallbackList(DE_FUNCTION_NAME);
-	de::Debug::writeToStream(logger);
+    {
+        de::list<de::string> l;
 
-	printf("pwd: %s\n", de::Core::getPwd());
+        l.add("test_string_list");
+    }
 
-	de::Window window(TARGET_MS, TARGET_FPS);
-	window.setEventCallback(event_callback);
-	window.setUpdateCallback(update_callback);
-	errorStatus = de::Window::create(window, "Creation UI [" DE_VERSION "]", de::size(WINDOW_WIDTH, WINDOW_HEIGHT));
-	if(errorStatus != de::ErrorStatus::NoError) {
-		de::DError::printError(errorStatus);
-		de::Core::shutdown();
+	de::window win(TARGET_MS, TARGET_FPS);
+	win.setEventCallback(event_callback);
+	win.setUpdateCallback(update_callback);
+	errorStatus = de::window::create(win, "Creation UI [" DE_VERSION "]", de::size(WINDOW_WIDTH, WINDOW_HEIGHT));
+
+	if(errorStatus != de::error_status::NoError)
+    {
+		de::error::printError(errorStatus);
+		de::core::shutdown();
 		return 1;
 	}
 
-	de::ImGuiWindow::init(window);
+	de::im_gui_window::init(win);
 
-	de::scene_id sceneID = de::Scene::createScene("scn_main");
-	de::Scene *scene = de::Scene::getScene(sceneID);
+	de::scene_id sceneID = de::scene::createScene("scn_main");
+	de::scene *scene = de::scene::getScene(sceneID);
 	scene->setColliderCallback(collider_callback);
 	scene->setColliderOutCallback(collider_out_callback);
 
-	de::entity_collection_id collectionID = de::Scene::getEntityCollection(sceneID);
+	de::entity_collection_id collectionID = de::scene::getEntityCollection(sceneID);
 
 	printf(
 		"====================[ OpenGL ]====================\n"
@@ -421,93 +438,56 @@ int main() {
 		"Max texture image units: %d\n"
 		"==================================================\n",
 		
-		de::GLCore::version(),
-		de::GLCore::maxVertexAttribs(),
-		de::GLCore::maxTextureImageUnits()
+		de::gl_core::version(),
+		de::gl_core::maxVertexAttribs(),
+		de::gl_core::maxTextureImageUnits()
 	);
 
-	de::Resources::init();
+	de::resources::init();
 
-	de::MyPNG pngTest;
+	de::gl_texture_int mcGrassSide = de::resources::loadTexture("grass_block_side.png", 0);
+	de::gl_texture_int mcGrassTop  = de::resources::loadTexture("grass_block_top.png", 0);
 
-	// Charge l'image PNG.
-	if(!pngTest.loadAndRead("C:\\ProgramData\\CreationUI\\resources\\textures\\undyne.png")) {
-		fprintf(stderr, "Unable to load image file.\n");
-		return 1;
-	}
-
-	pngTest.applyVerticalMirrorEffect();
-	
-	de::gl_texture texture1 = de::GLTexture::create();
-	de::GLTexture::bind(texture1, 0);
-
-	de::GLTexture::setTextureWrappingS(de::GLTextureWrap::Repeat);
-	de::GLTexture::setTextureWrappingT(de::GLTextureWrap::Repeat);
-	de::GLTexture::setTextureFiltering(de::GLTextureFilter::Nearest);
-
-	de::mem_ptr image = pngTest.rawImage();
-	de::GLTexture::transmitTexture(image, pngTest.width(), pngTest.height(), pngTest.colorType());
-	de::mem::free(image);
-
-	int pirateWidth = pngTest.width();
-	int pirateHeight = pngTest.height();
-
-	pngTest.destroy();
-
-	if(!pngTest.loadAndRead("..\\resources\\textures\\window.png")) {
-		fprintf(stderr, "Unable to load image file.\n");
-		return 1;
-	}
-
-	pngTest.applyVerticalMirrorEffect();
-
-	de::gl_texture textureWindow = de::GLTexture::create();
-	de::GLTexture::bind(textureWindow, 0);
-
-	de::GLTexture::setTextureWrappingS(de::GLTextureWrap::Repeat);
-	de::GLTexture::setTextureWrappingT(de::GLTextureWrap::Repeat);
-	de::GLTexture::setTextureFiltering(de::GLTextureFilter::Nearest);
-
-	image = pngTest.rawImage();
-	de::GLTexture::transmitTexture(image, pngTest.width(), pngTest.height(), pngTest.colorType());
-	de::mem::free(image);
-
-	pngTest.destroy();
-
-	de::MyPNG pngSkyboxLeft;
-	de::MyPNG pngSkyboxFront;
-	de::MyPNG pngSkyboxRight;
-	de::MyPNG pngSkyboxBack;
-	de::MyPNG pngSkyboxBottom;
-	de::MyPNG pngSkyboxTop;
+	de::png pngSkyboxLeft;
+	de::png pngSkyboxFront;
+	de::png pngSkyboxRight;
+	de::png pngSkyboxBack;
+	de::png pngSkyboxBottom;
+	de::png pngSkyboxTop;
 
 	// Charge les images de la skybox
-	if(!pngSkyboxLeft.loadAndRead("..\\resources\\textures\\skybox_left.png")) {
+	if(!pngSkyboxLeft.loadAndRead("..\\resources\\textures\\skybox_left.png"))
+    {
 		fprintf(stderr, "Unable to load 'skybox_left'.\n");
 		return 1;
 	}
 
-	if(!pngSkyboxFront.loadAndRead("..\\resources\\textures\\skybox_front.png")) {
+	if(!pngSkyboxFront.loadAndRead("..\\resources\\textures\\skybox_front.png"))
+    {
 		fprintf(stderr, "Unable to load 'skybox_front'.\n");
 		return 1;
 	}
 
-	if(!pngSkyboxRight.loadAndRead("..\\resources\\textures\\skybox_right.png")) {
+	if(!pngSkyboxRight.loadAndRead("..\\resources\\textures\\skybox_right.png"))
+    {
 		fprintf(stderr, "Unable to load 'skybox_right'.\n");
 		return 1;
 	}
 
-	if(!pngSkyboxBack.loadAndRead("..\\resources\\textures\\skybox_back.png")) {
+	if(!pngSkyboxBack.loadAndRead("..\\resources\\textures\\skybox_back.png"))
+    {
 		fprintf(stderr, "Unable to load 'skybox_back'.\n");
 		return 1;
 	}
 
-	if(!pngSkyboxBottom.loadAndRead("..\\resources\\textures\\skybox_bottom.png")) {
+	if(!pngSkyboxBottom.loadAndRead("..\\resources\\textures\\skybox_bottom.png"))
+    {
 		fprintf(stderr, "Unable to load 'skybox_bottom'.\n");
 		return 1;
 	}
 
-	if(!pngSkyboxTop.loadAndRead("..\\resources\\textures\\skybox_top.png")) {
+	if(!pngSkyboxTop.loadAndRead("..\\resources\\textures\\skybox_top.png"))
+    {
 		fprintf(stderr, "Unable to load 'skybox_top'.\n");
 		return 1;
 	}
@@ -531,13 +511,13 @@ int main() {
 	de::mem_ptr imageBottom = pngSkyboxBottom.rawImage();
 	de::mem_ptr imageTop    = pngSkyboxTop.rawImage();
 
-	de::gl_texture skybox = de::GLTexture::create();
-	de::GLTexture::bindCubemaps(skybox);
-	de::GLTexture::setTextureWrappingSCubemaps(de::GLTextureWrap::ClampToEdge);
-	de::GLTexture::setTextureWrappingTCubemaps(de::GLTextureWrap::ClampToEdge);
-	de::GLTexture::setTextureWrappingRCubemaps(de::GLTextureWrap::ClampToEdge);
-	de::GLTexture::setTextureFilteringCubemaps(de::GLTextureFilter::Linear);
-	de::GLTexture::transmitTextureCubemaps(imageLeft, imageFront, imageRight, imageBack, imageBottom, imageTop, pngSkyboxLeft.width(), pngSkyboxLeft.height(), pngSkyboxLeft.colorType());
+	de::gl_texture_int skybox = de::gl_texture::create();
+	de::gl_texture::bindCubemaps(skybox);
+	de::gl_texture::setTextureWrappingSCubemaps(de::gl_texture_wrap::ClampToEdge);
+	de::gl_texture::setTextureWrappingTCubemaps(de::gl_texture_wrap::ClampToEdge);
+	de::gl_texture::setTextureWrappingRCubemaps(de::gl_texture_wrap::ClampToEdge);
+	de::gl_texture::setTextureFilteringCubemaps(de::gl_texture_filter::Linear);
+	de::gl_texture::transmitTextureCubemaps(imageLeft, imageFront, imageRight, imageBack, imageBottom, imageTop, pngSkyboxLeft.width(), pngSkyboxLeft.height(), pngSkyboxLeft.colorType());
 
 	de::mem::free(imageLeft);
 	de::mem::free(imageFront);
@@ -546,57 +526,52 @@ int main() {
 	de::mem::free(imageBottom);
 	de::mem::free(imageTop);
 
-	de::gl_program defaultProgram = de::GLProgram::get("default");
-	de::gl_program skyboxProgram  = de::GLProgram::get("skybox");
+	de::gl_program_int defaultProgram = de::gl_program::get("default");
+	de::gl_program_int skyboxProgram  = de::gl_program::get("skybox");
 
 	de::colora white(255, 255, 255, 255);
 
 	size_t i, j;
-	for(i = 0; i < 50; ++i) {
-		float x = 2.0f * i;
-		for(j = 0; j < 50; ++j) {
-			float y = 2.0f * j;
-
-			de::Entity ent = de::Graphic::create3DRectangle(
+	for(i = 0; i < 50; ++i)
+    {
+		for(j = 0; j < 50; ++j)
+        {
+			de::entity ent = de::graphic::create3DRectangleTexture(
 				defaultProgram,
 				collectionID,
-				de::fvec3(x, 0.0f, y),
+				de::fvec3(i, 0.0f, j),
 				1.0f,
 				1.0f,
 				1.0f,
-				de::colora(255, 0, 0, 255),
-				de::colora(0, 255, 0, 255),
-				de::colora(0, 0, 255, 255),
-				de::colora(255, 255, 0, 255),
-				de::colora(255, 0, 255, 255),
-				de::colora(0, 255, 255, 255)
+				white,
+				white,
+				white,
+				white,
+				white,
+				white,
+				mcGrassSide,
+				0
 			);
 		}
 	}
 
-	de::Entity ent1 = de::Graphic::createRectangleTexture(defaultProgram, collectionID, de::fvec3(0.0f, 0.0f, -200.0f), pirateWidth, pirateHeight, de::colora(255, 255, 255, 255), texture1, 0);
-
-	de::Entity entWindow = de::Graphic::createRectangleTexture(defaultProgram, collectionID, de::fvec3(0.0f, 0.0f, 2.0f), 7.0f, 7.0f, de::colora(255, 255, 255, 255), textureWindow, 0);
-
 	// Affiche la skybox à la fin pour optimiser les appelles au fragment shader = FPS++
-	de::Entity skyboxEnt = de::Graphic::createCubemap(skyboxProgram, collectionID, de::fvec3(0.0f, 0.0f, 0.0f), 200.0f, 200.0f, 200.0f, skybox, 0);
+	de::entity skyboxEnt = de::graphic::createCubemap(skyboxProgram, collectionID, de::fvec3(0.0f, 0.0f, 0.0f), 200.0f, 200.0f, 200.0f, skybox, 0);
 
-	de::Scene::setActiveScene(sceneID);
+	de::scene::setActiveScene(sceneID);
 
-	window.setShowingDebugPanel(true);
+	win.setShowingDebugPanel(true);
 
 	// Lance la boucle du jeu, bloquant.
-	window.run();
+	win.run();
 
 	// Détruit tous les composants internes de la fenêtre puis la fenêtre elle-même.
-	window.destroy();
+	win.destroy();
 
-	logger.close();
+	de::gl_program::destroyAllPrograms();
 
-	de::GLProgram::destroyAllPrograms();
-
-	de::Resources::shutdown();
-	de::Core::shutdown();
+	de::resources::shutdown();
+	de::core::shutdown();
 
 	printf("Good-bye!\n");
 

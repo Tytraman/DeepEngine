@@ -1,0 +1,165 @@
+\hypertarget{classde_1_1_my_p_n_g}{}\doxysection{de\+::My\+P\+NG Class Reference}
+\label{classde_1_1_my_p_n_g}\index{de::MyPNG@{de::MyPNG}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_a0324c1b780d74e1536889dfc9b6982aa}\label{classde_1_1_my_p_n_g_a0324c1b780d74e1536889dfc9b6982aa}} 
+bool {\bfseries load\+File} (\mbox{\hyperlink{classde_1_1_input_file_stream}{Input\+File\+Stream}} \&ifs)
+\item 
+bool \mbox{\hyperlink{classde_1_1_my_p_n_g_a70d7dbb0b54f52764931710ed7d3ae97}{load\+File}} (const char $\ast$filename)
+\begin{DoxyCompactList}\small\item\em Charge le contenu d\textquotesingle{}un fichier dans la mémoire. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_a6208a456a5410518a4d118711fc16458}\label{classde_1_1_my_p_n_g_a6208a456a5410518a4d118711fc16458}} 
+bool {\bfseries load\+File} (const wchar\+\_\+t $\ast$filename)
+\item 
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_a5fa05e2025dff057624428a70c71b9e5}\label{classde_1_1_my_p_n_g_a5fa05e2025dff057624428a70c71b9e5}} 
+void \mbox{\hyperlink{classde_1_1_my_p_n_g_a5fa05e2025dff057624428a70c71b9e5}{destroy}} ()
+\begin{DoxyCompactList}\small\item\em Libère la mémoire utilisée. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{classde_1_1_my_p_n_g_a532a3e5a03a49c0612533185a909e82a}{check}} ()
+\begin{DoxyCompactList}\small\item\em Vérifie si les données chargées correspondent au format P\+NG. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_a8a7413cbb58d7691196e470e7fead348}\label{classde_1_1_my_p_n_g_a8a7413cbb58d7691196e470e7fead348}} 
+bool {\bfseries read\+P\+N\+G\+Info} ()
+\item 
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_ab0772585f7d2164f94b91b6be387c12f}\label{classde_1_1_my_p_n_g_ab0772585f7d2164f94b91b6be387c12f}} 
+bool {\bfseries read\+P\+N\+G\+Image} ()
+\item 
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_a909480921da81501c6d804df857c6f07}\label{classde_1_1_my_p_n_g_a909480921da81501c6d804df857c6f07}} 
+bool {\bfseries load\+And\+Read} (const char $\ast$filename)
+\item 
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_a9dbdbeed3225ffcd910d764eba3caea3}\label{classde_1_1_my_p_n_g_a9dbdbeed3225ffcd910d764eba3caea3}} 
+bool {\bfseries load\+And\+Read} (const wchar\+\_\+t $\ast$filename)
+\item 
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_a4ad4a0c795e7c6a3a9670395bd61e7d2}\label{classde_1_1_my_p_n_g_a4ad4a0c795e7c6a3a9670395bd61e7d2}} 
+void {\bfseries apply\+Horizontal\+Mirror\+Effect} ()
+\item 
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_a44b941d6b9a676f361a4157c5193e5c3}\label{classde_1_1_my_p_n_g_a44b941d6b9a676f361a4157c5193e5c3}} 
+void {\bfseries apply\+Vertical\+Mirror\+Effect} ()
+\item 
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_ae93b667cbd15742a268562338d0bcbce}\label{classde_1_1_my_p_n_g_ae93b667cbd15742a268562338d0bcbce}} 
+void {\bfseries copy\+Channel\+Colors} (Image\+Channel\+::t from, Image\+Channel\+::t to)
+\item 
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_ac85a3545728d67f8d169bc8253d55973}\label{classde_1_1_my_p_n_g_ac85a3545728d67f8d169bc8253d55973}} 
+void {\bfseries swap\+Channel\+Colors} (Image\+Channel\+::t channel1, Image\+Channel\+::t channel2)
+\item 
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_aebb109db67a7ad2e9850c6e9df913b42}\label{classde_1_1_my_p_n_g_aebb109db67a7ad2e9850c6e9df913b42}} 
+void {\bfseries set\+Channel\+Color} (Image\+Channel\+::t channel, uint8\+\_\+t value)
+\item 
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_abe857dab3b1d7e4f4ca5129ca719e5c1}\label{classde_1_1_my_p_n_g_abe857dab3b1d7e4f4ca5129ca719e5c1}} 
+uint8\+\_\+t $\ast$ {\bfseries data} ()
+\item 
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_ae96f01b38b1fceafefc6a51af55ef43b}\label{classde_1_1_my_p_n_g_ae96f01b38b1fceafefc6a51af55ef43b}} 
+size\+\_\+t {\bfseries size} () const
+\item 
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_a8f819d80007a0850a4bc36a5bf872c75}\label{classde_1_1_my_p_n_g_a8f819d80007a0850a4bc36a5bf872c75}} 
+size\+\_\+t {\bfseries position} () const
+\item 
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_a442b86a4c805d733b44f4f250872ec26}\label{classde_1_1_my_p_n_g_a442b86a4c805d733b44f4f250872ec26}} 
+uint32\+\_\+t {\bfseries width} () const
+\item 
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_ad99bbb8542b3af92115adbcb8075a9d2}\label{classde_1_1_my_p_n_g_ad99bbb8542b3af92115adbcb8075a9d2}} 
+uint32\+\_\+t {\bfseries height} () const
+\item 
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_a7274b2d9d7744f06acac004d0c873ff7}\label{classde_1_1_my_p_n_g_a7274b2d9d7744f06acac004d0c873ff7}} 
+int {\bfseries bit\+Depth} () const
+\item 
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_a2dd651cd341e33124096de69702e3178}\label{classde_1_1_my_p_n_g_a2dd651cd341e33124096de69702e3178}} 
+Image\+Color\+Type\+::t {\bfseries color\+Type} () const
+\item 
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_a69cedb13c2575c7f63c71ab0f7c2012d}\label{classde_1_1_my_p_n_g_a69cedb13c2575c7f63c71ab0f7c2012d}} 
+int {\bfseries interlace\+Type} () const
+\item 
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_a458d8d14666a868f180b79fe6d5aeae1}\label{classde_1_1_my_p_n_g_a458d8d14666a868f180b79fe6d5aeae1}} 
+uint8\+\_\+t {\bfseries channels} () const
+\item 
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_a0b619848aa50cfb522a4b2678f8514b6}\label{classde_1_1_my_p_n_g_a0b619848aa50cfb522a4b2678f8514b6}} 
+uint32\+\_\+t {\bfseries color\+Depth} () const
+\item 
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_af69110e918074c3ad7287a9e35e3a61c}\label{classde_1_1_my_p_n_g_af69110e918074c3ad7287a9e35e3a61c}} 
+uint8\+\_\+t $\ast$ {\bfseries image} ()
+\item 
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_a3f8fc93c1d2ed09e4a5e46e40a9518a4}\label{classde_1_1_my_p_n_g_a3f8fc93c1d2ed09e4a5e46e40a9518a4}} 
+mem\+\_\+ptr {\bfseries raw\+Image} ()
+\item 
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_adfff028e840304c9965766f5fd8d37b2}\label{classde_1_1_my_p_n_g_adfff028e840304c9965766f5fd8d37b2}} 
+void {\bfseries set\+Position} (size\+\_\+t pos)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_acb46d4210481679e9bea9847b34ff70e}\label{classde_1_1_my_p_n_g_acb46d4210481679e9bea9847b34ff70e}} 
+static const char $\ast$ {\bfseries color\+Type\+Name} (Image\+Color\+Type\+::t color\+Type)
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_a60cf5f1650bf588bcfe0386feafd19f5}\label{classde_1_1_my_p_n_g_a60cf5f1650bf588bcfe0386feafd19f5}} 
+\mbox{\hyperlink{classde_1_1_memory_chunk}{Memory\+Chunk}} {\bfseries m\+\_\+\+Memory\+Chunk}
+\item 
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_a791627e12ba4c3effb92ea502dbc5690}\label{classde_1_1_my_p_n_g_a791627e12ba4c3effb92ea502dbc5690}} 
+uint8\+\_\+t $\ast$ {\bfseries m\+\_\+\+Image}
+\item 
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_aa6b8f84f093c7bf5251ed05c060f1457}\label{classde_1_1_my_p_n_g_aa6b8f84f093c7bf5251ed05c060f1457}} 
+size\+\_\+t {\bfseries m\+\_\+\+Position}
+\item 
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_ab062fa708e5bbbb72b963e9edd1f7596}\label{classde_1_1_my_p_n_g_ab062fa708e5bbbb72b963e9edd1f7596}} 
+png\+\_\+structp {\bfseries m\+\_\+\+P\+NG}
+\item 
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_ad8ad48b10d5b493a164db9b86a97470e}\label{classde_1_1_my_p_n_g_ad8ad48b10d5b493a164db9b86a97470e}} 
+png\+\_\+infop {\bfseries m\+\_\+\+P\+N\+G\+Info}
+\item 
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_a61a05182a2a3ef8bb0fa2fd0f921259d}\label{classde_1_1_my_p_n_g_a61a05182a2a3ef8bb0fa2fd0f921259d}} 
+uint32\+\_\+t {\bfseries m\+\_\+\+Width}
+\item 
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_a75d54743dfaf1697e2d6536d8dffafa0}\label{classde_1_1_my_p_n_g_a75d54743dfaf1697e2d6536d8dffafa0}} 
+uint32\+\_\+t {\bfseries m\+\_\+\+Height}
+\item 
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_a0f048197ff8208689f0378b14e99faa7}\label{classde_1_1_my_p_n_g_a0f048197ff8208689f0378b14e99faa7}} 
+int {\bfseries m\+\_\+\+Bit\+Depth}
+\item 
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_ae54b557be1c772abd8d38acb163b10c6}\label{classde_1_1_my_p_n_g_ae54b557be1c772abd8d38acb163b10c6}} 
+Image\+Color\+Type\+::t {\bfseries m\+\_\+\+Color\+Type}
+\item 
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_ad8df7c958f3dba656378fb8d96767e8f}\label{classde_1_1_my_p_n_g_ad8df7c958f3dba656378fb8d96767e8f}} 
+int {\bfseries m\+\_\+\+Interlace\+Type}
+\item 
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_a55dbb3525b4a800f44b50ddb417ed6f1}\label{classde_1_1_my_p_n_g_a55dbb3525b4a800f44b50ddb417ed6f1}} 
+uint8\+\_\+t {\bfseries m\+\_\+\+Channels}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_a532a3e5a03a49c0612533185a909e82a}\label{classde_1_1_my_p_n_g_a532a3e5a03a49c0612533185a909e82a}} 
+\index{de::MyPNG@{de::MyPNG}!check@{check}}
+\index{check@{check}!de::MyPNG@{de::MyPNG}}
+\doxysubsubsection{\texorpdfstring{check()}{check()}}
+{\footnotesize\ttfamily bool de\+::\+My\+P\+N\+G\+::check (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Vérifie si les données chargées correspondent au format P\+NG. 
+
+\begin{DoxyReturn}{Returns}
+{\ttfamily true} si le format est P\+NG, sinon {\ttfamily false}. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classde_1_1_my_p_n_g_a70d7dbb0b54f52764931710ed7d3ae97}\label{classde_1_1_my_p_n_g_a70d7dbb0b54f52764931710ed7d3ae97}} 
+\index{de::MyPNG@{de::MyPNG}!loadFile@{loadFile}}
+\index{loadFile@{loadFile}!de::MyPNG@{de::MyPNG}}
+\doxysubsubsection{\texorpdfstring{loadFile()}{loadFile()}}
+{\footnotesize\ttfamily bool de\+::\+My\+P\+N\+G\+::load\+File (\begin{DoxyParamCaption}\item[{const char $\ast$}]{filename }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Charge le contenu d\textquotesingle{}un fichier dans la mémoire. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em filename} & Nom du fichier à charger. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily true} si le fichier à été chargé en mémoire, sinon {\ttfamily false}. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\+D\+E/image/mypng.\+hpp\end{DoxyCompactItemize}

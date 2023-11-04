@@ -1,0 +1,123 @@
+\hypertarget{classde_1_1_system_manager}{}\doxysection{de\+::System\+Manager Class Reference}
+\label{classde_1_1_system_manager}\index{de::SystemManager@{de::SystemManager}}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classde_1_1_system_manager_ad62befd7704d61a6a101e730d405bb37}\label{classde_1_1_system_manager_ad62befd7704d61a6a101e730d405bb37}} 
+{\bfseries System\+Manager} (const \mbox{\hyperlink{classde_1_1_system_manager}{System\+Manager}} \&)=delete
+\item 
+\mbox{\Hypertarget{classde_1_1_system_manager_a4d5b08b03ab3ac15e6303dc97fe18048}\label{classde_1_1_system_manager_a4d5b08b03ab3ac15e6303dc97fe18048}} 
+{\bfseries System\+Manager} (const \mbox{\hyperlink{classde_1_1_system_manager}{System\+Manager}} \&\&)=delete
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{namespacede_a19c1eee1844666d7ebaf4af86d2842b7}{system\+\_\+id}} \mbox{\hyperlink{classde_1_1_system_manager_a1da44cc05c09ecd7dea1f968e1bbd607}{create\+System}} (\mbox{\hyperlink{namespacede_a8ec09174ceec2239b452b6568d741620}{System\+Function}} function, \mbox{\hyperlink{namespacede_acf3417e1b1e9e2d7c19754ef383ca0af}{component\+\_\+type}} component\+Types\+To\+Include=0, \mbox{\hyperlink{namespacede_acf3417e1b1e9e2d7c19754ef383ca0af}{component\+\_\+type}} component\+Types\+To\+Exclude=0)
+\begin{DoxyCompactList}\small\item\em Crée un système. \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{classde_1_1_system_manager_a5988a5d6401cda5ef2139f39f4f9d45a}{execute\+System}} (\mbox{\hyperlink{namespacede_a19c1eee1844666d7ebaf4af86d2842b7}{system\+\_\+id}} system)
+\begin{DoxyCompactList}\small\item\em Exécute un système spécifique. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classde_1_1_system_manager_a56fb3a41c8988eeb5f06b130dec38294}\label{classde_1_1_system_manager_a56fb3a41c8988eeb5f06b130dec38294}} 
+static void \mbox{\hyperlink{classde_1_1_system_manager_a56fb3a41c8988eeb5f06b130dec38294}{execute\+Systems}} ()
+\begin{DoxyCompactList}\small\item\em Exécute tous les systèmes activés dans leur ordre d\textquotesingle{}activation. 1er activé = 1er exécuté. \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{classde_1_1_system_manager_ae7177cc0c6192ca56e2909e879f562dd}{enable\+System}} (\mbox{\hyperlink{namespacede_a19c1eee1844666d7ebaf4af86d2842b7}{system\+\_\+id}} system)
+\begin{DoxyCompactList}\small\item\em Active le système afin qu\textquotesingle{}il soit exécuté lors de l\textquotesingle{}appel à \mbox{\hyperlink{classde_1_1_system_manager_a56fb3a41c8988eeb5f06b130dec38294}{execute\+Systems}}. \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{classde_1_1_system_manager_a1054f3dbf4571c0a362bb919ba11f3a3}{disable\+System}} (\mbox{\hyperlink{namespacede_a19c1eee1844666d7ebaf4af86d2842b7}{system\+\_\+id}} system)
+\begin{DoxyCompactList}\small\item\em Désactive le système afin qu\textquotesingle{}il ne soit plus exécuté lors de l\textquotesingle{}appel à \mbox{\hyperlink{classde_1_1_system_manager_a56fb3a41c8988eeb5f06b130dec38294}{execute\+Systems}}. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classde_1_1_system_manager_ac55a671feb1fcaf640256a245df70ebe}\label{classde_1_1_system_manager_ac55a671feb1fcaf640256a245df70ebe}} 
+static void {\bfseries acceleration\+System} ()
+\item 
+\mbox{\Hypertarget{classde_1_1_system_manager_a53c94b9b798342eab29fa49da5fc7ae4}\label{classde_1_1_system_manager_a53c94b9b798342eab29fa49da5fc7ae4}} 
+static void {\bfseries velocity\+System} ()
+\item 
+\mbox{\Hypertarget{classde_1_1_system_manager_a77262835a4fb043829850fafd31fec8e}\label{classde_1_1_system_manager_a77262835a4fb043829850fafd31fec8e}} 
+static void {\bfseries collider\+System} ()
+\item 
+\mbox{\Hypertarget{classde_1_1_system_manager_a67cc9df3e9b5eccfac046a1c956c16f6}\label{classde_1_1_system_manager_a67cc9df3e9b5eccfac046a1c956c16f6}} 
+static void {\bfseries render\+System} (\mbox{\hyperlink{classde_1_1_open_g_l_renderer}{Open\+G\+L\+Renderer}} \&renderer, scene\+\_\+id scene\+ID)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classde_1_1_system_manager_a39b749613f07793c9549476b0dd1c0b7}\label{classde_1_1_system_manager_a39b749613f07793c9549476b0dd1c0b7}} 
+static \mbox{\hyperlink{namespacede_a19c1eee1844666d7ebaf4af86d2842b7}{system\+\_\+id}} \mbox{\hyperlink{classde_1_1_system_manager_a39b749613f07793c9549476b0dd1c0b7}{m\+\_\+\+Next\+ID}}
+\begin{DoxyCompactList}\small\item\em L\textquotesingle{}ID du prochain système à attribuer. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classde_1_1_system_manager_a7a95cd9f49a5ec4e0d2f4e6fdd5bb541}\label{classde_1_1_system_manager_a7a95cd9f49a5ec4e0d2f4e6fdd5bb541}} 
+static \mbox{\hyperlink{classde_1_1_list}{List}} \mbox{\hyperlink{classde_1_1_system_manager_a7a95cd9f49a5ec4e0d2f4e6fdd5bb541}{m\+\_\+\+Enabled\+Systems}}
+\begin{DoxyCompactList}\small\item\em Liste des systèmes actuellement activés. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classde_1_1_system_manager_a1da44cc05c09ecd7dea1f968e1bbd607}\label{classde_1_1_system_manager_a1da44cc05c09ecd7dea1f968e1bbd607}} 
+\index{de::SystemManager@{de::SystemManager}!createSystem@{createSystem}}
+\index{createSystem@{createSystem}!de::SystemManager@{de::SystemManager}}
+\doxysubsubsection{\texorpdfstring{createSystem()}{createSystem()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{namespacede_a19c1eee1844666d7ebaf4af86d2842b7}{system\+\_\+id}} de\+::\+System\+Manager\+::create\+System (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacede_a8ec09174ceec2239b452b6568d741620}{System\+Function}}}]{function,  }\item[{\mbox{\hyperlink{namespacede_acf3417e1b1e9e2d7c19754ef383ca0af}{component\+\_\+type}}}]{component\+Types\+To\+Include = {\ttfamily 0},  }\item[{\mbox{\hyperlink{namespacede_acf3417e1b1e9e2d7c19754ef383ca0af}{component\+\_\+type}}}]{component\+Types\+To\+Exclude = {\ttfamily 0} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Crée un système. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em function} & La fonction que le système devra exécuter. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+L\textquotesingle{}ID du système nouvellement créé. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classde_1_1_system_manager_a1054f3dbf4571c0a362bb919ba11f3a3}\label{classde_1_1_system_manager_a1054f3dbf4571c0a362bb919ba11f3a3}} 
+\index{de::SystemManager@{de::SystemManager}!disableSystem@{disableSystem}}
+\index{disableSystem@{disableSystem}!de::SystemManager@{de::SystemManager}}
+\doxysubsubsection{\texorpdfstring{disableSystem()}{disableSystem()}}
+{\footnotesize\ttfamily void de\+::\+System\+Manager\+::disable\+System (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacede_a19c1eee1844666d7ebaf4af86d2842b7}{system\+\_\+id}}}]{system }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Désactive le système afin qu\textquotesingle{}il ne soit plus exécuté lors de l\textquotesingle{}appel à \mbox{\hyperlink{classde_1_1_system_manager_a56fb3a41c8988eeb5f06b130dec38294}{execute\+Systems}}. 
+
+\begin{DoxyRemark}{Remarks}
+Si le système est déjà désactivé, il ne sera pas désactivé une 2ème fois. 
+\end{DoxyRemark}
+
+\begin{DoxyParams}{Parameters}
+{\em system} & L\textquotesingle{}ID du système à désactiver. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classde_1_1_system_manager_ae7177cc0c6192ca56e2909e879f562dd}\label{classde_1_1_system_manager_ae7177cc0c6192ca56e2909e879f562dd}} 
+\index{de::SystemManager@{de::SystemManager}!enableSystem@{enableSystem}}
+\index{enableSystem@{enableSystem}!de::SystemManager@{de::SystemManager}}
+\doxysubsubsection{\texorpdfstring{enableSystem()}{enableSystem()}}
+{\footnotesize\ttfamily void de\+::\+System\+Manager\+::enable\+System (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacede_a19c1eee1844666d7ebaf4af86d2842b7}{system\+\_\+id}}}]{system }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [inline]}, {\ttfamily [static]}}
+
+
+
+Active le système afin qu\textquotesingle{}il soit exécuté lors de l\textquotesingle{}appel à \mbox{\hyperlink{classde_1_1_system_manager_a56fb3a41c8988eeb5f06b130dec38294}{execute\+Systems}}. 
+
+\begin{DoxyRemark}{Remarks}
+Si le système est déjà activé, il ne sera pas activé une 2ème fois. 
+\end{DoxyRemark}
+
+\begin{DoxyParams}{Parameters}
+{\em system} & L\textquotesingle{}ID du système à activer. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classde_1_1_system_manager_a5988a5d6401cda5ef2139f39f4f9d45a}\label{classde_1_1_system_manager_a5988a5d6401cda5ef2139f39f4f9d45a}} 
+\index{de::SystemManager@{de::SystemManager}!executeSystem@{executeSystem}}
+\index{executeSystem@{executeSystem}!de::SystemManager@{de::SystemManager}}
+\doxysubsubsection{\texorpdfstring{executeSystem()}{executeSystem()}}
+{\footnotesize\ttfamily static void de\+::\+System\+Manager\+::execute\+System (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacede_a19c1eee1844666d7ebaf4af86d2842b7}{system\+\_\+id}}}]{system }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Exécute un système spécifique. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em system} & L\textquotesingle{}ID du système à exécuter. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\+D\+E/ecs/system.\+hpp\end{DoxyCompactItemize}

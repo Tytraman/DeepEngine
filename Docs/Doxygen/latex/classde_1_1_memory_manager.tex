@@ -1,0 +1,143 @@
+\hypertarget{classde_1_1_memory_manager}{}\doxysection{de\+::Memory\+Manager Class Reference}
+\label{classde_1_1_memory_manager}\index{de::MemoryManager@{de::MemoryManager}}
+
+
+Permet une gestion plus simple de la mémoire.  
+
+
+
+
+{\ttfamily \#include $<$memory.\+hpp$>$}
+
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static mem\+\_\+ptr \mbox{\hyperlink{classde_1_1_memory_manager_ac95ff11c0edacdecffc5cca82bcbb28a}{alloc\+No\+Track}} (size\+\_\+t \mbox{\hyperlink{structde_1_1size}{size}})
+\begin{DoxyCompactList}\small\item\em Alloue un espace mémoire sans le traquer avec le gestionnaire de mémoire. \end{DoxyCompactList}\item 
+static mem\+\_\+ptr \mbox{\hyperlink{classde_1_1_memory_manager_a129b4b6c1a1258cef221854d17d3801f}{alloc}} (size\+\_\+t \mbox{\hyperlink{structde_1_1size}{size}})
+\begin{DoxyCompactList}\small\item\em Alloue un espace mémoire en le traquant avec le gesionnaire de mémoire. {\itshape (Recommandé pour éviter les memory leaks)}. \end{DoxyCompactList}\item 
+static mem\+\_\+ptr \mbox{\hyperlink{classde_1_1_memory_manager_a6e8953db763e1745d7bc25d18da75163}{realloc\+No\+Track}} (mem\+\_\+ptr memory, size\+\_\+t new\+Size)
+\begin{DoxyCompactList}\small\item\em Ré-\/alloue un espace mémoire sans le traquer avec le gestionnaire de mémoire. \end{DoxyCompactList}\item 
+static mem\+\_\+ptr \mbox{\hyperlink{classde_1_1_memory_manager_a88ca3495608be242d2be6538c47ceaf7}{realloc}} (mem\+\_\+ptr memory, size\+\_\+t new\+Size)
+\begin{DoxyCompactList}\small\item\em Ré-\/alloue un espace mémoire en le traquant avec le gestionnaire de mémoire. \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{classde_1_1_memory_manager_af536942749dbc7e55d4aeeb61b457979}{free\+No\+Track}} (mem\+\_\+ptr memory)
+\begin{DoxyCompactList}\small\item\em Libère un espace mémoire qui a été créé sans être traqué. \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{classde_1_1_memory_manager_aae0b954aa55d62d79ea1b297a85b2fff}{free}} (const mem\+\_\+ptr memory)
+\begin{DoxyCompactList}\small\item\em Libère un espace mémoire qui a été créé en étant traqué. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Permet une gestion plus simple de la mémoire. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classde_1_1_memory_manager_a129b4b6c1a1258cef221854d17d3801f}\label{classde_1_1_memory_manager_a129b4b6c1a1258cef221854d17d3801f}} 
+\index{de::MemoryManager@{de::MemoryManager}!alloc@{alloc}}
+\index{alloc@{alloc}!de::MemoryManager@{de::MemoryManager}}
+\doxysubsubsection{\texorpdfstring{alloc()}{alloc()}}
+{\footnotesize\ttfamily static mem\+\_\+ptr de\+::\+Memory\+Manager\+::alloc (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{size }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Alloue un espace mémoire en le traquant avec le gesionnaire de mémoire. {\itshape (Recommandé pour éviter les memory leaks)}. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em size} & Nombre d\textquotesingle{}octets à allouer pour l\textquotesingle{}espace mémoire. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+L\textquotesingle{}adresse vers l\textquotesingle{}espace mémoire ou {\ttfamily nullptr} si une erreur ests survenue. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classde_1_1_memory_manager_ac95ff11c0edacdecffc5cca82bcbb28a}\label{classde_1_1_memory_manager_ac95ff11c0edacdecffc5cca82bcbb28a}} 
+\index{de::MemoryManager@{de::MemoryManager}!allocNoTrack@{allocNoTrack}}
+\index{allocNoTrack@{allocNoTrack}!de::MemoryManager@{de::MemoryManager}}
+\doxysubsubsection{\texorpdfstring{allocNoTrack()}{allocNoTrack()}}
+{\footnotesize\ttfamily static mem\+\_\+ptr de\+::\+Memory\+Manager\+::alloc\+No\+Track (\begin{DoxyParamCaption}\item[{size\+\_\+t}]{size }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Alloue un espace mémoire sans le traquer avec le gestionnaire de mémoire. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em size} & Nombre d\textquotesingle{}octets à allouer pour l\textquotesingle{}espace mémoire. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+L\textquotesingle{}adresse vers l\textquotesingle{}espace mémoire ou {\ttfamily nullptr} si une erreur est survenue. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classde_1_1_memory_manager_aae0b954aa55d62d79ea1b297a85b2fff}\label{classde_1_1_memory_manager_aae0b954aa55d62d79ea1b297a85b2fff}} 
+\index{de::MemoryManager@{de::MemoryManager}!free@{free}}
+\index{free@{free}!de::MemoryManager@{de::MemoryManager}}
+\doxysubsubsection{\texorpdfstring{free()}{free()}}
+{\footnotesize\ttfamily static void de\+::\+Memory\+Manager\+::free (\begin{DoxyParamCaption}\item[{const mem\+\_\+ptr}]{memory }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Libère un espace mémoire qui a été créé en étant traqué. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em memory} & Adresse de l\textquotesingle{}espace mémoire à libérer. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classde_1_1_memory_manager_af536942749dbc7e55d4aeeb61b457979}\label{classde_1_1_memory_manager_af536942749dbc7e55d4aeeb61b457979}} 
+\index{de::MemoryManager@{de::MemoryManager}!freeNoTrack@{freeNoTrack}}
+\index{freeNoTrack@{freeNoTrack}!de::MemoryManager@{de::MemoryManager}}
+\doxysubsubsection{\texorpdfstring{freeNoTrack()}{freeNoTrack()}}
+{\footnotesize\ttfamily static void de\+::\+Memory\+Manager\+::free\+No\+Track (\begin{DoxyParamCaption}\item[{mem\+\_\+ptr}]{memory }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Libère un espace mémoire qui a été créé sans être traqué. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em memory} & Adresse de l\textquotesingle{}espace mémoire à libérer. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{classde_1_1_memory_manager_a88ca3495608be242d2be6538c47ceaf7}\label{classde_1_1_memory_manager_a88ca3495608be242d2be6538c47ceaf7}} 
+\index{de::MemoryManager@{de::MemoryManager}!realloc@{realloc}}
+\index{realloc@{realloc}!de::MemoryManager@{de::MemoryManager}}
+\doxysubsubsection{\texorpdfstring{realloc()}{realloc()}}
+{\footnotesize\ttfamily static mem\+\_\+ptr de\+::\+Memory\+Manager\+::realloc (\begin{DoxyParamCaption}\item[{mem\+\_\+ptr}]{memory,  }\item[{size\+\_\+t}]{new\+Size }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Ré-\/alloue un espace mémoire en le traquant avec le gestionnaire de mémoire. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em memory} & Adresse de l\textquotesingle{}espace mémoire à ré-\/allouer. \\
+\hline
+{\em new\+Size} & Nombre d\textquotesingle{}octets à allouer pour l\textquotesingle{}espace mémoire. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+L\textquotesingle{}adresse vers le nouvel espace mémoire ou {\ttfamily nullptr} si une erreur est survenue. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classde_1_1_memory_manager_a6e8953db763e1745d7bc25d18da75163}\label{classde_1_1_memory_manager_a6e8953db763e1745d7bc25d18da75163}} 
+\index{de::MemoryManager@{de::MemoryManager}!reallocNoTrack@{reallocNoTrack}}
+\index{reallocNoTrack@{reallocNoTrack}!de::MemoryManager@{de::MemoryManager}}
+\doxysubsubsection{\texorpdfstring{reallocNoTrack()}{reallocNoTrack()}}
+{\footnotesize\ttfamily static mem\+\_\+ptr de\+::\+Memory\+Manager\+::realloc\+No\+Track (\begin{DoxyParamCaption}\item[{mem\+\_\+ptr}]{memory,  }\item[{size\+\_\+t}]{new\+Size }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Ré-\/alloue un espace mémoire sans le traquer avec le gestionnaire de mémoire. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em memory} & Adresse de l\textquotesingle{}espace mémoire à ré-\/allouer. \\
+\hline
+{\em new\+Size} & Nombre d\textquotesingle{}octets à allouer pour l\textquotesingle{}espace mémoire. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+L\textquotesingle{}adresse vers le nouvel espace mémoire ou {\ttfamily nullptr} si une erreur est survenue. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\+D\+E/memory/memory.\+hpp\end{DoxyCompactItemize}

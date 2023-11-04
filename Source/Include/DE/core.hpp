@@ -1,0 +1,55 @@
+#ifndef __DEEP_ENGINE_CORE_HPP__
+#define __DEEP_ENGINE_CORE_HPP__
+
+#include <DE/def.hpp>
+#include <DE/error.hpp>
+
+#include <stdint.h>
+
+namespace de
+{
+
+	class DE_API core
+    {
+
+		private:
+			static uint64_t m_InitTime;
+
+		public:
+			static error_status init();
+
+			static uint32_t getMousePosition(int *x, int *y);
+
+			static void shutdown();
+
+			static uint64_t getTick();
+			static uint64_t getCurrentTimeMillis();
+			static void sleep(uint32_t millis);
+
+			static const char *getPwd();
+
+        public:
+            core() = delete;
+
+	};
+
+	inline uint64_t core::getTick() {
+#ifdef DE_WINDOWS
+		return GetTickCount64() - m_InitTime;
+#else
+#error Need implementation
+#endif
+	}
+
+	inline void core::sleep(uint32_t millis)
+	{
+#ifdef DE_WINDOWS
+		Sleep(millis);
+#else
+#error Need implementation
+#endif
+	}
+
+}
+
+#endif

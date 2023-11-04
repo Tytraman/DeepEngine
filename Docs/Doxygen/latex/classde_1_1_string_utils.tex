@@ -1,0 +1,66 @@
+\hypertarget{classde_1_1_string_utils}{}\doxysection{de\+::String\+Utils Class Reference}
+\label{classde_1_1_string_utils}\index{de::StringUtils@{de::StringUtils}}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classde_1_1_string_utils_a4a1dec09092c1e6b381153d5ce18fcd2}\label{classde_1_1_string_utils_a4a1dec09092c1e6b381153d5ce18fcd2}} 
+static size\+\_\+t {\bfseries copy} (char $\ast$dest, size\+\_\+t dest\+Size, const char $\ast$source, size\+\_\+t source\+Length)
+\item 
+static char $\ast$ \mbox{\hyperlink{classde_1_1_string_utils_a177d3cec2c2f2f5aa568b7b49f08358e}{copy}} (const char $\ast$source)
+\begin{DoxyCompactList}\small\item\em Copie une chaîne de caractères dans un espace mémoire alloué dynamiquement, doit être mem\+:free. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classde_1_1_string_utils_aa51b6357293eb296206653d037738d30}\label{classde_1_1_string_utils_aa51b6357293eb296206653d037738d30}} 
+static wchar\+\_\+t $\ast$ {\bfseries copy} (const wchar\+\_\+t $\ast$source)
+\item 
+\mbox{\Hypertarget{classde_1_1_string_utils_aecd76f03fcc9f2c73544977ab309fdf9}\label{classde_1_1_string_utils_aecd76f03fcc9f2c73544977ab309fdf9}} 
+static bool {\bfseries append} (wchar\+\_\+t $\ast$$\ast$dest, const wchar\+\_\+t $\ast$source)
+\item 
+\mbox{\Hypertarget{classde_1_1_string_utils_a9a68b60d938b5cedcc5a817158d68409}\label{classde_1_1_string_utils_a9a68b60d938b5cedcc5a817158d68409}} 
+static bool {\bfseries append} (wchar\+\_\+t $\ast$$\ast$dest, const char $\ast$source)
+\item 
+\mbox{\Hypertarget{classde_1_1_string_utils_a146f3ac7f127989b76fec6557d7a67d7}\label{classde_1_1_string_utils_a146f3ac7f127989b76fec6557d7a67d7}} 
+static bool {\bfseries ends\+With} (const wchar\+\_\+t $\ast$to\+Search, const wchar\+\_\+t $\ast$end)
+\item 
+\mbox{\Hypertarget{classde_1_1_string_utils_afbdfd90b15b106bd0fe0ceee6b67edef}\label{classde_1_1_string_utils_afbdfd90b15b106bd0fe0ceee6b67edef}} 
+static size\+\_\+t {\bfseries last\+Index} (const wchar\+\_\+t $\ast$str, wchar\+\_\+t charactere)
+\item 
+\mbox{\Hypertarget{classde_1_1_string_utils_a715333783a44cd7ed15febbd3dcc88d8}\label{classde_1_1_string_utils_a715333783a44cd7ed15febbd3dcc88d8}} 
+static bool {\bfseries equals} (const wchar\+\_\+t $\ast$first, const wchar\+\_\+t $\ast$second)
+\item 
+\mbox{\Hypertarget{classde_1_1_string_utils_a9b0ee029d578e3269148e6c635c1505e}\label{classde_1_1_string_utils_a9b0ee029d578e3269148e6c635c1505e}} 
+static void {\bfseries wchar\+To\+Char} (char $\ast$dest, const wchar\+\_\+t $\ast$source)
+\item 
+\mbox{\Hypertarget{classde_1_1_string_utils_a133b370f3e80b6a3f9cf19c78c0e1e34}\label{classde_1_1_string_utils_a133b370f3e80b6a3f9cf19c78c0e1e34}} 
+static int {\bfseries to\+Upper} (int value)
+\item 
+\mbox{\Hypertarget{classde_1_1_string_utils_a457ba605ff37661413e0387aedbce379}\label{classde_1_1_string_utils_a457ba605ff37661413e0387aedbce379}} 
+static size\+\_\+t {\bfseries length} (const char $\ast$str)
+\item 
+\mbox{\Hypertarget{classde_1_1_string_utils_aa4791be55a0163923ef81ce01e2a41cc}\label{classde_1_1_string_utils_aa4791be55a0163923ef81ce01e2a41cc}} 
+static size\+\_\+t {\bfseries length} (const wchar\+\_\+t $\ast$str)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classde_1_1_string_utils_a177d3cec2c2f2f5aa568b7b49f08358e}\label{classde_1_1_string_utils_a177d3cec2c2f2f5aa568b7b49f08358e}} 
+\index{de::StringUtils@{de::StringUtils}!copy@{copy}}
+\index{copy@{copy}!de::StringUtils@{de::StringUtils}}
+\doxysubsubsection{\texorpdfstring{copy()}{copy()}}
+{\footnotesize\ttfamily static char$\ast$ de\+::\+String\+Utils\+::copy (\begin{DoxyParamCaption}\item[{const char $\ast$}]{source }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Copie une chaîne de caractères dans un espace mémoire alloué dynamiquement, doit être mem\+:free. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em source} & Chaîne de caractères à copier. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+La chaîne dynamiquement créée ou {\ttfamily nullptr} si une erreur est survenue. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\+D\+E/string\+\_\+utils.\+hpp\end{DoxyCompactItemize}

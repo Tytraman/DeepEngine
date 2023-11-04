@@ -1,0 +1,172 @@
+\hypertarget{classde_1_1_camera}{}\doxysection{de\+::Camera Class Reference}
+\label{classde_1_1_camera}\index{de::Camera@{de::Camera}}
+
+
+Les caméras sont ce qui donnent l\textquotesingle{}effet de voir le monde selon une position.  
+
+
+
+
+{\ttfamily \#include $<$camera.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classde_1_1_camera_a3fdd9bf5bd1d69db7f8261f89878eb97}\label{classde_1_1_camera_a3fdd9bf5bd1d69db7f8261f89878eb97}} 
+{\bfseries Camera} (const \mbox{\hyperlink{structde_1_1fvec3}{fvec3}} \&\mbox{\hyperlink{structde_1_1position}{position}}, const \mbox{\hyperlink{structde_1_1fvec3}{fvec3}} \&\mbox{\hyperlink{classde_1_1_camera_a532ded18fbf95a23aad5080a0c06114d}{front}}, const \mbox{\hyperlink{structde_1_1fvec3}{fvec3}} \&\mbox{\hyperlink{classde_1_1_camera_ac48b830b8a9a5dce2c4c391d6c45c2f8}{base\+Up}}=\mbox{\hyperlink{structde_1_1fvec3}{fvec3}}(0.\+0f, 1.\+0f, 0.\+0f))
+\item 
+\mbox{\Hypertarget{classde_1_1_camera_a2ec0bb6e7767e05ae163f34490ab2d08}\label{classde_1_1_camera_a2ec0bb6e7767e05ae163f34490ab2d08}} 
+void \mbox{\hyperlink{classde_1_1_camera_a2ec0bb6e7767e05ae163f34490ab2d08}{update\+Angle\+Of\+View}} ()
+\begin{DoxyCompactList}\small\item\em Met à jour l\textquotesingle{}angle de vision après avoir modifié le \textquotesingle{}yaw\textquotesingle{} et le \textquotesingle{}pitch\textquotesingle{} de la caméra. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structde_1_1fvec3}{fvec3}} \mbox{\hyperlink{classde_1_1_camera_a3f90a348735a65268b87315b4fe8ea9f}{position}} () const
+\begin{DoxyCompactList}\small\item\em Récupère la position relative au monde de la caméra. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structde_1_1fvec3}{fvec3}} \mbox{\hyperlink{classde_1_1_camera_ac48b830b8a9a5dce2c4c391d6c45c2f8}{base\+Up}} () const
+\begin{DoxyCompactList}\small\item\em Récupère le vecteur qui pointe vers le haut. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structde_1_1fvec3}{fvec3}} \mbox{\hyperlink{classde_1_1_camera_a532ded18fbf95a23aad5080a0c06114d}{front}} () const
+\begin{DoxyCompactList}\small\item\em Récupère le vecteur qui pointe vers l\textquotesingle{}avant de la caméra. \end{DoxyCompactList}\item 
+\mbox{\hyperlink{structde_1_1fvec3}{fvec3}} \mbox{\hyperlink{classde_1_1_camera_ad81ec787eb35901dff0dc8db553b9473}{up}} () const
+\begin{DoxyCompactList}\small\item\em Récupère le vecteur qui pointe vers le haut de la caméra en prenant en compte l\textquotesingle{}angle de vision. \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{classde_1_1_camera_a5d33f5dbd98aa48f801f7d5ed56ecf6c}{yaw}} () const
+\begin{DoxyCompactList}\small\item\em Récupère l\textquotesingle{}angle de vision horizontale de la caméra. \end{DoxyCompactList}\item 
+float \mbox{\hyperlink{classde_1_1_camera_a1d425543564638d5406ab6a8887b70ef}{pitch}} () const
+\begin{DoxyCompactList}\small\item\em Récupère l\textquotesingle{}angle de vision horizontale de la caméra. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classde_1_1_camera_a086dd7526f268047805cd882a3a8b440}\label{classde_1_1_camera_a086dd7526f268047805cd882a3a8b440}} 
+void {\bfseries set\+Yaw} (float value)
+\item 
+\mbox{\Hypertarget{classde_1_1_camera_a24867b1697141d5735b03fdbe5b6d07c}\label{classde_1_1_camera_a24867b1697141d5735b03fdbe5b6d07c}} 
+void {\bfseries set\+Pitch} (float value)
+\item 
+\mbox{\Hypertarget{classde_1_1_camera_ae99d130700371d432eb78251ef2bdd37}\label{classde_1_1_camera_ae99d130700371d432eb78251ef2bdd37}} 
+void {\bfseries set\+Position} (const \mbox{\hyperlink{structde_1_1fvec3}{fvec3}} \&pos)
+\item 
+\mbox{\Hypertarget{classde_1_1_camera_ae9aa8919ec39573675182e11419b5e4d}\label{classde_1_1_camera_ae9aa8919ec39573675182e11419b5e4d}} 
+void {\bfseries move\+Right} (float value)
+\item 
+\mbox{\Hypertarget{classde_1_1_camera_ad70c43393d3465d3bd3d602f1ed8db08}\label{classde_1_1_camera_ad70c43393d3465d3bd3d602f1ed8db08}} 
+void {\bfseries move\+Left} (float value)
+\item 
+\mbox{\Hypertarget{classde_1_1_camera_a69c4b853398e51c4bf40a16c08786fa6}\label{classde_1_1_camera_a69c4b853398e51c4bf40a16c08786fa6}} 
+void {\bfseries move\+Forward} (float value)
+\item 
+\mbox{\Hypertarget{classde_1_1_camera_a8308d97e99d3cec228886a886378745c}\label{classde_1_1_camera_a8308d97e99d3cec228886a886378745c}} 
+void {\bfseries move\+Backward} (float value)
+\item 
+\mbox{\Hypertarget{classde_1_1_camera_a8a5dc09cb56c98efa9b3f54b48ca1d4c}\label{classde_1_1_camera_a8a5dc09cb56c98efa9b3f54b48ca1d4c}} 
+void {\bfseries move\+Up} (float value)
+\item 
+\mbox{\Hypertarget{classde_1_1_camera_af53060c7ea1fff434f61c4a7ae3da6a7}\label{classde_1_1_camera_af53060c7ea1fff434f61c4a7ae3da6a7}} 
+void {\bfseries move\+Down} (float value)
+\item 
+\mbox{\Hypertarget{classde_1_1_camera_aa32537126b25420c594e14befba292f3}\label{classde_1_1_camera_aa32537126b25420c594e14befba292f3}} 
+\mbox{\hyperlink{structde_1_1fmat4x4}{fmat4x4}} {\bfseries look\+At} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classde_1_1_camera_aa6126951f3ae6040d44111f5b7c53a29}\label{classde_1_1_camera_aa6126951f3ae6040d44111f5b7c53a29}} 
+\mbox{\hyperlink{structde_1_1fvec3}{fvec3}} \mbox{\hyperlink{classde_1_1_camera_aa6126951f3ae6040d44111f5b7c53a29}{m\+\_\+\+Position}}
+\begin{DoxyCompactList}\small\item\em Position de la caméra. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classde_1_1_camera_ad7fc1db2f62dfcb929baa67c879640ea}\label{classde_1_1_camera_ad7fc1db2f62dfcb929baa67c879640ea}} 
+\mbox{\hyperlink{structde_1_1fvec3}{fvec3}} \mbox{\hyperlink{classde_1_1_camera_ad7fc1db2f62dfcb929baa67c879640ea}{m\+\_\+\+Base\+Up}}
+\begin{DoxyCompactList}\small\item\em Vecteur qui pointe vers le haut sans jamais changer. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classde_1_1_camera_a1fc399efc2aafccd541ecc2790ab9daf}\label{classde_1_1_camera_a1fc399efc2aafccd541ecc2790ab9daf}} 
+\mbox{\hyperlink{structde_1_1fvec3}{fvec3}} \mbox{\hyperlink{classde_1_1_camera_a1fc399efc2aafccd541ecc2790ab9daf}{m\+\_\+\+Front}}
+\begin{DoxyCompactList}\small\item\em Correspond à l\textquotesingle{}axe Z de la caméra. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classde_1_1_camera_aac97a1825951ac74222b40335d417f6e}\label{classde_1_1_camera_aac97a1825951ac74222b40335d417f6e}} 
+\mbox{\hyperlink{structde_1_1fvec3}{fvec3}} \mbox{\hyperlink{classde_1_1_camera_aac97a1825951ac74222b40335d417f6e}{m\+\_\+\+Up}}
+\begin{DoxyCompactList}\small\item\em Correspond à l\textquotesingle{}axe Y de la caméra. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classde_1_1_camera_a0a1571142481fff81e348aab1d70dc1c}\label{classde_1_1_camera_a0a1571142481fff81e348aab1d70dc1c}} 
+float \mbox{\hyperlink{classde_1_1_camera_a0a1571142481fff81e348aab1d70dc1c}{m\+\_\+\+Yaw}}
+\begin{DoxyCompactList}\small\item\em Angle de vision horizontale. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classde_1_1_camera_a6c2be6da15a12fb106c70e9656c6fd78}\label{classde_1_1_camera_a6c2be6da15a12fb106c70e9656c6fd78}} 
+float \mbox{\hyperlink{classde_1_1_camera_a6c2be6da15a12fb106c70e9656c6fd78}{m\+\_\+\+Pitch}}
+\begin{DoxyCompactList}\small\item\em Angle de vision verticale. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Les caméras sont ce qui donnent l\textquotesingle{}effet de voir le monde selon une position. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classde_1_1_camera_ac48b830b8a9a5dce2c4c391d6c45c2f8}\label{classde_1_1_camera_ac48b830b8a9a5dce2c4c391d6c45c2f8}} 
+\index{de::Camera@{de::Camera}!baseUp@{baseUp}}
+\index{baseUp@{baseUp}!de::Camera@{de::Camera}}
+\doxysubsubsection{\texorpdfstring{baseUp()}{baseUp()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structde_1_1fvec3}{fvec3}} de\+::\+Camera\+::base\+Up (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Récupère le vecteur qui pointe vers le haut. 
+
+\begin{DoxyReturn}{Returns}
+Le vecteur qui pointe vers le haut. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classde_1_1_camera_a532ded18fbf95a23aad5080a0c06114d}\label{classde_1_1_camera_a532ded18fbf95a23aad5080a0c06114d}} 
+\index{de::Camera@{de::Camera}!front@{front}}
+\index{front@{front}!de::Camera@{de::Camera}}
+\doxysubsubsection{\texorpdfstring{front()}{front()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structde_1_1fvec3}{fvec3}} de\+::\+Camera\+::front (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Récupère le vecteur qui pointe vers l\textquotesingle{}avant de la caméra. 
+
+\begin{DoxyReturn}{Returns}
+Le vecteur qui pointe vers l\textquotesingle{}avant de la caméra. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classde_1_1_camera_a1d425543564638d5406ab6a8887b70ef}\label{classde_1_1_camera_a1d425543564638d5406ab6a8887b70ef}} 
+\index{de::Camera@{de::Camera}!pitch@{pitch}}
+\index{pitch@{pitch}!de::Camera@{de::Camera}}
+\doxysubsubsection{\texorpdfstring{pitch()}{pitch()}}
+{\footnotesize\ttfamily float de\+::\+Camera\+::pitch (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Récupère l\textquotesingle{}angle de vision horizontale de la caméra. 
+
+\begin{DoxyReturn}{Returns}
+L\textquotesingle{}angle de vision horizontale en degrées de la caméra. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classde_1_1_camera_a3f90a348735a65268b87315b4fe8ea9f}\label{classde_1_1_camera_a3f90a348735a65268b87315b4fe8ea9f}} 
+\index{de::Camera@{de::Camera}!position@{position}}
+\index{position@{position}!de::Camera@{de::Camera}}
+\doxysubsubsection{\texorpdfstring{position()}{position()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structde_1_1fvec3}{fvec3}} de\+::\+Camera\+::position (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Récupère la position relative au monde de la caméra. 
+
+\begin{DoxyReturn}{Returns}
+La position relative au monde de la caméra. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classde_1_1_camera_ad81ec787eb35901dff0dc8db553b9473}\label{classde_1_1_camera_ad81ec787eb35901dff0dc8db553b9473}} 
+\index{de::Camera@{de::Camera}!up@{up}}
+\index{up@{up}!de::Camera@{de::Camera}}
+\doxysubsubsection{\texorpdfstring{up()}{up()}}
+{\footnotesize\ttfamily \mbox{\hyperlink{structde_1_1fvec3}{fvec3}} de\+::\+Camera\+::up (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Récupère le vecteur qui pointe vers le haut de la caméra en prenant en compte l\textquotesingle{}angle de vision. 
+
+\begin{DoxyReturn}{Returns}
+Le vecteur qui pointe vers le haut de la caméra. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classde_1_1_camera_a5d33f5dbd98aa48f801f7d5ed56ecf6c}\label{classde_1_1_camera_a5d33f5dbd98aa48f801f7d5ed56ecf6c}} 
+\index{de::Camera@{de::Camera}!yaw@{yaw}}
+\index{yaw@{yaw}!de::Camera@{de::Camera}}
+\doxysubsubsection{\texorpdfstring{yaw()}{yaw()}}
+{\footnotesize\ttfamily float de\+::\+Camera\+::yaw (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Récupère l\textquotesingle{}angle de vision horizontale de la caméra. 
+
+\begin{DoxyReturn}{Returns}
+L\textquotesingle{}angle de vision horizontale en degrées de la caméra. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\+D\+E/rendering/camera.\+hpp\end{DoxyCompactItemize}

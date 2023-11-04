@@ -1,0 +1,134 @@
+\hypertarget{classde_1_1_entity_manager}{}\doxysection{de\+::Entity\+Manager Class Reference}
+\label{classde_1_1_entity_manager}\index{de::EntityManager@{de::EntityManager}}
+
+
+Classe permettant la gestion d\textquotesingle{}une collection d\textquotesingle{}entités.  
+
+
+
+
+{\ttfamily \#include $<$entity.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classde_1_1_entity_manager_acab213a260814d75bb1ccd47d27a03f6}\label{classde_1_1_entity_manager_acab213a260814d75bb1ccd47d27a03f6}} 
+{\bfseries Entity\+Manager} (const \mbox{\hyperlink{classde_1_1_entity_manager}{Entity\+Manager}} \&)=delete
+\item 
+\mbox{\Hypertarget{classde_1_1_entity_manager_a93d6ec977983a6594bc72ee5e67e7cde}\label{classde_1_1_entity_manager_a93d6ec977983a6594bc72ee5e67e7cde}} 
+{\bfseries Entity\+Manager} (const \mbox{\hyperlink{classde_1_1_entity_manager}{Entity\+Manager}} \&\&)=delete
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classde_1_1_entity_manager_a6f203e88a820ac6d0b26b182746529d2}\label{classde_1_1_entity_manager_a6f203e88a820ac6d0b26b182746529d2}} 
+static void {\bfseries enum\+Entities} (entity\+\_\+collection\+\_\+id collection, Entity\+Enum\+Callback callback)
+\item 
+\mbox{\Hypertarget{classde_1_1_entity_manager_ab3d3d63141a9125c746918d105c6f0d2}\label{classde_1_1_entity_manager_ab3d3d63141a9125c746918d105c6f0d2}} 
+static size\+\_\+t {\bfseries get\+Number\+Of\+Entities} (entity\+\_\+collection\+\_\+id collection)
+\item 
+\mbox{\Hypertarget{classde_1_1_entity_manager_af7b4aa849530aba223af0c4df7840ded}\label{classde_1_1_entity_manager_af7b4aa849530aba223af0c4df7840ded}} 
+static entity\+\_\+collection\+\_\+id {\bfseries create\+Entity\+Collection} ()
+\item 
+static \mbox{\hyperlink{classde_1_1_entity}{Entity}} \mbox{\hyperlink{classde_1_1_entity_manager_a41b685fba772f2573e553594256bff02}{create\+Entity}} (entity\+\_\+collection\+\_\+id collection)
+\begin{DoxyCompactList}\small\item\em Crée une entité. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classde_1_1_entity_manager_ab1e4959e4575d4ed538be11af919db78}\label{classde_1_1_entity_manager_ab1e4959e4575d4ed538be11af919db78}} 
+static void \mbox{\hyperlink{classde_1_1_entity_manager_ab1e4959e4575d4ed538be11af919db78}{destroy\+Entity}} (const \mbox{\hyperlink{classde_1_1_entity}{Entity}} \&entity)
+\begin{DoxyCompactList}\small\item\em Supprime une entité de la liste. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classde_1_1_entity_manager_a4811ea67d5bc081fda057e5c3a2fe99d}\label{classde_1_1_entity_manager_a4811ea67d5bc081fda057e5c3a2fe99d}} 
+static void {\bfseries destroy\+Entity} (entity\+\_\+collection\+\_\+id collection, \mbox{\hyperlink{namespacede_a4b769e8ad9ef40c80d6977dd63b13d8d}{entity\+\_\+id}} entity)
+\item 
+\mbox{\Hypertarget{classde_1_1_entity_manager_a2838ff1a8eeaf0081e68af903aef046a}\label{classde_1_1_entity_manager_a2838ff1a8eeaf0081e68af903aef046a}} 
+static void {\bfseries destroy\+All\+Entities} (entity\+\_\+collection\+\_\+id collection)
+\item 
+\mbox{\Hypertarget{classde_1_1_entity_manager_a5ac91bb1020e0670bd14d10b169f472d}\label{classde_1_1_entity_manager_a5ac91bb1020e0670bd14d10b169f472d}} 
+static bool {\bfseries must\+Be\+Deleted} (entity\+\_\+collection\+\_\+id collection, \mbox{\hyperlink{namespacede_a4b769e8ad9ef40c80d6977dd63b13d8d}{entity\+\_\+id}} entity)
+\item 
+\mbox{\Hypertarget{classde_1_1_entity_manager_aa3d4df6c0297d907551119f69c3c1463}\label{classde_1_1_entity_manager_aa3d4df6c0297d907551119f69c3c1463}} 
+static void {\bfseries delete\+Entities} ()
+\item 
+static bool \mbox{\hyperlink{classde_1_1_entity_manager_aa5406fbe2a8b3d0ec171ae2a59a2fde2}{attach\+Component}} (const \mbox{\hyperlink{classde_1_1_entity}{Entity}} \&entity, \mbox{\hyperlink{namespacede_adbab350ac25bb55830790ba08466a4a1}{component\+\_\+id}} component)
+\begin{DoxyCompactList}\small\item\em Attache un composant à une entité. \end{DoxyCompactList}\item 
+static void \mbox{\hyperlink{classde_1_1_entity_manager_ad10c627184fb84d1ca88880846edfdf8}{query}} (entity\+\_\+collection\+\_\+id collection, \mbox{\hyperlink{namespacede_acf3417e1b1e9e2d7c19754ef383ca0af}{component\+\_\+type}} component\+Types\+To\+Include, \mbox{\hyperlink{namespacede_acf3417e1b1e9e2d7c19754ef383ca0af}{component\+\_\+type}} component\+Types\+To\+Exclude, \mbox{\hyperlink{classde_1_1_list}{List}} $\ast$dest)
+\begin{DoxyCompactList}\small\item\em Cherche toutes les entités qui respectent les conditions d\textquotesingle{}inclusions et les ajoute dans la liste destination. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classde_1_1_entity_manager_a20714104c38a0d36ffbd755a61a572ba}\label{classde_1_1_entity_manager_a20714104c38a0d36ffbd755a61a572ba}} 
+static \mbox{\hyperlink{namespacede_adbab350ac25bb55830790ba08466a4a1}{component\+\_\+id}} {\bfseries get\+Component\+ID} (entity\+\_\+collection\+\_\+id collection, \mbox{\hyperlink{namespacede_a4b769e8ad9ef40c80d6977dd63b13d8d}{entity\+\_\+id}} entity, \mbox{\hyperlink{namespacede_acf3417e1b1e9e2d7c19754ef383ca0af}{component\+\_\+type}} component\+Type)
+\item 
+\mbox{\Hypertarget{classde_1_1_entity_manager_a7a8607fce847d4b1b3c9d1c27e22be09}\label{classde_1_1_entity_manager_a7a8607fce847d4b1b3c9d1c27e22be09}} 
+static \mbox{\hyperlink{namespacede_adbab350ac25bb55830790ba08466a4a1}{component\+\_\+id}} {\bfseries get\+Component\+ID} (const \mbox{\hyperlink{classde_1_1_entity}{Entity}} \&entity, \mbox{\hyperlink{namespacede_acf3417e1b1e9e2d7c19754ef383ca0af}{component\+\_\+type}} component\+Type)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classde_1_1_entity_manager_a3738a80efb7cef27df15152600a900c7}\label{classde_1_1_entity_manager_a3738a80efb7cef27df15152600a900c7}} 
+static \mbox{\hyperlink{classde_1_1_hash_table}{Hash\+Table}} {\bfseries m\+\_\+\+Collections}
+\item 
+\mbox{\Hypertarget{classde_1_1_entity_manager_a47dac70b4cca4b75da0e5395155b0cfa}\label{classde_1_1_entity_manager_a47dac70b4cca4b75da0e5395155b0cfa}} 
+static \mbox{\hyperlink{classde_1_1_hash_table}{Hash\+Table}} {\bfseries m\+\_\+\+Next\+Entity\+ID}
+\item 
+\mbox{\Hypertarget{classde_1_1_entity_manager_aad23d890fc366599ba308210834eb154}\label{classde_1_1_entity_manager_aad23d890fc366599ba308210834eb154}} 
+static \mbox{\hyperlink{classde_1_1_hash_table}{Hash\+Table}} {\bfseries m\+\_\+\+Entities\+To\+Delete}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Classe permettant la gestion d\textquotesingle{}une collection d\textquotesingle{}entités. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classde_1_1_entity_manager_aa5406fbe2a8b3d0ec171ae2a59a2fde2}\label{classde_1_1_entity_manager_aa5406fbe2a8b3d0ec171ae2a59a2fde2}} 
+\index{de::EntityManager@{de::EntityManager}!attachComponent@{attachComponent}}
+\index{attachComponent@{attachComponent}!de::EntityManager@{de::EntityManager}}
+\doxysubsubsection{\texorpdfstring{attachComponent()}{attachComponent()}}
+{\footnotesize\ttfamily static bool de\+::\+Entity\+Manager\+::attach\+Component (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{classde_1_1_entity}{Entity}} \&}]{entity,  }\item[{\mbox{\hyperlink{namespacede_adbab350ac25bb55830790ba08466a4a1}{component\+\_\+id}}}]{component }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Attache un composant à une entité. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em entity} & L\textquotesingle{}entité à laquelle attacher le composant. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily true} si le composant à bien été attaché. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classde_1_1_entity_manager_a41b685fba772f2573e553594256bff02}\label{classde_1_1_entity_manager_a41b685fba772f2573e553594256bff02}} 
+\index{de::EntityManager@{de::EntityManager}!createEntity@{createEntity}}
+\index{createEntity@{createEntity}!de::EntityManager@{de::EntityManager}}
+\doxysubsubsection{\texorpdfstring{createEntity()}{createEntity()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{classde_1_1_entity}{Entity}} de\+::\+Entity\+Manager\+::create\+Entity (\begin{DoxyParamCaption}\item[{entity\+\_\+collection\+\_\+id}]{collection }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Crée une entité. 
+
+\begin{DoxyReturn}{Returns}
+L\textquotesingle{}entité nouvellement créée. 
+\end{DoxyReturn}
+\mbox{\Hypertarget{classde_1_1_entity_manager_ad10c627184fb84d1ca88880846edfdf8}\label{classde_1_1_entity_manager_ad10c627184fb84d1ca88880846edfdf8}} 
+\index{de::EntityManager@{de::EntityManager}!query@{query}}
+\index{query@{query}!de::EntityManager@{de::EntityManager}}
+\doxysubsubsection{\texorpdfstring{query()}{query()}}
+{\footnotesize\ttfamily static void de\+::\+Entity\+Manager\+::query (\begin{DoxyParamCaption}\item[{entity\+\_\+collection\+\_\+id}]{collection,  }\item[{\mbox{\hyperlink{namespacede_acf3417e1b1e9e2d7c19754ef383ca0af}{component\+\_\+type}}}]{component\+Types\+To\+Include,  }\item[{\mbox{\hyperlink{namespacede_acf3417e1b1e9e2d7c19754ef383ca0af}{component\+\_\+type}}}]{component\+Types\+To\+Exclude,  }\item[{\mbox{\hyperlink{classde_1_1_list}{List}} $\ast$}]{dest }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Cherche toutes les entités qui respectent les conditions d\textquotesingle{}inclusions et les ajoute dans la liste destination. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em collection} & ID de la collection d\textquotesingle{}entités dans laquelle chercher. \\
+\hline
+{\em component\+Types\+To\+Include} & Masque des types de composants que les entités doivent posséder afin d\textquotesingle{}être incluses. \\
+\hline
+{\em component\+Types\+To\+Exclude} & Masque des types de composants que les entités ne doivent pas avoir pour être incluses. \\
+\hline
+{\em dest} & Pointeur vers la liste qui stockera les entités répondant aux conditions. \\
+\hline
+\end{DoxyParams}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\+D\+E/ecs/entity.\+hpp\end{DoxyCompactItemize}

@@ -1,0 +1,84 @@
+\hypertarget{structde_1_1_rect}{}\doxysection{de\+::Rect Struct Reference}
+\label{structde_1_1_rect}\index{de::Rect@{de::Rect}}
+
+
+Structure représentant un rectangle.  
+
+
+
+
+{\ttfamily \#include $<$shape.\+hpp$>$}
+
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\hyperlink{structde_1_1_rect_ac0abddae1be27bf1b0b0b7db4e4f8b67}{Rect}} (const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&\mbox{\hyperlink{structde_1_1position}{position}}=\mbox{\hyperlink{structde_1_1fvec2}{fvec2}}(0.\+0f, 0.\+0f), float width=0.\+0f, float height=0.\+0f)
+\begin{DoxyCompactList}\small\item\em Constructeur de rectangle. \end{DoxyCompactList}\item 
+bool \mbox{\hyperlink{structde_1_1_rect_af42f9062907b19d491d1d22b68f71411}{is\+Inside}} (const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&v) const
+\begin{DoxyCompactList}\small\item\em Vérifie si un point se situe à l\textquotesingle{}intérieur du rectangle. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{structde_1_1_rect_a3c8b978522d356e2f96314819d3ec296}\label{structde_1_1_rect_a3c8b978522d356e2f96314819d3ec296}} 
+bool {\bfseries is\+Inside} (const \mbox{\hyperlink{structde_1_1_rect}{Rect}} \&r) const
+\end{DoxyCompactItemize}
+\doxysubsection*{Public Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{structde_1_1_rect_a5121dc74e506774781d9632972dba5bd}\label{structde_1_1_rect_a5121dc74e506774781d9632972dba5bd}} 
+\mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \mbox{\hyperlink{structde_1_1_rect_a5121dc74e506774781d9632972dba5bd}{pos}}
+\begin{DoxyCompactList}\small\item\em Position du rectangle. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{structde_1_1_rect_a0f529636ba7f1cdb31f67b18c6fe2e7c}\label{structde_1_1_rect_a0f529636ba7f1cdb31f67b18c6fe2e7c}} 
+float \mbox{\hyperlink{structde_1_1_rect_a0f529636ba7f1cdb31f67b18c6fe2e7c}{w}}
+\begin{DoxyCompactList}\small\item\em Largeur du rectangle. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{structde_1_1_rect_aa6fc77509109554b6b5469f100f69d53}\label{structde_1_1_rect_aa6fc77509109554b6b5469f100f69d53}} 
+float \mbox{\hyperlink{structde_1_1_rect_aa6fc77509109554b6b5469f100f69d53}{h}}
+\begin{DoxyCompactList}\small\item\em Hauteur du rectangle. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Structure représentant un rectangle. 
+
+\doxysubsection{Constructor \& Destructor Documentation}
+\mbox{\Hypertarget{structde_1_1_rect_ac0abddae1be27bf1b0b0b7db4e4f8b67}\label{structde_1_1_rect_ac0abddae1be27bf1b0b0b7db4e4f8b67}} 
+\index{de::Rect@{de::Rect}!Rect@{Rect}}
+\index{Rect@{Rect}!de::Rect@{de::Rect}}
+\doxysubsubsection{\texorpdfstring{Rect()}{Rect()}}
+{\footnotesize\ttfamily de\+::\+Rect\+::\+Rect (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&}]{position = {\ttfamily \mbox{\hyperlink{structde_1_1fvec2}{fvec2}}(0.0f,~0.0f)},  }\item[{float}]{width = {\ttfamily 0.0f},  }\item[{float}]{height = {\ttfamily 0.0f} }\end{DoxyParamCaption})}
+
+
+
+Constructeur de rectangle. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em position} & Position du rectangle. \\
+\hline
+{\em width} & Largeur du rectangle. \\
+\hline
+{\em height} & Hauteur du rectangle. \\
+\hline
+\end{DoxyParams}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{structde_1_1_rect_af42f9062907b19d491d1d22b68f71411}\label{structde_1_1_rect_af42f9062907b19d491d1d22b68f71411}} 
+\index{de::Rect@{de::Rect}!isInside@{isInside}}
+\index{isInside@{isInside}!de::Rect@{de::Rect}}
+\doxysubsubsection{\texorpdfstring{isInside()}{isInside()}}
+{\footnotesize\ttfamily bool de\+::\+Rect\+::is\+Inside (\begin{DoxyParamCaption}\item[{const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&}]{v }\end{DoxyParamCaption}) const\hspace{0.3cm}{\ttfamily [inline]}}
+
+
+
+Vérifie si un point se situe à l\textquotesingle{}intérieur du rectangle. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em v} & Le vecteur décrivant le point. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+{\ttfamily true} si le point se situe à l\textquotesingle{}intérieur du rectangle. 
+\end{DoxyReturn}
+
+
+The documentation for this struct was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\+D\+E/graphics/shape.\+hpp\end{DoxyCompactItemize}

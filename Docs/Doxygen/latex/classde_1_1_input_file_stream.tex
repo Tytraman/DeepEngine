@@ -1,0 +1,59 @@
+\hypertarget{classde_1_1_input_file_stream}{}\doxysection{de\+::Input\+File\+Stream Class Reference}
+\label{classde_1_1_input_file_stream}\index{de::InputFileStream@{de::InputFileStream}}
+Inheritance diagram for de\+::Input\+File\+Stream\+:\begin{figure}[H]
+\begin{center}
+\leavevmode
+\includegraphics[height=2.000000cm]{classde_1_1_input_file_stream}
+\end{center}
+\end{figure}
+\doxysubsection*{Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classde_1_1_input_file_stream_a597d450482fcdbe9939de5f5369f9686}\label{classde_1_1_input_file_stream_a597d450482fcdbe9939de5f5369f9686}} 
+{\bfseries Input\+File\+Stream} (const char $\ast$filename)
+\item 
+\mbox{\Hypertarget{classde_1_1_input_file_stream_af9177b390dbd6bfa5793ec68f4a5f7cc}\label{classde_1_1_input_file_stream_af9177b390dbd6bfa5793ec68f4a5f7cc}} 
+{\bfseries Input\+File\+Stream} (const wchar\+\_\+t $\ast$filename)
+\item 
+\mbox{\Hypertarget{classde_1_1_input_file_stream_a441a72949fa9b06d7e6a6adaecf835c6}\label{classde_1_1_input_file_stream_a441a72949fa9b06d7e6a6adaecf835c6}} 
+bool {\bfseries open} () override
+\item 
+\mbox{\Hypertarget{classde_1_1_input_file_stream_acebee1f0ba62d355cf4b96d07068c207}\label{classde_1_1_input_file_stream_acebee1f0ba62d355cf4b96d07068c207}} 
+bool {\bfseries openW} ()
+\item 
+\mbox{\Hypertarget{classde_1_1_input_file_stream_a485f8153e68966ac380293cdd8c937d4}\label{classde_1_1_input_file_stream_a485f8153e68966ac380293cdd8c937d4}} 
+void {\bfseries close} () override
+\item 
+\mbox{\Hypertarget{classde_1_1_input_file_stream_ae2e3febb4ecf10c42531c82434cf06f7}\label{classde_1_1_input_file_stream_ae2e3febb4ecf10c42531c82434cf06f7}} 
+bool {\bfseries read} (mem\+\_\+ptr dest, size\+\_\+t \mbox{\hyperlink{structde_1_1size}{size}}, size\+\_\+t $\ast$bytes\+Read) override
+\item 
+\mbox{\Hypertarget{classde_1_1_input_file_stream_abb6a42e5fe2438e3059123ae6cd6fd39}\label{classde_1_1_input_file_stream_abb6a42e5fe2438e3059123ae6cd6fd39}} 
+bool {\bfseries read\+All} (mem\+\_\+ptr dest, size\+\_\+t $\ast$bytes\+Read) override
+\item 
+\mbox{\Hypertarget{classde_1_1_input_file_stream_ab1e84bc94acd39cb807821bd722183a3}\label{classde_1_1_input_file_stream_ab1e84bc94acd39cb807821bd722183a3}} 
+const char $\ast$ {\bfseries get\+Filename} () const
+\item 
+\mbox{\Hypertarget{classde_1_1_input_file_stream_aec69513ae3cb6cea50afc2b276ce92cc}\label{classde_1_1_input_file_stream_aec69513ae3cb6cea50afc2b276ce92cc}} 
+size\+\_\+t {\bfseries get\+File\+Size} () const
+\item 
+\mbox{\Hypertarget{classde_1_1_input_file_stream_a1b03a9fea8ef6361be0d6c07e1a14509}\label{classde_1_1_input_file_stream_a1b03a9fea8ef6361be0d6c07e1a14509}} 
+void {\bfseries set\+Filename} (const char $\ast$filename)
+\item 
+\mbox{\Hypertarget{classde_1_1_input_file_stream_a03891e47f888721cd3baa05a5c2d707e}\label{classde_1_1_input_file_stream_a03891e47f888721cd3baa05a5c2d707e}} 
+bool {\bfseries is\+Wide\+Char} () const
+\end{DoxyCompactItemize}
+\doxysubsection*{Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classde_1_1_input_file_stream_a346e9aa256d719d399d85cf367c4ed0f}\label{classde_1_1_input_file_stream_a346e9aa256d719d399d85cf367c4ed0f}} 
+char $\ast$ {\bfseries m\+\_\+\+Filename}
+\item 
+\mbox{\Hypertarget{classde_1_1_input_file_stream_a48f4080aadecbb87f7c15556a0479996}\label{classde_1_1_input_file_stream_a48f4080aadecbb87f7c15556a0479996}} 
+bool {\bfseries m\+\_\+\+Wide\+Wchar}
+\end{DoxyCompactItemize}
+\doxysubsection*{Additional Inherited Members}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\+D\+E/stream.\+hpp\end{DoxyCompactItemize}

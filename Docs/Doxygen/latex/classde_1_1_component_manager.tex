@@ -1,0 +1,129 @@
+\hypertarget{classde_1_1_component_manager}{}\doxysection{de\+::Component\+Manager Class Reference}
+\label{classde_1_1_component_manager}\index{de::ComponentManager@{de::ComponentManager}}
+
+
+Permet la gestion de composants.  
+
+
+
+
+{\ttfamily \#include $<$component.\+hpp$>$}
+
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{namespacede_acf3417e1b1e9e2d7c19754ef383ca0af}{component\+\_\+type}} \mbox{\hyperlink{classde_1_1_component_manager_ab4cc5326a2c075b5e3302003f5bec715}{get\+Type}} (\mbox{\hyperlink{namespacede_adbab350ac25bb55830790ba08466a4a1}{component\+\_\+id}} component)
+\begin{DoxyCompactList}\small\item\em Récupère le type du composant spécifié. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classde_1_1_component_manager_a5d12301c96dc8a5cab87d5ce660e77ef}\label{classde_1_1_component_manager_a5d12301c96dc8a5cab87d5ce660e77ef}} 
+static \mbox{\hyperlink{namespacede_adbab350ac25bb55830790ba08466a4a1}{component\+\_\+id}} {\bfseries create\+Drawable\+Component} ()
+\item 
+\mbox{\Hypertarget{classde_1_1_component_manager_a68976c89ae2925a3e6ea9a36a8147de2}\label{classde_1_1_component_manager_a68976c89ae2925a3e6ea9a36a8147de2}} 
+static \mbox{\hyperlink{namespacede_adbab350ac25bb55830790ba08466a4a1}{component\+\_\+id}} {\bfseries create\+Drawable\+Component} (gl\+\_\+program program, gl\+\_\+vbo vbo, gl\+\_\+vao vao, gl\+\_\+texture texture=0, uint8\+\_\+t texture\+Unit=0)
+\item 
+\mbox{\Hypertarget{classde_1_1_component_manager_a8cc412b2fcaf65706b9452efc082eea9}\label{classde_1_1_component_manager_a8cc412b2fcaf65706b9452efc082eea9}} 
+static \mbox{\hyperlink{structde_1_1_drawable_component}{Drawable\+Component}} $\ast$ {\bfseries get\+Drawable\+Component} (\mbox{\hyperlink{namespacede_adbab350ac25bb55830790ba08466a4a1}{component\+\_\+id}} component)
+\item 
+\mbox{\Hypertarget{classde_1_1_component_manager_a4d5def21266b0c652bdb0c1f1a385ed3}\label{classde_1_1_component_manager_a4d5def21266b0c652bdb0c1f1a385ed3}} 
+static void {\bfseries delete\+Drawable\+Component} (\mbox{\hyperlink{namespacede_adbab350ac25bb55830790ba08466a4a1}{component\+\_\+id}} id)
+\item 
+\mbox{\Hypertarget{classde_1_1_component_manager_acd6b791c6bedea2489a6b5b15adf8a3e}\label{classde_1_1_component_manager_acd6b791c6bedea2489a6b5b15adf8a3e}} 
+static \mbox{\hyperlink{namespacede_adbab350ac25bb55830790ba08466a4a1}{component\+\_\+id}} {\bfseries create\+Transformation\+Component} (const \mbox{\hyperlink{structde_1_1fvec3}{fvec3}} \&translation, const \mbox{\hyperlink{structde_1_1fvec3}{fvec3}} \&scaling=\mbox{\hyperlink{structde_1_1fvec3}{fvec3}}(1.\+0f, 1.\+0f, 1.\+0f), float rotation=0.\+0f)
+\item 
+\mbox{\Hypertarget{classde_1_1_component_manager_aecd43a8bf36b8a0a81945e3541c5b704}\label{classde_1_1_component_manager_aecd43a8bf36b8a0a81945e3541c5b704}} 
+static \mbox{\hyperlink{structde_1_1_transformation_component}{Transformation\+Component}} $\ast$ {\bfseries get\+Transformation\+Component} (\mbox{\hyperlink{namespacede_adbab350ac25bb55830790ba08466a4a1}{component\+\_\+id}} component)
+\item 
+\mbox{\Hypertarget{classde_1_1_component_manager_a613fb8deb811d3b7f79527266a94f3e5}\label{classde_1_1_component_manager_a613fb8deb811d3b7f79527266a94f3e5}} 
+static void {\bfseries delete\+Transformation\+Component} (\mbox{\hyperlink{namespacede_adbab350ac25bb55830790ba08466a4a1}{component\+\_\+id}} id)
+\item 
+\mbox{\Hypertarget{classde_1_1_component_manager_a2010d0f7407854d002981eda71e7965b}\label{classde_1_1_component_manager_a2010d0f7407854d002981eda71e7965b}} 
+static \mbox{\hyperlink{namespacede_adbab350ac25bb55830790ba08466a4a1}{component\+\_\+id}} {\bfseries create\+Collider\+Component} ()
+\item 
+\mbox{\Hypertarget{classde_1_1_component_manager_a55573c39f9655f2d8ddf2c13a4161417}\label{classde_1_1_component_manager_a55573c39f9655f2d8ddf2c13a4161417}} 
+static \mbox{\hyperlink{structde_1_1_collider_component}{Collider\+Component}} $\ast$ {\bfseries get\+Collider\+Component} (\mbox{\hyperlink{namespacede_adbab350ac25bb55830790ba08466a4a1}{component\+\_\+id}} component)
+\item 
+\mbox{\Hypertarget{classde_1_1_component_manager_a75d428fc4491b02318e923cd6a1e9db1}\label{classde_1_1_component_manager_a75d428fc4491b02318e923cd6a1e9db1}} 
+static void {\bfseries delete\+Collider\+Component} (\mbox{\hyperlink{namespacede_adbab350ac25bb55830790ba08466a4a1}{component\+\_\+id}} id)
+\item 
+\mbox{\Hypertarget{classde_1_1_component_manager_ac3938544a9f0538fa9c6105af6813f71}\label{classde_1_1_component_manager_ac3938544a9f0538fa9c6105af6813f71}} 
+static \mbox{\hyperlink{namespacede_adbab350ac25bb55830790ba08466a4a1}{component\+\_\+id}} {\bfseries create\+Velocity\+Component} ()
+\item 
+\mbox{\Hypertarget{classde_1_1_component_manager_aaed037ad1f33268473a1f91cfbcf47a6}\label{classde_1_1_component_manager_aaed037ad1f33268473a1f91cfbcf47a6}} 
+static \mbox{\hyperlink{structde_1_1_velocity_component}{Velocity\+Component}} $\ast$ {\bfseries get\+Velocity\+Component} (\mbox{\hyperlink{namespacede_adbab350ac25bb55830790ba08466a4a1}{component\+\_\+id}} component)
+\item 
+\mbox{\Hypertarget{classde_1_1_component_manager_a56863b7b59ebb8ee1ab88b3c7d3da0b5}\label{classde_1_1_component_manager_a56863b7b59ebb8ee1ab88b3c7d3da0b5}} 
+static void {\bfseries delete\+Velocity\+Component} (\mbox{\hyperlink{namespacede_adbab350ac25bb55830790ba08466a4a1}{component\+\_\+id}} id)
+\item 
+\mbox{\Hypertarget{classde_1_1_component_manager_a716e243f2cfcaeccedb1e67bec853d45}\label{classde_1_1_component_manager_a716e243f2cfcaeccedb1e67bec853d45}} 
+static \mbox{\hyperlink{namespacede_adbab350ac25bb55830790ba08466a4a1}{component\+\_\+id}} {\bfseries create\+Acceleration\+Component} (const \mbox{\hyperlink{structde_1_1fvec2}{fvec2}} \&acceleration)
+\item 
+\mbox{\Hypertarget{classde_1_1_component_manager_a3fa53e6a0f587f4624384f60227fb983}\label{classde_1_1_component_manager_a3fa53e6a0f587f4624384f60227fb983}} 
+static \mbox{\hyperlink{structde_1_1_acceleration_component}{Acceleration\+Component}} $\ast$ {\bfseries get\+Acceleration\+Component} (\mbox{\hyperlink{namespacede_adbab350ac25bb55830790ba08466a4a1}{component\+\_\+id}} component)
+\item 
+\mbox{\Hypertarget{classde_1_1_component_manager_ae237196d16293f7a59e26851e277a385}\label{classde_1_1_component_manager_ae237196d16293f7a59e26851e277a385}} 
+static void {\bfseries delete\+Acceleration\+Component} (\mbox{\hyperlink{namespacede_adbab350ac25bb55830790ba08466a4a1}{component\+\_\+id}} component)
+\item 
+\mbox{\Hypertarget{classde_1_1_component_manager_ab8bd3e2a5e3cfa5c8e97ecf431434271}\label{classde_1_1_component_manager_ab8bd3e2a5e3cfa5c8e97ecf431434271}} 
+static \mbox{\hyperlink{namespacede_adbab350ac25bb55830790ba08466a4a1}{component\+\_\+id}} {\bfseries create\+Health\+Component} (uint32\+\_\+t pv, uint32\+\_\+t max)
+\item 
+\mbox{\Hypertarget{classde_1_1_component_manager_aa845b16b3f265b633c1b516903319a06}\label{classde_1_1_component_manager_aa845b16b3f265b633c1b516903319a06}} 
+static \mbox{\hyperlink{structde_1_1_health_component}{Health\+Component}} $\ast$ {\bfseries get\+Health\+Component} (\mbox{\hyperlink{namespacede_adbab350ac25bb55830790ba08466a4a1}{component\+\_\+id}} component)
+\item 
+\mbox{\Hypertarget{classde_1_1_component_manager_aa04899bf777e23410c8ee78f36e3774d}\label{classde_1_1_component_manager_aa04899bf777e23410c8ee78f36e3774d}} 
+static void {\bfseries delete\+Health\+Component} (\mbox{\hyperlink{namespacede_adbab350ac25bb55830790ba08466a4a1}{component\+\_\+id}} id)
+\end{DoxyCompactItemize}
+\doxysubsection*{Static Private Attributes}
+\begin{DoxyCompactItemize}
+\item 
+\mbox{\Hypertarget{classde_1_1_component_manager_af2c52bdee7748dd7cdc722226d636a6f}\label{classde_1_1_component_manager_af2c52bdee7748dd7cdc722226d636a6f}} 
+static \mbox{\hyperlink{namespacede_adbab350ac25bb55830790ba08466a4a1}{component\+\_\+id}} \mbox{\hyperlink{classde_1_1_component_manager_af2c52bdee7748dd7cdc722226d636a6f}{m\+\_\+\+Component\+Count}}
+\begin{DoxyCompactList}\small\item\em Comptabilise le nombre total de composants créés. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classde_1_1_component_manager_a083f0b5fae5aa5a70293e374480c9f48}\label{classde_1_1_component_manager_a083f0b5fae5aa5a70293e374480c9f48}} 
+static \mbox{\hyperlink{classde_1_1_hash_table}{Hash\+Table}} {\bfseries m\+\_\+\+Components\+Type}
+\item 
+\mbox{\Hypertarget{classde_1_1_component_manager_afd75bbb82aae143c993ec11194652b3b}\label{classde_1_1_component_manager_afd75bbb82aae143c993ec11194652b3b}} 
+static \mbox{\hyperlink{classde_1_1_hash_table}{Hash\+Table}} {\bfseries m\+\_\+\+Drawable\+Components}
+\item 
+\mbox{\Hypertarget{classde_1_1_component_manager_a4d7e887231c160a1fd07975d224cc0a0}\label{classde_1_1_component_manager_a4d7e887231c160a1fd07975d224cc0a0}} 
+static \mbox{\hyperlink{classde_1_1_hash_table}{Hash\+Table}} {\bfseries m\+\_\+\+Transformation\+Components}
+\item 
+\mbox{\Hypertarget{classde_1_1_component_manager_a3f8e280259d9d069b23afa02f9a9f793}\label{classde_1_1_component_manager_a3f8e280259d9d069b23afa02f9a9f793}} 
+static \mbox{\hyperlink{classde_1_1_hash_table}{Hash\+Table}} {\bfseries m\+\_\+\+Velocity\+Components}
+\item 
+\mbox{\Hypertarget{classde_1_1_component_manager_a27d8377fd52ebc57cacce5ead0784367}\label{classde_1_1_component_manager_a27d8377fd52ebc57cacce5ead0784367}} 
+static \mbox{\hyperlink{classde_1_1_hash_table}{Hash\+Table}} {\bfseries m\+\_\+\+Collider\+Components}
+\item 
+\mbox{\Hypertarget{classde_1_1_component_manager_a1c0f182d5f28457f20ed5172642f5383}\label{classde_1_1_component_manager_a1c0f182d5f28457f20ed5172642f5383}} 
+static \mbox{\hyperlink{classde_1_1_hash_table}{Hash\+Table}} {\bfseries m\+\_\+\+Acceleration\+Components}
+\item 
+\mbox{\Hypertarget{classde_1_1_component_manager_ada33920c937068e1b1fe40d3d4f40ce7}\label{classde_1_1_component_manager_ada33920c937068e1b1fe40d3d4f40ce7}} 
+static \mbox{\hyperlink{classde_1_1_hash_table}{Hash\+Table}} {\bfseries m\+\_\+\+Health\+Components}
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Detailed Description}
+Permet la gestion de composants. 
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classde_1_1_component_manager_ab4cc5326a2c075b5e3302003f5bec715}\label{classde_1_1_component_manager_ab4cc5326a2c075b5e3302003f5bec715}} 
+\index{de::ComponentManager@{de::ComponentManager}!getType@{getType}}
+\index{getType@{getType}!de::ComponentManager@{de::ComponentManager}}
+\doxysubsubsection{\texorpdfstring{getType()}{getType()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{namespacede_acf3417e1b1e9e2d7c19754ef383ca0af}{component\+\_\+type}} de\+::\+Component\+Manager\+::get\+Type (\begin{DoxyParamCaption}\item[{\mbox{\hyperlink{namespacede_adbab350ac25bb55830790ba08466a4a1}{component\+\_\+id}}}]{component }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Récupère le type du composant spécifié. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em component} & L\textquotesingle{}ID du composant auquel récupérer le type. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Le type du composant. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\+D\+E/ecs/component.\+hpp\end{DoxyCompactItemize}

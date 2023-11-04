@@ -1,0 +1,17 @@
+- Cette page regroupe toutes les choses à faire pour le moteur.
+-
+- Visuel
+	- TODO Ajouter le support des images RGB et RGBA.
+	- TODO Ajouter les animations d'images.
+- Mémoire
+	- TODO Gestion de données par Queue.
+	- TODO Gestion de données par Stack.
+	- TODO Trier les listes de types primitifs.
+	- TODO Trier les listes de String.
+- Modding
+	- TODO Gestion des mods en Lua.
+- Debug
+	- TODO Afficher la liste des sons.
+	- DONE Afficher les entités présentes dans une scène.
+	- TODO Gérer les entités présentes dans une scène.
+	-

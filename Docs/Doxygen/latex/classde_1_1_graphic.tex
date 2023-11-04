@@ -1,0 +1,53 @@
+\hypertarget{classde_1_1_graphic}{}\doxysection{de\+::Graphic Class Reference}
+\label{classde_1_1_graphic}\index{de::Graphic@{de::Graphic}}
+\doxysubsection*{Static Public Member Functions}
+\begin{DoxyCompactItemize}
+\item 
+static \mbox{\hyperlink{classde_1_1_entity}{Entity}} \mbox{\hyperlink{classde_1_1_graphic_a98d5a5fd67fcf67a6beb57da8bed66fd}{create\+Rectangle}} (gl\+\_\+program program, entity\+\_\+collection\+\_\+id collection\+ID, const \mbox{\hyperlink{structde_1_1fvec3}{fvec3}} \&\mbox{\hyperlink{structde_1_1position}{position}}, float width, float height, const \mbox{\hyperlink{structde_1_1colora}{colora}} \&\mbox{\hyperlink{structde_1_1color}{color}}, bool collidable=false)
+\begin{DoxyCompactList}\small\item\em Crée un rectangle dans la collection spécifiée. \end{DoxyCompactList}\item 
+\mbox{\Hypertarget{classde_1_1_graphic_a0ae1d2383cac7924328ecc40acf025d6}\label{classde_1_1_graphic_a0ae1d2383cac7924328ecc40acf025d6}} 
+static \mbox{\hyperlink{classde_1_1_entity}{Entity}} {\bfseries create\+Rectangle\+Texture} (gl\+\_\+program program, entity\+\_\+collection\+\_\+id collection\+ID, const \mbox{\hyperlink{structde_1_1fvec3}{fvec3}} \&\mbox{\hyperlink{structde_1_1position}{position}}, float width, float height, const \mbox{\hyperlink{structde_1_1colora}{colora}} \&\mbox{\hyperlink{structde_1_1color}{color}}, gl\+\_\+texture texture, uint8\+\_\+t texture\+Unit, bool collidable=false)
+\item 
+\mbox{\Hypertarget{classde_1_1_graphic_a8b3bddd7c16b144fce0f5d374f35188a}\label{classde_1_1_graphic_a8b3bddd7c16b144fce0f5d374f35188a}} 
+static \mbox{\hyperlink{classde_1_1_entity}{Entity}} {\bfseries create3\+D\+Rectangle} (gl\+\_\+program program, entity\+\_\+collection\+\_\+id collection\+ID, const \mbox{\hyperlink{structde_1_1fvec3}{fvec3}} \&\mbox{\hyperlink{structde_1_1position}{position}}, float width, float height, float length, const \mbox{\hyperlink{structde_1_1colora}{colora}} \&color1, const \mbox{\hyperlink{structde_1_1colora}{colora}} \&color2, const \mbox{\hyperlink{structde_1_1colora}{colora}} \&color3, const \mbox{\hyperlink{structde_1_1colora}{colora}} \&color4, const \mbox{\hyperlink{structde_1_1colora}{colora}} \&color5, const \mbox{\hyperlink{structde_1_1colora}{colora}} \&color6, bool collidable=false)
+\item 
+\mbox{\Hypertarget{classde_1_1_graphic_a61f262db00a55b15d79a72874ea78e13}\label{classde_1_1_graphic_a61f262db00a55b15d79a72874ea78e13}} 
+static \mbox{\hyperlink{classde_1_1_entity}{Entity}} {\bfseries create3\+D\+Rectangle\+Texture} (gl\+\_\+program program, entity\+\_\+collection\+\_\+id collection\+ID, const \mbox{\hyperlink{structde_1_1fvec3}{fvec3}} \&\mbox{\hyperlink{structde_1_1position}{position}}, float width, float height, float length, const \mbox{\hyperlink{structde_1_1colora}{colora}} \&color1, const \mbox{\hyperlink{structde_1_1colora}{colora}} \&color2, const \mbox{\hyperlink{structde_1_1colora}{colora}} \&color3, const \mbox{\hyperlink{structde_1_1colora}{colora}} \&color4, const \mbox{\hyperlink{structde_1_1colora}{colora}} \&color5, const \mbox{\hyperlink{structde_1_1colora}{colora}} \&color6, gl\+\_\+texture texture, uint8\+\_\+t texture\+Unit, bool collidable=false)
+\item 
+\mbox{\Hypertarget{classde_1_1_graphic_a0d1b4cec697e43b69a1a43178d263d5a}\label{classde_1_1_graphic_a0d1b4cec697e43b69a1a43178d263d5a}} 
+static \mbox{\hyperlink{classde_1_1_entity}{Entity}} {\bfseries create\+Cubemap} (gl\+\_\+program program, entity\+\_\+collection\+\_\+id collection\+ID, const \mbox{\hyperlink{structde_1_1fvec3}{fvec3}} \&\mbox{\hyperlink{structde_1_1position}{position}}, float width, float height, float length, gl\+\_\+texture texture, uint8\+\_\+t texture\+Unit, bool collidable=false)
+\end{DoxyCompactItemize}
+
+
+\doxysubsection{Member Function Documentation}
+\mbox{\Hypertarget{classde_1_1_graphic_a98d5a5fd67fcf67a6beb57da8bed66fd}\label{classde_1_1_graphic_a98d5a5fd67fcf67a6beb57da8bed66fd}} 
+\index{de::Graphic@{de::Graphic}!createRectangle@{createRectangle}}
+\index{createRectangle@{createRectangle}!de::Graphic@{de::Graphic}}
+\doxysubsubsection{\texorpdfstring{createRectangle()}{createRectangle()}}
+{\footnotesize\ttfamily static \mbox{\hyperlink{classde_1_1_entity}{Entity}} de\+::\+Graphic\+::create\+Rectangle (\begin{DoxyParamCaption}\item[{gl\+\_\+program}]{program,  }\item[{entity\+\_\+collection\+\_\+id}]{collection\+ID,  }\item[{const \mbox{\hyperlink{structde_1_1fvec3}{fvec3}} \&}]{position,  }\item[{float}]{width,  }\item[{float}]{height,  }\item[{const \mbox{\hyperlink{structde_1_1colora}{colora}} \&}]{color,  }\item[{bool}]{collidable = {\ttfamily false} }\end{DoxyParamCaption})\hspace{0.3cm}{\ttfamily [static]}}
+
+
+
+Crée un rectangle dans la collection spécifiée. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em collection\+ID} & ID de la collection dans laquelle créer le rectangle. \\
+\hline
+{\em position} & Position à laquelle se situera le rectangle. \\
+\hline
+{\em width} & Largeur du rectangle. \\
+\hline
+{\em height} & Hauteur du rectangle. \\
+\hline
+{\em color} & Couleur du rectangle. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+L\textquotesingle{}entité nouvellement créée ou Entity\+::bad() si une erreur est survenue. 
+\end{DoxyReturn}
+
+
+The documentation for this class was generated from the following file\+:\begin{DoxyCompactItemize}
+\item 
+include/\+D\+E/graphics/graphic.\+hpp\end{DoxyCompactItemize}
