@@ -59,7 +59,7 @@ namespace de {
 	*/
 	void scene::deleteScenes()
 	{
-		size_t length = m_ScenesToDelete.getNumberOfElements();
+		size_t length = m_ScenesToDelete.count();
 		size_t i;
 		scene_id scene;
 

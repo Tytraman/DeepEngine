@@ -31,7 +31,7 @@ namespace de
 	drawable_component::classicRenderCallback
 	========================================
 	*/
-	void drawable_component::classicRenderCallback(OpenGLRenderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, Camera *camera)
+	void drawable_component::classicRenderCallback(gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, Camera *camera)
 	{
 		gl_uniform uniModel;
 
@@ -91,7 +91,7 @@ namespace de
 	drawable_component::skyboxRenderCallback
 	=======================================
 	*/
-	void drawable_component::skyboxRenderCallback(OpenGLRenderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, Camera *camera)
+	void drawable_component::skyboxRenderCallback(gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, Camera *camera)
 	{
 		gl_uniform uniModel;
 

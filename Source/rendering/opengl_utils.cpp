@@ -648,9 +648,9 @@ namespace de
 	}
 
 	/*
-	==================================
+	===================================
 	gl_texture::transmitTextureCubemaps
-	==================================
+	===================================
 	*/
 	void gl_texture::transmitTextureCubemaps(mem_ptr left, mem_ptr front, mem_ptr right, mem_ptr back, mem_ptr bottom, mem_ptr top, int width, int height, image_color_type colorType)
 	{
@@ -685,5 +685,159 @@ namespace de
 		// Dessus
 		DE_GL_CALL(glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, top));
 	}
+
+    /*
+	======================
+	gl_framebuffer::create
+	======================
+	*/
+    gl_framebuffer_int gl_framebuffer::create()
+    {
+        gl_framebuffer_int fbo;
+        DE_GL_CALL(glGenFramebuffers(1, &fbo));
+
+        return fbo;
+    }
+
+    /*
+	====================
+	gl_framebuffer::bind
+	====================
+	*/
+    void gl_framebuffer::bind(gl_framebuffer_int fbo)
+    {
+        DE_GL_CALL(glBindFramebuffer(GL_FRAMEBUFFER, fbo));
+    }
+
+    /*
+	=====================
+	gl_framebuffer::check
+	=====================
+	*/
+    bool gl_framebuffer::check()
+    {
+        return DE_GL_CALLV(glCheckFramebufferStatus(GL_FRAMEBUFFER)) == GL_FRAMEBUFFER_COMPLETE;
+    }
+
+    /*
+	===========================
+	gl_framebuffer::bindDefault
+	===========================
+	*/
+    void gl_framebuffer::bindDefault()
+    {
+        DE_GL_CALL(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+    }
+
+    /*
+	=======================
+	gl_framebuffer::destroy
+	=======================
+	*/
+    void gl_framebuffer::destroy(gl_framebuffer_int fbo)
+    {
+        DE_GL_CALL(glDeleteFramebuffers(1, &fbo));
+    }
+
+    /*
+	=============================
+	gl_framebuffer::attachTexture
+	=============================
+	*/
+    void gl_framebuffer::attachTexture(int width, int height)
+    {
+        unsigned int texture;
+
+        // Génère une nouvelle texture.
+        DE_GL_CALL(glGenTextures(1, &texture));
+        DE_GL_CALL(glBindTexture(GL_TEXTURE_2D, texture));
+
+        // Crée la texture.
+        DE_GL_CALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr));
+
+        DE_GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+        DE_GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+
+        // Attache la texture au framebuffer.
+        DE_GL_CALL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0));
+    }
+
+    /*
+	==================================
+	gl_framebuffer::attachRenderbuffer
+	==================================
+	*/
+    void gl_framebuffer::attachRenderbuffer(gl_renderbuffer_int rbo)
+    {
+        DE_GL_CALL(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo));
+    }
+
+    /*
+	=======================
+	gl_renderbuffer::create
+	=======================
+	*/
+    gl_renderbuffer_int gl_renderbuffer::create()
+    {
+        gl_renderbuffer_int rbo;
+        DE_GL_CALL(glGenRenderbuffers(1, &rbo));
+
+        return rbo;
+    }
+
+    /*
+	=====================
+	gl_renderbuffer::bind
+	=====================
+	*/
+    void gl_renderbuffer::bind(gl_renderbuffer_int rbo)
+    {
+        DE_GL_CALL(glBindRenderbuffer(GL_RENDERBUFFER, rbo));
+    }
+
+    /*
+	============================
+	gl_renderbuffer::bindDefault
+	============================
+	*/
+    void gl_renderbuffer::bindDefault()
+    {
+        DE_GL_CALL(glBindRenderbuffer(GL_RENDERBUFFER, 0));
+    }
+
+    /*
+	======================
+	gl_renderbuffer::store
+	======================
+	*/
+    void gl_renderbuffer::store(int width, int height)
+    {
+        DE_GL_CALL(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height));
+    }
+
+    /*
+	============================
+	gl_framerenderbuffer::create
+	============================
+	*/
+    bool gl_framerenderbuffer::create(int width, int height)
+    {
+        m_Framebuffer = gl_framebuffer::create();
+        gl_framebuffer::bind(m_Framebuffer);
+        gl_framebuffer::attachTexture(width, height);
+
+        m_Renderbuffer = gl_renderbuffer::create();
+        gl_renderbuffer::bind(m_Renderbuffer);
+        gl_renderbuffer::store(width, height);
+        gl_renderbuffer::bindDefault();
+
+        gl_framebuffer::attachRenderbuffer(m_Renderbuffer);
+
+        bool ret = gl_framebuffer::check();
+
+        gl_framebuffer::bindDefault();
+
+        return ret;
+    }
 
 }

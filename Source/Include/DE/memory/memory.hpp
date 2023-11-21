@@ -186,6 +186,9 @@ namespace de
             /// @return Le pointeur interne.
             T *operator->() const;
 
+            void assign(T *ptr);
+
+        public:
             unique_ptr(const unique_ptr &other) = delete;             // Il ne faut pas que la classe puisse copier un autre pointeur unique sinon elle perd tout son intérêt.
             unique_ptr &operator=(const unique_ptr &other) = delete;
 
@@ -313,14 +316,25 @@ namespace de
     }
 
     /*
-    ========================
+    =========================
     unique_ptr<T>::operator->
-    ========================
+    =========================
     */
     template<typename T>
     T *unique_ptr<T>::operator->() const
     {
         return m_Ptr;
+    }
+
+    /*
+    ========================
+    unique_ptr<Type>::assign
+    ========================
+    */
+    template<typename Type>
+    void unique_ptr<Type>::assign(Type *ptr)
+    {
+        m_Ptr = ptr;
     }
 
 }

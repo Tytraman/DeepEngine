@@ -4,11 +4,11 @@
 	- [[Source]] : contient le code du moteur.
 	- [[Assets]] : contient tous les assets du jeu.
 	- [[Docs]] : contient toutes les documentations peu importe leurs formes.
-	- [[Build]] : contient l'exécutable final ainsi que toutes les bibliothèques requises.
+	- [[Build]] : contient0 l'exécutable final ainsi que toutes les bibliothèques requises.
 - # Compilation du projet
-	- CMake est l'outil utilisé pour gérer toute la compilation et l'exécution des scripts.
+	- [[CMake]] est l'outil utilisé pour gérer toute la compilation et l'exécution des scripts.
 - # Versioning
-	- Git est utilisé pour garder une trace des différentes versions du code.
+	- [[Git]] est utilisé pour garder une trace des différentes versions du code.
 	- GitHub est utilisé comme plateforme de dépôts.
 - # Fonctionnement du moteur
 	- [[Moteur : introduction]]

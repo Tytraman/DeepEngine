@@ -37,6 +37,11 @@ namespace de
         hash_entry(uint64_t key, const Value &value, hash_entry<Value> *previous);
     };
 
+    /*
+	=============================
+	hash_entry<Value>::hash_entry
+	=============================
+	*/
     template<typename Value>
     hash_entry<Value>::hash_entry()
         : key(-1),
@@ -45,6 +50,11 @@ namespace de
           previous(nullptr)
     { }
 
+    /*
+	=============================
+	hash_entry<Value>::hash_entry
+	=============================
+	*/
     template<typename Value>
     hash_entry<Value>::hash_entry(uint64_t _key, const Value &_value, hash_entry<Value> *_previous)
         : key(_key),
@@ -93,6 +103,11 @@ namespace de
 
     };
 
+    /*
+	=============================
+	hash_table<Value>::hash_table
+	=============================
+	*/
     template<typename Value>
     hash_table<Value>::hash_table(size_t size, hash_function hashfunction, hash_table_free_element_callback<Value> freeElementCallback)
         : m_Table(new hash_entry<Value>*[size]),
@@ -107,6 +122,11 @@ namespace de
             m_Table[index] = nullptr;
     }
 
+    /*
+	=======================
+	hash_table<Value>::init
+	=======================
+	*/
     template<typename Value>
     void hash_table<Value>::init(size_t size, hash_function hashfunction, hash_table_free_element_callback<Value> freeElementCallback)
     {
@@ -122,12 +142,22 @@ namespace de
             m_Table[index] = nullptr;
     }
 
+    /*
+	=========================
+	hash_table<Value>::insert
+	=========================
+	*/
     template<typename Value>
     hash_entry<Value> &hash_table<Value>::insert(const char *key, const Value &value)
     {
         return insert(m_HashFunction(key), value);
     }
 
+    /*
+	=========================
+	hash_table<Value>::insert
+	=========================
+	*/
     template<typename Value>
     hash_entry<Value> &hash_table<Value>::insert(uint64_t key, const Value &value)
     {
@@ -147,6 +177,7 @@ namespace de
 
                 m_Table[bucket] = n;
 
+                m_NumberOfElements++;
                 return *n;
             }
 
@@ -154,6 +185,7 @@ namespace de
                 n = n->next;
 
             n->next = new hash_entry<Value>(key, value, n);
+            m_NumberOfElements++;
 
             n = n->next;
         }
@@ -166,12 +198,22 @@ namespace de
         return *n;
     }
 
+    /*
+	=============================
+	hash_table<Value>::operator[]
+	=============================
+	*/
     template<typename Value>
     hash_entry<Value> *hash_table<Value>::operator[](const char *str)
     {
         return operator[](m_HashFunction(str));
     }
 
+    /*
+	=============================
+	hash_table<Value>::operator[]
+	=============================
+	*/
     template<typename Value>
     hash_entry<Value> *hash_table<Value>::operator[](uint64_t key)
     {
@@ -195,6 +237,11 @@ namespace de
         return nullptr;
     }
 
+    /*
+	========================
+	hash_table<Value>::first
+	========================
+	*/
     template<typename Value>
     hash_entry<Value> *hash_table<Value>::first(uint64_t *bucket)
     {
@@ -219,6 +266,11 @@ namespace de
         return n;
     }
 
+    /*
+	=======================
+	hash_table<Value>::last
+	=======================
+	*/
     template<typename Value>
     hash_entry<Value> *hash_table<Value>::last(uint64_t *bucket, uint64_t *count)
     {
@@ -253,12 +305,22 @@ namespace de
         return n;
     }
 
+    /*
+	=========================
+	hash_table<Value>::remove
+	=========================
+	*/
     template<typename Value>
     bool hash_table<Value>::remove(const char *str)
     {
         return remove(m_HashFunction(str));
     }
 
+    /*
+	=========================
+	hash_table<Value>::remove
+	=========================
+	*/
     template<typename Value>
     bool hash_table<Value>::remove(uint64_t key)
     {
@@ -289,6 +351,11 @@ namespace de
         return true;
     }
 
+    /*
+	========================
+	hash_table<Value>::clear
+	========================
+	*/
     template<typename Value>
     void hash_table<Value>::clear()
     {
@@ -306,6 +373,11 @@ namespace de
         m_NumberOfElements = 0;
     }
 
+    /*
+	========================
+	hash_table<Value>::begin
+	========================
+	*/
     template<typename Value>
     hash_table_iterator<Value> hash_table<Value>::begin()
     {
@@ -314,6 +386,11 @@ namespace de
         return hash_table_iterator<Value>(this, val, bucket, 0);
     }
 
+    /*
+	======================
+	hash_table<Value>::end
+	======================
+	*/
     template<typename Value>
     hash_table_iterator<Value> hash_table<Value>::end()
     {
@@ -323,12 +400,22 @@ namespace de
         return hash_table_iterator<Value>(this, val, bucket, count);
     }
 
+    /*
+	=======================
+	hash_table<Value>::size
+	=======================
+	*/
     template<typename Value>
     size_t hash_table<Value>::size() const
     {
         return m_Size;
     }
 
+    /*
+	======================================
+	hash_table<Value>::getNumberOfElements
+	======================================
+	*/
     template<typename Value>
     size_t hash_table<Value>::getNumberOfElements() const
     {
@@ -363,6 +450,11 @@ namespace de
 
     };
 
+    /*
+	===============================================
+	hash_table_iterator<Value>::hash_table_iterator
+	===============================================
+	*/
     template<typename Value>
     hash_table_iterator<Value>::hash_table_iterator(hash_table<Value> *hashtable, hash_entry<Value> *hashentry, uint64_t bucket, uint64_t count)
         : m_HashTable(hashtable),
@@ -371,18 +463,33 @@ namespace de
           m_Count(count)
     { }
 
+    /*
+	=====================================
+	hash_table_iterator<Value>::operator*
+	=====================================
+	*/
     template<typename Value>
     hash_entry<Value> &hash_table_iterator<Value>::operator*()
     {
         return *m_CurrentEntry;
     }
 
+    /*
+	======================================
+	hash_table_iterator<Value>::operator->
+	======================================
+	*/
     template<typename Value>
     hash_entry<Value> *hash_table_iterator<Value>::operator->()
     {
         return m_CurrentEntry;
     }
 
+    /*
+	======================================
+	hash_table_iterator<Value>::operator++
+	======================================
+	*/
     template<typename Value>
     hash_table_iterator<Value> &hash_table_iterator<Value>::operator++()
     {
@@ -411,6 +518,11 @@ namespace de
         return *this;
     }
 
+    /*
+	======================================
+	hash_table_iterator<Value>::operator++
+	======================================
+	*/
     template<typename Value>
     hash_table_iterator<Value> hash_table_iterator<Value>::operator++(int)
     {
@@ -421,6 +533,11 @@ namespace de
         return temp;
     }
 
+    /*
+	======================================
+	hash_table_iterator<Value>::operator==
+	======================================
+	*/
     template<typename Value>
     bool hash_table_iterator<Value>::operator==(const hash_table_iterator<Value> &other) const
     {
@@ -428,6 +545,11 @@ namespace de
                 (m_Count == other.m_Count);
     }
 
+    /*
+	======================================
+	hash_table_iterator<Value>::operator!=
+	======================================
+	*/
     template<typename Value>
     bool hash_table_iterator<Value>::operator!=(const hash_table_iterator<Value> &other) const
     {
@@ -435,6 +557,11 @@ namespace de
                 (m_Count != other.m_Count);
     }
 
+    /*
+	============================================
+	hash_table_iterator<Value>::getCurrentBucket
+	============================================
+	*/
     template<typename Value>
     uint64_t hash_table_iterator<Value>::getCurrentBucket() const
     {

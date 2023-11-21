@@ -8,16 +8,25 @@
 #include <DE/renderer.hpp>
 #include <DE/memory/list.hpp>
 #include <DE/imgui/deimgui.hpp>
+#include <DE/rendering/opengl_utils.hpp>
 
 #include <stdint.h>
-#include <string>
-#include <vector>
-#include <memory>
 
 #include <SDL.h>
 
 namespace de
 {
+
+#if DE_WINDOWS
+
+    using window_handle = HWND;
+
+    static constexpr window_handle invalid_window_handle = nullptr;
+
+#else
+#error Need implementation
+#endif
+
 
 	/// @class window
 	/// @brief Permet la gestion d'une fenêtre.
@@ -39,6 +48,12 @@ namespace de
 			/// @param size		Taille de la fenêtre.
 			/// @return			Le code d'erreur.
 			static error_status create(window &win, const char *title, const size &size);
+
+            static window_handle find(const char *className);
+            static void show(window_handle win);
+            static void focus(window_handle win);
+            static void setForeground(window_handle win);
+            static void setActive(window_handle win);
 			
 			/// @brief Détruit la fenêtre ainsi que tous ses composants internes.
 			void destroy();
@@ -65,7 +80,7 @@ namespace de
 			uint32_t getWidth() const;
 			uint32_t getHeight() const;
 			const char *getTitle() const;
-			OpenGLRenderer &getRenderer();
+			gl_renderer &getRenderer();
 			bool isShowingDebugPanel() const;
 
 
@@ -81,7 +96,7 @@ namespace de
 			list<pre_event_callback> m_PreEventCallbacks;
 			event_callback           m_EventCallback;
 			update_callback          m_UpdateCallback;
-			OpenGLRenderer           m_Renderer;
+			gl_renderer              m_Renderer;
 			uint16_t                 m_TargetMSPerUpdate;
 			uint16_t                 m_TargetFPS;
 			bool                     m_Running;
@@ -90,6 +105,71 @@ namespace de
 			void internalEventCallback(devent e);
 
 	};
+
+    /*
+	============
+	window::find
+	============
+	*/
+    inline window_handle window::find(const char *className)
+    {
+#if DE_WINDOWS
+        return FindWindowA(className, nullptr);
+#else
+#error Need implementation
+#endif
+    }
+
+    /*
+	============
+	window::show
+	============
+	*/
+    inline void window::show(window_handle win)
+    {
+#if DE_WINDOWS
+        ShowWindow(win, SW_SHOWNORMAL);
+#else
+#error Need implementation
+#endif
+    }
+
+    /*
+	=============
+	window::focus
+	=============
+	*/
+    inline void window::focus(window_handle win)
+    {
+#if DE_WINDOWS
+        SetFocus(win);
+#else
+#error Need implementation
+#endif
+    }
+
+    /*
+	=====================
+	window::setForeground
+	=====================
+	*/
+    inline void window::setForeground(window_handle win)
+    {
+#if DE_WINDOWS
+        SetForegroundWindow(win);
+#else
+#error Need implementation
+#endif
+    }
+
+    inline void window::setActive(window_handle win)
+    {
+#if DE_WINDOWS
+        SetActiveWindow(win);
+#else
+#error Need implementation
+#endif
+    }
 
 	/*
 	===========================
@@ -116,7 +196,7 @@ namespace de
 	window::getRenderer
 	===================
 	*/
-	inline OpenGLRenderer &window::getRenderer()
+	inline gl_renderer &window::getRenderer()
 	{
 		return m_Renderer;
 	}

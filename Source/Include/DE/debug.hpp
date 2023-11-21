@@ -14,9 +14,6 @@ namespace de
     {
 
 		public:
-			static bool addFunctionToCallbackList(const char *functionName, bool count = true);
-			static bool removeFunctionFromCallbackList();
-			static bool writeToStream(output_stream &stream);
 
         public:
             debug() = delete;

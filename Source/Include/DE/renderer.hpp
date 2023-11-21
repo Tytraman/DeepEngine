@@ -94,48 +94,6 @@ namespace de
 		return m_Color;
 	}
 
-	class DE_API OpenGLRenderer
-    {
-
-		public:
-			OpenGLRenderer();
-
-			static bool create(OpenGLRenderer &dest, window *window);
-
-			void clear() const;
-			void draw(unsigned int numberOfVertices) const;
-			void swapBuffers() const;
-
-			SDL_GLContext context();
-			window *getWindow();
-
-			colora clearColor() const;
-
-			void setClearColor(const colora color);
-
-		private:
-			SDL_GLContext m_Context;
-			window *m_Window;
-
-			colora m_ClearColor;
-
-	};
-
-	inline SDL_GLContext OpenGLRenderer::context()
-	{
-		return m_Context;
-	}
-
-	inline window *OpenGLRenderer::getWindow()
-	{
-		return m_Window;
-	}
-
-	inline colora OpenGLRenderer::clearColor() const
-	{
-		return m_ClearColor;
-	}
-
 }
 
 #endif

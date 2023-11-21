@@ -19,14 +19,19 @@ namespace de
 			static char *copy(const char *source);
 			static wchar_t *copy(const wchar_t *source);
 
+            static char *substring(const char *source, size_t start, size_t end);
 
             static bool append(char **dest, const char *source);
 			static bool append(wchar_t **dest, const wchar_t *source);
 			static bool append(wchar_t **dest, const char *source);
+            static bool append(char **dest, uint8_t *buffer, size_t size);
+
+            static size_t removeAll(char **str, char caractere);
 
 			static bool endsWith(const wchar_t *toSearch, const wchar_t *end);
 			static size_t lastIndex(const wchar_t *str, wchar_t charactere);
 			static bool equals(const wchar_t *first, const wchar_t *second);
+            static bool equals(const char *first, const char *second);
 
 			static void wcharToChar(char *dest, const wchar_t *source);
 

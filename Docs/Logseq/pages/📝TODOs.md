@@ -3,11 +3,16 @@
 - Visuel
 	- TODO Ajouter le support des images RGB et RGBA.
 	- TODO Ajouter les animations d'images.
+	- TODO Ajouter le post-processing.
 - Mémoire
 	- TODO Gestion de données par Queue.
-	- TODO Gestion de données par Stack.
+	- DONE Gestion de données par Stack.
 	- TODO Trier les listes de types primitifs.
 	- TODO Trier les listes de String.
+	- TODO Faire un loader de meshes.
+- Stockage
+	- TODO Créer un format pour stocker des données hiérarchiques.
+	- TODO Créer un format pour stocker les ressources.
 - Modding
 	- TODO Gestion des mods en Lua.
 - Debug

@@ -9,21 +9,36 @@
 namespace de
 {
 
+    class string;
+    class string_finder;
+
     class DE_API string
     {
 
         public:
             string();
             string(const char *str);
+            string(mem_ptr rawStr);
             string(const string &other);
             string(string &&other) noexcept;
 
             string &operator=(const string &other);
             string &operator=(string &&other) noexcept;
 
+            char operator[](size_t index) const;
+
             void clear();
 
             bool append(const char *str);
+            bool append(uint8_t *buffer, size_t size);
+
+            size_t removeAll(char caractere);
+
+            string newSubstring(size_t start, size_t end) const;
+            bool substring(size_t start, size_t end);
+
+            size_t find(char charactere) const;
+            size_t findFromEnd(char charactere) const;
 
             static uint64_t hash(const string &str);
             uint64_t hash() const;
@@ -36,6 +51,16 @@ namespace de
             size_t m_Length;
 
     };
+
+    /*
+    ==================
+    string::operator[]
+    ==================
+    */
+    inline char string::operator[](size_t index) const
+    {
+        return m_Chars.get()[index];
+    }
 
     /*
     ============
@@ -67,17 +92,114 @@ namespace de
         return m_Chars.get();
     }
 
+    /*
+    =============
+    string::clear
+    =============
+    */
     inline void string::clear()
     {
         m_Chars.reset(nullptr);
         m_Length = 0;
     }
 
+    /*
+    ==============
+    string::append
+    ==============
+    */
     inline bool string::append(const char *str)
     {
-        char *ptr = m_Chars.get();
+        return append((uint8_t *) str, string_utils::length(str));
+    }
 
-        return string_utils::append(&ptr, str);
+    class DE_API string_finder
+    {
+
+        public:
+            string_finder(const string &str, size_t index = 0);
+
+            char operator[](size_t index) const;
+
+            bool skipWhiteChars();
+            bool skipAlpha();
+            bool skipNum();
+            bool skipAlphaNum();
+            bool skipTo(char charactere);
+            bool skip();
+            bool skip(char charactere);
+            char skipUntil(char *characteres, uint8_t numberOfCharacteres);
+
+            bool isAlphaNum() const;
+
+            size_t position() const;
+            char current() const;
+
+            void setPosition(size_t index);
+
+        private:
+            const string *m_String;
+            size_t m_Position;
+
+        public:
+            string_finder() = delete;
+
+    };
+
+    /*
+    =========================
+    string_finder::operator[]
+    =========================
+    */
+    inline char string_finder::operator[](size_t index) const
+    {
+        return (*m_String)[index];
+    }
+
+    /*
+    ===================
+    string_finder::skip
+    ===================
+    */
+    inline bool string_finder::skip()
+    {
+        if(m_Position < m_String->length())
+        {
+            m_Position++;
+            return true;
+        }
+
+        return false;
+    }
+
+    /*
+    =======================
+    string_finder::position
+    =======================
+    */
+    inline size_t string_finder::position() const
+    {
+        return m_Position;
+    }
+
+    /*
+    ======================
+    string_finder::current
+    ======================
+    */
+    inline char string_finder::current() const
+    {
+        return (*m_String)[m_Position];
+    }
+
+    /*
+    ==========================
+    string_finder::setPosition
+    ==========================
+    */
+    inline void string_finder::setPosition(size_t index)
+    {
+        m_Position = index;
     }
 
 }

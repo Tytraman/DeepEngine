@@ -8,16 +8,12 @@
 
 #if DE_WINDOWS
 
+#include <crtdbg.h>
+
 DE_API BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved);
 
 namespace de
 {
-
-	struct local_thread_var
-    {
-		list<string> functionCallbackList;
-		hash_table<size_t> functionCallNumber;
-	};
 	
 	class DE_API sys_win
     {
@@ -28,9 +24,6 @@ namespace de
 			static DWORD m_TLSIndex;
 
 		public:
-			static local_thread_var *getLocalThreadVar(bool createIfNotExisting = false);
-			static local_thread_var *createLocalThreadVar();
-
 			static DWORD getTlsIndex();
 
         public:

@@ -9,6 +9,7 @@
 #include <DE/image/image.hpp>
 #include <DE/memory/hash_table.hpp>
 
+
 #include <glad/glad.h>
 
 namespace de
@@ -34,6 +35,24 @@ namespace de
 	_x;                                                                      \
 	if(de::gl_error::checkErrors(#_x, DE_FILE_NAME, DE_LINE)) DE_DEBUG_BREAK;
 
+    using gl_vbo_int          = unsigned int;
+    using gl_vao_int          = unsigned int;
+    using gl_shader_int       = unsigned int;
+    using gl_program_int      = unsigned int;
+    using gl_texture_int      = unsigned int;
+    using gl_framebuffer_int  = unsigned int;
+    using gl_renderbuffer_int = unsigned int;
+
+    class gl_vbo;
+    class gl_vao;
+    class gl_shader;
+    class gl_program;
+    class gl_texture;
+    class gl_framebuffer;
+    class gl_renderbuffer;
+    class gl_framerenderbuffer;
+
+    class window;
 
 	
 	enum class gl_attrib_components_number : int
@@ -90,12 +109,6 @@ namespace de
 		Vertex,
 		Fragment
 	};
-
-	using gl_vbo_int     = unsigned int;
-    using gl_vao_int     = unsigned int;
-    using gl_shader_int  = unsigned int;
-    using gl_program_int = unsigned int;
-    using gl_texture_int = unsigned int;
 
 	/// @brief Vertex Buffer Object
 	class DE_API gl_vbo
@@ -372,6 +385,100 @@ namespace de
 			static void setCullFace(gl_cull_face cullFace);
 
 	};
+
+    class DE_API gl_framebuffer
+    {
+
+        public:
+            static gl_framebuffer_int create();
+            static void bind(gl_framebuffer_int fbo);
+            static void bindDefault();
+            static bool check();
+            static void destroy(gl_framebuffer_int fbo);
+
+            static void attachTexture(int width, int height);
+            static void attachRenderbuffer(gl_renderbuffer_int rbo);
+
+    };
+
+    class DE_API gl_renderbuffer
+    {
+
+        public:
+            static gl_renderbuffer_int create();
+            static void bind(gl_renderbuffer_int rbo);
+            static void bindDefault();
+            static void store(int width, int height);
+
+    };
+
+    class DE_API gl_framerenderbuffer
+    {
+
+        public:
+            bool create(int width, int height);
+
+            gl_framebuffer_int framebuffer() const;
+            gl_renderbuffer_int renderbuffer() const;
+
+        private:
+            gl_framebuffer_int m_Framebuffer;
+            gl_renderbuffer_int m_Renderbuffer;
+
+    };
+
+    inline gl_framebuffer_int gl_framerenderbuffer::framebuffer() const
+    {
+        return m_Framebuffer;
+    }
+
+    inline gl_renderbuffer_int gl_framerenderbuffer::renderbuffer() const
+    {
+        return m_Renderbuffer;
+    }
+
+    class DE_API gl_renderer
+    {
+
+		public:
+			gl_renderer();
+
+			static bool create(gl_renderer &dest, window *window);
+
+			void clear() const;
+            void clearColor() const;
+			void draw(unsigned int numberOfVertices) const;
+			void swapBuffers() const;
+
+			SDL_GLContext context();
+			window *getWindow();
+
+			colora getClearColor() const;
+
+			void setClearColor(const colora color);
+
+		private:
+			SDL_GLContext m_Context;
+			window *m_Window;
+
+			colora m_ClearColor;
+
+	};
+
+	inline SDL_GLContext gl_renderer::context()
+	{
+		return m_Context;
+	}
+
+	inline window *gl_renderer::getWindow()
+	{
+		return m_Window;
+	}
+
+	inline colora gl_renderer::getClearColor() const
+	{
+		return m_ClearColor;
+	}
 
 }
 

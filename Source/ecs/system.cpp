@@ -76,7 +76,7 @@ namespace de
 	void system_manager::executeSystems()
 	{
 		size_t i;
-		size_t length = m_EnabledSystems.getNumberOfElements();
+		size_t length = m_EnabledSystems.count();
 		system_id system;
 
 		scene_id scene = scene::getActiveSceneID();
@@ -122,7 +122,7 @@ namespace de
 		// Query toutes les entités possédant une vélocité et une accélération.
 		entity_manager::query(collectionID, VelocityComponentType | AccelerationComponentType, 0, entities);
 
-		size_t length = entities.getNumberOfElements();
+		size_t length = entities.count();
 		size_t i;
 		entity_id entity;
 
@@ -167,7 +167,7 @@ namespace de
 		// Query toutes les entités possédant une vélocité et une transformation.
 		entity_manager::query(collectionID, TransformationComponentType | VelocityComponentType, 0, entities);
 
-		size_t length = entities.getNumberOfElements();
+		size_t length = entities.count();
 		size_t i;
 		entity_id entity;
 
@@ -238,7 +238,7 @@ namespace de
 		// Query toutes les entités possédant une boîte de collision.
 		entity_manager::query(collectionID, ColliderComponentType, 0, entities);
 
-		size_t length = entities.getNumberOfElements();
+		size_t length = entities.count();
 		size_t i, j;
 		entity_id entity1, entity2;
 
@@ -332,11 +332,15 @@ namespace de
 	system_manager::renderSystem
 	===========================
 	*/
-	void system_manager::renderSystem(OpenGLRenderer &renderer, scene_id sceneID)
+	void system_manager::renderSystem(gl_renderer &renderer, gl_framebuffer_int fbo, scene_id sceneID)
 	{
 		window *window = renderer.getWindow();
 
-		// Nettoie l'écran en le remplissant de la couleur noire.
+        // Le rendu est d'abord stocké dans un framebuffer pour pouvoir faire du post-processing.
+        gl_framebuffer::bind(fbo);
+        DE_GL_CALL(glEnable(GL_DEPTH_TEST));
+
+		// Nettoie le framebuffer en le remplissant de la couleur noire.
 		renderer.setClearColor( { 0, 0, 0, 255 } );
 		renderer.clear();
 
@@ -375,6 +379,14 @@ namespace de
 			// Solution temporaire avant d'en trouver une meilleure.
 			entities.empty();
 		}
+
+        // Toute cette partie là permet de faire du post-processing.
+
+        gl_framebuffer::bindDefault();
+        DE_GL_CALL(glDisable(GL_DEPTH_TEST));
+
+        renderer.setClearColor( { 255, 255, 255, 255 } );
+		renderer.clear();
 
 		// C'est ce qui permet de mettre à jour les pixels de l'écran.
 		renderer.swapBuffers();

@@ -9,7 +9,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/Build")
 enable_language(C ASM_MASM)
 
 if(MSVC)
-    add_compile_options(/fsanitize=address)
+    #add_compile_options(/fsanitize=address)
 endif()
 
 # Variables qui contiennent le nom des différents projets.
@@ -44,6 +44,8 @@ file(GLOB DE_HEADERS
 	"${DE_INCLUDE}/DE/imgui/*.hpp" "${DE_INCLUDE}/DE/imgui/*.h"
 	"${DE_INCLUDE}/DE/memory/*.hpp" "${DE_INCLUDE}/DE/memory/*.h"
 	"${DE_INCLUDE}/DE/rendering/*.hpp" "${DE_INCLUDE}/DE/rendering/*.h"
+    "${DE_INCLUDE}/DE/resource/*.hpp" "${DE_INCLUDE}/DE/resource/*.h"
+    "${DE_INCLUDE}/DE/file/*.hpp" "${DE_INCLUDE}/DE/file/*.h"
 
 	"${DE_INCLUDE}/glad/*.hpp" "${DE_INCLUDE}/glad/*.h"
 	"${DE_INCLUDE}/KHR/*.hpp" "${DE_INCLUDE}/KHR/*.h"
@@ -62,6 +64,8 @@ file(GLOB DE_SOURCES
 	"${DE_SOURCE}/imgui/*.cpp" "${DE_SOURCE}/imgui/*.c"
 	"${DE_SOURCE}/memory/*.cpp" "${DE_SOURCE}/memory/*.c" "${DE_SOURCE}/src/memory/*.asm"
 	"${DE_SOURCE}/rendering/*.cpp" "${DE_SOURCE}/rendering/*.c"
+    "${DE_SOURCE}/resource/*.cpp" "${DE_SOURCE}/resource/*.c"
+    "${DE_SOURCE}/file/*.cpp" "${DE_SOURCE}/file/*.c"
 
 	"${IMGUI_INCLUDE}/*.cpp" "${IMGUI_INCLUDE}/*.c"
 	"${IMGUI_INCLUDE}/backends/imgui_impl_sdl2.cpp"

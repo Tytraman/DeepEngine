@@ -1,15 +1,13 @@
 #ifndef __DEEP_ENGINE_LIST_HPP__
 #define __DEEP_ENGINE_LIST_HPP__
 
-#include <DE/def.hpp>
-#include <DE/types.hpp>
-#include <DE/memory/memory.hpp>
+#include <DE/memory/collection.hpp>
 
 namespace de
 {
 
     template<typename Type>
-    class list_iterator
+    class list_iterator : public iiterator<Type, list_iterator<Type>>
     {
 
         public:
@@ -21,20 +19,17 @@ namespace de
         public:
             list_iterator(TypePtr ptr);
 
-            list_iterator<Type> &operator++();
-            list_iterator<Type> operator++(int);
+            list_iterator<Type> &operator++()   override;
+            list_iterator<Type> operator++(int) override;
 
-            list_iterator<Type> &operator--();
-            list_iterator<Type> operator--(int);
+            list_iterator<Type> &operator--()   override;
+            list_iterator<Type> operator--(int) override;
 
-            TypeRef operator[](size_t index);
-            TypeRef operator*();
+            TypeRef operator[](size_t index) override;
+            TypeRef operator*()              override;
 
-            bool operator==(const list_iterator<Type> &other) const;
-            bool operator!=(const list_iterator<Type> &other) const;
-
-        private:
-            TypePtr m_Ptr;
+            bool operator==(const list_iterator<Type> &other) const override;
+            bool operator!=(const list_iterator<Type> &other) const override;
 
     };
 
@@ -45,7 +40,7 @@ namespace de
 	*/
     template<typename Type>
     list_iterator<Type>::list_iterator(TypePtr ptr)
-        : m_Ptr(ptr)
+        : iiterator<Type, list_iterator<Type>>(ptr)
     { }
 
     /*
@@ -151,7 +146,7 @@ namespace de
     }
 
     template<typename Type>
-    class list
+    class list : public icollection<Type, list_iterator<Type>>
     {
         public:
             using TypePtr = Type*;
@@ -159,42 +154,38 @@ namespace de
             using TypeRef = Type&;
             using ConstTypeRef = const Type&;
 
-            static constexpr size_t nothing = -1;
-
         public:
             list(uint32_t capacityStep = 10);
             ~list();
 
             void init(uint32_t capacityStep = 10);
 
-            bool add(ConstTypeRef element);
-            bool add(Type &&element);
-            bool add();
+            bool add()                     override;
+            bool add(ConstTypeRef element) override;
+            bool add(Type &&element)       override;
 
-            bool remove(size_t index);
+            bool remove(size_t index) override;
 
-            size_t find(ConstTypeRef toSearch) const;
+            size_t find(const Type &toSearch) const override;
 
-            bool reserve(size_t numberOfElements);
+            bool reserve(size_t numberOfElements) override;
 
-            void empty();
-            void free();
+            void empty() override;
+            void free()  override;
 
-            list_iterator<Type> begin();
-            list_iterator<Type> end();
+            list_iterator<Type> begin() override;
+            list_iterator<Type> end()   override;
 
             size_t   getCapacity()         const;
             uint32_t getCapacityStep()     const;
-            size_t   getNumberOfElements() const;
             TypeRef operator[](size_t index);
 
             void setCapacityStep(size_t size);
 
-        private:
+        protected:
             Type     *m_Data;
             size_t    m_Capacity;
             uint32_t  m_CapacityStep;
-            size_t    m_NumberOfElements;
 
             bool growIfNeeded();
 
@@ -207,10 +198,10 @@ namespace de
 	*/
     template<typename Type>
     list<Type>::list(uint32_t capacityStep)
-        : m_Data(nullptr),
+        : icollection<Type, list_iterator<Type>>(),
+          m_Data(nullptr),
           m_Capacity(0),
-          m_CapacityStep(capacityStep),
-          m_NumberOfElements(0)
+          m_CapacityStep(capacityStep)
     { }
 
     /*
@@ -317,7 +308,7 @@ namespace de
 	================
 	*/
     template<typename Type>
-    size_t list<Type>::find(ConstTypeRef toSearch) const
+    size_t list<Type>::find(const Type &toSearch) const
     {
         // Pointeur vers le tableau des éléments de la liste.
 		uint8_t *ptr = (uint8_t *) m_Data;
@@ -431,17 +422,6 @@ namespace de
     uint32_t list<Type>::getCapacityStep() const
     {
         return m_Capacity;
-    }
-
-    /*
-	===============================
-	list<Type>::getNumberOfElements
-	===============================
-	*/
-    template<typename Type>
-    size_t list<Type>::getNumberOfElements() const
-    {
-        return m_NumberOfElements;
     }
 
     /*

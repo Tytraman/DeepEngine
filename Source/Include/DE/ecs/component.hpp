@@ -25,9 +25,9 @@ namespace de
 	class system_manager;
 	class window;
 	class Camera;
-	class OpenGLRenderer;
+	class gl_renderer;
 
-	using drawable_render_callback = void (*)(OpenGLRenderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, Camera *camera);
+	using drawable_render_callback = void (*)(gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, Camera *camera);
 
 	constexpr component_type DrawableComponentType = (1 << 0);
 
@@ -42,8 +42,8 @@ namespace de
 		gl_program_int program;
 		drawable_render_callback renderCallback;
 
-		static void classicRenderCallback(OpenGLRenderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, Camera *camera);
-		static void skyboxRenderCallback(OpenGLRenderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, Camera *camera);
+		static void classicRenderCallback(gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, Camera *camera);
+		static void skyboxRenderCallback(gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, Camera *camera);
 		
 		private:
 			drawable_component();

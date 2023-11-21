@@ -123,12 +123,12 @@ namespace de {
 		m_Renderer = NULL;
 	}
 
-	OpenGLRenderer::OpenGLRenderer()
+	gl_renderer::gl_renderer()
 		: m_Context(NULL),
 		  m_Window(NULL)
 	{ }
 
-	bool OpenGLRenderer::create(OpenGLRenderer &dest, window *window)
+	bool gl_renderer::create(gl_renderer &dest, window *window)
 	{
 		// Spécifie le profil "Core" d'OpenGL.
 		SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
@@ -147,24 +147,29 @@ namespace de {
 		return true;
 	}
 
-	void OpenGLRenderer::clear() const
+	void gl_renderer::clear() const
 	{
 		DE_GL_CALL(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 	}
 
-	void OpenGLRenderer::draw(unsigned int numberOfVertices) const
+    void gl_renderer::clearColor() const
+    {
+        DE_GL_CALL(glClear(GL_COLOR_BUFFER_BIT));
+    }
+
+	void gl_renderer::draw(unsigned int numberOfVertices) const
 	{
 		DE_GL_CALL(glDrawArrays(GL_TRIANGLES, 0, numberOfVertices));
 	}
 
-	void OpenGLRenderer::swapBuffers() const
+	void gl_renderer::swapBuffers() const
 	{
 		ImGui::Render();
 		ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 		SDL_GL_SwapWindow(m_Window->getWindow());
 	}
 
-	void OpenGLRenderer::setClearColor(const colora color)
+	void gl_renderer::setClearColor(const colora color)
 	{
 		m_ClearColor = color;
 		DE_GL_CALL(glClearColor(color.R / 255.0f, color.G / 255.0f, color.B / 255.0f, color.A / 255.0f));

@@ -43,6 +43,11 @@ namespace de
 			
 	};
 
+    /*
+	===================
+	output_stream::open
+	===================
+	*/
 	inline bool output_stream::open(bool append)
 	{
 		return open();
@@ -70,17 +75,21 @@ namespace de
 
 			bool isWideChar() const;
 
-		private:
+		protected:
 			char *m_Filename;
 			bool m_WideWchar;
 
 	};
 
-
+    /*
+	=======================
+	input_file_stream::open
+	=======================
+	*/
 	inline bool input_file_stream::open()
 	{
 #if DE_WINDOWS
-		m_FD = CreateFileA(m_Filename, FILE_GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		m_FD = CreateFileA(m_Filename, FILE_GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 		if(m_FD == INVALID_HANDLE_VALUE)
 			return false;
 #else
@@ -90,10 +99,15 @@ namespace de
 		return true;
 	}
 
+    /*
+	========================
+	input_file_stream::openW
+	========================
+	*/
 	inline bool input_file_stream::openW()
 	{
 #if DE_WINDOWS
-		m_FD = CreateFileW((wchar_t *) m_Filename, FILE_GENERIC_READ, 0, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+		m_FD = CreateFileW((wchar_t *) m_Filename, FILE_GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 		if(m_FD == INVALID_HANDLE_VALUE)
 			return false;
 #else
@@ -103,6 +117,11 @@ namespace de
 		return true;
 	}
 
+    /*
+	========================
+	input_file_stream::close
+	========================
+	*/
 	inline void input_file_stream::close()
 	{
 #if DE_WINDOWS
@@ -115,11 +134,21 @@ namespace de
 		m_FD = NULL_FD;
 	}
 
+    /*
+	==============================
+	input_file_stream::getFilename
+	==============================
+	*/
 	inline const char *input_file_stream::getFilename() const
 	{
 		return m_Filename;
 	}
 
+    /*
+	==============================
+	input_file_stream::getFileSize
+	==============================
+	*/
 	inline size_t input_file_stream::getFileSize() const
 	{
 #if DE_WINDOWS
@@ -134,6 +163,11 @@ namespace de
 #endif
 	}
 
+    /*
+	=============================
+	input_file_stream::isWideChar
+	=============================
+	*/
 	inline bool input_file_stream::isWideChar() const
 	{
 		return m_WideWchar;
@@ -159,11 +193,21 @@ namespace de
 			void setFilename(const char *filename);
 	};
 
+    /*
+	========================
+	output_file_stream::open
+	========================
+	*/
 	inline bool output_file_stream::open()
 	{
 		return open(false);
 	}
 
+    /*
+	========================
+	output_file_stream::open
+	========================
+	*/
 	inline bool output_file_stream::open(bool append)
 	{
 #ifdef DE_WINDOWS
@@ -188,6 +232,11 @@ namespace de
 		return true;
 	}
 
+    /*
+	=========================
+	output_file_stream::close
+	=========================
+	*/
 	inline void output_file_stream::close()
 	{
 #ifdef DE_WINDOWS
@@ -200,6 +249,11 @@ namespace de
 		m_FD = NULL_FD;
 	}
 
+    /*
+	===============================
+	output_file_stream::getFilename
+	===============================
+	*/
 	inline const char *output_file_stream::getFilename() const
 	{
 		return m_Filename;

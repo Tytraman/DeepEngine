@@ -95,7 +95,7 @@ namespace de
 
 		// Récupère tous les "Vertex Shaders" et les "Fragment Shaders".
 		file::enumFiles(m_DeepShadersFolder, enum_shader_files_callback, &shaderFiles);
-		size_t numberOfShaders = shaderFiles.getNumberOfElements();
+		size_t numberOfShaders = shaderFiles.count();
 		size_t i, j;
 
 		// Des wchar sont utilisés car la fonction 'SHGetKnownFolderPath' n'existe pas en version char.
@@ -116,7 +116,7 @@ namespace de
 			if(dotIndex > 0)
 				filename1[dotIndex] = L'\0';
 
-			size_t numberOfRelations = shadersRelation.getNumberOfElements();
+			size_t numberOfRelations = shadersRelation.count();
 			bool foundRelation = false;
 
 			// Parcourt la liste des relations pour voir si un shader a déjà ce nom.
@@ -170,7 +170,7 @@ namespace de
 		wchar_t *fragmentShaderFilename;
 
 		// Maintenant que la liaison entre les différents shaders est faite, il faut les compiler et les linker ensembles.
-		for(i = 0; i < shadersRelation.getNumberOfElements(); ++i)
+		for(i = 0; i < shadersRelation.count(); ++i)
         {
 			shader_relation &existingRelation = shadersRelation[i];
 
@@ -331,14 +331,14 @@ namespace de
 		}
 
 end:
-		for(i = 0; i < shaderFiles.getNumberOfElements(); ++i)
+		for(i = 0; i < shaderFiles.count(); ++i)
         {
             filename1 = shaderFiles[i];
 			mem::free(filename1);
 		}
 		shaderFiles.free();
 
-		for(i = 0; i < shadersRelation.getNumberOfElements(); ++i)
+		for(i = 0; i < shadersRelation.count(); ++i)
         {
 			shader_relation &existingRelation = shadersRelation[i];
 			mem::free(existingRelation.name);

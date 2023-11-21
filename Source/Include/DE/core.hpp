@@ -9,14 +9,25 @@
 namespace de
 {
 
+    enum class core_init_status : uint8_t
+    {
+        OK                      = 0,
+        InstanceAlreadyExists   = 1,
+        NoEnoughDiskSpace       = 2,
+        NoEnoughMemory          = 3,
+
+        Unknown                 = 255
+    };
+
 	class DE_API core
     {
 
-		private:
-			static uint64_t m_InitTime;
-
 		public:
-			static error_status init();
+			static core_init_status init(const char *gameTitle, uint64_t diskSpaceRequired, uint64_t physicalRamNeeded, uint64_t virtualRamNeeded);
+
+            static bool focusInstance(const char *gameTitle);
+            static bool checkAvailableDiskSpace(uint64_t diskSpaceRequired);
+            static bool checkMemory(uint64_t physicalRamNeeded, uint64_t virtualRamNeeded);
 
 			static uint32_t getMousePosition(int *x, int *y);
 
@@ -27,6 +38,9 @@ namespace de
 			static void sleep(uint32_t millis);
 
 			static const char *getPwd();
+
+        private:
+			static uint64_t m_InitTime;
 
         public:
             core() = delete;

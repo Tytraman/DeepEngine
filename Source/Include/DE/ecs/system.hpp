@@ -7,6 +7,7 @@
 #include <DE/memory/list.hpp>
 #include <DE/ecs/ecs.hpp>
 #include <DE/renderer.hpp>
+#include <DE/rendering/opengl_utils.hpp>
 
 namespace de
 {
@@ -53,7 +54,7 @@ namespace de
 
 			static void colliderSystem();
 
-			static void renderSystem(OpenGLRenderer &renderer, scene_id sceneID);
+			static void renderSystem(gl_renderer &renderer, gl_framebuffer_int fbo, scene_id sceneID);
 
         private:
 			static system_id m_NextID;                  ///< L'ID du prochain système à attribuer.

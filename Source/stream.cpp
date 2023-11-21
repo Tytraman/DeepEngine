@@ -87,7 +87,8 @@ namespace de {
 		size_t total = 0, diff;
 		DWORD number;
 
-		while(total < size && current != 0) {
+		while(total < size && current != 0)
+        {
 			diff = size - total;
 			number = (diff > 0xFFFFFFFF ? 0xFFFFFFFF : (DWORD) diff);
 			
@@ -122,8 +123,10 @@ namespace de {
 		DWORD total = 0, current = 1;
 		uint8_t buffer[4096];
 
-		while(current != 0) {
-			if(!ReadFile(m_FD, buffer, 4096, &current, NULL)) {
+		while(current != 0)
+        {
+			if(!ReadFile(m_FD, buffer, 4096, &current, NULL))
+            {
 				DWORD lastError = GetLastError();
 				return false;
 			}

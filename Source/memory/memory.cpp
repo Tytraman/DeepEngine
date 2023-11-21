@@ -75,7 +75,7 @@ namespace de
 	{
 		mem_ptr mem = reallocNoTrack(memory, newSize);
 
-		if(memory == nullptr)
+		if(mem == nullptr)
 			return nullptr;
 
 		size_t index = g_MemoryTrack.find(memory);

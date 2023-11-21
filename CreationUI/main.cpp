@@ -20,8 +20,10 @@
 #include <DE/memory/hash_table.hpp>
 #include <DE/memory/memory.hpp>
 #include <DE/string.hpp>
+#include <DE/file/file_object.hpp>
 
-extern "C" {
+extern "C"
+{
 
 #include <DE/memory/windows_internal.h>
 
@@ -105,8 +107,6 @@ void event_callback(de::window &window, de::devent e)
 // pour mettre à jour toutes les valeurs du jeu
 void update_callback(de::window &win)
 {
-	de::debug::addFunctionToCallbackList(DE_FUNCTION_NAME);
-
 	de::scene_id sceneID = de::scene::getActiveSceneID();
 	de::entity_collection_id collectionID;
 	de::scene *scene;
@@ -174,9 +174,7 @@ void update_callback(de::window &win)
 
 	camera.updateAngleOfView();
 
-end:
-
-	de::debug::removeFunctionFromCallbackList();
+end:;
 }
 
 void collider_callback(de::entity_collection_id collectionID, de::entity_id entity1, de::entity_id entity2, const de::fvec2 &difference, const de::rect &collision)
@@ -388,26 +386,73 @@ void collider_out_callback(de::entity_collection_id collectionID, de::entity_id 
 	//}
 }
 
-#include <type_traits>
+void fobj_load_warning_callback(const char *filename, uint64_t line, char charactere)
+{
+    fprintf(stderr, "[WARNING] File Object \"%s\" invalid charactere '%c' at line %llu. Ignoring the line.\n", filename, charactere, line);
+}
+
+bool fobj_enum_callback(de::hash_entry<de::pair<de::string, de::string>> &entry, de::string &currentPath, de::mem_ptr args)
+{
+    printf("[%s] : %s\n", currentPath.str(), entry.value.value2().str());
+
+    return true;
+}
 
 #undef main
 int main()
 {
-	de::error_status errorStatus;
+    de::error_status errorStatus;
 
-	errorStatus = de::core::init();
-	if(errorStatus != de::error_status::NoError)
+    switch(de::core::init("Creation UI [" DE_VERSION "]", 0, 0, 0))
     {
-		de::error::printError(errorStatus);
-		return 1;
-	}
+        default:
+            break;
+        case de::core_init_status::InstanceAlreadyExists:
+        {
+            fprintf(stderr, "Process already running.\n");
+        } return EXIT_FAILURE;
+        case de::core_init_status::NoEnoughDiskSpace:
+        {
+            fprintf(stderr, "No enough disk space.\n");
+        } return EXIT_FAILURE;
+        case de::core_init_status::NoEnoughMemory:
+        {
+            fprintf(stderr, "No enough memory.\n");
+        } return EXIT_FAILURE;
+    }
 
 	printf("pwd: %s\n", de::core::getPwd());
 
     {
-        de::list<de::string> l;
+        de::file_object fobj("test.fobj");
 
-        l.add("test_string_list");
+        if(!fobj.open())
+        {
+            fprintf(stderr, "Cannot open test.fobj\n");
+        }
+
+        if(!fobj.load(fobj_load_warning_callback))
+        {
+            fprintf(stderr, "Unable to load test.fobj\n");
+        }
+
+        printf("==============================\n");
+        fobj.enumerate(fobj_enum_callback, nullptr, nullptr);
+        printf("==============================\n");
+
+        de::file_object_container *container = fobj.searchContainer("users.tytraman");
+        if(container != nullptr)
+            printf("Found container: %s\n", container->name.str());
+
+        container = fobj.searchContainer("i_hate_error");
+        if(container != nullptr)
+            printf("Found container: %s\n", container->name.str());
+
+        de::pair<de::string, de::string> *element = fobj.searchElement("users.viktor.status");
+        if(element != nullptr)
+            printf("Found element: %s = %s\n", element->value1().str(), element->value2().str());
+
+        fobj.close();
     }
 
 	de::window win(TARGET_MS, TARGET_FPS);
@@ -573,7 +618,9 @@ int main()
 	de::resources::shutdown();
 	de::core::shutdown();
 
+    _CrtDumpMemoryLeaks();
+
 	printf("Good-bye!\n");
 
-	return 0;
+	return EXIT_SUCCESS;
 }

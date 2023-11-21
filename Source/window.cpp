@@ -12,6 +12,8 @@
 #include "backends/imgui_impl_sdl2.h"
 #include "backends/imgui_impl_opengl3.h"
 
+#include <string>
+
 namespace de
 {
 
@@ -135,6 +137,9 @@ namespace de
 	*/
 	error_status window::create(window &win, const char *title, const size &size)
 	{
+        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+        SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 32);
+
 		win.m_Window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, size.width, size.height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
 		if(win.m_Window == NULL)
 			return error_status::CreateWindowSDL;
@@ -142,16 +147,18 @@ namespace de
 		SDL_SetRelativeMouseMode(SDL_TRUE);
 		win.setCursorPos(win.getWidth() / 2, win.getHeight() / 2);
 		
-		if(!OpenGLRenderer::create(win.m_Renderer, &win)) {
+		if(!gl_renderer::create(win.m_Renderer, &win)) {
 			win.destroy();
 			return error_status::GLCreateContext;
 		}
 
 		gladLoadGL();
+        
 		glViewport(0, 0, size.width, size.height);
 
 		// Permet de tester la profondeur lors du rendu afin de ne pas superposer les triangles.
 		DE_GL_CALL(glEnable(GL_DEPTH_TEST));
+        DE_GL_CALL(glEnable(GL_MULTISAMPLE));
 
 		// Active la fonctionnalité d'OpenGL qui permet de gérer la transparence des couleurs lorsque nécessaire.
 		DE_GL_CALL(glEnable(GL_BLEND));
@@ -198,7 +205,7 @@ namespace de
 
 	void __executePreEventCallbacks(list<window::pre_event_callback> &preEventCallbacks, window &window)
 	{
-		size_t length = preEventCallbacks.getNumberOfElements();
+		size_t length = preEventCallbacks.count();
 		size_t i;
 		window::pre_event_callback callback;
 
@@ -233,6 +240,15 @@ namespace de
 
 		// Met à jour l'état du clavier.
 		key::update();
+
+        de::gl_framerenderbuffer framebuffer;
+        if(!framebuffer.create(getWidth(), getHeight()))
+        {
+            fprintf(stderr, "Unable to create the Frame Render Buffer.\n");
+            return;
+        }
+            
+        gl_framebuffer_int frame_int = framebuffer.framebuffer();
 
 		// Boucle infinie du jeu
 		// TODO: mettre cette boucle autre part que dans la fenêtre car ça n'a pas vraiment de lien.
@@ -298,7 +314,7 @@ namespace de
 			}
 
 			// Fait le rendu final de la frame !
-			system_manager::renderSystem(m_Renderer, sceneID);
+			system_manager::renderSystem(m_Renderer, frame_int, sceneID);
 
 			end = core::getTick();
 
@@ -332,7 +348,7 @@ namespace de
 		devent e = devent_s::create();
 		if(!e->pollEvent())
         {
-			delete e;
+			mem::free(e);
 			return nullptr;
 		}
 
