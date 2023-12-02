@@ -23,11 +23,31 @@ namespace de
 			/// @param height          Hauteur du rectangle.
 			/// @param color           Couleur du rectangle.
 			/// @return                L'entité nouvellement créée ou \ref entity::bad() si une erreur est survenue.
-			static entity createRectangle(gl_program_int program, entity_collection_id collectionID, const fvec3 &position, float width, float height, const colora &color, bool collidable = false);
-			static entity createRectangleTexture(gl_program_int program, entity_collection_id collectionID, const fvec3 &position, float width, float height, const colora &color, gl_texture_int texture, uint8_t textureUnit, bool collidable = false);
+			static entity createRectangle(
+                const char *name,
+                program_id program,
+                entity_collection_id collectionID,
+                const fvec3 &position,
+                float width,
+                float height,
+                const colora &color,
+                bool collidable = false);
+
+			static entity createRectangleTexture(
+                const char *name,
+                program_id program,
+                entity_collection_id collectionID,
+                const fvec3 &position,
+                float width,
+                float height,
+                const colora &color,
+                texture_id texture,
+                uint8_t textureUnit,
+                bool collidable = false);
 
 			static entity create3DRectangle(
-				gl_program_int program,
+                const char *name,
+                program_id program,
 				entity_collection_id collectionID,
 				const fvec3 &position,
 				float width,
@@ -43,7 +63,8 @@ namespace de
 			);
 			
 			static entity create3DRectangleTexture(
-				gl_program_int program,
+                const char *name,
+                program_id program,
 				entity_collection_id collectionID,
 				const fvec3 &position,
 				float width,
@@ -55,19 +76,20 @@ namespace de
 				const colora &color4,
 				const colora &color5,
 				const colora &color6,
-				gl_texture_int texture,
+                texture_id texture,
 				uint8_t textureUnit,
 				bool collidable = false
 			);
 
 			static entity createCubemap(
-				gl_program_int program,
+                const char *name,
+				program_id program,
 				entity_collection_id collectionID,
 				const fvec3 &position,
 				float width,
 				float height,
 				float length,
-				gl_texture_int texture,
+				texture_id texture,
 				uint8_t textureUnit,
 				bool collidable = false
 			);

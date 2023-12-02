@@ -27,7 +27,7 @@ namespace de
         file_object_container();
         file_object_container(const char *key);
 
-        void enumerate(file_object_enum_element_callback elementCallback, file_object_enum_container_callback containerCallback, mem_ptr args, file_object_container **container = nullptr, pair<string, string> **element = nullptr);
+        void enumerate(file_object_enum_element_callback elementCallback, file_object_enum_container_callback containerCallback, mem_ptr args, size_t maxSubContainer = -1, file_object_container **container = nullptr, pair<string, string> **element = nullptr);
         file_object_container *searchContainer(const char *path);
         pair<string, string> *searchElement(const char *path);
     };
@@ -39,7 +39,7 @@ namespace de
             file_object(const char *filename);
             bool load(file_object_load_warning_callback warningCallback = nullptr);
 
-            void enumerate(file_object_enum_element_callback elementCallback, file_object_enum_container_callback containerCallback, mem_ptr args, file_object_container **container = nullptr, pair<string, string> **element = nullptr);
+            void enumerate(file_object_enum_element_callback elementCallback, file_object_enum_container_callback containerCallback, mem_ptr args, size_t maxSubContainer = -1, file_object_container **container = nullptr, pair<string, string> **element = nullptr);
             file_object_container *searchContainer(const char *path);
             pair<string, string> *searchElement(const char *path);
 
@@ -57,9 +57,9 @@ namespace de
     file_object::enumerate
     ======================
     */
-    inline void file_object::enumerate(file_object_enum_element_callback elementCallback, file_object_enum_container_callback containerCallback, mem_ptr args, file_object_container **container, pair<string, string> **element)
+    inline void file_object::enumerate(file_object_enum_element_callback elementCallback, file_object_enum_container_callback containerCallback, mem_ptr args, size_t maxSubContainer, file_object_container **container, pair<string, string> **element)
     {
-        m_Container.enumerate(elementCallback, containerCallback, args, container, element);
+        m_Container.enumerate(elementCallback, containerCallback, args, maxSubContainer, container, element);
     }
     
     /*

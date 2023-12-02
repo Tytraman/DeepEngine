@@ -28,8 +28,12 @@ namespace de
 
             static size_t removeAll(char **str, char caractere);
 
+            static bool endsWith(const char *toSearch, const char *end);
 			static bool endsWith(const wchar_t *toSearch, const wchar_t *end);
-			static size_t lastIndex(const wchar_t *str, wchar_t charactere);
+
+			static size_t lastIndex(const char *str, char charactere);
+            static size_t lastIndex(const wchar_t *str, wchar_t charactere);
+
 			static bool equals(const wchar_t *first, const wchar_t *second);
             static bool equals(const char *first, const char *second);
 

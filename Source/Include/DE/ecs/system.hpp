@@ -54,7 +54,7 @@ namespace de
 
 			static void colliderSystem();
 
-			static void renderSystem(gl_renderer &renderer, gl_framebuffer_int fbo, scene_id sceneID);
+			static void renderSystem(gl_renderer &renderer, framerenderbuffer &frb, scene_id sceneID);
 
         private:
 			static system_id m_NextID;                  ///< L'ID du prochain système à attribuer.

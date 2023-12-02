@@ -112,17 +112,22 @@ namespace de {
 
 		ImGui::SetNextWindowPos({ 0, 0 });
 		ImGui::SetNextWindowSize({ 500, 700 });
-		if(ImGui::Begin("DeepEngine Debug Menu", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_MenuBar)) {
-
-			if(ImGui::BeginMenuBar()) {
-				if(ImGui::BeginMenu("Vue")) {
-					if(ImGui::MenuItem("Accueil", nullptr, false, true)) {
+		if(ImGui::Begin("DeepEngine Debug Menu", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_MenuBar))
+        {
+			if(ImGui::BeginMenuBar())
+            {
+				if(ImGui::BeginMenu("Vue"))
+                {
+					if(ImGui::MenuItem("Accueil", nullptr, false, true))
+                    {
 						options.view = ImGuiDebugMenuHomeView;
 					}
-					if(ImGui::MenuItem("Scènes", nullptr, false, true)) {
+					if(ImGui::MenuItem("Scènes", nullptr, false, true))
+                    {
 						options.view = ImGuiDebugMenuScenesView;
 					}
-					if(ImGui::MenuItem("Entités", nullptr, false, true)) {
+					if(ImGui::MenuItem("Entités", nullptr, false, true))
+                    {
 						options.view = ImGuiDebugMenuEntitiesView;
 					}
 					ImGui::EndMenu();
@@ -131,28 +136,34 @@ namespace de {
 				ImGui::EndMenuBar();
 
 				// Affiche un panel différent selon la vue sélectionnée.
-				switch(options.view) {
+				switch(options.view)
+                {
 					default: break;
 					// Accueil.
-					case ImGuiDebugMenuHomeView: {
+					case ImGuiDebugMenuHomeView:
+                    {
 						ImGui::Text("Bienvenue dans le moteur profond !");
 						ImGui::Spacing();
 
-						if(ImGui::CollapsingHeader("Utilisation")) {
+						if(ImGui::CollapsingHeader("Utilisation"))
+                        {
 							ImGui::SeparatorText("Menu debug :");
 							ImGui::BulletText("Insert : afficher / cacher le menu debug.");
 						}
 					} break;
 					// Menu des scènes.
-					case ImGuiDebugMenuScenesView: {
+					case ImGuiDebugMenuScenesView:
+                    {
 						static bool emptyNameBuffer = false;
 						static char nameBuffer[128] = "";
 						// Création d'une scène.
-						ImGui::InputText("Nom: ", nameBuffer, sizeof(nameBuffer)); ImGui::SameLine();
-						if(ImGui::Button("Créer une scène")) {
+						ImGui::Text("Nom: "); ImGui::SameLine(); ImGui::InputText("##", nameBuffer, sizeof(nameBuffer)); ImGui::SameLine();
+						if(ImGui::Button("Créer une scène"))
+                        {
 							if(strlen(nameBuffer) == 0)
 								emptyNameBuffer = true;
-							else {
+							else
+                            {
 								emptyNameBuffer = false;
 								scene::createScene(nameBuffer);
 								nameBuffer[0] = '\0';
@@ -165,21 +176,25 @@ namespace de {
 						ImGui::Spacing();
 
 						// Affiche toutes les scènes existantes.
-						if(ImGui::CollapsingHeader("Liste des scènes")) {
+						if(ImGui::CollapsingHeader("Liste des scènes"))
+                        {
 							scene::enumScenes(scenes_enum_callback);
 						}
 					} break;
-					case ImGuiDebugMenuEntitiesView: {
+					case ImGuiDebugMenuEntitiesView:
+                    {
 						// Affiche le nombre d'entités de la scène.
 						ImGui::Text(std::string("Nombre d'entités: " + std::to_string(entity_manager::getNumberOfEntities(collection))).c_str()); ImGui::SameLine();
-						if(ImGui::Button("Tout supprimer")) {
+						if(ImGui::Button("Tout supprimer"))
+                        {
 							entity_manager::destroyAllEntities(collection);
 						}
 
 						ImGui::Spacing();
 
 						// Affiche toutes les entités de la scène.
-						if(ImGui::CollapsingHeader("Liste des entités de la scène")) {
+						if(ImGui::CollapsingHeader("Liste des entités de la scène"))
+                        {
 							entity_manager::enumEntities(collection, entities_enum_callback);
 						}
 					} break;

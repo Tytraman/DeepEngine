@@ -185,12 +185,13 @@ rread:
 	file_object_container::enumerate
 	================================
 	*/
-    void file_object_container::enumerate(file_object_enum_element_callback elementCallback, file_object_enum_container_callback containerCallback, mem_ptr args, file_object_container **container, pair<string, string> **element)
+    void file_object_container::enumerate(file_object_enum_element_callback elementCallback, file_object_enum_container_callback containerCallback, mem_ptr args, size_t maxSubContainer, file_object_container **container, pair<string, string> **element)
     {
         // Permet de garder une trace des conteneurs parents lorsqu'un sous conteneur existe.
         stack<pair<hash_table_iterator<file_object_container>, file_object_container *>> snapshots;
         bool back = false;
         string currentPath = "";
+        size_t indexContainer = 0;
 
         snapshots.add(pair<hash_table_iterator<file_object_container>, file_object_container *>(this->containers.begin(), this));
 
@@ -263,9 +264,16 @@ rread:
 
                 back = true;
                 snapshots.pop();
+                indexContainer--;
             }
             else
             {
+                if(indexContainer >= maxSubContainer)
+                {
+                    it = end;
+                    goto end_loop;
+                }
+
                 // Ajoute la clé du conteneur dans le chemin total.
                 if(currentPath.length() > 0)
                     currentPath.append(".");
@@ -276,19 +284,21 @@ rread:
                 auto el = it->value.containers.begin();
                 snapshots.add(pair<hash_table_iterator<file_object_container>, file_object_container *>(el, &it->value));
                 it++;
-            }
+                indexContainer++;
 
-            if(containerCallback)
-            {
-                // Si le callback retourne faux, alors stop l'énumération.
-                if(!containerCallback(itBackup->value, currentPath, args))
+                if(containerCallback)
                 {
-                    if(container != nullptr)
-                        *container = &itBackup->value;
+                    // Si le callback retourne faux, alors stop l'énumération.
+                    if(!containerCallback(itBackup->value, currentPath, args))
+                    {
+                        if(container != nullptr)
+                            *container = &itBackup->value;
 
-                    goto end;
+                        goto end;
+                    }
                 }
             }
+end_loop: ;
         }
 end: ;
     }
@@ -309,7 +319,7 @@ end: ;
     {
         file_object_container *container = nullptr;
 
-        enumerate(nullptr, __de_file_object_container_search_callback, (mem_ptr) path, &container, nullptr);
+        enumerate(nullptr, __de_file_object_container_search_callback, (mem_ptr) path, -1, &container, nullptr);
 
         return container;
     }
@@ -330,7 +340,7 @@ end: ;
     {
         pair<string, string> *element = nullptr;
 
-        enumerate(__de_file_object_element_search_callback, nullptr, (mem_ptr) path, nullptr, &element);
+        enumerate(__de_file_object_element_search_callback, nullptr, (mem_ptr) path, true, nullptr, &element);
 
         return element;
     }

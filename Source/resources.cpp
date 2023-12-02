@@ -1,407 +1,304 @@
 #include <DE/resources.hpp>
 #include <DE/string_utils.hpp>
 #include <DE/memory/memory.hpp>
+#include <DE/memory/pair.hpp>
 #include <DE/file.hpp>
 #include <DE/stream.hpp>
 #include <DE/rendering/opengl_utils.hpp>
 #include <DE/image/png.hpp>
+#include <DE/common.hpp>
+#include <DE/file/file_object.hpp>
+#include <DE/memory/hash_table.hpp>
 
 #include <stdio.h>
-
-#if DE_WINDOWS
-// Permet de récupérer les dossiers spéciaux sous Windows.
-#include <shlobj_core.h>
-#endif
 
 namespace de
 {
 
-	struct shader_relation
+    struct shader_fusion
     {
-		wchar_t *name;
-		size_t vertexShaderIndex;
-		size_t fragmentShaderIndex;
-	};
+        string name;
+        string vertexFilename;
+        string fragmentFilename;
 
-	wchar_t *resources::m_DeepDataFolder      = nullptr;
-	wchar_t *resources::m_DeepResourcesFolder = nullptr;
-	wchar_t *resources::m_DeepShadersFolder   = nullptr;
-	wchar_t *resources::m_DeepTexturesFolder  = nullptr;
-	wchar_t *resources::m_DeepSoundsFolder    = nullptr;
+        shader_fusion(const char *first, const char *second, const char *third);
+    };
 
-	bool enum_shader_files_callback(wchar_t *filename, bool isDirectory, void *args)
+    shader_fusion::shader_fusion(const char *first, const char *second, const char *third)
+        : name(first),
+          vertexFilename(second),
+          fragmentFilename(third)
+    { }
+
+    string resource_manager::m_ResourcesFolder;
+    string resource_manager::m_ShadersFolder;
+    string resource_manager::m_TexturesFolder;
+    string resource_manager::m_SoundsFolder;
+
+    bool enum_shaders_config_fobj(file_object_container &container, string &currentPath, mem_ptr args)
+    {
+        // Contient la liste des fusions Vertex Fragment shaders.
+        hash_table<shader_fusion> *table = static_cast<hash_table<shader_fusion>*>(args);
+
+        pair<string, string> *name = container.searchElement("name");
+        if(name == nullptr)
+            return true;
+
+        pair<string, string> *vertex = container.searchElement("vertex");
+        if(vertex == nullptr)
+            return true;
+
+        pair<string, string> *fragment = container.searchElement("fragment");
+        if(fragment == nullptr)
+            return true;
+
+        // Ajoute à la liste la fusion Vertex Fragment shaders.
+        table->insert(name->value2().str(), shader_fusion(name->value2().str(), vertex->value2().str(), fragment->value2().str()));
+
+        return true;
+    }
+
+    bool enum_shader_files_callback_ascii(const char *filename, bool isDirectory, void *args)
 	{
 		if(!isDirectory)
         {
-			list<wchar_t *> *ls = static_cast<list<wchar_t *>*>(args);
+			list<pair<string, gl_shader_type>> *ls = static_cast<list<pair<string, gl_shader_type>>*>(args);
 
-			if(
-				string_utils::endsWith(filename, L".vert") ||
-				string_utils::endsWith(filename, L".frag")
-				) {
-
-				wchar_t *p = string_utils::copy(filename);
-				ls->add(p);
-			}
+            if(string_utils::endsWith(filename, ".vert"))
+            {
+                ls->add(pair<string, gl_shader_type>(filename, gl_shader_type::Vertex));
+            }
+            else if(string_utils::endsWith(filename, ".frag"))
+            {
+                ls->add(pair<string, gl_shader_type>(filename, gl_shader_type::Fragment));
+            }
 		}
 
 		return true;
 	}
 
 	/*
-	===============
-	resources::init
-	===============
+	======================
+	resource_manager::init
+	======================
 	*/
-	bool resources::init()
+	bool resource_manager::init(const char *filepath)
 	{
 		bool ret = true;
-		WCHAR *filepath;
 
-		// Récupère le chemin d'accès "C:\ProgramData\".
-		HRESULT hResult = SHGetKnownFolderPath(FOLDERID_ProgramData, 0, NULL, &filepath);
-		if(hResult != S_OK)
-			return false;
+		m_ResourcesFolder = filepath;
 
-		m_DeepDataFolder = string_utils::copy(filepath);
+		m_ShadersFolder = m_ResourcesFolder;
+		m_ShadersFolder.append("shaders\\");
 
-		// Libère la mémoire allouée par la fonction 'SHGetKnownFolderPath'.
-		CoTaskMemFree(filepath);
+		m_TexturesFolder = m_ResourcesFolder;
+		m_TexturesFolder.append("textures\\");
 
-
-		// Crée tous les noms de dossiers ressources.
-		string_utils::append(&m_DeepDataFolder, L"\\CreationUI\\");
-
-		m_DeepResourcesFolder = string_utils::copy(m_DeepDataFolder);
-		string_utils::append(&m_DeepResourcesFolder, L"resources\\");
-
-		m_DeepShadersFolder = string_utils::copy(m_DeepResourcesFolder);
-		string_utils::append(&m_DeepShadersFolder, L"shaders\\");
-
-		m_DeepTexturesFolder = string_utils::copy(m_DeepResourcesFolder);
-		string_utils::append(&m_DeepTexturesFolder, L"textures\\");
-
-		m_DeepSoundsFolder = string_utils::copy(m_DeepResourcesFolder);
-		string_utils::append(&m_DeepSoundsFolder, L"sounds\\");
+		m_SoundsFolder = m_ResourcesFolder;
+		m_SoundsFolder.append("sounds\\");
 
 		// Création des dossiers.
-		CreateDirectoryW(m_DeepDataFolder, NULL);
-		CreateDirectoryW(m_DeepResourcesFolder, NULL);
-		CreateDirectoryW(m_DeepShadersFolder, NULL);
-		CreateDirectoryW(m_DeepTexturesFolder, NULL);
-		CreateDirectoryW(m_DeepSoundsFolder, NULL);
+		CreateDirectoryA(m_ResourcesFolder.str(), NULL);
+		CreateDirectoryA(m_ShadersFolder.str(), NULL);
+		CreateDirectoryA(m_TexturesFolder.str(), NULL);
+		CreateDirectoryA(m_SoundsFolder.str(), NULL);
 
-		list<wchar_t *> shaderFiles;
+        string shadersConfig(m_ShadersFolder);
+        shadersConfig.append("shaders.fobj");
 
-		// Récupère tous les "Vertex Shaders" et les "Fragment Shaders".
-		file::enumFiles(m_DeepShadersFolder, enum_shader_files_callback, &shaderFiles);
-		size_t numberOfShaders = shaderFiles.count();
-		size_t i, j;
+        file_object shadersFobj(shadersConfig.str());
 
-		// Des wchar sont utilisés car la fonction 'SHGetKnownFolderPath' n'existe pas en version char.
-		wchar_t *filename1, *filename2;
+        if(!shadersFobj.open())
+            return false;
+
+        if(!shadersFobj.load())
+        {
+            shadersFobj.close();
+            return false;
+        }
+
+        hash_table<shader_fusion> shaderFiles;
+        shadersFobj.enumerate(nullptr, enum_shaders_config_fobj, static_cast<mem_ptr>(&shaderFiles), 1);
+		size_t numberOfShaders = shaderFiles.getNumberOfElements();
 
 		printf("Found %llu shaders.\n", numberOfShaders);
 
-		list<shader_relation> shadersRelation;
+        auto &currentShader = shaderFiles.begin();
+        auto &endShader = shaderFiles.end();
 
-		// Parcourt tous les shaders et fait le lien entre ceux qui ont le même nom.
-		for(i = 0; i < numberOfShaders; ++i)
-        {
-            filename1 = shaderFiles[i];
+        // Compile et link les shaders.
+        for(; currentShader != endShader; ++currentShader)
+        {   
+            string vertexShaderFilename(m_ShadersFolder);
+            string fragmentShaderFilename(m_ShadersFolder);
+            vertexShaderFilename.append(currentShader->value.vertexFilename.str());
+            fragmentShaderFilename.append(currentShader->value.fragmentFilename.str());
 
-			// Retire l'extension du nom du fichier.
-			size_t dotIndex = string_utils::lastIndex(filename1, L'.');
-			wchar_t *extension = filename1 + dotIndex + 1;
-			if(dotIndex > 0)
-				filename1[dotIndex] = L'\0';
+			printf("(\n  %s\n  %s\n  Opening files...\n  ", vertexShaderFilename.str(), fragmentShaderFilename.str());
 
-			size_t numberOfRelations = shadersRelation.count();
-			bool foundRelation = false;
-
-			// Parcourt la liste des relations pour voir si un shader a déjà ce nom.
-			for(j = 0; j < numberOfRelations; ++j)
-            {
-				shader_relation &existingRelation = shadersRelation[j];
-				// Si une relation possède déjà le nom du fichier.
-				if(string_utils::equals(filename1, existingRelation.name))
-                {
-					foundRelation = true;
-
-					if(string_utils::equals(extension, L"vert"))
-						existingRelation.vertexShaderIndex   = i;
-					else if(string_utils::equals(extension, L"frag"))
-						existingRelation.fragmentShaderIndex = i;
-
-					break;
-				}
-			}
-
-			// Si aucune relation ne possède le nom du fichier, alors il faut la créer.
-			if(!foundRelation)
-            {
-				shader_relation relation;
-				wchar_t *filenameCopy = string_utils::copy(filename1);
-				relation.name = filenameCopy;
-				if(string_utils::equals(extension, L"vert"))
-                {
-					relation.vertexShaderIndex   = i;
-					relation.fragmentShaderIndex = -1;
-				}
-                else if(string_utils::equals(extension, L"frag"))
-                {
-					relation.fragmentShaderIndex = i;
-					relation.vertexShaderIndex   = -1;
-				}
-                else
-                {
-					relation.vertexShaderIndex   = -1;
-					relation.fragmentShaderIndex = -1;
-				}
-
-				shadersRelation.add(relation);
-			}
-
-			if(dotIndex > 0)
-				filename1[dotIndex] = L'.';
-		}
-
-		wchar_t *vertexShaderFilename;
-		wchar_t *fragmentShaderFilename;
-
-		// Maintenant que la liaison entre les différents shaders est faite, il faut les compiler et les linker ensembles.
-		for(i = 0; i < shadersRelation.count(); ++i)
-        {
-			shader_relation &existingRelation = shadersRelation[i];
-
-			// Si un élément n'a pas de relation alors on l'ignore, triste pour les célibataires :'(
-			if(existingRelation.vertexShaderIndex == -1 || existingRelation.fragmentShaderIndex == -1)
-				continue;
-
-            filename1 = shaderFiles[existingRelation.vertexShaderIndex];
-            filename2 = shaderFiles[existingRelation.fragmentShaderIndex];
-
-			vertexShaderFilename = string_utils::copy(m_DeepShadersFolder);
-			string_utils::append(&vertexShaderFilename, filename1);
-
-			fragmentShaderFilename = string_utils::copy(m_DeepShadersFolder);
-			string_utils::append(&fragmentShaderFilename, filename2);
-
-			printf("%(\n  %ls\n  %ls\n  Opening files...\n  ", vertexShaderFilename, fragmentShaderFilename);
-
-			input_file_stream vis(vertexShaderFilename);
-			if(!vis.openW())
+			input_file_stream vis(vertexShaderFilename.str());
+			if(!vis.open())
             {
 				fprintf(stderr, "Unable to open vertex shader file.\n");
 				printf(")\n");
 
-				mem::free(vertexShaderFilename);
-				mem::free(fragmentShaderFilename);
-
 				ret = false;
 				goto end;
 			}
 
-			input_file_stream fis(fragmentShaderFilename);
-			if(!fis.openW())
+            input_file_stream fis(fragmentShaderFilename.str());
+			if(!fis.open())
             {
 				fprintf(stderr, "Unable to open fragment shader file.\n");
 				printf(")\n");
 
-				vis.close();
-
-				mem::free(vertexShaderFilename);
-				mem::free(fragmentShaderFilename);
+                vis.close();
 
 				ret = false;
 				goto end;
 			}
 
-			memory_chunk vertChk;
-			memory_chunk::alloc(vertChk, vis.getFileSize() + 1);
-			memory_chunk fragChk;
-			memory_chunk::alloc(fragChk, fis.getFileSize() + 1);
+			memory_chunk vertexShaderChunk;
+            memory_chunk fragmentShaderChunk;
+			memory_chunk::alloc(vertexShaderChunk, vis.getFileSize() + 1);
+            memory_chunk::alloc(fragmentShaderChunk, fis.getFileSize() + 1);
+
 			size_t bytesRead;
 
 			printf("Reading files...\n  ");
 
-			if(!vis.readAll(vertChk.data(), &bytesRead))
+			if(!vis.readAll(vertexShaderChunk.data(), &bytesRead))
             {
 				fprintf(stderr, "Can't read vertex shader.\n");
 				printf(")\n");
 
-				vertChk.free();
-				fragChk.free();
+				vertexShaderChunk.free();
+                fragmentShaderChunk.free();
 
 				vis.close();
-				fis.close();
-
-				mem::free(vertexShaderFilename);
-				mem::free(fragmentShaderFilename);
+                fis.close();
 
 				ret = false;
 				goto end;
 			}
 
-			if(!fis.readAll(fragChk.data(), &bytesRead))
+            if(!fis.readAll(fragmentShaderChunk.data(), &bytesRead))
             {
 				fprintf(stderr, "Can't read fragment shader.\n");
 				printf(")\n");
 
-				vertChk.free();
-				fragChk.free();
+				vertexShaderChunk.free();
+                fragmentShaderChunk.free();
 
 				vis.close();
-				fis.close();
-
-				mem::free(vertexShaderFilename);
-				mem::free(fragmentShaderFilename);
+                fis.close();
 
 				ret = false;
 				goto end;
 			}
 
-			((char *) vertChk.data())[vertChk.size() - 1] = '\0';
-			((char *) fragChk.data())[fragChk.size() - 1] = '\0';
+			((char *) vertexShaderChunk.data())[vertexShaderChunk.size() - 1] = '\0';
+            ((char *) fragmentShaderChunk.data())[fragmentShaderChunk.size() - 1] = '\0';
 
 			vis.close();
-			fis.close();
+            fis.close();
 
-			char *convName = static_cast<char *>(mem::alloc(string_utils::length(existingRelation.name) + 1));
-			string_utils::wcharToChar(convName, existingRelation.name);
+            string vertexShaderName = currentShader->value.name;
+            string fragmentShaderName = currentShader->value.name;
+            vertexShaderName.append("_vert");
+            fragmentShaderName.append("_frag");
 
-			mem::free(vertexShaderFilename);
-			mem::free(fragmentShaderFilename);
+			shader_id vertexShader = shader_manager::create(vertexShaderName.str(), gl_shader_type::Vertex);
+            shader_id fragmentShader = shader_manager::create(fragmentShaderName.str(), gl_shader_type::Fragment);
 
-			gl_shader_int vertShader = gl_shader::create(gl_shader_type::Vertex);
-			gl_shader_int fragShader = gl_shader::create(gl_shader_type::Fragment);
+			shader_manager::load(vertexShader, vertexShaderChunk);
+            shader_manager::load(fragmentShader, fragmentShaderChunk);
 
-			gl_shader::load(vertShader, vertChk);
-			gl_shader::load(fragShader, fragChk);
+			vertexShaderChunk.free();
+            fragmentShaderChunk.free();
 
-			vertChk.free();
-			fragChk.free();
-
-
-			printf("Compiling shaders...\n  ");
-			if(!gl_shader::compile(vertShader))
+			printf("Compiling shaders...\n");
+			if(!shader_manager::compile(vertexShader))
             {
-				gl_shader::destroy(vertShader);
-				gl_shader::destroy(fragShader);
-
-				mem::free(convName);
+				shader_manager::destroy(vertexShader);
+                shader_manager::destroy(fragmentShader);
 							
 				ret = false;
 				goto end;
 			}
 
-			if(!gl_shader::compile(fragShader))
+            if(!shader_manager::compile(fragmentShader))
             {
-				gl_shader::destroy(vertShader);
-				gl_shader::destroy(fragShader);
-
-				mem::free(convName);
+				shader_manager::destroy(vertexShader);
+                shader_manager::destroy(fragmentShader);
 							
 				ret = false;
 				goto end;
 			}
 						
-			gl_program_int program = gl_program::create(convName);
+			program_id program = program_manager::create(currentShader->value.name.str());
 
-			mem::free(convName);
+			program_manager::attachShader(program, vertexShader);
+            program_manager::attachShader(program, fragmentShader);
 
-			gl_program::attachShader(program, vertShader);
-			gl_program::attachShader(program, fragShader);
-
-			printf("Linking shaders...\n");
-			if(!gl_program::link(program))
+			printf("  Linking shaders...\n");
+			if(!program_manager::link(program))
             {
 				printf(")\n");
-				gl_shader::destroy(vertShader);
-				gl_shader::destroy(fragShader);
+				shader_manager::destroy(vertexShader);
+                shader_manager::destroy(fragmentShader);
 							
 				ret = false;
 				goto end;
 			}
 
-			gl_shader::destroy(vertShader);
-			gl_shader::destroy(fragShader);
+			shader_manager::destroy(vertexShader);
+            shader_manager::destroy(fragmentShader);
 
-			printf("  Done.\n)\n");
-		}
+			printf("  " DE_TERM_FG_GREEN "Done." DE_TERM_RESET "\n)\n");
+        }
 
 end:
-		for(i = 0; i < shaderFiles.count(); ++i)
-        {
-            filename1 = shaderFiles[i];
-			mem::free(filename1);
-		}
-		shaderFiles.free();
-
-		for(i = 0; i < shadersRelation.count(); ++i)
-        {
-			shader_relation &existingRelation = shadersRelation[i];
-			mem::free(existingRelation.name);
-		}
-		shadersRelation.free();
-
 		return ret;
 	}
 
 	/*
-	===================
-	resources::shutdown
-	===================
+	==========================
+	resource_manager::shutdown
+	==========================
 	*/
-	void resources::shutdown()
+	void resource_manager::shutdown()
 	{
-		if(m_DeepDataFolder != nullptr)
-			mem::free(m_DeepDataFolder);
 
-		if(m_DeepResourcesFolder != nullptr)
-			mem::free(m_DeepResourcesFolder);
-
-		if(m_DeepShadersFolder != nullptr)
-			mem::free(m_DeepShadersFolder);
-
-		if(m_DeepTexturesFolder != nullptr)
-			mem::free(m_DeepTexturesFolder);
-
-		if(m_DeepSoundsFolder != nullptr)
-			mem::free(m_DeepSoundsFolder);
 	}
 
 	/*
-	======================
-	resources::loadTexture
-	======================
+	=============================
+	resource_manager::loadTexture
+	=============================
 	*/
-	gl_texture_int resources::loadTexture(const char *name, uint8_t unit)
+	texture_id resource_manager::loadTexture(const char *name, uint8_t unit)
 	{
 		png png;
-		wchar_t *filename = string_utils::copy(m_DeepTexturesFolder);
-		string_utils::append(&filename, name);
+		string filename = m_TexturesFolder;
+		filename.append(name);
 
-		if(!png.loadAndRead(filename)) {
-			mem::free(filename);
+		if(!png.loadAndRead(filename.str()))
 			return 0;
-		}
 
 		printf("Texture \"%s\" loaded: %s\n", name, png::colorTypeName(png.colorType()));
 
-		mem::free(filename);
-
 		png.applyVerticalMirrorEffect();
 
-		gl_texture_int texture = gl_texture::create();
-		gl_texture::bind(texture, unit);
+		texture_id texture = texture_manager::create(name);
+		texture_manager::bind(texture, unit);
 
-		gl_texture::setTextureWrappingS(gl_texture_wrap::ClampToEdge);
-		gl_texture::setTextureWrappingT(gl_texture_wrap::ClampToEdge);
-		gl_texture::setTextureFiltering(gl_texture_filter::Nearest);
+		texture_manager::setTextureWrappingS(gl_texture_wrap::ClampToEdge);
+		texture_manager::setTextureWrappingT(gl_texture_wrap::ClampToEdge);
+		texture_manager::setTextureFiltering(gl_texture_filter::Nearest);
 
 		mem_ptr image = png.rawImage();
-		gl_texture::transmitTexture(image, png.width(), png.height(), png.colorType());
+		texture_manager::transmitTexture(image, png.width(), png.height(), png.colorType());
 		mem::free(image);
 
 		return texture;

@@ -289,6 +289,25 @@ namespace de
         return backupLen - len;
     }
 
+    /*
+	======================
+	string_utils::endsWith
+	======================
+	*/
+    bool string_utils::endsWith(const char *toSearch, const char *end)
+    {
+        size_t len1 = length(toSearch);
+		size_t len2 = length(end);
+
+        // Si la chaîne de fin est plus longue que la chaîne dans laquelle chercher, c'est sûr la chaîne ne peut pas finir avec.
+		if(len2 > len1)
+			return false;
+
+		size_t diff = len1 - len2;
+
+		return memcmp(toSearch + diff, end, (len1 - diff) * sizeof(*end)) == 0;
+    }
+
 	/*
 	======================
 	string_utils::endsWith
@@ -308,10 +327,36 @@ namespace de
 		return memcmp(toSearch + diff, end, (len1 - diff) * sizeof(*end)) == 0;
 	}
 
-	/*
-	======================
+    /*
+	=======================
 	string_utils::lastIndex
-	======================
+	=======================
+	*/
+    size_t string_utils::lastIndex(const char *str, char charactere)
+    {
+        size_t num = length(str);
+		if(num <= 1)
+			return 0;
+
+		num--;
+
+		while(1) {
+			if(str[num] == charactere)
+				break;
+
+			if(num == 0)
+				break;
+
+			num--;
+		}
+
+		return num;
+    }
+
+	/*
+	=======================
+	string_utils::lastIndex
+	=======================
 	*/
 	size_t string_utils::lastIndex(const wchar_t *str, wchar_t charactere)
 	{

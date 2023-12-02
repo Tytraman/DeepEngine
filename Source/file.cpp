@@ -1,4 +1,5 @@
 #include <DE/file.hpp>
+#include <DE/string.hpp>
 #include <DE/string_utils.hpp>
 
 #include <stdio.h>
@@ -51,12 +52,77 @@ namespace de
 		return true;
 	}
 
+    /*
+	==============
+	file::enumFile
+	==============
+	*/
+    bool file::enumFiles(const char *path, file_enum_callback_ascii callback, void *args)
+    {
+        // Aucun intérêt de continuer la procédure s'il n'y a pas de fonction callback.
+		if(callback == nullptr)
+			return true;    // Retourne vrai car il n'y a en soit pas d'erreur.
+
+        #if DE_WINDOWS
+		bool ret = true;
+
+		string p(path);
+
+		if(p[p.length() - 1] != L'\\')
+			p.append("\\*");
+		else if(p[p.length() - 1] != L'*')
+			p.append("*");
+
+		WIN32_FIND_DATAA data;
+
+		// Sous Windows on doit d'abord trouver le premier fichier avant de pouvoir lister les autres...
+		HANDLE handle = FindFirstFileA(p.str(), &data);
+
+		if(handle == INVALID_HANDLE_VALUE)
+        {
+			ret = false;
+			goto badEnd;
+		}
+
+		if(!callback(data.cFileName, data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY, args))
+			goto end;
+
+		// Tant qu'un fichier / dossier est trouvé et que la fonction de callback retourne vrai, la boucle tourne.
+		while(true)
+        {
+			// Permet de trouver le prochain fichier / dossier dans le dossier courant.
+			if(!FindNextFileA(handle, &data))
+            {
+				if(GetLastError() == ERROR_NO_MORE_FILES)
+					break;
+
+				ret = false;
+				break;
+			}
+
+			// Appelle la fonction de callback, si elle retourne faux alors on arrête de chercher la suite des fichiers.
+			if(!callback(data.cFileName, data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY, args))
+				break;
+		}
+		
+
+end:
+		FindClose(handle);
+badEnd:
+
+		return ret;
+
+#else
+#error Need implementation
+#endif
+    }
+
 	/*
 	==============
 	file::enumFile
 	==============
 	*/
-	bool file::enumFiles(wchar_t *path, file_enum_callback callback, void *args)
+	bool file::enumFiles(wchar_t *path, file_enum_callback_wide callback, void *args)
 	{
 		// Aucun intérêt de continuer la procédure s'il n'y a pas de fonction callback.
 		if(callback == nullptr)

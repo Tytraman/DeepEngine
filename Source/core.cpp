@@ -7,6 +7,7 @@
 #include <DE/mutex.hpp>
 #include <DE/string.hpp>
 #include <DE/window.hpp>
+#include <DE/memory/settings.hpp>
 
 #include <SDL.h>
 
@@ -32,6 +33,19 @@ namespace de
 	*/
 	core_init_status core::init(const char *gameTitle, uint64_t diskSpaceRequired, uint64_t physicalRamNeeded, uint64_t virtualRamNeeded)
 	{
+#if DE_WINDOWS
+        HANDLE stdHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+        if(stdHandle != INVALID_HANDLE_VALUE)
+        {
+            DWORD consoleMode;
+            GetConsoleMode(stdHandle, &consoleMode);
+            consoleMode |= ENABLE_PROCESSED_OUTPUT | ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+            SetConsoleMode(stdHandle, consoleMode);
+        }
+#endif
+
+        printf(DE_TERM_FG_GREEN "core::init" DE_TERM_RESET " - " DE_TERM_FG_RED "this is where it all begins" DE_TERM_RESET "\n");
+
         // Vérifie s'il y a une autre instance du programme et
         // si c'est le cas, lui donne le focus.
         if(focusInstance(gameTitle))
@@ -45,8 +59,14 @@ namespace de
         if(!checkMemory(physicalRamNeeded, virtualRamNeeded))
             return core_init_status::NoEnoughMemory;
 
+        // Charge les paramètres liés au moteur.
+        if(!engine_settings::init("engine_config.fobj"))
+            return core_init_status::CannotLoadEngineSettings;
+
 		if(SDL_Init(SDL_INIT_VIDEO) != 0)
 			return core_init_status::Unknown;
+
+        printf(DE_TERM_FG_GREEN "core::init'ialisation successful" DE_TERM_RESET "\n");
 
 		return core_init_status::OK;
 	}
@@ -58,13 +78,26 @@ namespace de
 	*/
     bool core::checkAvailableDiskSpace(uint64_t diskSpaceRequired)
     {
+        printf("Checking available disk space... ");
+        fflush(stdout);
+
 #if DE_WINDOWS
         ULARGE_INTEGER space;
 
         if(!GetDiskFreeSpaceExA(nullptr, &space, nullptr, nullptr))
+        {
+            printf("BAD\n");
             return false;
+        }
 
-        return space.QuadPart >= diskSpaceRequired;
+        if(space.QuadPart >= diskSpaceRequired)
+        {
+            printf("OK\n");
+            return true;
+        }
+
+        printf("BAD\n");
+        return false;
 #else
 #error Need implementation
 #endif
@@ -77,23 +110,35 @@ namespace de
 	*/
     bool core::checkMemory(uint64_t physicalRamNeeded, uint64_t virtualRamNeeded)
     {
+        printf("Checking memory... ");
+        fflush(stdout);
+
 #if DE_WINDOWS
 
         MEMORYSTATUSEX status;
         status.dwLength = sizeof(status);
 
         if(!GlobalMemoryStatusEx(&status))
+        {
+            printf("BAD\n");
             return false;
+        }
 
         if(physicalRamNeeded > status.ullTotalPhys || virtualRamNeeded > status.ullAvailVirtual)
+        {
+            printf("BAD\n");
             return false;
+        }
 
         // Vérifie qu'il est possible de réserver une plage continue d'octets.
         if(virtualRamNeeded > 0)
         {
             mem_ptr ptr = mem::allocNoTrack(virtualRamNeeded);
             if(ptr == nullptr)
+            {
+                printf("BAD\n");
                 return false;
+            }
 
             mem::freeNoTrack(ptr);
         }
@@ -102,6 +147,7 @@ namespace de
 #error Need implementation
 #endif
 
+        printf("OK\n");
         return true;
     }
 
@@ -112,11 +158,21 @@ namespace de
 	*/
     bool core::focusInstance(const char *gameTitle)
     {
+        const char *retText = "OK";
+
+        printf("Checking if another instance of the game is not currently running... ");
+        fflush(stdout);
+
         mutex_handle mutexHandle = mutex::create(gameTitle);
         bool ret = false;
 
         if(mutexHandle == invalid_mutex_handle)
-            return true;
+        {
+            retText = "BAD";
+            ret = true;
+
+            goto end;
+        }
 
         window_handle win = window::find(gameTitle);
         if(win != invalid_window_handle)
@@ -126,11 +182,14 @@ namespace de
             window::setForeground(win);
             window::setActive(win);
 
+            retText = "BAD";
             ret = true;
         }
 
         mutex::close(mutexHandle);
 
+end:
+        printf("%s\n", retText);
         return ret;
     }
 

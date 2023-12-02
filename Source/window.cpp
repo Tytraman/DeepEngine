@@ -58,7 +58,7 @@ namespace de
                             {
 								SDL_SetWindowFullscreen(m_Window, 0);
 								SDL_SetWindowSize(m_Window, lastWindowWidth, lastWindowHeight);
-								gl_core::updateViewport(lastWindowWidth, lastWindowHeight);
+								gpu_core::updateViewport(lastWindowWidth, lastWindowHeight);
 								setCursorPos(getWidth() / 2, getHeight() / 2);
 							}
                             else
@@ -70,7 +70,7 @@ namespace de
 								lastWindowHeight = getHeight();
 								
 								SDL_SetWindowSize(m_Window, DM.w, DM.h);
-								gl_core::updateViewport(DM.w, DM.h);
+								gpu_core::updateViewport(DM.w, DM.h);
 								SDL_SetWindowFullscreen(m_Window, SDL_WINDOW_FULLSCREEN);
 								setCursorPos(getWidth() / 2, getHeight() / 2);
 							}
@@ -107,7 +107,7 @@ namespace de
 					case events::WindowResized:
                     {	// Redimension de la fenêtre
 						size newSize = e->getWindowSize();
-						gl_core::updateViewport(newSize.width, newSize.height);
+						gpu_core::updateViewport(newSize.width, newSize.height);
 						//printf("window resized: %dx%d\n", newSize.width, newSize.height);
 					} break;
 				}
@@ -165,7 +165,7 @@ namespace de
 		DE_GL_CALL(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
 		DE_GL_CALL(glEnable(GL_CULL_FACE));
-		gl_core::setCullFace(gl_cull_face::Back);
+		gpu_core::setCullFace(gl_cull_face::Back);
 		DE_GL_CALL(glFrontFace(GL_CCW));
 
 		// Une fois qu'OpenGL a bien été initialisé,
@@ -175,16 +175,16 @@ namespace de
 			255, 255, 255, 255
 		};
 
-		gl_texture_int whiteTex = gl_texture::create();
-		gl_texture::bind(whiteTex, 0);
+		texture_id whiteTex = texture_manager::create("default_white");
+		texture_manager::bind(whiteTex, 0);
 
-		gl_texture::setTextureWrappingS(gl_texture_wrap::Repeat);
-		gl_texture::setTextureWrappingT(gl_texture_wrap::Repeat);
-		gl_texture::setTextureFiltering(gl_texture_filter::Nearest);
+		texture_manager::setTextureWrappingS(gl_texture_wrap::Repeat);
+		texture_manager::setTextureWrappingT(gl_texture_wrap::Repeat);
+		texture_manager::setTextureFiltering(gl_texture_filter::Nearest);
 
-		gl_texture::transmitTexture(colors, 1, 1, image_color_type::RGBA);
+		texture_manager::transmitTexture(colors, 1, 1, image_color_type::RGBA);
 
-		gl_texture::setWhiteTexture(whiteTex);
+		texture_manager::setWhiteTexture(whiteTex);
 
 		return error_status::NoError;
 	}
@@ -241,17 +241,14 @@ namespace de
 		// Met à jour l'état du clavier.
 		key::update();
 
-        de::gl_framerenderbuffer framebuffer;
-        if(!framebuffer.create(getWidth(), getHeight()))
+        framerenderbuffer frb;
+        if(!frb.create("primary_framebuffer", getWidth(), getHeight()))
         {
             fprintf(stderr, "Unable to create the Frame Render Buffer.\n");
             return;
         }
-            
-        gl_framebuffer_int frame_int = framebuffer.framebuffer();
 
-		// Boucle infinie du jeu
-		// TODO: mettre cette boucle autre part que dans la fenêtre car ça n'a pas vraiment de lien.
+		// Boucle infinie du jeu.
 		uint64_t startTime = core::getCurrentTimeMillis(), endTime;
 		while(m_Running)
         {
@@ -314,7 +311,7 @@ namespace de
 			}
 
 			// Fait le rendu final de la frame !
-			system_manager::renderSystem(m_Renderer, frame_int, sceneID);
+			system_manager::renderSystem(m_Renderer, frb, sceneID);
 
 			end = core::getTick();
 

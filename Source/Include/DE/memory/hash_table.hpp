@@ -92,6 +92,8 @@ namespace de
             size_t size() const;
             size_t getNumberOfElements() const;
 
+            hash_function getHashFunction() const;
+
         private:
             hash_entry<Value> **m_Table;
             size_t m_Size;
@@ -420,6 +422,17 @@ namespace de
     size_t hash_table<Value>::getNumberOfElements() const
     {
         return m_NumberOfElements;
+    }
+
+    /*
+	==================================
+	hash_table<Value>::getHashFunction
+	==================================
+	*/
+    template<typename Value>
+    hash_function hash_table<Value>::getHashFunction() const
+    {
+        return m_HashFunction;
     }
 
 

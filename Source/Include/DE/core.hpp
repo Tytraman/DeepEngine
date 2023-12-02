@@ -9,14 +9,18 @@
 namespace de
 {
 
+    class core;
+
     enum class core_init_status : uint8_t
     {
-        OK                      = 0,
-        InstanceAlreadyExists   = 1,
-        NoEnoughDiskSpace       = 2,
-        NoEnoughMemory          = 3,
+        OK                       = 0,
+        InstanceAlreadyExists    = 1,
+        NoEnoughDiskSpace        = 2,
+        NoEnoughMemory           = 3,
+        CannotLoadEngineSettings = 4,
+        CannotLoadResources      = 5,
 
-        Unknown                 = 255
+        Unknown                  = 255
     };
 
 	class DE_API core

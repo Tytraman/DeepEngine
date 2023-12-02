@@ -21,6 +21,7 @@
 #include <DE/memory/memory.hpp>
 #include <DE/string.hpp>
 #include <DE/file/file_object.hpp>
+#include <DE/memory/settings.hpp>
 
 extern "C"
 {
@@ -386,17 +387,7 @@ void collider_out_callback(de::entity_collection_id collectionID, de::entity_id 
 	//}
 }
 
-void fobj_load_warning_callback(const char *filename, uint64_t line, char charactere)
-{
-    fprintf(stderr, "[WARNING] File Object \"%s\" invalid charactere '%c' at line %llu. Ignoring the line.\n", filename, charactere, line);
-}
-
-bool fobj_enum_callback(de::hash_entry<de::pair<de::string, de::string>> &entry, de::string &currentPath, de::mem_ptr args)
-{
-    printf("[%s] : %s\n", currentPath.str(), entry.value.value2().str());
-
-    return true;
-}
+#include <iostream>
 
 #undef main
 int main()
@@ -423,38 +414,6 @@ int main()
 
 	printf("pwd: %s\n", de::core::getPwd());
 
-    {
-        de::file_object fobj("test.fobj");
-
-        if(!fobj.open())
-        {
-            fprintf(stderr, "Cannot open test.fobj\n");
-        }
-
-        if(!fobj.load(fobj_load_warning_callback))
-        {
-            fprintf(stderr, "Unable to load test.fobj\n");
-        }
-
-        printf("==============================\n");
-        fobj.enumerate(fobj_enum_callback, nullptr, nullptr);
-        printf("==============================\n");
-
-        de::file_object_container *container = fobj.searchContainer("users.tytraman");
-        if(container != nullptr)
-            printf("Found container: %s\n", container->name.str());
-
-        container = fobj.searchContainer("i_hate_error");
-        if(container != nullptr)
-            printf("Found container: %s\n", container->name.str());
-
-        de::pair<de::string, de::string> *element = fobj.searchElement("users.viktor.status");
-        if(element != nullptr)
-            printf("Found element: %s = %s\n", element->value1().str(), element->value2().str());
-
-        fobj.close();
-    }
-
 	de::window win(TARGET_MS, TARGET_FPS);
 	win.setEventCallback(event_callback);
 	win.setUpdateCallback(update_callback);
@@ -467,6 +426,13 @@ int main()
 		return 1;
 	}
 
+    // Charge les ressources nécessaires au jeu.
+    if(!de::resource_manager::init(de::engine_settings::getResourcesDirectory().str()))
+    {
+        de::core::shutdown();
+		return 1;
+    }
+
 	de::im_gui_window::init(win);
 
 	de::scene_id sceneID = de::scene::createScene("scn_main");
@@ -477,21 +443,19 @@ int main()
 	de::entity_collection_id collectionID = de::scene::getEntityCollection(sceneID);
 
 	printf(
-		"====================[ OpenGL ]====================\n"
+		DE_TERM_FG_YELLOW "====================[ " DE_TERM_FG_RED "\\OpenGL/" DE_TERM_FG_YELLOW " ]====================\n" DE_TERM_RESET
 		"Version: %s\n"
 		"Max vertex attribs: %d\n"
 		"Max texture image units: %d\n"
-		"==================================================\n",
+		DE_TERM_FG_YELLOW "====================================================\n" DE_TERM_RESET,
 		
-		de::gl_core::version(),
-		de::gl_core::maxVertexAttribs(),
-		de::gl_core::maxTextureImageUnits()
+		de::gpu_core::version(),
+		de::gpu_core::maxVertexAttribs(),
+		de::gpu_core::maxTextureImageUnits()
 	);
 
-	de::resources::init();
-
-	de::gl_texture_int mcGrassSide = de::resources::loadTexture("grass_block_side.png", 0);
-	de::gl_texture_int mcGrassTop  = de::resources::loadTexture("grass_block_top.png", 0);
+	de::texture_id mcGrassSide = de::resource_manager::loadTexture("grass_block_side.png", 0);
+	de::texture_id mcGrassTop  = de::resource_manager::loadTexture("grass_block_top.png", 0);
 
 	de::png pngSkyboxLeft;
 	de::png pngSkyboxFront;
@@ -556,13 +520,13 @@ int main()
 	de::mem_ptr imageBottom = pngSkyboxBottom.rawImage();
 	de::mem_ptr imageTop    = pngSkyboxTop.rawImage();
 
-	de::gl_texture_int skybox = de::gl_texture::create();
-	de::gl_texture::bindCubemaps(skybox);
-	de::gl_texture::setTextureWrappingSCubemaps(de::gl_texture_wrap::ClampToEdge);
-	de::gl_texture::setTextureWrappingTCubemaps(de::gl_texture_wrap::ClampToEdge);
-	de::gl_texture::setTextureWrappingRCubemaps(de::gl_texture_wrap::ClampToEdge);
-	de::gl_texture::setTextureFilteringCubemaps(de::gl_texture_filter::Linear);
-	de::gl_texture::transmitTextureCubemaps(imageLeft, imageFront, imageRight, imageBack, imageBottom, imageTop, pngSkyboxLeft.width(), pngSkyboxLeft.height(), pngSkyboxLeft.colorType());
+	de::texture_id skybox = de::texture_manager::create("skybox");
+	de::texture_manager::bindCubemaps(skybox);
+	de::texture_manager::setTextureWrappingSCubemaps(de::gl_texture_wrap::ClampToEdge);
+	de::texture_manager::setTextureWrappingTCubemaps(de::gl_texture_wrap::ClampToEdge);
+	de::texture_manager::setTextureWrappingRCubemaps(de::gl_texture_wrap::ClampToEdge);
+	de::texture_manager::setTextureFilteringCubemaps(de::gl_texture_filter::Linear);
+	de::texture_manager::transmitTextureCubemaps(imageLeft, imageFront, imageRight, imageBack, imageBottom, imageTop, pngSkyboxLeft.width(), pngSkyboxLeft.height(), pngSkyboxLeft.colorType());
 
 	de::mem::free(imageLeft);
 	de::mem::free(imageFront);
@@ -571,8 +535,9 @@ int main()
 	de::mem::free(imageBottom);
 	de::mem::free(imageTop);
 
-	de::gl_program_int defaultProgram = de::gl_program::get("default");
-	de::gl_program_int skyboxProgram  = de::gl_program::get("skybox");
+    de::hash_function hash = de::program_manager::getHashFunction();
+    de::program_id defaultProgram = hash("default");
+    de::program_id skyboxProgram  = hash("skybox");
 
 	de::colora white(255, 255, 255, 255);
 
@@ -581,7 +546,11 @@ int main()
     {
 		for(j = 0; j < 50; ++j)
         {
+            de::string name = "3d_rect_";
+            name.append(std::to_string(i + j).c_str());
+
 			de::entity ent = de::graphic::create3DRectangleTexture(
+                name.str(),
 				defaultProgram,
 				collectionID,
 				de::fvec3(i, 0.0f, j),
@@ -601,7 +570,7 @@ int main()
 	}
 
 	// Affiche la skybox à la fin pour optimiser les appelles au fragment shader = FPS++
-	de::entity skyboxEnt = de::graphic::createCubemap(skyboxProgram, collectionID, de::fvec3(0.0f, 0.0f, 0.0f), 200.0f, 200.0f, 200.0f, skybox, 0);
+	de::entity skyboxEnt = de::graphic::createCubemap("skybox", skyboxProgram, collectionID, de::fvec3(0.0f, 0.0f, 0.0f), 200.0f, 200.0f, 200.0f, skybox, 0);
 
 	de::scene::setActiveScene(sceneID);
 
@@ -613,14 +582,14 @@ int main()
 	// Détruit tous les composants internes de la fenêtre puis la fenêtre elle-même.
 	win.destroy();
 
-	de::gl_program::destroyAllPrograms();
+	de::program_manager::destroyAllPrograms();
 
-	de::resources::shutdown();
+	de::resource_manager::shutdown();
 	de::core::shutdown();
 
     _CrtDumpMemoryLeaks();
 
-	printf("Good-bye!\n");
+	printf(DE_TERM_FG_RED "~Good-bye~" DE_TERM_RESET "\n");
 
 	return EXIT_SUCCESS;
 }

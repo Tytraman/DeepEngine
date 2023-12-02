@@ -8,9 +8,11 @@
 #include <DE/mat.hpp>
 #include <DE/image/image.hpp>
 #include <DE/memory/hash_table.hpp>
-
+#include <DE/memory/pair.hpp>
 
 #include <glad/glad.h>
+
+#include <stdint.h>
 
 namespace de
 {
@@ -36,21 +38,34 @@ namespace de
 	if(de::gl_error::checkErrors(#_x, DE_FILE_NAME, DE_LINE)) DE_DEBUG_BREAK;
 
     using gl_vbo_int          = unsigned int;
-    using gl_vao_int          = unsigned int;
-    using gl_shader_int       = unsigned int;
-    using gl_program_int      = unsigned int;
-    using gl_texture_int      = unsigned int;
-    using gl_framebuffer_int  = unsigned int;
-    using gl_renderbuffer_int = unsigned int;
+    using vbo_id              = uint64_t;
 
-    class gl_vbo;
-    class gl_vao;
-    class gl_shader;
-    class gl_program;
-    class gl_texture;
-    class gl_framebuffer;
-    class gl_renderbuffer;
-    class gl_framerenderbuffer;
+    using gl_vao_int          = unsigned int;
+    using vao_id              = uint64_t;
+
+    using gl_shader_int       = unsigned int;
+    using shader_id           = uint64_t;
+
+    using gl_program_int      = unsigned int;
+    using program_id          = uint64_t;
+
+    using gl_texture_int      = unsigned int;
+    using texture_id          = uint64_t;
+
+    using gl_framebuffer_int  = unsigned int;
+    using framebuffer_id      = uint64_t;
+
+    using gl_renderbuffer_int = unsigned int;
+    using renderbuffer_id     = uint64_t;
+
+    class vbo_manager;
+    class vao_manager;
+    class shader_manager;
+    class program_manager;
+    class texture_manager;
+    class framebuffer_manager;
+    class renderbuffer_manager;
+    class framerenderbuffer;
 
     class window;
 
@@ -63,7 +78,8 @@ namespace de
 		x4 = 4
 	};
 
-	enum class gl_type {
+	enum class gl_type
+    {
 		Byte  = GL_UNSIGNED_BYTE,
 		Float = GL_FLOAT,
 		Int   = GL_INT,
@@ -111,15 +127,22 @@ namespace de
 	};
 
 	/// @brief Vertex Buffer Object
-	class DE_API gl_vbo
+	class DE_API vbo_manager
     {
 
 		public:
-            gl_vbo() = delete;
-			
-			static gl_vbo_int create();
-			static void bind(gl_vbo_int vbo);
-			static void destroy(gl_vbo_int vbo);
+			static vbo_id create(const char *name);
+
+            static void rawBind(gl_vbo_int vbo);
+			static bool bind(vbo_id vbo);
+            static bool bind(const char *name);
+
+            static void bindDefault();
+
+            static void rawDestroy(gl_vbo_int vbo);
+			static bool destroy(vbo_id vbo);
+            static bool destroy(const char *name);
+
 			static void addAttribute(unsigned int index, gl_attrib_components_number componentsNumber, gl_type type, int stride, int offset);
 			static void setVerticesNumber(unsigned int number);
 
@@ -129,112 +152,232 @@ namespace de
 			/// @return Le nombre de sommets que le VBO possède.
 			static unsigned int getVerticesNumber();
 
-			static unsigned int getVerticesNumber(gl_vbo_int vbo);
+			static unsigned int getVerticesNumber(vbo_id vbo);
 
-			/// @brief  Demande à OpenGL quel est le VBO actuellement lié.
-			/// @return L'ID du VBO actuellement lié.
-			static unsigned int currentlyBound();
+			static gl_vbo_int currentlyBound();
+            static vbo_id currentID();
 
 		private:
 			static gl_vbo_int m_CurrentlyBound;
+            static vbo_id m_CurrentID;
+            static hash_table<pair<gl_vbo_int, unsigned int>> m_VBOs;
+
+        public:
+            vbo_manager() = delete;
 
 	};
 
 	/*
-	=====================
-	gl_vbo::currentlyBound
-	=====================
+	===========================
+	vbo_manager::currentlyBound
+	===========================
 	*/
-	inline unsigned int gl_vbo::currentlyBound()
+	inline gl_vbo_int vbo_manager::currentlyBound()
 	{
 		return m_CurrentlyBound;
 	}
 
-	class DE_API gl_vao
+    /*
+	======================
+	vbo_manager::currentID
+	======================
+	*/
+    inline vbo_id vbo_manager::currentID()
+    {
+        return m_CurrentID;
+    }
+
+	class DE_API vao_manager
     {
 
 		public:
-			static gl_vao_int create();
-			static void bind(gl_vao_int vao);
-			static void destroy(gl_vao_int vao);
+			static vao_id create(const char *name);
+
+            static void rawBind(gl_vao_int vao);
+			static bool bind(vao_id vao);
+            static bool bind(const char *name);
+
+            static void bindDefault();
+
+            static void rawDestroy(gl_vao_int vao);
+			static bool destroy(vao_id vao);
+            static bool destroy(const char *name);
 
 			static gl_vao_int currentlyBound();
+            static vao_id currentID();
 
 		private:
 			static gl_vao_int m_CurrentlyBound;
+            static vao_id m_CurrentID;
+            static hash_table<gl_vao_int> m_VAOs;
 
         public:
-            gl_vao() = delete;
+            vao_manager() = delete;
 	};
 
 	/*
-	=====================
-	gl_vao::currentlyBound
-	=====================
+	===========================
+	vao_manager::currentlyBound
+	===========================
 	*/
-	inline gl_vao_int gl_vao::currentlyBound()
+	inline gl_vao_int vao_manager::currentlyBound()
 	{
 		return m_CurrentlyBound;
 	}
 
-	class DE_API gl_shader
+    /*
+	======================
+	vao_manager::currentID
+	======================
+	*/
+    inline vao_id vao_manager::currentID()
+    {
+        return m_CurrentID;
+    }
+
+	class DE_API shader_manager
     {
 
 		public:
-			static gl_shader_int create(gl_shader_type shaderType);
+			static shader_id create(const char *name, gl_shader_type shaderType);
 
-			static void load(gl_shader_int shader, memory_chunk &program);
-			static bool compile(gl_shader_int shader);
-			static void destroy(gl_shader_int shader);
+			static void rawLoad(gl_shader_int shader, memory_chunk &program);
+            static bool load(shader_id shader, memory_chunk &program);
+            static bool load(const char *name, memory_chunk &program);
+
+			static bool rawCompile(gl_shader_int shader);
+            static bool compile(shader_id shader);
+            static bool compile(const char *name);
+
+			static void rawDestroy(gl_shader_int shader);
+            static bool destroy(shader_id shader);
+            static bool destroy(const char *name);
+
+        private:
+            static hash_table<gl_shader_int> m_Shaders;
 
         public:
-            gl_shader() = delete;
+            shader_manager() = delete;
+
+            friend program_manager;
 	};
 
-	class DE_API gl_program
+	class DE_API program_manager
     {
 
 		public:
-			static gl_program_int create(const char *name);
-			static gl_program_int get(const char *name);
+			static program_id create(const char *name);
 
-			static void attachShader(gl_program_int program, gl_shader_int shader);
-			static bool link(gl_program_int program);
-			static void use(gl_program_int program);
-			static void destroy(gl_program_int program);
+			static void rawAttachShader(gl_program_int program, gl_shader_int shader);
+            static bool attachShader(program_id program, shader_id shader);
+            static bool attachShader(const char *progName, const char *shadName);
+            static bool attachShader(const char *progName, shader_id shader);
+            static bool attachShader(program_id program, const char *shadName);
+
+			static bool rawLink(gl_program_int program);
+            static bool link(program_id program);
+            static bool link(const char *name);
+
+			static void rawUse(gl_program_int program);
+            static bool use(program_id program);
+            static bool use(const char *name);
+
+			static void rawDestroy(gl_program_int program);
+            static bool destroy(program_id program);
+            static bool destroy(const char *name);
 
 			static void destroyAllPrograms();
 
+            static bool exists(program_id program);
+            static bool exists(const char *name);
+
+            static hash_entry<gl_program_int> *get(program_id program);
+            static hash_entry<gl_program_int> *get(const char *name);
+
 			static gl_program_int currentlyBound();
+            static program_id currentID();
+
+            static hash_function getHashFunction();
 
 		private:
 			static gl_program_int m_CurrentlyBound;
+            static program_id m_CurrentID;
 			static hash_table<gl_program_int> m_Programs;
 
         public:
-            gl_program() = delete;
+            program_manager() = delete;
 
 	};
 
-	/*
-	=============================
-	gl_program::destroyAllPrograms
-	=============================
+    /*
+	=======================
+	program_manager::exists
+	=======================
 	*/
-	inline void gl_program::destroyAllPrograms()
-	{
-		m_Programs.clear();
-	}
+    inline bool program_manager::exists(program_id program)
+    {
+        return m_Programs[program] != nullptr;
+    }
+
+    /*
+	=======================
+	program_manager::exists
+	=======================
+	*/
+    inline bool program_manager::exists(const char *name)
+    {
+        return m_Programs[name] != nullptr;
+    }
+
+    /*
+	====================
+	program_manager::get
+	====================
+	*/
+    inline hash_entry<gl_program_int> *program_manager::get(program_id program)
+    {
+        return m_Programs[program];
+    }
+
+    /*
+	====================
+	program_manager::get
+	====================
+	*/
+    inline hash_entry<gl_program_int> *program_manager::get(const char *name)
+    {
+        return m_Programs[name];
+    }
 
 	/*
-	=========================
-	gl_program::currentlyBound
-	=========================
+	===============================
+	program_manager::currentlyBound
+	===============================
 	*/
-	inline gl_program_int gl_program::currentlyBound()
+	inline gl_program_int program_manager::currentlyBound()
 	{
 		return m_CurrentlyBound;
 	}
+
+    /*
+	==========================
+	program_manager::currentID
+	==========================
+	*/
+    inline program_id program_manager::currentID()
+    {
+        return m_CurrentID;
+    }
+
+    /*
+	================================
+	program_manager::getHashFunction
+	================================
+	*/
+    inline hash_function program_manager::getHashFunction()
+    {
+        return m_Programs.getHashFunction();
+    }
 
 	class DE_API gl_uniform
     {
@@ -242,7 +385,9 @@ namespace de
 		public:
 			gl_uniform();
 
-			bool find(gl_program_int program, const char *name);
+			bool rawFind(gl_program_int program, const char *name);
+            bool find(program_id program, const char *name);
+            bool find(const char *progName, const char *name);
 
 			void send(float value);
 			void send(int value);
@@ -256,13 +401,23 @@ namespace de
 
 	};
 
-	class DE_API gl_texture
+	class DE_API texture_manager
     {
 
 		public:
-			static gl_texture_int create();
-			static void bind(gl_texture_int texture, uint8_t unit);
-			static void bindCubemaps(gl_texture_int texture);
+			static texture_id create(const char *name);
+
+			static void rawBind(gl_texture_int texture, uint8_t unit);
+            static bool bind(texture_id texture, uint8_t unit);
+            static bool bind(const char *name, uint8_t unit);
+
+			static void rawBindCubemaps(gl_texture_int texture);
+            static bool bindCubemaps(texture_id texture);
+            static bool bindCubemaps(const char *name);
+
+            static void rawDestroy(gl_texture_int texture);
+            static bool destroy(texture_id texture);
+            static bool destroy(const char *name);
 
 			static void setTextureWrappingS(gl_texture_wrap mode);
 			static void setTextureWrappingT(gl_texture_wrap mode);
@@ -274,62 +429,113 @@ namespace de
 			static void setTextureWrappingRCubemaps(gl_texture_wrap mode);
 			static void setTextureFilteringCubemaps(gl_texture_filter mode);
 
+            static void allocSpace(int width, int height);
+
 			static void transmitTexture(mem_ptr data, int width, int height, image_color_type colorType);
 			static void transmitTextureCubemaps(mem_ptr left, mem_ptr front, mem_ptr right, mem_ptr back, mem_ptr bottom, mem_ptr top, int width, int height, image_color_type colorType);
 
-			static gl_texture_int getWhiteTexture();
-			static void setWhiteTexture(gl_texture_int texture);
+			static texture_id getWhiteTexture();
+			static void setWhiteTexture(texture_id texture);
+
+            static hash_entry<gl_texture_int> *get(texture_id texture);
+            static hash_entry<gl_texture_int> *get(const char *name);
 
 			static gl_texture_int currentlyBound();
+            static texture_id currentID();
+            static texture_id currentCubemapsID();
 			static uint8_t currentUnit();
 
 		private:
-			static gl_texture_int m_WhiteTex;
+			static texture_id m_WhiteTex;
 
 			static gl_texture_int m_CurrentlyBound;
+            static texture_id m_CurrentID;
+            static texture_id m_CurrentCubemapsID;
 			static uint8_t m_CurrentUnit;
 
+            static hash_table<gl_texture_int> m_Textures;
+
         public:
-			gl_texture() = delete;
+			texture_manager() = delete;
 
 	};
 
-	/*
-	=========================
-	gl_texture::currentlyBound
-	=========================
+    /*
+	====================
+	texture_manager::get
+	====================
 	*/
-	inline gl_texture_int gl_texture::currentlyBound()
+    inline hash_entry<gl_texture_int> *texture_manager::get(texture_id texture)
+    {
+        return m_Textures[texture];
+    }
+
+    /*
+	====================
+	texture_manager::get
+	====================
+	*/
+    inline hash_entry<gl_texture_int> *texture_manager::get(const char *name)
+    {
+        return m_Textures[name];
+    }
+
+	/*
+	===============================
+	texture_manager::currentlyBound
+	===============================
+	*/
+	inline gl_texture_int texture_manager::currentlyBound()
 	{
 		return m_CurrentlyBound;
 	}
 
-	/*
-	======================
-	gl_texture::currentUnit
-	======================
+    /*
+	==========================
+	texture_manager::currentID
+	==========================
 	*/
-	inline uint8_t gl_texture::currentUnit()
+    inline texture_id texture_manager::currentID()
+    {
+        return m_CurrentID;
+    }
+
+    /*
+	==================================
+	texture_manager::currentCubemapsID
+	==================================
+	*/
+    inline texture_id texture_manager::currentCubemapsID()
+    {
+        return m_CurrentCubemapsID;
+    }
+
+	/*
+	============================
+	texture_manager::currentUnit
+	============================
+	*/
+	inline uint8_t texture_manager::currentUnit()
 	{
 		return m_CurrentUnit;
 	}
 
 	/*
-	==========================
-	gl_texture::getWhiteTexture
-	==========================
+	================================
+	texture_manager::getWhiteTexture
+	================================
 	*/
-	inline gl_texture_int gl_texture::getWhiteTexture()
+	inline texture_id texture_manager::getWhiteTexture()
 	{
 		return m_WhiteTex;
 	}
 
 	/*
-	==========================
-	gl_texture::setWhiteTexture
-	==========================
+	================================
+	texture_manager::setWhiteTexture
+	================================
 	*/
-	inline void gl_texture::setWhiteTexture(gl_texture_int texture)
+	inline void texture_manager::setWhiteTexture(texture_id texture)
 	{
 		m_WhiteTex = texture;
 	}
@@ -356,7 +562,7 @@ namespace de
 
 	};
 
-	class DE_API gl_core
+	class DE_API gpu_core
     {
 
 		public:
@@ -380,61 +586,238 @@ namespace de
 			/// @param value 
 			static void enableDepthMask(bool value);
 
+            static void enableDepthTest();
+            static void disableDepthTest();
+
 			static void setDepthFunction(gl_depth_function func);
 
 			static void setCullFace(gl_cull_face cullFace);
 
 	};
 
-    class DE_API gl_framebuffer
+    class DE_API framebuffer_manager
     {
 
         public:
-            static gl_framebuffer_int create();
-            static void bind(gl_framebuffer_int fbo);
+            static framebuffer_id create(const char *name);
+
+            static void rawBind(gl_framebuffer_int fbo);
+            static bool bind(framebuffer_id fbo);
+            static bool bind(const char *name);
+
             static void bindDefault();
+
             static bool check();
-            static void destroy(gl_framebuffer_int fbo);
 
-            static void attachTexture(int width, int height);
-            static void attachRenderbuffer(gl_renderbuffer_int rbo);
+            static void rawDestroy(gl_framebuffer_int fbo);
+            static bool destroy(framebuffer_id fbo, bool destroyTexture = false);
+            static bool destroy(const char *name, bool destroyTexture = false);
 
-    };
+            static bool attachTexture(texture_id texture);
+            static bool attachTexture(const char *name);
 
-    class DE_API gl_renderbuffer
-    {
+            static bool attachRenderbuffer(framebuffer_id fbo);
+            static bool attachRenderbuffer(const char *name);
 
-        public:
-            static gl_renderbuffer_int create();
-            static void bind(gl_renderbuffer_int rbo);
-            static void bindDefault();
-            static void store(int width, int height);
+            static hash_entry<pair<gl_framebuffer_int, texture_id>> *get(framebuffer_id fbo);
+            static hash_entry<pair<gl_framebuffer_int, texture_id>> *get(const char *name);
 
-    };
-
-    class DE_API gl_framerenderbuffer
-    {
-
-        public:
-            bool create(int width, int height);
-
-            gl_framebuffer_int framebuffer() const;
-            gl_renderbuffer_int renderbuffer() const;
+            static gl_framebuffer_int currentlyBound();
+            static framebuffer_id currentID();
+            static texture_id currentTextureID();
 
         private:
-            gl_framebuffer_int m_Framebuffer;
-            gl_renderbuffer_int m_Renderbuffer;
+            static gl_framebuffer_int m_CurrentlyBound;
+            static framebuffer_id m_CurrentID;
+
+			static hash_table<pair<gl_framebuffer_int, texture_id>> m_Framebuffers;
 
     };
 
-    inline gl_framebuffer_int gl_framerenderbuffer::framebuffer() const
+    /*
+	========================
+	framebuffer_manager::get
+	========================
+	*/
+    inline hash_entry<pair<gl_framebuffer_int, texture_id>> *framebuffer_manager::get(framebuffer_id fbo)
+    {
+        return m_Framebuffers[fbo];
+    }
+
+    /*
+	========================
+	framebuffer_manager::get
+	========================
+	*/
+    inline hash_entry<pair<gl_framebuffer_int, texture_id>> *framebuffer_manager::get(const char *name)
+    {
+        return m_Framebuffers[name];
+    }
+
+    /*
+	===================================
+	framebuffer_manager::currentlyBound
+	===================================
+	*/
+    inline gl_framebuffer_int framebuffer_manager::currentlyBound()
+    {
+        return m_CurrentlyBound;
+    }
+
+    /*
+	==============================
+	framebuffer_manager::currentID
+	==============================
+	*/
+    inline framebuffer_id framebuffer_manager::currentID()
+    {
+        return m_CurrentID;
+    }
+
+    /*
+	=====================================
+	framebuffer_manager::currentTextureID
+	=====================================
+	*/
+    inline texture_id framebuffer_manager::currentTextureID()
+    {
+        auto el = m_Framebuffers[m_CurrentID];
+        if(el == nullptr)
+            return 0;
+
+        return el->value.value2();
+    }
+
+    class DE_API renderbuffer_manager
+    {
+
+        public:
+            static renderbuffer_id create(const char *name);
+
+            static void rawBind(gl_renderbuffer_int rbo);
+            static bool bind(renderbuffer_id rbo);
+            static bool bind(const char *name);
+
+            static void bindDefault();
+
+            static hash_entry<gl_renderbuffer_int> *get(renderbuffer_id rbo);
+            static hash_entry<gl_renderbuffer_int> *get(const char *name);
+
+            static void store(int width, int height);
+
+            static void rawDestroy(gl_renderbuffer_int rbo);
+            static bool destroy(renderbuffer_id rbo);
+            static bool destroy(const char *name);
+
+            static gl_renderbuffer_int currentlyBound();
+            static renderbuffer_id currentID();
+
+        private:
+            static hash_table<gl_renderbuffer_int> m_Renderbuffers;
+            static gl_renderbuffer_int m_CurrentlyBound;
+            static renderbuffer_id m_CurrentID;
+
+    };
+
+    /*
+	=========================
+	renderbuffer_manager::get
+	=========================
+	*/
+    inline hash_entry<gl_renderbuffer_int> *renderbuffer_manager::get(renderbuffer_id rbo)
+    {
+        return m_Renderbuffers[rbo];
+    }
+
+    /*
+	=========================
+	renderbuffer_manager::get
+	=========================
+	*/
+    inline hash_entry<gl_renderbuffer_int> *renderbuffer_manager::get(const char *name)
+    {
+        return m_Renderbuffers[name];
+    }
+
+    /*
+	====================================
+	renderbuffer_manager::currentlyBound
+	====================================
+	*/
+    inline gl_renderbuffer_int renderbuffer_manager::currentlyBound()
+    {
+        return m_CurrentlyBound;
+    }
+
+    /*
+	===============================
+	renderbuffer_manager::currentID
+	===============================
+	*/
+    inline renderbuffer_id renderbuffer_manager::currentID()
+    {
+        return m_CurrentID;
+    }
+
+    class DE_API framerenderbuffer
+    {
+
+        public:
+            bool create(const char *name, int width, int height);
+
+            void destroy();
+
+            framebuffer_id framebuffer() const;
+            renderbuffer_id renderbuffer() const;
+            vbo_id vbo() const;
+            vao_id vao() const;
+
+        private:
+            framebuffer_id m_Framebuffer;
+            renderbuffer_id m_Renderbuffer;
+            vbo_id m_VBO;
+            vao_id m_VAO;
+
+    };
+
+    /*
+	==============================
+	framerenderbuffer::framebuffer
+	==============================
+	*/
+    inline framebuffer_id framerenderbuffer::framebuffer() const
     {
         return m_Framebuffer;
     }
 
-    inline gl_renderbuffer_int gl_framerenderbuffer::renderbuffer() const
+    /*
+	===============================
+	framerenderbuffer::renderbuffer
+	===============================
+	*/
+    inline renderbuffer_id framerenderbuffer::renderbuffer() const
     {
         return m_Renderbuffer;
+    }
+
+    /*
+	======================
+	framerenderbuffer::vbo
+	======================
+	*/
+    inline vbo_id framerenderbuffer::vbo() const
+    {
+        return m_VBO;
+    }
+
+    /*
+	======================
+	framerenderbuffer::vao
+	======================
+	*/
+    inline vao_id framerenderbuffer::vao() const
+    {
+        return m_VAO;
     }
 
     class DE_API gl_renderer
@@ -465,16 +848,31 @@ namespace de
 
 	};
 
+    /*
+	====================
+	gl_renderer::context
+	====================
+	*/
 	inline SDL_GLContext gl_renderer::context()
 	{
 		return m_Context;
 	}
 
+    /*
+	======================
+	gl_renderer::getWindow
+	======================
+	*/
 	inline window *gl_renderer::getWindow()
 	{
 		return m_Window;
 	}
 
+    /*
+	==========================
+	gl_renderer::getClearColor
+	==========================
+	*/
 	inline colora gl_renderer::getClearColor() const
 	{
 		return m_ClearColor;

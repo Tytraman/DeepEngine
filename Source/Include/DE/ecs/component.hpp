@@ -35,19 +35,18 @@ namespace de
 	/// @brief	Composant indiquant qu'une entité peut dessiner une forme.
 	struct DE_API drawable_component
     {
-		gl_vbo_int vbo;
-		gl_vao_int vao;
-		gl_texture_int texture;
+		vbo_id vbo;
+		vao_id vao;
+		texture_id texture;
 		uint8_t textureUnit;
-		gl_program_int program;
+		program_id program;
 		drawable_render_callback renderCallback;
 
 		static void classicRenderCallback(gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, Camera *camera);
 		static void skyboxRenderCallback(gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, Camera *camera);
 		
 		private:
-			drawable_component();
-			drawable_component(gl_program_int program, gl_vbo_int vbo, gl_vao_int vao, gl_texture_int texture = 0, uint8_t textureUnit = 0);
+			drawable_component(program_id program, vbo_id vbo, vao_id vao, texture_id texture = 0, uint8_t textureUnit = 0);
 
 			friend component_manager;
 	};
@@ -161,8 +160,9 @@ namespace de
 			/// @return          Le type du composant.
 			static component_type getType(component_id component);
 
-			static component_id createDrawableComponent();
-			static component_id createDrawableComponent(gl_program_int program, gl_vbo_int vbo, gl_vao_int vao, gl_texture_int texture = 0, uint8_t textureUnit = 0);
+			static component_id createDrawableComponent(program_id program, vbo_id vbo, vao_id vao, texture_id texture = 0, uint8_t textureUnit = 0);
+            static component_id createDrawableComponent(const char *progName, const char *vboName, const char *vaoName, const char *textName = nullptr, uint8_t textureUnit = 0);
+
 			static drawable_component *getDrawableComponent(component_id component);
 			static void deleteDrawableComponent(component_id id);
 

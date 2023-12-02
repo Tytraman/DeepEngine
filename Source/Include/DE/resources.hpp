@@ -4,28 +4,30 @@
 #include <DE/def.hpp>
 #include <DE/types.hpp>
 #include <DE/rendering/opengl_utils.hpp>
+#include <DE/string.hpp>
 
 namespace de
 {
 
-	class DE_API resources
+	class DE_API resource_manager
     {
 
 		public:
-			static bool init();
+			static bool init(const char *filepath);
 			static void shutdown();
 
-			static gl_texture_int loadTexture(const char *name, uint8_t unit);
+			static texture_id loadTexture(const char *name, uint8_t unit);
 
 		private:
-			static wchar_t *m_DeepDataFolder;
-			static wchar_t *m_DeepResourcesFolder;
-			static wchar_t *m_DeepShadersFolder;
-			static wchar_t *m_DeepTexturesFolder;
-			static wchar_t *m_DeepSoundsFolder;
+			static string m_ResourcesFolder;
+			static string m_ShadersFolder;
+			static string m_TexturesFolder;
+			static string m_SoundsFolder;
 
         public:
-            resources() = delete;
+            resource_manager() = delete;
+            resource_manager(const resource_manager &) = delete;
+            resource_manager(resource_manager &&) = delete;
 
 	};
 

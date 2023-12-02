@@ -12,8 +12,8 @@ namespace de
 	{
 		drawable_component *drawable = (drawable_component *) ptr;
 
-		gl_vao::destroy(drawable->vao);
-		gl_vbo::destroy(drawable->vbo);
+		vao_manager::destroy(drawable->vao);
+		vbo_manager::destroy(drawable->vbo);
 	}
 
 	component_id component_manager::m_ComponentCount = 0;
@@ -27,53 +27,60 @@ namespace de
 	hash_table<health_component> component_manager::m_HealthComponents(1000);
 
 	/*
-	========================================
+	=========================================
 	drawable_component::classicRenderCallback
-	========================================
+	=========================================
 	*/
 	void drawable_component::classicRenderCallback(gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, Camera *camera)
 	{
 		gl_uniform uniModel;
 
-		gl_program_int program = drawable->program;
-		gl_vao_int vao = drawable->vao;
-		gl_texture_int texture = drawable->texture;
+		program_id program = drawable->program;
+		vao_id vao = drawable->vao;
+		texture_id texture = drawable->texture;
 		uint8_t textureUnit = drawable->textureUnit;
 
 		// Pas besoin d'indiquer à OpenGL d'utiliser un programme qui est déjà en cours d'utilisation.
-		if(program != gl_program::currentlyBound())
-			gl_program::use(drawable->program);
+		if(program != program_manager::currentID())
+			program_manager::use(program);
 
 		// Pas besoin d'indiquer à OpenGL d'utiliser un VAO qui est déjà en cours d'utilisation.
-		if(vao != gl_vao::currentlyBound())
-			gl_vao::bind(drawable->vao);
+		if(vao != vao_manager::currentID())
+			vao_manager::bind(vao);
 
 		// Pas besoin d'indiquer à OpenGL d'utiliser une texture si elle est déjà en cours d'utilisation.
-		if(texture != gl_texture::currentlyBound() || textureUnit != gl_texture::currentUnit())
-			gl_texture::bind(drawable->texture, drawable->textureUnit);
+		if(texture != texture_manager::currentID() || textureUnit != texture_manager::currentUnit())
+			texture_manager::bind(texture, textureUnit);
 
-		if(uniModel.find(drawable->program, "myTex"))
+		if(uniModel.find(program, "myTex"))
 			uniModel.send(0);
 
-		if(uniModel.find(drawable->program, "mTrs")) {
+		if(uniModel.find(program, "mTrs"))
+        {
 			uniModel.send(transformation->getTranslation());
 
-			if(uniModel.find(drawable->program, "mRotX")) {
+			if(uniModel.find(program, "mRotX"))
+            {
 				uniModel.send(transformation->getRotationX());
 
-				if(uniModel.find(drawable->program, "mRotY")) {
+				if(uniModel.find(program, "mRotY"))
+                {
 					uniModel.send(transformation->getRotationY());
 
-					if(uniModel.find(drawable->program, "mRotZ")) {
+					if(uniModel.find(program, "mRotZ"))
+                    {
 						uniModel.send(transformation->getRotationZ());
 
-						if(uniModel.find(drawable->program, "mScl")) {
+						if(uniModel.find(program, "mScl"))
+                        {
 							uniModel.send(transformation->getScaling());
 
-							if(uniModel.find(drawable->program, "view")) {
+							if(uniModel.find(program, "view"))
+                            {
 								uniModel.send(camera->lookAt());
 
-								if(uniModel.find(drawable->program, "proj")) {
+								if(uniModel.find(program, "proj"))
+                                {
 									uniModel.send(fmat4x4::perspective(fmat4x4(), 45.0f, (float) window->getWidth() / (float) window->getHeight(), 0.1f, 1000.0f));
 								}
 							}
@@ -83,7 +90,7 @@ namespace de
 			}
 		}
 
-		renderer.draw(gl_vbo::getVerticesNumber(drawable->vbo));
+		renderer.draw(vbo_manager::getVerticesNumber(drawable->vbo));
 	}
 
 	/*
@@ -95,18 +102,20 @@ namespace de
 	{
 		gl_uniform uniModel;
 
-		gl_core::enableDepthMask(false);
-		gl_core::setDepthFunction(gl_depth_function::Lequal);
+		gpu_core::enableDepthMask(false);
+		gpu_core::setDepthFunction(gl_depth_function::Lequal);
 
-		gl_program::use(drawable->program);
-		gl_vao::bind(drawable->vao);
+		program_manager::use(drawable->program);
+		vao_manager::bind(drawable->vao);
 
-		gl_texture::bindCubemaps(drawable->texture);
+		texture_manager::bindCubemaps(drawable->texture);
 
-		if(uniModel.find(drawable->program, "skybox")) {
+		if(uniModel.find(drawable->program, "skybox"))
+        {
 			uniModel.send(0);
 
-			if(uniModel.find(drawable->program, "view")) {
+			if(uniModel.find(drawable->program, "view"))
+            {
 				fmat4x4 view = camera->lookAt();
 				view[static_cast<uint8_t>(fmat4x4_index::w1)] = 0.0f;
 				view[static_cast<uint8_t>(fmat4x4_index::w2)] = 0.0f;
@@ -114,21 +123,22 @@ namespace de
 
 				uniModel.send(view);
 
-				if(uniModel.find(drawable->program, "proj")) {
+				if(uniModel.find(drawable->program, "proj"))
+                {
 					uniModel.send(fmat4x4::perspective(fmat4x4(), 45.0f, (float) window->getWidth() / (float) window->getHeight(), 0.1f, 1000.0f));
 				}
 			}
 		}
 
-		renderer.draw(gl_vbo::getVerticesNumber(drawable->vbo));
-		gl_core::setDepthFunction(gl_depth_function::Less);
-		gl_core::enableDepthMask(true);
+		renderer.draw(vbo_manager::getVerticesNumber(drawable->vbo));
+		gpu_core::setDepthFunction(gl_depth_function::Less);
+		gpu_core::enableDepthMask(true);
 	}
 
 	/*
-	=========================
+	==========================
 	component_manager::getType
-	=========================
+	==========================
 	*/
 	component_type component_manager::getType(component_id component)
 	{
@@ -140,25 +150,11 @@ namespace de
 	}
 
 	/*
-	====================================
+	======================================
 	drawable_component::drawable_component
-	====================================
+	======================================
 	*/
-	drawable_component::drawable_component()
-		: vbo(gl_vbo::create()),
-		  vao(gl_vao::create()),
-		  texture(0),
-		  textureUnit(0),
-		  program(0),
-		  renderCallback(nullptr)
-	{ }
-
-	/*
-	====================================
-	drawable_component::drawable_component
-	====================================
-	*/
-	drawable_component::drawable_component(gl_program_int _program, gl_vbo_int _vbo, gl_vao_int _vao, gl_texture_int _texture, uint8_t _textureUnit)
+	drawable_component::drawable_component(program_id _program, vbo_id _vbo, vao_id _vao, texture_id _texture, uint8_t _textureUnit)
 		: vbo(_vbo),
 		  vao(_vao),
 		  texture(_texture),
@@ -168,30 +164,11 @@ namespace de
 	{ }
 
 	/*
-	=========================================
+	==========================================
 	component_manager::createDrawableComponent
-	=========================================
+	==========================================
 	*/
-	component_id component_manager::createDrawableComponent()
-	{
-		component_id id = m_ComponentCount;
-		drawable_component drawable;
-		component_type type = DrawableComponentType;
-
-		m_DrawableComponents.insert(id, drawable);
-		m_ComponentsType.insert(id, type);
-
-		m_ComponentCount = id + 1;
-
-		return id;
-	}
-
-	/*
-	=========================================
-	component_manager::createDrawableComponent
-	=========================================
-	*/
-	component_id component_manager::createDrawableComponent(gl_program_int program, gl_vbo_int vbo, gl_vao_int vao, gl_texture_int texture, uint8_t textureUnit)
+	component_id component_manager::createDrawableComponent(program_id program, vbo_id vbo, vao_id vao, texture_id texture, uint8_t textureUnit)
 	{
 		component_id id = m_ComponentCount;
 		drawable_component drawable(program, vbo, vao, texture, textureUnit);
@@ -205,10 +182,30 @@ namespace de
 		return id;
 	}
 
+    /*
+	==========================================
+	component_manager::createDrawableComponent
+	==========================================
+	*/
+    component_id component_manager::createDrawableComponent(const char *progName, const char *vboName, const char *vaoName, const char *textName, uint8_t textureUnit)
+    {
+        hash_function hash = program_manager::getHashFunction();
+
+        program_id prog = hash(progName);
+        vbo_id vbo = hash(vboName);
+        vao_id vao = hash(vaoName);
+
+        texture_id texture = 0;
+        if(textName != nullptr)
+            texture = hash(textName);
+
+        return createDrawableComponent(prog, vbo, vao, texture, textureUnit);
+    }
+
 	/*
-	================================================
+	==================================================
 	transformation_component::transformation_component
-	================================================
+	==================================================
 	*/
 	transformation_component::transformation_component(const fvec3 &translation, const fvec3 &scaling, float rotationX, float rotationY, float rotationZ)
 		: m_Translation(translation),
@@ -219,9 +216,9 @@ namespace de
 	{ }
 
 	/*
-	===============================================
+	================================================
 	component_manager::createTransformationComponent
-	===============================================
+	================================================
 	*/
 	component_id component_manager::createTransformationComponent(const fvec3 &translation, const fvec3 &scaling, float rotation)
 	{

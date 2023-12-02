@@ -24,6 +24,7 @@ namespace de
 
             string &operator=(const string &other);
             string &operator=(string &&other) noexcept;
+            string &operator=(const char *str);
 
             char operator[](size_t index) const;
 
@@ -42,6 +43,16 @@ namespace de
 
             static uint64_t hash(const string &str);
             uint64_t hash() const;
+
+            bool equals(const char *str) const;
+
+            // ===== Converter ===== //
+
+            bool toBool() const;
+            uint8_t toUint8() const;
+            uint16_t toUint16() const;
+            uint32_t toUint32() const;
+            uint64_t toUint64() const;
 
             size_t length() const;
             const char *str() const;
@@ -113,6 +124,46 @@ namespace de
         return append((uint8_t *) str, string_utils::length(str));
     }
 
+    /*
+    ==============
+    string::equals
+    ==============
+    */
+    inline bool string::equals(const char *str) const
+    {
+        return string_utils::equals(m_Chars.get(), str);
+    }
+
+    /*
+    ===============
+    string::toUint8
+    ===============
+    */
+    inline uint8_t string::toUint8() const
+    {
+        return static_cast<uint8_t>(toUint64());
+    }
+
+    /*
+    ================
+    string::toUint16
+    ================
+    */
+    inline uint16_t string::toUint16() const
+    {
+        return static_cast<uint16_t>(toUint64());
+    }
+
+    /*
+    ================
+    string::toUint32
+    ================
+    */
+    inline uint32_t string::toUint32() const
+    {
+        return static_cast<uint32_t>(toUint64());
+    }
+
     class DE_API string_finder
     {
 
@@ -131,6 +182,7 @@ namespace de
             char skipUntil(char *characteres, uint8_t numberOfCharacteres);
 
             bool isAlphaNum() const;
+
 
             size_t position() const;
             char current() const;

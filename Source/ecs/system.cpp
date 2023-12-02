@@ -328,19 +328,21 @@ namespace de
 	}
 
 	/*
-	===========================
+	============================
 	system_manager::renderSystem
-	===========================
+	============================
 	*/
-	void system_manager::renderSystem(gl_renderer &renderer, gl_framebuffer_int fbo, scene_id sceneID)
+	void system_manager::renderSystem(gl_renderer &renderer, framerenderbuffer &frb, scene_id sceneID)
 	{
 		window *window = renderer.getWindow();
 
         // Le rendu est d'abord stocké dans un framebuffer pour pouvoir faire du post-processing.
-        gl_framebuffer::bind(fbo);
-        DE_GL_CALL(glEnable(GL_DEPTH_TEST));
+        framebuffer_manager::bind(frb.framebuffer());
+        texture_id texture = framebuffer_manager::currentTextureID();
 
-		// Nettoie le framebuffer en le remplissant de la couleur noire.
+        gpu_core::enableDepthTest();
+
+		// Nettoie le framebuffer_manager en le remplissant de la couleur noire.
 		renderer.setClearColor( { 0, 0, 0, 255 } );
 		renderer.clear();
 
@@ -382,11 +384,21 @@ namespace de
 
         // Toute cette partie là permet de faire du post-processing.
 
-        gl_framebuffer::bindDefault();
-        DE_GL_CALL(glDisable(GL_DEPTH_TEST));
+        framebuffer_manager::bindDefault();
+        gpu_core::disableDepthTest();
 
-        renderer.setClearColor( { 255, 255, 255, 255 } );
+        renderer.setClearColor( { 0, 0, 0, 0 } );
 		renderer.clear();
+
+        if(program_manager::use("post_processing"))
+        {
+            if(vao_manager::bind(frb.vao()))
+            {
+                texture_manager::bind(texture, 0);
+
+                renderer.draw(vbo_manager::getVerticesNumber(frb.vbo()));
+            }
+        }
 
 		// C'est ce qui permet de mettre à jour les pixels de l'écran.
 		renderer.swapBuffers();

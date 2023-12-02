@@ -95,6 +95,24 @@ namespace de
     }
 
     /*
+    =================
+    string::operator=
+    =================
+    */
+    string &string::operator=(const char *str)
+    {
+        char *cp = string_utils::copy(str);
+
+        if(cp == nullptr)
+            return *this;
+
+        m_Chars.reset(cp);
+        m_Length = string_utils::length(str);
+
+        return *this;
+    }
+
+    /*
     ==============
     string::append
     ==============
@@ -238,6 +256,48 @@ namespace de
             val = ((val << 5) + val) + chars[i]; /* val * 33 + chars[i] */
 
 		return val;
+    }
+
+    /*
+    ==============
+    string::toBool
+    ==============
+    */
+    bool string::toBool() const
+    {
+        return
+            equals("1")    ||
+            equals("true") ||
+            equals("TRUE") ||
+            equals("True");
+    }
+
+    /*
+    ================
+    string::toUint64
+    ================
+    */
+    uint64_t string::toUint64() const
+    {
+        uint64_t value = 0;
+        uint64_t dec = 1;
+        size_t length = m_Length;
+        size_t index;
+        char *text = m_Chars.get();
+
+        for(index = 0; index < length; ++index)
+        {
+            if(text[index] >= '0' && text[index] <= '9')
+            {
+                uint8_t val = text[index] - '0';
+
+                value += val * dec;
+
+                val *= 10;
+            }
+        }
+
+        return value;
     }
 
     /*

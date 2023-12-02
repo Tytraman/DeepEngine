@@ -2,7 +2,6 @@
 #include <DE/string_utils.hpp>
 
 #include <stdio.h>
-#include <unordered_map>
 
 #include <glad/glad.h>
 
@@ -11,166 +10,349 @@ namespace de
 
 	void programs_hashtable_free_element_callback(gl_program_int &program)
 	{
-		gl_program::destroy(program);
+		program_manager::rawDestroy(program);
 	}
 
-	gl_vbo_int gl_vbo::m_CurrentlyBound   = 0;
-	gl_vao_int gl_vao::m_CurrentlyBound   = 0;
+	gl_vbo_int vbo_manager::m_CurrentlyBound = 0;
+    vbo_id vbo_manager::m_CurrentID = 0;
+    hash_table<pair<gl_vbo_int, unsigned int>> vbo_manager::m_VBOs;
 
-	gl_texture_int gl_texture::m_WhiteTex = 0;
-	gl_texture_int gl_texture::m_CurrentlyBound = 0;
-	uint8_t gl_texture::m_CurrentUnit = 0;
+	gl_vao_int vao_manager::m_CurrentlyBound = 0;
+    vao_id vao_manager::m_CurrentID = 0;
+    hash_table<gl_vao_int> vao_manager::m_VAOs;
 
-	unsigned int gl_program::m_CurrentlyBound = 0;
-	hash_table<gl_program_int> gl_program::m_Programs(100, string::hash, programs_hashtable_free_element_callback);
+    hash_table<gl_shader_int> shader_manager::m_Shaders;
 
-	static std::unordered_map<gl_vbo_int, int> m_VBONumberOfVertices;
+	texture_id texture_manager::m_WhiteTex = 0;
+	gl_texture_int texture_manager::m_CurrentlyBound = 0;
+    texture_id texture_manager::m_CurrentID = 0;
+    texture_id texture_manager::m_CurrentCubemapsID = 0;
+	uint8_t texture_manager::m_CurrentUnit = 0;
+    hash_table<gl_texture_int> texture_manager::m_Textures;
 
-	
+    gl_framebuffer_int framebuffer_manager::m_CurrentlyBound = 0;
+    framebuffer_id framebuffer_manager::m_CurrentID = 0;
+    hash_table<pair<gl_framebuffer_int, texture_id>> framebuffer_manager::m_Framebuffers;
+
+    hash_table<gl_renderbuffer_int> renderbuffer_manager::m_Renderbuffers;
+    gl_renderbuffer_int renderbuffer_manager::m_CurrentlyBound = 0;
+    renderbuffer_id renderbuffer_manager::m_CurrentID = 0;
+
+	gl_program_int program_manager::m_CurrentlyBound = 0;
+    program_id program_manager::m_CurrentID = 0;
+	hash_table<gl_program_int> program_manager::m_Programs(100, string::hash, programs_hashtable_free_element_callback);
 
 	/*
-	=============
-	gl_vbo::create
-	=============
+	===================
+	vbo_manager::create
+	===================
 	*/
-	gl_vbo_int gl_vbo::create()
+	vbo_id vbo_manager::create(const char *name)
 	{
-		gl_vbo_int vbo = 0;
+		gl_vbo_int vbo;
 		DE_GL_CALL(glGenBuffers(1, &vbo));
 
-		m_VBONumberOfVertices.emplace(vbo, 0);
+        auto &el = m_VBOs.insert(name, pair(vbo, static_cast<unsigned int>(0)));
 
-		return vbo;
+        return el.key;
 	}
 
-	/*
-	===========
-	gl_vbo::bind
-	===========
+    /*
+	====================
+	vbo_manager::rawBind
+	====================
 	*/
-	void gl_vbo::bind(gl_vbo_int vbo)
+    void vbo_manager::rawBind(gl_vbo_int vbo)
+    {
+        DE_GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, vbo));
+
+        m_CurrentlyBound = vbo;
+    }
+
+	/*
+	=================
+	vbo_manager::bind
+	=================
+	*/
+	bool vbo_manager::bind(vbo_id vbo)
 	{
-		DE_GL_CALL(glBindBuffer(GL_ARRAY_BUFFER, vbo));
+        auto el = m_VBOs[vbo];
+        if(el == nullptr)
+            return false;
+
+        rawBind(el->value.value1());
+
+        m_CurrentID = vbo;
+
+        return true;
+	}
+
+    /*
+	=================
+	vbo_manager::bind
+	=================
+	*/
+    bool vbo_manager::bind(const char *name)
+    {
+        auto el = m_VBOs[name];
+        if(el == nullptr)
+            return false;
+
+		rawBind(el->value.value2());
 		
-		m_CurrentlyBound = vbo;
-	}
+        m_CurrentID = el->key;
+
+        return true;
+    }
+
+    /*
+	========================
+	vbo_manager::bindDefault
+	========================
+	*/
+    void vbo_manager::bindDefault()
+    {
+        rawBind(0);
+        m_CurrentID = 0;
+    }
+
+    /*
+	=======================
+	vbo_manager::rawDestroy
+	=======================
+	*/
+    void vbo_manager::rawDestroy(gl_vbo_int vbo)
+    {
+        DE_GL_CALL(glDeleteBuffers(1, &vbo));
+    }
 
 	/*
-	==============
-	gl_vbo::destroy
-	==============
+	====================
+	vbo_manager::destroy
+	====================
 	*/
-	void gl_vbo::destroy(gl_vbo_int vbo)
+	bool vbo_manager::destroy(vbo_id vbo)
 	{
-		DE_GL_CALL(glDeleteBuffers(1, &vbo));
+        auto el = m_VBOs[vbo];
+        if(el == nullptr)
+            return false;
+
+		rawDestroy(el->value.value1());
+        m_VBOs.remove(el->key);
+
+        return true;
 	}
 
-	/*
-	========================
-	gl_vbo::setVerticesNumber
-	========================
+    /*
+	====================
+	vbo_manager::destroy
+	====================
 	*/
-	void gl_vbo::setVerticesNumber(unsigned int number)
+    bool vbo_manager::destroy(const char *name)
+    {
+        auto el = m_VBOs[name];
+        if(el == nullptr)
+            return false;
+
+		rawDestroy(el->value.value1());
+        m_VBOs.remove(el->key);
+
+        return true;
+    }
+
+	/*
+	==============================
+	vbo_manager::setVerticesNumber
+	==============================
+	*/
+	void vbo_manager::setVerticesNumber(unsigned int number)
 	{
-		const auto &it = m_VBONumberOfVertices.find(m_CurrentlyBound);
-		if(it != m_VBONumberOfVertices.end())
-			it->second = number;
+        auto el = m_VBOs[m_CurrentID];
+        if(el == nullptr)
+            return;
+
+        el->value.value2() = number;
 	}
 
 	/*
-	========================
-	gl_vbo::getVerticesNumber
-	========================
+	==============================
+	vbo_manager::getVerticesNumber
+	==============================
 	*/
-	unsigned int gl_vbo::getVerticesNumber()
+	unsigned int vbo_manager::getVerticesNumber()
 	{
 		return getVerticesNumber(m_CurrentlyBound);
 	}
 
 	/*
-	========================
-	gl_vbo::getVerticesNumber
-	========================
+	==============================
+	vbo_manager::getVerticesNumber
+	==============================
 	*/
-	unsigned int gl_vbo::getVerticesNumber(gl_vbo_int vbo)
+	unsigned int vbo_manager::getVerticesNumber(vbo_id vbo)
 	{
-		const auto &it = m_VBONumberOfVertices.find(vbo);
-		if(it == m_VBONumberOfVertices.end())
-			return 0;
+        auto el = m_VBOs[vbo];
+        if(el == nullptr)
+            return 0;
 
-		return it->second;
+        return el->value.value2();
 	}
 
 	/*
-	===================
-	gl_vbo::transmitData
-	===================
+	=========================
+	vbo_manager::transmitData
+	=========================
 	*/
-	void gl_vbo::transmitData(memory_chunk &data)
+	void vbo_manager::transmitData(memory_chunk &data)
 	{
 		DE_GL_CALL(glBufferData(GL_ARRAY_BUFFER, data.size(), data.data(), GL_STATIC_DRAW));
 	}
 
 	/*
-	===================
-	gl_vbo::addAttribute
-	===================
+	=========================
+	vbo_manager::addAttribute
+	=========================
 	*/
-	void gl_vbo::addAttribute(unsigned int index, gl_attrib_components_number componentsNumber, gl_type type, int stride, int offset)
+	void vbo_manager::addAttribute(unsigned int index, gl_attrib_components_number componentsNumber, gl_type type, int stride, int offset)
 	{
 		DE_GL_CALL(glVertexAttribPointer(index, static_cast<GLint>(componentsNumber), static_cast<GLenum>(type), GL_FALSE, stride, (void *) offset));
 		DE_GL_CALL(glEnableVertexAttribArray(index));
 	}
 
 	/*
-	=============
-	gl_vao::create
-	=============
+	===================
+	vao_manager::create
+	===================
 	*/
-	gl_vao_int gl_vao::create()
+	vao_id vao_manager::create(const char *name)
 	{
-		gl_vao_int vao = 0;
+		gl_vao_int vao;
+
 		DE_GL_CALL(glGenVertexArrays(1, &vao));
-		return vao;
+
+        auto &el = m_VAOs.insert(name, vao);
+
+		return el.key;
 	}
+
+    /*
+	====================
+	vao_manager::rawBind
+	====================
+	*/
+    void vao_manager::rawBind(gl_vao_int vao)
+    {
+        DE_GL_CALL(glBindVertexArray(vao));
+
+        m_CurrentlyBound = vao;
+    }
 
 	/*
-	===========
-	gl_vao::bind
-	===========
+	=================
+	vao_manager::bind
+	=================
 	*/
-	void gl_vao::bind(gl_vao_int vao)
+	bool vao_manager::bind(vao_id vao)
 	{
-		DE_GL_CALL(glBindVertexArray(vao));
+        auto el = m_VAOs[vao];
+        if(el == nullptr)
+            return false;
 
-		m_CurrentlyBound = vao;
+        rawBind(el->value);
+
+        m_CurrentID = el->key;
+
+        return true;
 	}
 
-	/*
-	==============
-	gl_vao::destroy
-	==============
+    /*
+	=================
+	vao_manager::bind
+	=================
 	*/
-	void gl_vao::destroy(gl_vao_int vao)
-	{
-		DE_GL_CALL(glDeleteVertexArrays(1, &vao));
-	}
+    bool vao_manager::bind(const char *name)
+    {
+        auto el = m_VAOs[name];
+        if(el == nullptr)
+            return false;
+
+        rawBind(el->value);
+
+        m_CurrentID = el->key;
+
+        return true;
+    }
+
+    /*
+	========================
+	vao_manager::bindDefault
+	========================
+	*/
+    void vao_manager::bindDefault()
+    {
+        rawBind(0);
+        m_CurrentID = 0;
+    }
+
+    /*
+	=======================
+	vao_manager::rawDestroy
+	=======================
+	*/
+    void vao_manager::rawDestroy(gl_vao_int vao)
+    {
+        DE_GL_CALL(glDeleteVertexArrays(1, &vao));
+    }
 
 	/*
 	====================
+	vao_manager::destroy
+	====================
+	*/
+	bool vao_manager::destroy(vao_id vao)
+	{
+        auto el = m_VAOs[vao];
+        if(el == nullptr)
+            return false;
+
+		rawDestroy(el->value);
+        m_VAOs.remove(el->key);
+
+        return true;
+	}
+
+    /*
+	====================
+	vao_manager::destroy
+	====================
+	*/
+    bool vao_manager::destroy(const char *name)
+    {
+        auto el = m_VAOs[name];
+        if(el == nullptr)
+            return false;
+
+		rawDestroy(el->value);
+        m_VAOs.remove(el->key);
+
+        return true;
+    }
+
+	/*
+	======================
 	gl_uniform::gl_uniform
-	====================
+	======================
 	*/
 	gl_uniform::gl_uniform()
 		: m_Location(-1)
 	{ }
 
 	/*
-	===============
-	gl_uniform::find
-	===============
+	===================
+	gl_uniform::rawFind
+	===================
 	*/
-	bool gl_uniform::find(unsigned int program, const char *name)
+	bool gl_uniform::rawFind(gl_program_int program, const char *name)
 	{
 		m_Location = DE_GL_CALLV(glGetUniformLocation(program, name));
 		if(m_Location == -1)
@@ -179,10 +361,38 @@ namespace de
 		return true;
 	}
 
+    /*
+	================
+	gl_uniform::find
+	================
+	*/
+    bool gl_uniform::find(program_id program, const char *name)
+    {
+        auto el = program_manager::get(program);
+        if(el == nullptr)
+            return false;
+
+        return rawFind(el->value, name);
+    }
+
+    /*
+	================
+	gl_uniform::find
+	================
+	*/
+    bool gl_uniform::find(const char *progName, const char *name)
+    {
+        auto el = program_manager::get(progName);
+        if(el == nullptr)
+            return false;
+
+        return rawFind(el->value, name);
+    }
+
 	/*
-	===============
+	================
 	gl_uniform::send
-	===============
+	================
 	*/
 	void gl_uniform::send(float value)
 	{
@@ -190,9 +400,9 @@ namespace de
 	}
 
 	/*
-	===============
+	================
 	gl_uniform::send
-	===============
+	================
 	*/
 	void gl_uniform::send(int value)
 	{
@@ -200,9 +410,9 @@ namespace de
 	}
 
 	/*
-	===============
+	================
 	gl_uniform::send
-	===============
+	================
 	*/
 	void gl_uniform::send(const fvec2 &vec)
 	{
@@ -210,9 +420,9 @@ namespace de
 	}
 
 	/*
-	===============
+	================
 	gl_uniform::send
-	===============
+	================
 	*/
 	void gl_uniform::send(const fvec3 &vec)
 	{
@@ -220,9 +430,9 @@ namespace de
 	}
 
 	/*
-	===============
+	================
 	gl_uniform::send
-	===============
+	================
 	*/
 	void gl_uniform::send(fmat3x3 &mat)
 	{
@@ -230,9 +440,9 @@ namespace de
 	}
 
 	/*
-	===============
+	================
 	gl_uniform::send
-	===============
+	================
 	*/
 	void gl_uniform::send(fmat4x4 &mat)
 	{
@@ -240,32 +450,68 @@ namespace de
 	}
 
 	/*
-	================
-	gl_shader::create
-	================
+	======================
+	shader_manager::create
+	======================
 	*/
-	gl_shader_int gl_shader::create(gl_shader_type shaderType)
+	shader_id shader_manager::create(const char *name, gl_shader_type shaderType)
 	{
-		return DE_GL_CALLV(glCreateShader((shaderType == gl_shader_type::Vertex ? GL_VERTEX_SHADER : GL_FRAGMENT_SHADER)));
+		gl_shader_int shader = DE_GL_CALLV(glCreateShader((shaderType == gl_shader_type::Vertex ? GL_VERTEX_SHADER : GL_FRAGMENT_SHADER)));
+
+        auto &el = m_Shaders.insert(name, shader);
+
+        return el.key;
 	}
 
-	/*
-	==============
-	gl_shader::load
-	==============
+    /*
+	======================
+	shader_manager::rawLoad
+	======================
 	*/
-	void gl_shader::load(gl_shader_int shader, memory_chunk &program)
-	{
-		char *source = (char *) program.data();
+    void shader_manager::rawLoad(gl_shader_int shader, memory_chunk &program)
+    {
+        char *source = (char *) program.data();
 		DE_GL_CALL(glShaderSource(shader, 1, &source, NULL));
-	}
+    }
 
 	/*
-	=================
-	gl_shader::compile
-	=================
+	====================
+	shader_manager::load
+	====================
 	*/
-	bool gl_shader::compile(gl_shader_int shader)
+	bool shader_manager::load(shader_id shader, memory_chunk &program)
+	{
+		auto el = m_Shaders[shader];
+        if(el == nullptr)
+            return false;
+        
+        rawLoad(el->value, program);
+
+        return true;
+	}
+
+    /*
+	====================
+	shader_manager::load
+	====================
+	*/
+    bool shader_manager::load(const char *name, memory_chunk &program)
+    {
+        auto el = m_Shaders[name];
+        if(el == nullptr)
+            return false;
+        
+        rawLoad(el->value, program);
+
+        return true;
+    }
+
+	/*
+	==========================
+	shader_manager::rawCompile
+	==========================
+	*/
+	bool shader_manager::rawCompile(gl_shader_int shader)
 	{
 		int  success;
 		char infoLog[512];
@@ -273,7 +519,8 @@ namespace de
 		DE_GL_CALL(glCompileShader(shader));
 		DE_GL_CALL(glGetShaderiv(shader, GL_COMPILE_STATUS, &success));
 
-		if(!success) {
+		if(!success)
+        {
 			DE_GL_CALL(glGetShaderInfoLog(shader, 512, NULL, infoLog));
 			fprintf(stderr, "GLSL compilation error:\n%s\n", infoLog);
 
@@ -283,60 +530,188 @@ namespace de
 		return true;
 	}
 
-	/*
-	=================
-	gl_shader::destroy
-	=================
+    /*
+	=======================
+	shader_manager::compile
+	=======================
 	*/
-	void gl_shader::destroy(gl_shader_int shader)
+    bool shader_manager::compile(shader_id shader)
+    {
+        auto el = m_Shaders[shader];
+        if(el == nullptr)
+            return false;
+
+        return rawCompile(el->value);
+    }
+
+    /*
+	=======================
+	shader_manager::compile
+	=======================
+	*/
+    bool shader_manager::compile(const char *name)
+    {
+        auto el = m_Shaders[name];
+        if(el == nullptr)
+            return false;
+
+        return rawCompile(el->value);
+    }
+
+	/*
+	==========================
+	shader_manager::rawDestroy
+	==========================
+	*/
+	void shader_manager::rawDestroy(gl_shader_int shader)
 	{
 		DE_GL_CALL(glDeleteShader(shader));
 	}
 
-	/*
-	=================
-	gl_program::create
-	=================
+    /*
+	=======================
+	shader_manager::destroy
+	=======================
 	*/
-	gl_program_int gl_program::create(const char *name)
+    bool shader_manager::destroy(shader_id shader)
+    {
+        auto el = m_Shaders[shader];
+        if(el == nullptr)
+            return false;
+
+        rawDestroy(el->value);
+        m_Shaders.remove(el->key);
+
+        return true;
+    }
+
+    /*
+	=======================
+	shader_manager::destroy
+	=======================
+	*/
+    bool shader_manager::destroy(const char *name)
+    {
+        auto el = m_Shaders[name];
+        if(el == nullptr)
+            return false;
+
+        rawDestroy(el->value);
+        m_Shaders.remove(el->key);
+
+        return true;
+    }
+
+	/*
+	=======================
+	program_manager::create
+	=======================
+	*/
+	program_id program_manager::create(const char *name)
 	{
 		gl_program_int program = DE_GL_CALLV(glCreateProgram());
 
-		m_Programs.insert(name, program);
+		auto &el = m_Programs.insert(name, program);
 
-		return program;
+		return el.key;
 	}
 
 	/*
-	==============
-	gl_program::get
-	==============
+	================================
+	program_manager::rawAttachShader
+	================================
 	*/
-	gl_program_int gl_program::get(const char *name)
-	{
-		const auto hs = m_Programs[name];
-		if(hs == nullptr)
-			return 0;
-
-		return hs->value;
-	}
-
-	/*
-	=======================
-	gl_program::attachShader
-	=======================
-	*/
-	void gl_program::attachShader(gl_program_int program, gl_shader_int shader)
+	void program_manager::rawAttachShader(gl_program_int program, gl_shader_int shader)
 	{
 		DE_GL_CALL(glAttachShader(program, shader));
 	}
 
-	/*
-	===============
-	gl_program::link
-	===============
+    /*
+	=============================
+	program_manager::attachShader
+	=============================
 	*/
-	bool gl_program::link(gl_program_int program)
+    bool program_manager::attachShader(program_id program, shader_id shader)
+    {
+        auto prog = m_Programs[program];
+        if(prog == nullptr)
+            return false;
+
+        auto shad = shader_manager::m_Shaders[shader];
+        if(shad == nullptr)
+            return false;
+
+        rawAttachShader(prog->value, shad->value);
+
+        return true;
+    }
+
+    /*
+	=============================
+	program_manager::attachShader
+	=============================
+	*/
+    bool program_manager::attachShader(const char *progName, const char *shadName)
+    {
+        auto prog = m_Programs[progName];
+        if(prog == nullptr)
+            return false;
+
+        auto shad = shader_manager::m_Shaders[shadName];
+        if(shad == nullptr)
+            return false;
+
+        rawAttachShader(prog->value, shad->value);
+
+        return true;
+    }
+
+    /*
+	=============================
+	program_manager::attachShader
+	=============================
+	*/
+    bool program_manager::attachShader(const char *progName, shader_id shader)
+    {
+        auto prog = m_Programs[progName];
+        if(prog == nullptr)
+            return false;
+
+        auto shad = shader_manager::m_Shaders[shader];
+        if(shad == nullptr)
+            return false;
+
+        rawAttachShader(prog->value, shad->value);
+
+        return true;
+    }
+
+    /*
+	=============================
+	program_manager::attachShader
+	=============================
+	*/
+    bool program_manager::attachShader(program_id program, const char *shadName)
+    {
+        auto prog = m_Programs[program];
+        if(prog == nullptr)
+            return false;
+
+        auto shad = shader_manager::m_Shaders[shadName];
+        if(shad == nullptr)
+            return false;
+
+        rawAttachShader(prog->value, shad->value);
+
+        return true;
+    }
+
+	/*
+	========================
+	program_manager::rawLink
+	========================
+	*/
+	bool program_manager::rawLink(gl_program_int program)
 	{
 		int  success;
 		char infoLog[512];
@@ -344,7 +719,8 @@ namespace de
 		DE_GL_CALL(glLinkProgram(program));
 		DE_GL_CALL(glGetProgramiv(program, GL_LINK_STATUS, &success));
 
-		if(!success) {
+		if(!success)
+        {
 			DE_GL_CALL(glGetProgramInfoLog(program, sizeof(infoLog), NULL, infoLog));
 			fprintf(stderr, "GLSL link error:\n%s\n", infoLog);
 
@@ -354,34 +730,143 @@ namespace de
 		return true;
 	}
 
-	/*
-	==============
-	gl_program::use
-	==============
+    /*
+	=====================
+	program_manager::link
+	=====================
 	*/
-	void gl_program::use(gl_program_int program)
+    bool program_manager::link(program_id program)
+    {
+        auto el = m_Programs[program];
+        if(el == nullptr)
+            return false;
+
+        return rawLink(el->value);
+    }
+
+    /*
+	=====================
+	program_manager::link
+	=====================
+	*/
+    bool program_manager::link(const char *name)
+    {
+        auto el = m_Programs[name];
+        if(el == nullptr)
+            return false;
+
+        return rawLink(el->value);
+    }
+
+	/*
+	=======================
+	program_manager::rawUse
+	=======================
+	*/
+	void program_manager::rawUse(gl_program_int program)
 	{
 		DE_GL_CALL(glUseProgram(program));
 		m_CurrentlyBound = program;
 	}
 
-	/*
-	==================
-	gl_program::destroy
-	==================
+    /*
+	====================
+	program_manager::use
+	====================
 	*/
-	void gl_program::destroy(gl_program_int program)
+    bool program_manager::use(program_id program)
+    {
+        auto el = m_Programs[program];
+        if(el == nullptr)
+            return false;
+
+        rawUse(el->value);
+        m_CurrentID = program;
+
+        return true;
+    }
+
+    /*
+	====================
+	program_manager::use
+	====================
+	*/
+    bool program_manager::use(const char *name)
+    {
+        auto el = m_Programs[name];
+        if(el == nullptr)
+            return false;
+
+        rawUse(el->value);
+        m_CurrentID = el->key;
+
+        return true;
+    }
+
+	/*
+	===========================
+	program_manager::rawDestroy
+	===========================
+	*/
+	void program_manager::rawDestroy(gl_program_int program)
 	{
-		m_Programs.remove(program);
 		DE_GL_CALL(glDeleteProgram(program));
 	}
 
-	
+    /*
+	========================
+	program_manager::destroy
+	========================
+	*/
+    bool program_manager::destroy(program_id program)
+    {
+        auto el = m_Programs[program];
+        if(el == nullptr)
+            return false;
+
+        rawDestroy(el->value);
+        m_Programs.remove(el->key);
+
+        return true;
+    }
+
+    /*
+	========================
+	program_manager::destroy
+	========================
+	*/
+    bool program_manager::destroy(const char *name)
+    {
+        auto el = m_Programs[name];
+        if(el == nullptr)
+            return false;
+
+        rawDestroy(el->value);
+        m_Programs.remove(el->key);
+
+        return true;
+    }
+
+    /*
+	===================================
+	program_manager::destroyAllPrograms
+	===================================
+	*/
+	void program_manager::destroyAllPrograms()
+	{
+        auto &beg = m_Programs.begin();
+        auto &end = m_Programs.end();
+
+        for(; beg != end; ++beg)
+            rawDestroy(beg->value);
+
+		m_Programs.clear();
+	}
 
 	/*
-	====================
+	=====================
 	gl_error::clearErrors
-	====================
+	=====================
 	*/
 	void gl_error::clearErrors()
 	{
@@ -389,9 +874,9 @@ namespace de
 	}
 
 	/*
-	====================
+	=====================
 	gl_error::checkErrors
-	====================
+	=====================
 	*/
 	bool gl_error::checkErrors(const char *function, const char *file, unsigned int line)
 	{
@@ -407,9 +892,9 @@ namespace de
 	}
 
 	/*
-	================
+	=================
 	gl_error::getName
-	================
+	=================
 	*/
 	const char *gl_error::getName(GLenum errorCode)
 	{
@@ -426,31 +911,31 @@ namespace de
 	}
 
 	/*
-	===============
-	gl_core::version
-	===============
+	================
+	gpu_core::version
+	================
 	*/
-	const char *gl_core::version()
+	const char *gpu_core::version()
 	{
 		return (const char *) glGetString(GL_VERSION);
 	}
 
 	/*
-	======================
-	gl_core::updateViewport
-	======================
+	=======================
+	gpu_core::updateViewport
+	=======================
 	*/
-	void gl_core::updateViewport(int width, int height)
+	void gpu_core::updateViewport(int width, int height)
 	{
 		glViewport(0, 0, width, height);
 	}
 
 	/*
-	========================
-	gl_core::maxVertexAttribs
-	========================
+	=========================
+	gpu_core::maxVertexAttribs
+	=========================
 	*/
-	int gl_core::maxVertexAttribs()
+	int gpu_core::maxVertexAttribs()
 	{
 		int val = 0;
 		DE_GL_CALL(glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &val));
@@ -458,11 +943,11 @@ namespace de
 	}
 
 	/*
-	============================
-	gl_core::maxTextureImageUnits
-	============================
+	=============================
+	gpu_core::maxTextureImageUnits
+	=============================
 	*/
-	int gl_core::maxTextureImageUnits()
+	int gpu_core::maxTextureImageUnits()
 	{
 		int val = 0;
 		DE_GL_CALL(glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &val));
@@ -470,53 +955,77 @@ namespace de
 	}
 
 	/*
-	=======================
-	gl_core::enableDepthMask
-	=======================
+	=========================
+	gpu_core::enableDepthMask
+	=========================
 	*/
-	void gl_core::enableDepthMask(bool value)
+	void gpu_core::enableDepthMask(bool value)
 	{
 		DE_GL_CALL(glDepthMask(value));
 	}
 
-	/*
-	========================
-	gl_core::setDepthFunction
-	========================
+    /*
+	=========================
+	gpu_core::enableDepthTest
+	=========================
 	*/
-	void gl_core::setDepthFunction(gl_depth_function func)
+    void gpu_core::enableDepthTest()
+    {
+        DE_GL_CALL(glEnable(GL_DEPTH_TEST));
+    }
+
+    /*
+	==========================
+	gpu_core::disableDepthTest
+	==========================
+	*/
+    void gpu_core::disableDepthTest()
+    {
+        DE_GL_CALL(glDisable(GL_DEPTH_TEST));
+    }
+
+	/*
+	=========================
+	gpu_core::setDepthFunction
+	=========================
+	*/
+	void gpu_core::setDepthFunction(gl_depth_function func)
 	{
 		DE_GL_CALL(glDepthFunc(static_cast<GLenum>(func)));
 	}
 
 	/*
-	===================
-	gl_core::setCullFace
-	===================
+	====================
+	gpu_core::setCullFace
+	====================
 	*/
-	void gl_core::setCullFace(gl_cull_face cullFace)
+	void gpu_core::setCullFace(gl_cull_face cullFace)
 	{
 		DE_GL_CALL(glCullFace(static_cast<GLenum>(cullFace)));
 	}
 
 	/*
-	=================
-	gl_texture::create
-	=================
+	=======================
+	texture_manager::create
+	=======================
 	*/
-	gl_texture_int gl_texture::create()
+	texture_id texture_manager::create(const char *name)
 	{
-		gl_texture_int texture = 0;
+		gl_texture_int texture;
+
 		DE_GL_CALL(glGenTextures(1, &texture));
-		return texture;
+
+        auto &el = m_Textures.insert(name, texture);
+
+		return el.key;
 	}
 
 	/*
-	===============
-	gl_texture::bind
-	===============
+	========================
+	texture_manager::rawBind
+	========================
 	*/
-	void gl_texture::bind(gl_texture_int texture, uint8_t unit)
+	void texture_manager::rawBind(gl_texture_int texture, uint8_t unit)
 	{
 		DE_GL_CALL(glActiveTexture(GL_TEXTURE0 + unit));
 		DE_GL_CALL(glBindTexture(GL_TEXTURE_2D, texture));
@@ -525,106 +1034,232 @@ namespace de
 		m_CurrentUnit = unit;
 	}
 
-	/*
-	=======================
-	gl_texture::bindCubemaps
-	=======================
+    /*
+	=====================
+	texture_manager::bind
+	=====================
 	*/
-	void gl_texture::bindCubemaps(gl_texture_int texture)
+    bool texture_manager::bind(texture_id texture, uint8_t unit)
+    {
+        auto el = m_Textures[texture];
+        if(el == nullptr)
+            return false;
+
+        rawBind(el->value, unit);
+
+        m_CurrentID = el->key;
+
+        return true;
+    }
+
+    /*
+	=====================
+	texture_manager::bind
+	=====================
+	*/
+    bool texture_manager::bind(const char *name, uint8_t unit)
+    {
+        auto el = m_Textures[name];
+        if(el == nullptr)
+            return false;
+
+        rawBind(el->value, unit);
+
+        m_CurrentID = el->key;
+
+        return true;
+    }
+
+	/*
+	================================
+	texture_manager::rawBindCubemaps
+	================================
+	*/
+	void texture_manager::rawBindCubemaps(gl_texture_int texture)
 	{
 		DE_GL_CALL(glBindTexture(GL_TEXTURE_CUBE_MAP, texture));
 
 		m_CurrentlyBound = texture;
 	}
 
-	/*
-	==============================
-	gl_texture::setTextureWrappingS
-	==============================
+    /*
+	=============================
+	texture_manager::bindCubemaps
+	=============================
 	*/
-	void gl_texture::setTextureWrappingS(gl_texture_wrap mode)
+    bool texture_manager::bindCubemaps(texture_id texture)
+    {
+        auto el = m_Textures[texture];
+        if(el == nullptr)
+            return false;
+
+        rawBindCubemaps(el->value);
+
+        m_CurrentCubemapsID = el->key;
+
+        return true;
+    }
+
+    /*
+	=============================
+	texture_manager::bindCubemaps
+	=============================
+	*/
+    bool texture_manager::bindCubemaps(const char *name)
+    {
+        auto el = m_Textures[name];
+        if(el == nullptr)
+            return false;
+
+        rawBindCubemaps(el->value);
+
+        m_CurrentCubemapsID = el->key;
+
+        return true;
+    }
+
+    /*
+	===========================
+	texture_manager::rawDestroy
+	===========================
+	*/
+    void texture_manager::rawDestroy(gl_texture_int texture)
+    {
+        DE_GL_CALL(glDeleteTextures(1, &texture));
+    }
+
+    /*
+	========================
+	texture_manager::destroy
+	========================
+	*/
+    bool texture_manager::destroy(texture_id texture)
+    {
+        auto el = m_Textures[texture];
+        if(el == nullptr)
+            return false;
+
+        rawDestroy(el->value);
+        m_Textures.remove(el->key);
+
+        return true;
+    }
+
+    /*
+	========================
+	texture_manager::destroy
+	========================
+	*/
+    bool texture_manager::destroy(const char *name)
+    {
+        auto el = m_Textures[name];
+        if(el == nullptr)
+            return false;
+
+        rawDestroy(el->value);
+        m_Textures.remove(el->key);
+
+        return true;
+    }
+
+	/*
+	====================================
+	texture_manager::setTextureWrappingS
+	====================================
+	*/
+	void texture_manager::setTextureWrappingS(gl_texture_wrap mode)
 	{
 		DE_GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, static_cast<GLint>(mode)));
 	}
 
 	/*
-	==============================
-	gl_texture::setTextureWrappingT
-	==============================
+	====================================
+	texture_manager::setTextureWrappingT
+	====================================
 	*/
-	void gl_texture::setTextureWrappingT(gl_texture_wrap mode)
+	void texture_manager::setTextureWrappingT(gl_texture_wrap mode)
 	{
 		DE_GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, static_cast<GLint>(mode)));
 	}
 
 	/*
-	==============================
-	gl_texture::setTextureWrappingR
-	==============================
+	====================================
+	texture_manager::setTextureWrappingR
+	====================================
 	*/
-	void gl_texture::setTextureWrappingR(gl_texture_wrap mode)
+	void texture_manager::setTextureWrappingR(gl_texture_wrap mode)
 	{
 		DE_GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_R, static_cast<GLint>(mode)));
 	}
 
 	/*
-	==============================
-	gl_texture::setTextureFiltering
-	==============================
+	====================================
+	texture_manager::setTextureFiltering
+	====================================
 	*/
-	void gl_texture::setTextureFiltering(gl_texture_filter mode)
+	void texture_manager::setTextureFiltering(gl_texture_filter mode)
 	{
 		DE_GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(mode)));
 		DE_GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(mode)));
 	}
 
 	/*
-	======================================
-	gl_texture::setTextureWrappingSCubemaps
-	======================================
+	============================================
+	texture_manager::setTextureWrappingSCubemaps
+	============================================
 	*/
-	void gl_texture::setTextureWrappingSCubemaps(gl_texture_wrap mode)
+	void texture_manager::setTextureWrappingSCubemaps(gl_texture_wrap mode)
 	{
 		DE_GL_CALL(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, static_cast<GLint>(mode)));
 	}
 
 	/*
-	======================================
-	gl_texture::setTextureWrappingTCubemaps
-	======================================
+	============================================
+	texture_manager::setTextureWrappingTCubemaps
+	============================================
 	*/
-	void gl_texture::setTextureWrappingTCubemaps(gl_texture_wrap mode)
+	void texture_manager::setTextureWrappingTCubemaps(gl_texture_wrap mode)
 	{
 		DE_GL_CALL(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, static_cast<GLint>(mode)));
 	}
 
 	/*
-	======================================
-	gl_texture::setTextureWrappingRCubemaps
-	======================================
+	============================================
+	texture_manager::setTextureWrappingRCubemaps
+	============================================
 	*/
-	void gl_texture::setTextureWrappingRCubemaps(gl_texture_wrap mode)
+	void texture_manager::setTextureWrappingRCubemaps(gl_texture_wrap mode)
 	{
 		DE_GL_CALL(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, static_cast<GLint>(mode)));
 	}
 
 	/*
-	======================================
-	gl_texture::setTextureFilteringCubemaps
-	======================================
+	============================================
+	texture_manager::setTextureFilteringCubemaps
+	============================================
 	*/
-	void gl_texture::setTextureFilteringCubemaps(gl_texture_filter mode)
+	void texture_manager::setTextureFilteringCubemaps(gl_texture_filter mode)
 	{
 		DE_GL_CALL(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, static_cast<GLint>(mode)));
 		DE_GL_CALL(glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, static_cast<GLint>(mode)));
 	}
 
-	/*
-	==========================
-	gl_texture::transmitTexture
-	==========================
+    /*
+	===========================
+	texture_manager::allocSpace
+	===========================
 	*/
-	void gl_texture::transmitTexture(mem_ptr data, int width, int height, image_color_type colorType)
+    void texture_manager::allocSpace(int width, int height)
+    {
+        DE_GL_CALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr));
+    }
+
+	/*
+	================================
+	texture_manager::transmitTexture
+	================================
+	*/
+	void texture_manager::transmitTexture(mem_ptr data, int width, int height, image_color_type colorType)
 	{
 		GLenum internalFormat;
 		GLenum format;
@@ -648,11 +1283,11 @@ namespace de
 	}
 
 	/*
-	===================================
-	gl_texture::transmitTextureCubemaps
-	===================================
+	========================================
+	texture_manager::transmitTextureCubemaps
+	========================================
 	*/
-	void gl_texture::transmitTextureCubemaps(mem_ptr left, mem_ptr front, mem_ptr right, mem_ptr back, mem_ptr bottom, mem_ptr top, int width, int height, image_color_type colorType)
+	void texture_manager::transmitTextureCubemaps(mem_ptr left, mem_ptr front, mem_ptr right, mem_ptr back, mem_ptr bottom, mem_ptr top, int width, int height, image_color_type colorType)
 	{
 		GLenum internalFormat;
 		GLenum format;
@@ -687,157 +1322,425 @@ namespace de
 	}
 
     /*
-	======================
-	gl_framebuffer::create
-	======================
+	===========================
+	framebuffer_manager::create
+	===========================
 	*/
-    gl_framebuffer_int gl_framebuffer::create()
+    framebuffer_id framebuffer_manager::create(const char *name)
     {
         gl_framebuffer_int fbo;
         DE_GL_CALL(glGenFramebuffers(1, &fbo));
 
-        return fbo;
+        auto &el = m_Framebuffers.insert(name, pair(fbo, static_cast<texture_id>(0)));
+
+        return el.key;
     }
 
     /*
-	====================
-	gl_framebuffer::bind
-	====================
+	============================
+	framebuffer_manager::rawBind
+	============================
 	*/
-    void gl_framebuffer::bind(gl_framebuffer_int fbo)
+    void framebuffer_manager::rawBind(gl_framebuffer_int fbo)
     {
         DE_GL_CALL(glBindFramebuffer(GL_FRAMEBUFFER, fbo));
+
+        m_CurrentlyBound = fbo;
     }
 
     /*
-	=====================
-	gl_framebuffer::check
-	=====================
+	=========================
+	framebuffer_manager::bind
+	=========================
 	*/
-    bool gl_framebuffer::check()
+    bool framebuffer_manager::bind(framebuffer_id fbo)
+    {
+        auto el = m_Framebuffers[fbo];
+        if(el == nullptr)
+            return false;
+
+        rawBind(el->value.value1());
+        m_CurrentID = fbo;
+
+        return true;
+    }
+
+    /*
+	=========================
+	framebuffer_manager::bind
+	=========================
+	*/
+    bool framebuffer_manager::bind(const char *name)
+    {
+        auto el = m_Framebuffers[name];
+        if(el == nullptr)
+            return false;
+
+        rawBind(el->value.value1());
+        m_CurrentID = el->key;
+
+        return true;
+    }
+
+    /*
+	==========================
+	framebuffer_manager::check
+	==========================
+	*/
+    bool framebuffer_manager::check()
     {
         return DE_GL_CALLV(glCheckFramebufferStatus(GL_FRAMEBUFFER)) == GL_FRAMEBUFFER_COMPLETE;
     }
 
     /*
-	===========================
-	gl_framebuffer::bindDefault
-	===========================
+	================================
+	framebuffer_manager::bindDefault
+	================================
 	*/
-    void gl_framebuffer::bindDefault()
+    void framebuffer_manager::bindDefault()
     {
         DE_GL_CALL(glBindFramebuffer(GL_FRAMEBUFFER, 0));
+        m_CurrentlyBound = 0;
+        m_CurrentID = 0;
     }
 
     /*
-	=======================
-	gl_framebuffer::destroy
-	=======================
+	===============================
+	framebuffer_manager::rawDestroy
+	===============================
 	*/
-    void gl_framebuffer::destroy(gl_framebuffer_int fbo)
+    void framebuffer_manager::rawDestroy(gl_framebuffer_int fbo)
     {
         DE_GL_CALL(glDeleteFramebuffers(1, &fbo));
     }
 
     /*
-	=============================
-	gl_framebuffer::attachTexture
-	=============================
+	============================
+	framebuffer_manager::destroy
+	============================
 	*/
-    void gl_framebuffer::attachTexture(int width, int height)
+    bool framebuffer_manager::destroy(framebuffer_id fbo, bool destroyTexture)
     {
-        unsigned int texture;
+        auto el = m_Framebuffers[fbo];
+        if(el == nullptr)
+            return false;
 
-        // Génère une nouvelle texture.
-        DE_GL_CALL(glGenTextures(1, &texture));
-        DE_GL_CALL(glBindTexture(GL_TEXTURE_2D, texture));
+        if(destroyTexture)
+            texture_manager::destroy(el->value.value2());
 
-        // Crée la texture.
-        DE_GL_CALL(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr));
+        rawDestroy(el->value.value1());
+        m_Framebuffers.remove(el->key);
 
-        DE_GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
-        DE_GL_CALL(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+        return true;
+    }
+
+    /*
+	============================
+	framebuffer_manager::destroy
+	============================
+	*/
+    bool framebuffer_manager::destroy(const char *name, bool destroyTexture)
+    {
+        auto el = m_Framebuffers[name];
+        if(el == nullptr)
+            return false;
+
+        if(destroyTexture)
+            texture_manager::destroy(el->value.value2());
+
+        rawDestroy(el->value.value1());
+        m_Framebuffers.remove(el->key);
+
+        return true;
+    }
+
+    /*
+	==================================
+	framebuffer_manager::attachTexture
+	==================================
+	*/
+    bool framebuffer_manager::attachTexture(texture_id texture)
+    {
+        auto el = texture_manager::get(texture);
+        if(el == nullptr)
+            return false;
 
         // Attache la texture au framebuffer.
-        DE_GL_CALL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, texture, 0));
+        DE_GL_CALL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, el->value, 0));
+        m_Framebuffers[m_CurrentID]->value.value2() = texture;
+
+        return true;
     }
 
     /*
 	==================================
-	gl_framebuffer::attachRenderbuffer
+	framebuffer_manager::attachTexture
 	==================================
 	*/
-    void gl_framebuffer::attachRenderbuffer(gl_renderbuffer_int rbo)
+    bool framebuffer_manager::attachTexture(const char *name)
     {
-        DE_GL_CALL(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo));
+        auto el = texture_manager::get(name);
+        if(el == nullptr)
+            return false;
+
+        // Attache la texture au framebuffer.
+        DE_GL_CALL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, el->value, 0));
+        m_Framebuffers[m_CurrentID]->value.value2() = el->value;
+
+        return true;
     }
 
     /*
-	=======================
-	gl_renderbuffer::create
-	=======================
+	=======================================
+	framebuffer_manager::attachRenderbuffer
+	=======================================
 	*/
-    gl_renderbuffer_int gl_renderbuffer::create()
+    bool framebuffer_manager::attachRenderbuffer(framebuffer_id fbo)
+    {
+        auto el = m_Framebuffers[fbo];
+        if(el == nullptr)
+            return false;
+
+        DE_GL_CALL(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, el->value.value1()));
+
+        return true;
+    }
+
+    /*
+	==================================
+	framebuffer_manager::attachRenderbuffer
+	==================================
+	*/
+    bool framebuffer_manager::attachRenderbuffer(const char *name)
+    {
+        auto el = m_Framebuffers[name];
+        if(el == nullptr)
+            return false;
+
+        DE_GL_CALL(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, el->value.value1()));
+
+        return true;
+    }
+
+    /*
+	============================
+	renderbuffer_manager::create
+	============================
+	*/
+    renderbuffer_id renderbuffer_manager::create(const char *name)
     {
         gl_renderbuffer_int rbo;
         DE_GL_CALL(glGenRenderbuffers(1, &rbo));
 
-        return rbo;
+        auto &el = m_Renderbuffers.insert(name, rbo);
+
+        return el.key;
     }
 
     /*
-	=====================
-	gl_renderbuffer::bind
-	=====================
+	=============================
+	renderbuffer_manager::rawBind
+	=============================
 	*/
-    void gl_renderbuffer::bind(gl_renderbuffer_int rbo)
+    void renderbuffer_manager::rawBind(gl_renderbuffer_int rbo)
     {
         DE_GL_CALL(glBindRenderbuffer(GL_RENDERBUFFER, rbo));
     }
 
     /*
-	============================
-	gl_renderbuffer::bindDefault
-	============================
+	==========================
+	renderbuffer_manager::bind
+	==========================
 	*/
-    void gl_renderbuffer::bindDefault()
+    bool renderbuffer_manager::bind(renderbuffer_id rbo)
     {
-        DE_GL_CALL(glBindRenderbuffer(GL_RENDERBUFFER, 0));
+        auto el = m_Renderbuffers[rbo];
+        if(el == nullptr)
+            return false;
+
+        rawBind(el->value);
+        m_CurrentID = rbo;
+
+        return true;
     }
 
     /*
-	======================
-	gl_renderbuffer::store
-	======================
+	==========================
+	renderbuffer_manager::bind
+	==========================
 	*/
-    void gl_renderbuffer::store(int width, int height)
+    bool renderbuffer_manager::bind(const char *name)
+    {
+        auto el = m_Renderbuffers[name];
+        if(el == nullptr)
+            return false;
+
+        rawBind(el->value);
+        m_CurrentID = el->key;
+
+        return true;
+    }
+
+    /*
+	=================================
+	renderbuffer_manager::bindDefault
+	=================================
+	*/
+    void renderbuffer_manager::bindDefault()
+    {
+        DE_GL_CALL(glBindRenderbuffer(GL_RENDERBUFFER, 0));
+
+        m_CurrentlyBound = 0;
+        m_CurrentID = 0;
+    }
+
+    /*
+	===========================
+	renderbuffer_manager::store
+	===========================
+	*/
+    void renderbuffer_manager::store(int width, int height)
     {
         DE_GL_CALL(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height));
     }
 
     /*
-	============================
-	gl_framerenderbuffer::create
-	============================
+	================================
+	renderbuffer_manager::rawDestroy
+	================================
 	*/
-    bool gl_framerenderbuffer::create(int width, int height)
+    void renderbuffer_manager::rawDestroy(gl_renderbuffer_int rbo)
     {
-        m_Framebuffer = gl_framebuffer::create();
-        gl_framebuffer::bind(m_Framebuffer);
-        gl_framebuffer::attachTexture(width, height);
+        DE_GL_CALL(glDeleteRenderbuffers(1, &rbo));
+    }
 
-        m_Renderbuffer = gl_renderbuffer::create();
-        gl_renderbuffer::bind(m_Renderbuffer);
-        gl_renderbuffer::store(width, height);
-        gl_renderbuffer::bindDefault();
+    /*
+	=============================
+	renderbuffer_manager::destroy
+	=============================
+	*/
+    bool renderbuffer_manager::destroy(renderbuffer_id rbo)
+    {
+        auto el = m_Renderbuffers[rbo];
+        if(el == nullptr)
+            return false;
 
-        gl_framebuffer::attachRenderbuffer(m_Renderbuffer);
+        rawDestroy(el->value);
+        m_Renderbuffers.remove(el->key);
 
-        bool ret = gl_framebuffer::check();
+        return true;
+    }
 
-        gl_framebuffer::bindDefault();
+    /*
+	=============================
+	renderbuffer_manager::destroy
+	=============================
+	*/
+    bool renderbuffer_manager::destroy(const char *name)
+    {
+        auto el = m_Renderbuffers[name];
+        if(el == nullptr)
+            return false;
 
-        return ret;
+        rawDestroy(el->value);
+        m_Renderbuffers.remove(el->key);
+
+        return true;
+    }
+
+    /*
+	=========================
+	framerenderbuffer::create
+	=========================
+	*/
+    bool framerenderbuffer::create(const char *name, int width, int height)
+    {
+        // Crée un framebuffer.
+        m_Framebuffer = framebuffer_manager::create(name);
+        framebuffer_manager::bind(m_Framebuffer);
+
+        string strName = name;
+        strName.append("_fb");
+
+        // Alloue de la place pour stocker la texture du framebuffer.
+        texture_id texture = texture_manager::create(strName.str());
+        texture_manager::bind(texture, 0);
+        texture_manager::allocSpace(width, height);
+        texture_manager::setTextureFiltering(gl_texture_filter::Linear);
+
+        // Indique que le framebuffer doit utiliser la place précédemment allouée.
+        framebuffer_manager::attachTexture(texture);
+
+        // Crée un renderbuffer.
+        m_Renderbuffer = renderbuffer_manager::create(name);
+        renderbuffer_manager::bind(m_Renderbuffer);
+        renderbuffer_manager::store(width, height);     // Indique la taille du renderbuffer, a la même taille que le framebuffer car ils seront liés.
+        renderbuffer_manager::bindDefault();
+
+        // Lie le renderbuffer au framebuffer.
+        framebuffer_manager::attachRenderbuffer(m_Renderbuffer);
+
+        // Vérifie que le framebuffer a bien été créé et fonctionnel.
+        bool ret = framebuffer_manager::check();
+
+        framebuffer_manager::bindDefault();
+
+        if(!ret)
+        {
+            renderbuffer_manager::destroy(m_Renderbuffer);
+            texture_manager::destroy(texture);
+            framebuffer_manager::destroy(m_Framebuffer);
+
+            return false;
+        }
+
+        strName = name;
+        strName.append("_vbo");
+        m_VBO = vbo_manager::create(strName.str());
+
+        string vaoName = name;
+        vaoName.append("_vao");
+        m_VAO = vao_manager::create(vaoName.str());
+
+        float vPos[] =
+        {
+			// Positions  // Coordonnées de texture
+            -1.0f, 1.0f, 0.0f, 1.0f,
+            -1.0f, -1.0f, 0.0f, 0.0f,
+            1.0f, -1.0f, 1.0f, 0.0f,
+            
+
+            -1.0f, 1.0f, 0.0f, 1.0f,
+            1.0f, -1.0f, 1.0f, 0.0f,
+            1.0f, 1.0f, 1.0f, 1.0f
+		};
+
+        memory_chunk chunk(vPos, sizeof(vPos));
+
+        vbo_manager::bind(m_VBO);
+        vao_manager::bind(m_VAO);
+
+        vbo_manager::transmitData(chunk);
+		vbo_manager::setVerticesNumber(6);
+
+        vbo_manager::addAttribute(0, gl_attrib_components_number::x2, gl_type::Float, 4 * sizeof(float), 0);
+		vbo_manager::addAttribute(1, gl_attrib_components_number::x2, gl_type::Float, 4 * sizeof(float), 2 * sizeof(float));
+
+        vao_manager::bindDefault();
+        vbo_manager::bindDefault();
+
+        return true;
+    }
+
+    /*
+	==========================
+	framerenderbuffer::destroy
+	==========================
+	*/
+    void framerenderbuffer::destroy()
+    {
+        renderbuffer_manager::destroy(m_Renderbuffer);
+        framebuffer_manager::destroy(m_Framebuffer, true);
     }
 
 }

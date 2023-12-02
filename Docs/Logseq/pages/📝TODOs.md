@@ -11,7 +11,7 @@
 	- TODO Trier les listes de String.
 	- TODO Faire un loader de meshes.
 - Stockage
-	- TODO Créer un format pour stocker des données hiérarchiques.
+	- DONE Créer un format pour stocker des données hiérarchiques.
 	- TODO Créer un format pour stocker les ressources.
 - Modding
 	- TODO Gestion des mods en Lua.
@@ -20,3 +20,4 @@
 	- DONE Afficher les entités présentes dans une scène.
 	- TODO Gérer les entités présentes dans une scène.
 	-
+-

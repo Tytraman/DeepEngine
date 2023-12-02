@@ -64,6 +64,10 @@
 #define DE_FILE_NAME __FILE__
 #define DE_LINE __LINE__
 
+#if _DEBUG
+#define DE_DEBUG 1
+#endif
+
 #define DE_PACK( __Declaration__ ) __pragma( pack(push, 1) ) __Declaration__ __pragma( pack(pop))
 
 #if DEEPENGINE_LIB
@@ -86,5 +90,15 @@
 #define de DeepEngine
 
 #define DE_DEG_RAD(__deg) (__deg * (float) M_PI / 180.0f)
+
+#define DE_TERM_ESC        "\033"
+#define DE_TERM_RESET      DE_TERM_ESC "[39;49m"
+#define DE_TERM_FG_RED     DE_TERM_ESC "[31m"
+#define DE_TERM_FG_GREEN   DE_TERM_ESC "[32m"
+#define DE_TERM_FG_YELLOW  DE_TERM_ESC "[33m"
+#define DE_TERM_FG_BLUE    DE_TERM_ESC "[34m"
+#define DE_TERM_FG_MAGENTA DE_TERM_ESC "[35m"
+#define DE_TERM_FG_CYAN    DE_TERM_ESC "[36m"
+#define DE_TERM_FG_WHITE   DE_TERM_ESC "[37m"
 
 #endif
