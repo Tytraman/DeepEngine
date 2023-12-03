@@ -41,6 +41,8 @@ namespace de
 			static uint64_t getCurrentTimeMillis();
 			static void sleep(uint32_t millis);
 
+            static void getLocalTime(uint32_t *year, uint32_t *month, uint32_t *day, uint32_t *hour, uint32_t *minute, uint32_t *second, uint32_t *millis);
+
 			static const char *getPwd();
 
         private:
@@ -51,7 +53,13 @@ namespace de
 
 	};
 
-	inline uint64_t core::getTick() {
+    /*
+    =============
+    core::getTick
+    =============
+    */
+	inline uint64_t core::getTick()
+    {
 #ifdef DE_WINDOWS
 		return GetTickCount64() - m_InitTime;
 #else
@@ -59,6 +67,11 @@ namespace de
 #endif
 	}
 
+    /*
+    ===========
+    core::sleep
+    ===========
+    */
 	inline void core::sleep(uint32_t millis)
 	{
 #ifdef DE_WINDOWS

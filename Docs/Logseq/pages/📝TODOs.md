@@ -3,16 +3,31 @@
 - Visuel
 	- TODO Ajouter le support des images RGB et RGBA.
 	- TODO Ajouter les animations d'images.
-	- TODO Ajouter le post-processing.
+	- DONE Ajouter le post-processing.
+		- TODO Changer la taille du framebuffer quand la résolution change.
+	- TODO Plusieurs textures pour un même objet.
+	- TODO Pouvoir afficher du texte.
+	- TODO Effets de lumières.
+	- TODO Effets d'ombres.
 - Mémoire
 	- TODO Gestion de données par Queue.
 	- DONE Gestion de données par Stack.
 	- TODO Trier les listes de types primitifs.
 	- TODO Trier les listes de String.
+	- TODO Stocker les emplacements d'uniformes pour éviter de les chercher à chaque frame.
+- Traitement
+	- TODO Faire un parseur de shader.
+	- TODO Faire un loader de polices d'écriture.
 	- TODO Faire un loader de meshes.
 - Stockage
 	- DONE Créer un format pour stocker des données hiérarchiques.
 	- TODO Créer un format pour stocker les ressources.
+	- TODO Utiliser File Object pour stocker des mondes.
+		- TODO Se renseigner sur les différentes manières de charger un monde.
+	- DONE Sauvegarder une texture en tant qu'image.
+	- DONE Pouvoir faire des screenshots.
+- API
+	- TODO Définir des uniformes prédéfinis par le moteur *(deTime, dePos, deColor...)*
 - Modding
 	- TODO Gestion des mods en Lua.
 - Debug

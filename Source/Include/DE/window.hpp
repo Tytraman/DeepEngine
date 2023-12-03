@@ -82,6 +82,7 @@ namespace de
 			const char *getTitle() const;
 			gl_renderer &getRenderer();
 			bool isShowingDebugPanel() const;
+            framerenderbuffer m_FRB;
 
 
 			//===== SETTERS =====//

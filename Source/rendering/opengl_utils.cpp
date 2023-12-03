@@ -1,5 +1,6 @@
 #include <DE/rendering/opengl_utils.hpp>
 #include <DE/string_utils.hpp>
+#include <DE/image/bmp.hpp>
 
 #include <stdio.h>
 
@@ -1507,9 +1508,9 @@ namespace de
     }
 
     /*
-	==================================
+	=======================================
 	framebuffer_manager::attachRenderbuffer
-	==================================
+	=======================================
 	*/
     bool framebuffer_manager::attachRenderbuffer(const char *name)
     {
@@ -1647,6 +1648,38 @@ namespace de
 
         return true;
     }
+    /*
+	=======================================
+	framebuffer_manager::saveTextureAsImage
+	=======================================
+	*/
+    bool framebuffer_manager::saveTextureAsImage(int width, int height, const char *filedest)
+    {
+        uint8_t *buffer = static_cast<uint8_t *>(mem::alloc(static_cast<uint64_t>(width) * height * sizeof(uint8_t) * 4));
+        if(buffer == nullptr)
+            return false;
+
+        // Cette fonction permet de récupérer l'ensemble des pixels du framebuffer actif.
+        // Après plusieurs tests, il semblerait que si le format est GL_RGB,
+        // l'octet correspondant à la transparence est mis à 0 au lieu d'être ignoré.
+        // Donc autant utiliser GL_RGBA ou GL_BGRA.
+        DE_GL_CALL(glReadPixels(0, 0, width, height, GL_BGRA, GL_UNSIGNED_BYTE, buffer));   // GL_BGRA est utilisé car le format BMP stock les pixels dans ce format.
+
+        bmp image;
+        if(!image.create(width, height, 32, image_color_type::RGBA))
+        {
+            mem::free(buffer);
+            return false;
+        }
+
+        image.convertRaw(buffer);
+        image.save(filedest);
+        image.destroy();
+
+        mem::free(buffer);
+
+        return true;
+    }
 
     /*
 	=========================
@@ -1729,6 +1762,9 @@ namespace de
         vao_manager::bindDefault();
         vbo_manager::bindDefault();
 
+        m_Width = width;
+        m_Height = height;
+
         return true;
     }
 
@@ -1741,6 +1777,25 @@ namespace de
     {
         renderbuffer_manager::destroy(m_Renderbuffer);
         framebuffer_manager::destroy(m_Framebuffer, true);
+    }
+
+    /*
+	=====================================
+	framerenderbuffer::saveTextureAsImage
+	=====================================
+	*/
+    bool framerenderbuffer::saveTextureAsImage(const char *destpath)
+    {
+        framebuffer_id currentBuffer = framebuffer_manager::currentID();
+
+        if(!framebuffer_manager::bind(m_Framebuffer))
+            return false;
+
+        bool ret = framebuffer_manager::saveTextureAsImage(m_Width, m_Height, destpath);
+
+        framebuffer_manager::bind(currentBuffer);
+
+        return ret;
     }
 
 }

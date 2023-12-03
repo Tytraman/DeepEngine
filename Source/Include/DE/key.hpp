@@ -51,6 +51,7 @@ namespace de
 		Space  = SDLK_SPACE,
 		Insert = SDLK_INSERT,
 
+        F2  = SDLK_F2,
 		F11 = SDLK_F11,
 		F12 = SDLK_F12
 

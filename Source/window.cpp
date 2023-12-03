@@ -4,6 +4,7 @@
 #include <DE/key.hpp>
 #include <DE/ecs/scene.hpp>
 #include <DE/ecs/system.hpp>
+#include <DE/resources.hpp>
 #include <DE/rendering/opengl_utils.hpp>
 
 #include <glad/glad.h>
@@ -25,6 +26,7 @@ namespace de
 	void window::internalEventCallback(devent e)
 	{
 		static bool insertPressed = false;
+        static bool f2Pressed     = false;
 		static bool f11Pressed    = false;
 		static int lastWindowWidth  = getWidth();
 		static int lastWindowHeight = getHeight();
@@ -40,6 +42,7 @@ namespace de
                 {
 					default:
                         break;
+                    // Debug menu toggle.
 					case dkey::Insert:
                     {
 						if(!insertPressed)
@@ -50,6 +53,38 @@ namespace de
 							insertPressed = true;
 						}
 					} break;
+                    // Screenshot.
+                    case dkey::F2:
+                    {
+                        if(!f2Pressed)
+                        {
+                            f2Pressed = true;
+
+                            uint32_t year, month, day, hour, minute, second;
+
+                            core::getLocalTime(&year, &month, &day, &hour, &minute, &second, nullptr);
+                            string destpath = resource_manager::getScreenshotsFolder();
+                            destpath.append("screenshot_");
+                            destpath.append(std::to_string(year).c_str());
+                            destpath.append("_");
+                            destpath.append(std::to_string(month).c_str());
+                            destpath.append("_");
+                            destpath.append(std::to_string(day).c_str());
+                            destpath.append("_");
+                            destpath.append(std::to_string(hour).c_str());
+                            destpath.append("_");
+                            destpath.append(std::to_string(minute).c_str());
+                            destpath.append("_");
+                            destpath.append(std::to_string(second).c_str());
+                            destpath.append(".bmp");
+
+                            if(m_FRB.saveTextureAsImage(destpath.str()))
+                            {
+                                printf(DE_TERM_FG_GREEN "Screeshot saved" DE_TERM_RESET ": %s\n", destpath.str());
+                            }
+                        }
+                    } break;
+                    // Fullscreen toggle.
 					case dkey::F11:
                     {
 						if(!f11Pressed)
@@ -87,13 +122,16 @@ namespace de
                         break;
 					case dkey::Insert:
                     {
-						if(insertPressed)
-							insertPressed = false;
+						insertPressed = false;
 					} break;
+                    case dkey::F2:
+                    {
+                        f2Pressed = false;
+                    } break;
 					case dkey::F11:
                     {
-						if(f11Pressed)
-							f11Pressed = false;
+						
+						f11Pressed = false;
 					} break;
 				}
 			} break;
@@ -186,6 +224,11 @@ namespace de
 
 		texture_manager::setWhiteTexture(whiteTex);
 
+        if(!win.m_FRB.create("primary_framebuffer", win.getWidth(), win.getHeight()))
+        {
+            fprintf(stderr, "Unable to create the Frame Render Buffer.\n");
+        }
+
 		return error_status::NoError;
 	}
 
@@ -240,13 +283,6 @@ namespace de
 
 		// Met à jour l'état du clavier.
 		key::update();
-
-        framerenderbuffer frb;
-        if(!frb.create("primary_framebuffer", getWidth(), getHeight()))
-        {
-            fprintf(stderr, "Unable to create the Frame Render Buffer.\n");
-            return;
-        }
 
 		// Boucle infinie du jeu.
 		uint64_t startTime = core::getCurrentTimeMillis(), endTime;
@@ -311,7 +347,7 @@ namespace de
 			}
 
 			// Fait le rendu final de la frame !
-			system_manager::renderSystem(m_Renderer, frb, sceneID);
+			system_manager::renderSystem(m_Renderer, m_FRB, sceneID);
 
 			end = core::getTick();
 

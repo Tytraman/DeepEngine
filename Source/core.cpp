@@ -20,11 +20,15 @@ namespace de
 	#error Need implementation
 	#endif
 
+    /*
+    ======================
+    core::getMousePosition
+    ======================
+    */
 	uint32_t core::getMousePosition(int *x, int *y)
 	{
 		return SDL_GetMouseState(x, y);
 	}
-
 
     /*
 	==========
@@ -193,6 +197,11 @@ end:
         return ret;
     }
 
+    /*
+    ==============
+    core::shutdown
+    ==============
+    */
 	void core::shutdown()
 	{
 		im_gui_window::shutdown();
@@ -200,6 +209,11 @@ end:
 		SDL_Quit();
 	}
 
+    /*
+    ==========================
+    core::getCurrentTimeMillis
+    ==========================
+    */
 	uint64_t core::getCurrentTimeMillis()
 	{
 		FILETIME t;
@@ -210,6 +224,47 @@ end:
 		return millis;
 	}
 
+    /*
+    ==================
+    core::getLocalTime
+    ==================
+    */
+    void core::getLocalTime(uint32_t *year, uint32_t *month, uint32_t *day, uint32_t *hour, uint32_t *minute, uint32_t *second, uint32_t *millis)
+    {
+#if DE_WINDOWS
+        SYSTEMTIME st;
+        GetLocalTime(&st);
+
+        if(year != nullptr)
+            *year = st.wYear;
+
+        if(month != nullptr)
+            *month = st.wMonth;
+
+        if(day != nullptr)
+            *day = st.wDay;
+
+        if(hour != nullptr)
+            *hour = st.wHour;
+
+        if(minute != nullptr)
+            *minute = st.wMinute;
+
+        if(second != nullptr)
+            *second = st.wSecond;
+
+        if(millis != nullptr)
+            *millis = st.wMilliseconds;
+#else
+#error Need implementation.
+#endif
+    }
+
+    /*
+    ============
+    core::getPwd
+    ============
+    */
 	const char *core::getPwd()
 	{
 		static string p;
@@ -228,6 +283,11 @@ end:
 
 }
 
+/*
+================
+de_core_get_tick
+================
+*/
 de_uint64 de_core_get_tick() {
 	return de::core::getTick();
 }

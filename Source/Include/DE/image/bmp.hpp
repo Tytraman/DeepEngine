@@ -66,6 +66,8 @@ namespace de
 			bool create(int32_t width, int32_t height, uint16_t colorDepth, image_color_type colorType);
 			void destroy();
 
+            void convertRaw(uint8_t *raw);
+
 			void convertFrom(png &png);
 			bool save(const char *filename);
 

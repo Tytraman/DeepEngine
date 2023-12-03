@@ -34,6 +34,7 @@ namespace de
     string resource_manager::m_ShadersFolder;
     string resource_manager::m_TexturesFolder;
     string resource_manager::m_SoundsFolder;
+    string resource_manager::m_ScreenshotsFolder;
 
     bool enum_shaders_config_fobj(file_object_container &container, string &currentPath, mem_ptr args)
     {
@@ -97,11 +98,15 @@ namespace de
 		m_SoundsFolder = m_ResourcesFolder;
 		m_SoundsFolder.append("sounds\\");
 
+        m_ScreenshotsFolder = m_ResourcesFolder;
+        m_ScreenshotsFolder.append("screenshots\\");
+
 		// Création des dossiers.
 		CreateDirectoryA(m_ResourcesFolder.str(), NULL);
 		CreateDirectoryA(m_ShadersFolder.str(), NULL);
 		CreateDirectoryA(m_TexturesFolder.str(), NULL);
 		CreateDirectoryA(m_SoundsFolder.str(), NULL);
+        CreateDirectoryA(m_ScreenshotsFolder.str(), NULL);
 
         string shadersConfig(m_ShadersFolder);
         shadersConfig.append("shaders.fobj");

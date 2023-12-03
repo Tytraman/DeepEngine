@@ -20,9 +20,9 @@ namespace de {
 	{ }
 
 	/*
-	=============
+	===========
 	bmp::create
-	=============
+	===========
 	*/
 	bool bmp::create(int32_t width, int32_t height, uint16_t colorDepth, image_color_type colorType)
 	{
@@ -111,10 +111,10 @@ namespace de {
 				
 				bmpInfoHeader->compressionMethod = 3;    // BI_BITFIELD; Permet d'indiquer un masque de couleur pour chaque channel.
 
-				v4Header->redChannelBitmask   = 0xFF000000;
-				v4Header->greenChannelBitmask = 0x00FF0000;
-				v4Header->blueChannelBitmask  = 0x0000FF00;
-				v4Header->alphaChannelBitmask = 0x000000FF;
+				v4Header->redChannelBitmask   = 0x00FF0000;
+				v4Header->greenChannelBitmask = 0x0000FF00;
+				v4Header->blueChannelBitmask  = 0x000000FF;
+				v4Header->alphaChannelBitmask = 0xFF000000;
 				v4Header->colorSpaceType = ImageColorSpaceSRGB;
 				memset(v4Header->endpoints, 0, sizeof(v4Header->endpoints));            // Les endpoints ne sont pas utilisés lorsque l'espace de couleurs est sRGB.
 				v4Header->gammaRed = v4Header->gammaGreen = v4Header->gammaBlue = 0;    // Les gammas ne sont pas utilisés lorsque l'espace de couleurs est sRGB.
@@ -125,9 +125,9 @@ namespace de {
 	}
 
 	/*
-	==============
+	============
 	bmp::destroy
-	==============
+	============
 	*/
 	void bmp::destroy()
 	{
@@ -135,10 +135,54 @@ namespace de {
 		m_RowSize = 0;
 	}
 
+    void bmp::convertRaw(uint8_t *raw)
+    {
+        int32_t cols = m_Width;
+        int32_t rows = m_Height;
+
+        uint8_t * memData = (uint8_t *) m_MemoryChunk.data();
+        uint8_t *data = memData + ((bmp_file_header *) memData)->imageDataOffset;
+        bmp_info_header *infoHeader = (bmp_info_header *) (memData + sizeof(bmp_file_header));
+
+        uint8_t b;
+
+        // Correspond aux nombres d'octets par pixels, dans le cas de RGB, 3 pixels sont nécessaires.
+		uint8_t bytes;
+
+		if(infoHeader->size == sizeof(bmp_info_header))
+			bytes = 3;
+		else if(infoHeader->size == sizeof(bmp_v4_header))
+			bytes = 4;
+		else
+			return;
+
+        uint8_t *r = raw;
+
+        int32_t row, col;
+		uint32_t empty = m_RowSize % bytes;
+
+        // Parcourt toutes les lignes.
+		for(row = 0; row < rows; ++row)
+        {
+			// Parcourt toutes les colonnes de la ligne en cours.
+			for(col = 0; col < cols; ++col)
+            {
+				for(b = 0; b < bytes; ++b, ++data, ++r)
+                {
+					*data = *r;
+				}
+			}
+
+			// Rempli le padding de 0s.
+			memset(data, 0, empty);
+			data += empty;
+		}
+    }
+
 	/*
-	==================
+	================
 	bmp::convertFrom
-	==================
+	================
 	*/
 	void bmp::convertFrom(png &png)
 	{
@@ -166,16 +210,19 @@ namespace de {
 		uint32_t empty = m_RowSize % bytes;
 
 		// Parcourt toutes les lignes.
-		for(row = 0; row < rows; ++row, --r) {
+		for(row = 0; row < rows; ++row, --r)
+        {
 			// Parcourt toutes les colonnes de la ligne en cours.
-			for(column = 0; column < columns; ++column) {
-				for(b = 0; b < bytes; ++b) {
-					uint8_t gg = *(data + b) = (*r)[column * bytes + bytes - 1 - b];
-					int o =0;
+			for(column = 0; column < columns; ++column)
+            {
+				for(b = 0; b < bytes; ++b)
+                {
+					*(data + b) = (*r)[column * bytes + bytes - 1 - b];
 				}
 					
 				data += bytes;
 			}
+
 			// Rempli le padding de 0s.
 			memset(data, 0, empty);
 			data += empty;
@@ -183,9 +230,9 @@ namespace de {
 	}
 
 	/*
-	===========
+	=========
 	bmp::save
-	===========
+	=========
 	*/
 	bool bmp::save(const char *filename)
 	{

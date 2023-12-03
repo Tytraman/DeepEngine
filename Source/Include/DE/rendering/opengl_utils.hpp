@@ -619,6 +619,8 @@ namespace de
             static bool attachRenderbuffer(framebuffer_id fbo);
             static bool attachRenderbuffer(const char *name);
 
+            static bool saveTextureAsImage(int width, int height, const char *filedest);
+
             static hash_entry<pair<gl_framebuffer_int, texture_id>> *get(framebuffer_id fbo);
             static hash_entry<pair<gl_framebuffer_int, texture_id>> *get(const char *name);
 
@@ -767,16 +769,22 @@ namespace de
 
             void destroy();
 
+            bool saveTextureAsImage(const char *destpath);
+
             framebuffer_id framebuffer() const;
             renderbuffer_id renderbuffer() const;
             vbo_id vbo() const;
             vao_id vao() const;
+            int width() const;
+            int height() const;
 
         private:
             framebuffer_id m_Framebuffer;
             renderbuffer_id m_Renderbuffer;
             vbo_id m_VBO;
             vao_id m_VAO;
+            int m_Width;
+            int m_Height;
 
     };
 
@@ -818,6 +826,26 @@ namespace de
     inline vao_id framerenderbuffer::vao() const
     {
         return m_VAO;
+    }
+
+    /*
+	========================
+	framerenderbuffer::width
+	========================
+	*/
+    inline int framerenderbuffer::width() const
+    {
+        return m_Width;
+    }
+
+    /*
+	=========================
+	framerenderbuffer::height
+	=========================
+	*/
+    inline int framerenderbuffer::height() const
+    {
+        return m_Height;
     }
 
     class DE_API gl_renderer
