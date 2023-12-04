@@ -95,6 +95,8 @@ namespace de
 								SDL_SetWindowSize(m_Window, lastWindowWidth, lastWindowHeight);
 								gpu_core::updateViewport(lastWindowWidth, lastWindowHeight);
 								setCursorPos(getWidth() / 2, getHeight() / 2);
+
+                                m_FRB.resize("primary_frb", lastWindowWidth, lastWindowHeight);
 							}
                             else
                             {
@@ -108,6 +110,8 @@ namespace de
 								gpu_core::updateViewport(DM.w, DM.h);
 								SDL_SetWindowFullscreen(m_Window, SDL_WINDOW_FULLSCREEN);
 								setCursorPos(getWidth() / 2, getHeight() / 2);
+
+                                m_FRB.resize("primary_frb", DM.w, DM.h);
 							}
 							f11Pressed = true;
 						}
@@ -224,7 +228,7 @@ namespace de
 
 		texture_manager::setWhiteTexture(whiteTex);
 
-        if(!win.m_FRB.create("primary_framebuffer", win.getWidth(), win.getHeight()))
+        if(!win.m_FRB.create("primary_frb", win.getWidth(), win.getHeight()))
         {
             fprintf(stderr, "Unable to create the Frame Render Buffer.\n");
         }

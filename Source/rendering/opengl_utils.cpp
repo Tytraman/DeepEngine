@@ -33,7 +33,7 @@ namespace de
 
     gl_framebuffer_int framebuffer_manager::m_CurrentlyBound = 0;
     framebuffer_id framebuffer_manager::m_CurrentID = 0;
-    hash_table<pair<gl_framebuffer_int, texture_id>> framebuffer_manager::m_Framebuffers;
+    hash_table<framebuffer_item> framebuffer_manager::m_Framebuffers;
 
     hash_table<gl_renderbuffer_int> renderbuffer_manager::m_Renderbuffers;
     gl_renderbuffer_int renderbuffer_manager::m_CurrentlyBound = 0;
@@ -1323,6 +1323,17 @@ namespace de
 	}
 
     /*
+	==================================
+	framebuffer_item::framebuffer_item
+	==================================
+	*/
+    framebuffer_item::framebuffer_item(gl_framebuffer_int _fbo)
+        : fbo(_fbo),
+          texture(0),
+          rbo(0)
+    { }
+
+    /*
 	===========================
 	framebuffer_manager::create
 	===========================
@@ -1332,7 +1343,7 @@ namespace de
         gl_framebuffer_int fbo;
         DE_GL_CALL(glGenFramebuffers(1, &fbo));
 
-        auto &el = m_Framebuffers.insert(name, pair(fbo, static_cast<texture_id>(0)));
+        auto &el = m_Framebuffers.insert(name, framebuffer_item(fbo));
 
         return el.key;
     }
@@ -1360,8 +1371,15 @@ namespace de
         if(el == nullptr)
             return false;
 
-        rawBind(el->value.value1());
+        rawBind(el->value.fbo);
         m_CurrentID = fbo;
+
+        auto al = renderbuffer_manager::m_Renderbuffers[el->value.rbo];
+        if(al != nullptr)
+        {
+            renderbuffer_manager::m_CurrentlyBound = al->value;
+            renderbuffer_manager::m_CurrentID = el->value.rbo;
+        }
 
         return true;
     }
@@ -1377,7 +1395,7 @@ namespace de
         if(el == nullptr)
             return false;
 
-        rawBind(el->value.value1());
+        rawBind(el->value.fbo);
         m_CurrentID = el->key;
 
         return true;
@@ -1427,9 +1445,9 @@ namespace de
             return false;
 
         if(destroyTexture)
-            texture_manager::destroy(el->value.value2());
+            texture_manager::destroy(el->value.texture);
 
-        rawDestroy(el->value.value1());
+        rawDestroy(el->value.fbo);
         m_Framebuffers.remove(el->key);
 
         return true;
@@ -1447,9 +1465,9 @@ namespace de
             return false;
 
         if(destroyTexture)
-            texture_manager::destroy(el->value.value2());
+            texture_manager::destroy(el->value.texture);
 
-        rawDestroy(el->value.value1());
+        rawDestroy(el->value.fbo);
         m_Framebuffers.remove(el->key);
 
         return true;
@@ -1466,9 +1484,13 @@ namespace de
         if(el == nullptr)
             return false;
 
+        auto al = m_Framebuffers[m_CurrentID];
+        if(al == nullptr)
+            return false;
+
         // Attache la texture au framebuffer.
         DE_GL_CALL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, el->value, 0));
-        m_Framebuffers[m_CurrentID]->value.value2() = texture;
+        al->value.texture = texture;
 
         return true;
     }
@@ -1486,7 +1508,7 @@ namespace de
 
         // Attache la texture au framebuffer.
         DE_GL_CALL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, el->value, 0));
-        m_Framebuffers[m_CurrentID]->value.value2() = el->value;
+        m_Framebuffers[m_CurrentID]->value.texture = el->value;
 
         return true;
     }
@@ -1496,13 +1518,18 @@ namespace de
 	framebuffer_manager::attachRenderbuffer
 	=======================================
 	*/
-    bool framebuffer_manager::attachRenderbuffer(framebuffer_id fbo)
+    bool framebuffer_manager::attachRenderbuffer(framebuffer_id fbo, renderbuffer_id rbo)
     {
         auto el = m_Framebuffers[fbo];
         if(el == nullptr)
             return false;
 
-        DE_GL_CALL(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, el->value.value1()));
+        auto al = renderbuffer_manager::m_Renderbuffers[rbo];
+        if(al == nullptr)
+            return false;
+
+        DE_GL_CALL(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, el->value.fbo));
+        el->value.rbo = rbo;
 
         return true;
     }
@@ -1512,15 +1539,33 @@ namespace de
 	framebuffer_manager::attachRenderbuffer
 	=======================================
 	*/
-    bool framebuffer_manager::attachRenderbuffer(const char *name)
+    bool framebuffer_manager::attachRenderbuffer(const char *fboName, const char *rboName)
     {
-        auto el = m_Framebuffers[name];
+        auto el = m_Framebuffers[fboName];
         if(el == nullptr)
             return false;
 
-        DE_GL_CALL(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, el->value.value1()));
+        auto al = renderbuffer_manager::m_Renderbuffers[rboName];
+        if(al == nullptr)
+            return false;
+
+        DE_GL_CALL(glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, el->value.fbo));
+        el->value.rbo = al->key;
 
         return true;
+    }
+
+    /*
+	===============================
+	renderbuffer_manager::rawCreate
+	===============================
+	*/
+    gl_renderbuffer_int renderbuffer_manager::rawCreate()
+    {
+        gl_renderbuffer_int rbo;
+        DE_GL_CALL(glGenRenderbuffers(1, &rbo));
+
+        return rbo;
     }
 
     /*
@@ -1530,8 +1575,7 @@ namespace de
 	*/
     renderbuffer_id renderbuffer_manager::create(const char *name)
     {
-        gl_renderbuffer_int rbo;
-        DE_GL_CALL(glGenRenderbuffers(1, &rbo));
+        gl_renderbuffer_int rbo = rawCreate();
 
         auto &el = m_Renderbuffers.insert(name, rbo);
 
@@ -1603,6 +1647,25 @@ namespace de
     void renderbuffer_manager::store(int width, int height)
     {
         DE_GL_CALL(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height));
+    }
+
+    /*
+	============================
+	renderbuffer_manager::resize
+	============================
+	*/
+    bool renderbuffer_manager::resize(int width, int height)
+    {
+        auto el = m_Renderbuffers[m_CurrentID];
+        if(el == nullptr)
+            return false;
+
+        rawDestroy(m_CurrentlyBound);
+        m_CurrentlyBound = 0;
+
+        el->value = rawCreate();
+
+        return true;
     }
 
     /*
@@ -1705,13 +1768,15 @@ namespace de
         framebuffer_manager::attachTexture(texture);
 
         // Crée un renderbuffer.
-        m_Renderbuffer = renderbuffer_manager::create(name);
+        string renderbufferName = name;
+        renderbufferName.append("_rb");
+        m_Renderbuffer = renderbuffer_manager::create(renderbufferName.str());
         renderbuffer_manager::bind(m_Renderbuffer);
         renderbuffer_manager::store(width, height);     // Indique la taille du renderbuffer, a la même taille que le framebuffer car ils seront liés.
         renderbuffer_manager::bindDefault();
 
         // Lie le renderbuffer au framebuffer.
-        framebuffer_manager::attachRenderbuffer(m_Renderbuffer);
+        framebuffer_manager::attachRenderbuffer(m_Framebuffer, m_Renderbuffer);
 
         // Vérifie que le framebuffer a bien été créé et fonctionnel.
         bool ret = framebuffer_manager::check();
@@ -1796,6 +1861,18 @@ namespace de
         framebuffer_manager::bind(currentBuffer);
 
         return ret;
+    }
+
+    /*
+	=====================================
+	framerenderbuffer::resize
+	=====================================
+	*/
+    bool framerenderbuffer::resize(const char *newName, int width, int height)
+    {
+        destroy();
+
+        return create(newName, width, height);
     }
 
 }

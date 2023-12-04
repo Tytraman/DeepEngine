@@ -595,6 +595,15 @@ namespace de
 
 	};
 
+    struct DE_API framebuffer_item
+    {
+        gl_framebuffer_int fbo;
+        texture_id texture;
+        renderbuffer_id rbo;
+
+        framebuffer_item(gl_framebuffer_int fbo);
+    };
+
     class DE_API framebuffer_manager
     {
 
@@ -616,13 +625,13 @@ namespace de
             static bool attachTexture(texture_id texture);
             static bool attachTexture(const char *name);
 
-            static bool attachRenderbuffer(framebuffer_id fbo);
-            static bool attachRenderbuffer(const char *name);
+            static bool attachRenderbuffer(framebuffer_id fbo, renderbuffer_id rbo);
+            static bool attachRenderbuffer(const char *fboName, const char *rboName);
 
             static bool saveTextureAsImage(int width, int height, const char *filedest);
 
-            static hash_entry<pair<gl_framebuffer_int, texture_id>> *get(framebuffer_id fbo);
-            static hash_entry<pair<gl_framebuffer_int, texture_id>> *get(const char *name);
+            static hash_entry<framebuffer_item> *get(framebuffer_id fbo);
+            static hash_entry<framebuffer_item> *get(const char *name);
 
             static gl_framebuffer_int currentlyBound();
             static framebuffer_id currentID();
@@ -632,7 +641,7 @@ namespace de
             static gl_framebuffer_int m_CurrentlyBound;
             static framebuffer_id m_CurrentID;
 
-			static hash_table<pair<gl_framebuffer_int, texture_id>> m_Framebuffers;
+			static hash_table<framebuffer_item> m_Framebuffers;
 
     };
 
@@ -641,7 +650,7 @@ namespace de
 	framebuffer_manager::get
 	========================
 	*/
-    inline hash_entry<pair<gl_framebuffer_int, texture_id>> *framebuffer_manager::get(framebuffer_id fbo)
+    inline hash_entry<framebuffer_item> *framebuffer_manager::get(framebuffer_id fbo)
     {
         return m_Framebuffers[fbo];
     }
@@ -651,7 +660,7 @@ namespace de
 	framebuffer_manager::get
 	========================
 	*/
-    inline hash_entry<pair<gl_framebuffer_int, texture_id>> *framebuffer_manager::get(const char *name)
+    inline hash_entry<framebuffer_item> *framebuffer_manager::get(const char *name)
     {
         return m_Framebuffers[name];
     }
@@ -687,13 +696,15 @@ namespace de
         if(el == nullptr)
             return 0;
 
-        return el->value.value2();
+        return el->value.texture;
     }
 
     class DE_API renderbuffer_manager
     {
 
         public:
+
+            static gl_renderbuffer_int rawCreate();
             static renderbuffer_id create(const char *name);
 
             static void rawBind(gl_renderbuffer_int rbo);
@@ -706,6 +717,7 @@ namespace de
             static hash_entry<gl_renderbuffer_int> *get(const char *name);
 
             static void store(int width, int height);
+            static bool resize(int width, int height);
 
             static void rawDestroy(gl_renderbuffer_int rbo);
             static bool destroy(renderbuffer_id rbo);
@@ -719,6 +731,8 @@ namespace de
             static gl_renderbuffer_int m_CurrentlyBound;
             static renderbuffer_id m_CurrentID;
 
+        public:
+            friend framebuffer_manager;
     };
 
     /*
@@ -770,6 +784,8 @@ namespace de
             void destroy();
 
             bool saveTextureAsImage(const char *destpath);
+
+            bool resize(const char *newName, int width, int height);
 
             framebuffer_id framebuffer() const;
             renderbuffer_id renderbuffer() const;

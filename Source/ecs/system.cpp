@@ -311,8 +311,6 @@ namespace de
 					// Appelle la fonction callback entre les 2 entités qui sont en collision entre elles.
 
 					callback(collectionID, entity1, entity2, entity2Middle - entity1Middle, collision);
-
-					int a = 10;
 				}
                 else
                 {
