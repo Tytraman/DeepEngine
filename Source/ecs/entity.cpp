@@ -1,7 +1,7 @@
 #include <DE/ecs/entity.hpp>
 #include <DE/ecs/component.hpp>
 
-namespace de
+namespace deep
 {
 
 	static entity_collection_id m_NextCollectionID = 0;     ///< Prochain ID de collection à attribuer.
@@ -82,33 +82,79 @@ namespace de
 		return id;
 	}
 
-	/*
-	===========================
-	entity_manager::createEntity
-	===========================
+    /*
+	==============================
+	entity_manager::__createEntity
+	==============================
 	*/
-	entity entity_manager::createEntity(entity_collection_id collection)
-	{
-		hash_entry<hash_table<entity_item>> *hs = m_Collections[collection];
+    hash_entry<entity_item> *entity_manager::__createEntity(entity_collection_id collection)
+    {
+        hash_entry<hash_table<entity_item>> *hs = m_Collections[collection];
         if(hs == nullptr)
-            return entity::bad();
+            return nullptr;
 
         hash_entry<entity_id> *el = m_NextEntityID[collection];
         if(el == nullptr)
-            return entity::bad();
+            return nullptr;
 
 		entity_id di = el->value;
 		el->value++;
 
 		hash_entry<entity_item> &hti = hs->value.insert(di, entity_item(entity(collection, di)));
 
-		return hti.value.ent;
-	}
+        return &hti;
+    }
 
 	/*
 	============================
-	entity_manager::destroyEntity
+	entity_manager::createEntity
 	============================
+	*/
+	entity entity_manager::createEntity(entity_collection_id collection)
+	{
+		hash_entry<entity_item> *hti = __createEntity(collection);
+        if(hti == nullptr)
+            return entity::bad();
+
+		return hti->value.ent;
+	}
+
+    /*
+	============================
+	entity_manager::createEntity
+	============================
+	*/
+    entity entity_manager::createEntity(
+        entity_collection_id collection,
+        const polygon &pol,
+        program_id program,
+        const fvec3 &position,
+        const fvec3 &size,
+        texture_id texture,
+        uint8_t textureUnit)
+    {
+        hash_entry<entity_item> *hti = __createEntity(collection);
+        if(hti == nullptr)
+            return entity::bad();
+
+        component_id drawableComponentID       = component_manager::createDrawableComponent(program, pol.vbo(), pol.vao());
+        component_id transformationComponentID = component_manager::createTransformationComponent(position, size, 0.0f);
+
+        drawable_component *drawableComponent = component_manager::getDrawableComponent(drawableComponentID);
+        drawableComponent->texture = texture;
+		drawableComponent->textureUnit = textureUnit;
+		drawableComponent->renderCallback = drawable_component::classicRenderCallback;
+
+        entity_manager::attachComponent(hti->value.ent, drawableComponentID);
+		entity_manager::attachComponent(hti->value.ent, transformationComponentID);
+
+		return hti->value.ent;
+    }
+
+	/*
+	=============================
+	entity_manager::destroyEntity
+	=============================
 	*/
 	void entity_manager::destroyEntity(const entity &entity)
 	{

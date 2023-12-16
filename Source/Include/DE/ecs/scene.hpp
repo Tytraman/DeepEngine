@@ -10,7 +10,7 @@
 #include <DE/graphics/shape.hpp>
 #include <DE/rendering/camera.hpp>
 
-namespace de
+namespace deep
 {
 
 	class DE_API scene

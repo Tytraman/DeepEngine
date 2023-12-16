@@ -2,11 +2,11 @@
 
 #include <stdio.h>
 
-const char *de::error::Error = "Error";
-const char *de::error::Warning = "Warning";
-const char *de::error::Success = "Success";
+const char *deep::error::Error = "Error";
+const char *deep::error::Warning = "Warning";
+const char *deep::error::Success = "Success";
 
-void de::error::printError(error_status status) {
+void deep::error::printError(error_status status) {
 	const char *error;
 
 	DE_ERROR_SW(status,

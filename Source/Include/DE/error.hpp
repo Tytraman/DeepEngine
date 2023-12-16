@@ -12,7 +12,7 @@
 #define DE_ERROR_SW(__status,...) DE_ERROR_SW_HELPER(__status,__VA_ARGS__)
 #define DE_ERROR_CASE(__status) DE_ERROR_CASE_HELPER(__status)
 
-namespace de
+namespace deep
 {
 
 	enum class error_status : uint16_t

@@ -8,7 +8,7 @@
 
 #include <SDL.h>
 
-namespace de
+namespace deep
 {
 	
 	enum class dkey

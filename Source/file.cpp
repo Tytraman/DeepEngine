@@ -6,7 +6,7 @@
 
 #include <string>
 
-namespace de
+namespace deep
 {
 
 	struct list_wstr_fusion

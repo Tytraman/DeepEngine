@@ -6,7 +6,7 @@
 #include <string.h>
 #include <stdio.h>
 
-namespace de
+namespace deep
 {
 
 	/*
@@ -107,11 +107,24 @@ namespace de
 	string_utils::toUpper
 	=====================
 	*/
-	int string_utils::toUpper(int value) {
+	int string_utils::toUpper(int value)
+    {
 		if(value >= 'a' && value <= 'z')
 			return value - 32;
 		return value;
 	}
+
+    uint64_t string_utils::hash(const char *str)
+    {
+        uint64_t val = 5381;
+		size_t len = length(str);
+        size_t i;
+
+        for(i = 0; i < len; ++i)
+            val = ((val << 5) + val) + str[i]; /* val * 33 + chars[i] */
+
+		return val;
+    }
 
 	/*
 	====================
@@ -441,9 +454,9 @@ namespace de
 }
 
 size_t de_string_utils_copy(char *dest, size_t destSize, const char *source, size_t sourceLength) {
-	return de::string_utils::copy(dest, destSize, source, sourceLength);
+	return deep::string_utils::copy(dest, destSize, source, sourceLength);
 }
 
 int de_string_utils_to_upper(int value) {
-	return de::string_utils::toUpper(value);
+	return deep::string_utils::toUpper(value);
 }

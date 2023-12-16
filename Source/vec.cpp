@@ -6,7 +6,7 @@
 vec2::draw
 ==========
 */
-void de::vec2::draw(renderer &renderer) const
+void deep::vec2::draw(renderer &renderer) const
 {
 	renderer.drawLine(0, 0, x, y);
 }
@@ -16,7 +16,7 @@ void de::vec2::draw(renderer &renderer) const
 fvec2::draw
 ===========
 */
-void de::fvec2::draw(renderer &renderer) const
+void deep::fvec2::draw(renderer &renderer) const
 {
 	renderer.drawLine(0, 0, (int) x, (int) y);
 }

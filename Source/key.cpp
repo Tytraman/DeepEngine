@@ -1,6 +1,6 @@
 #include <DE/key.hpp>
 
-namespace de
+namespace deep
 {
 
 	const Uint8 *key::m_Keys = nullptr;

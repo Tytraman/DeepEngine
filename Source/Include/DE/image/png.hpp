@@ -4,7 +4,7 @@
 #include <DE/image/image.hpp>
 #include <DE/stream.hpp>
 
-namespace de
+namespace deep
 {
 
 	class DE_API png

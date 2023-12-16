@@ -4,7 +4,7 @@
 #include <DE/def.hpp>
 #include <DE/types.hpp>
 
-namespace de
+namespace deep
 {
 
     // ===== REMOVE REFERENCE ===== //

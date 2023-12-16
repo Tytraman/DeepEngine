@@ -10,7 +10,7 @@
 #include <stdint.h>
 #include <vector>
 
-namespace de
+namespace deep
 {
 
 	class window;

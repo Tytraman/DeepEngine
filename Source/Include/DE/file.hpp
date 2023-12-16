@@ -5,7 +5,7 @@
 #include <DE/types.hpp>
 #include <DE/memory/list.hpp>
 
-namespace de
+namespace deep
 {
 
     using file_enum_callback_ascii = bool (*)(const char *filename, bool isDirectory, void *args);

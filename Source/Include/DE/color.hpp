@@ -5,7 +5,7 @@
 
 #include <stdint.h>
 
-namespace de
+namespace deep
 {
 
 	struct DE_API color

@@ -11,11 +11,11 @@
 
 #include <SDL.h>
 
-namespace de
+namespace deep
 {
 
 	#ifdef DE_WINDOWS
-	uint64_t de::core::m_InitTime = GetTickCount64();
+	uint64_t deep::core::m_InitTime = GetTickCount64();
 	#else
 	#error Need implementation
 	#endif
@@ -289,5 +289,5 @@ de_core_get_tick
 ================
 */
 de_uint64 de_core_get_tick() {
-	return de::core::getTick();
+	return deep::core::getTick();
 }

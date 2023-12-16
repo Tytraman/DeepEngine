@@ -6,7 +6,8 @@
 
 #include <math.h>
 
-namespace de {
+namespace deep
+{
 
 	/*
 	============

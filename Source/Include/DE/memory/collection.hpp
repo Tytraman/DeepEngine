@@ -5,7 +5,7 @@
 #include <DE/types.hpp>
 #include <DE/memory/memory.hpp>
 
-namespace de
+namespace deep
 {
     template<typename Type, typename Iterator>
     class icollection;

@@ -6,12 +6,12 @@
 
 #include <glad/glad.h>
 
-namespace de
+namespace deep
 {
 
-	void programs_hashtable_free_element_callback(gl_program_int &program)
+	void programs_hashtable_free_element_callback(program_item &program)
 	{
-		program_manager::rawDestroy(program);
+		program_manager::rawDestroy(program.program);
 	}
 
 	gl_vbo_int vbo_manager::m_CurrentlyBound = 0;
@@ -41,7 +41,7 @@ namespace de
 
 	gl_program_int program_manager::m_CurrentlyBound = 0;
     program_id program_manager::m_CurrentID = 0;
-	hash_table<gl_program_int> program_manager::m_Programs(100, string::hash, programs_hashtable_free_element_callback);
+	hash_table<program_item> program_manager::m_Programs(100, string_utils::hash, programs_hashtable_free_element_callback);
 
 	/*
 	===================
@@ -340,114 +340,102 @@ namespace de
     }
 
 	/*
-	======================
-	gl_uniform::gl_uniform
-	======================
+	===========================
+	uniform_manager::rawFind
+	===========================
 	*/
-	gl_uniform::gl_uniform()
-		: m_Location(-1)
-	{ }
-
-	/*
-	===================
-	gl_uniform::rawFind
-	===================
-	*/
-	bool gl_uniform::rawFind(gl_program_int program, const char *name)
+	int uniform_manager::rawFind(gl_program_int program, const char *name)
 	{
-		m_Location = DE_GL_CALLV(glGetUniformLocation(program, name));
-		if(m_Location == -1)
-			return false;
-
-		return true;
+        int uni = DE_GL_CALLV(glGetUniformLocation(program, name));
+		return uni;
 	}
 
     /*
-	================
-	gl_uniform::find
-	================
+	========================
+	uniform_manager::find
+	========================
 	*/
-    bool gl_uniform::find(program_id program, const char *name)
+    int uniform_manager::find(program_id program, const char *name)
     {
         auto el = program_manager::get(program);
         if(el == nullptr)
-            return false;
+            return -1;
 
-        return rawFind(el->value, name);
+        return rawFind(el->value.program, name);
     }
 
     /*
-	================
-	gl_uniform::find
-	================
+	========================
+	uniform_manager::find
+	========================
 	*/
-    bool gl_uniform::find(const char *progName, const char *name)
+    int uniform_manager::find(const char *progName, const char *name)
     {
         auto el = program_manager::get(progName);
         if(el == nullptr)
-            return false;
+            return -1;
 
-        return rawFind(el->value, name);
+        return rawFind(el->value.program, name);
     }
 
 	/*
-	================
-	gl_uniform::send
-	================
+	========================
+	uniform_manager::send
+	========================
 	*/
-	void gl_uniform::send(float value)
+	void uniform_manager::send(int location, float value)
 	{
-		DE_GL_CALL(glUniform1f(m_Location, value));
+		DE_GL_CALL(glUniform1f(location, value));
 	}
 
 	/*
-	================
-	gl_uniform::send
-	================
+	========================
+	uniform_manager::send
+	========================
 	*/
-	void gl_uniform::send(int value)
+	void uniform_manager::send(int location, int value)
 	{
-		DE_GL_CALL(glUniform1i(m_Location, value));
+		DE_GL_CALL(glUniform1i(location, value));
 	}
 
 	/*
-	================
-	gl_uniform::send
-	================
+	========================
+	uniform_manager::send
+	========================
 	*/
-	void gl_uniform::send(const fvec2 &vec)
+	void uniform_manager::send(int location, const fvec2 &vec)
 	{
-		DE_GL_CALL(glUniform2f(m_Location, vec.x, vec.y));
+		DE_GL_CALL(glUniform2f(location, vec.x, vec.y));
 	}
 
 	/*
-	================
-	gl_uniform::send
-	================
+	========================
+	uniform_manager::send
+	========================
 	*/
-	void gl_uniform::send(const fvec3 &vec)
+	void uniform_manager::send(int location, const fvec3 &vec)
 	{
-		DE_GL_CALL(glUniform3f(m_Location, vec.x, vec.y, vec.z));
+		DE_GL_CALL(glUniform3f(location, vec.x, vec.y, vec.z));
 	}
 
 	/*
-	================
-	gl_uniform::send
-	================
+	========================
+	uniform_manager::send
+	========================
 	*/
-	void gl_uniform::send(fmat3x3 &mat)
+	void uniform_manager::send(int location, fmat3x3 &mat)
 	{
-		DE_GL_CALL(glUniformMatrix3fv(m_Location, 1, GL_TRUE, mat.ptr()));
+		DE_GL_CALL(glUniformMatrix3fv(location, 1, GL_TRUE, mat.ptr()));
 	}
 
 	/*
-	================
-	gl_uniform::send
-	================
+	========================
+	uniform_manager::send
+	========================
 	*/
-	void gl_uniform::send(fmat4x4 &mat)
+	void uniform_manager::send(int location, fmat4x4 &mat)
 	{
-		DE_GL_CALL(glUniformMatrix4fv(m_Location, 1, GL_TRUE, mat.ptr()));
+		DE_GL_CALL(glUniformMatrix4fv(location, 1, GL_TRUE, mat.ptr()));
 	}
 
 	/*
@@ -603,6 +591,15 @@ namespace de
         return true;
     }
 
+    /*
+	==========================
+	program_item::program_item
+	==========================
+	*/
+    program_item::program_item(gl_program_int _program)
+        : program(_program)
+    { }
+
 	/*
 	=======================
 	program_manager::create
@@ -642,7 +639,7 @@ namespace de
         if(shad == nullptr)
             return false;
 
-        rawAttachShader(prog->value, shad->value);
+        rawAttachShader(prog->value.program, shad->value);
 
         return true;
     }
@@ -662,7 +659,7 @@ namespace de
         if(shad == nullptr)
             return false;
 
-        rawAttachShader(prog->value, shad->value);
+        rawAttachShader(prog->value.program, shad->value);
 
         return true;
     }
@@ -682,7 +679,7 @@ namespace de
         if(shad == nullptr)
             return false;
 
-        rawAttachShader(prog->value, shad->value);
+        rawAttachShader(prog->value.program, shad->value);
 
         return true;
     }
@@ -702,7 +699,151 @@ namespace de
         if(shad == nullptr)
             return false;
 
-        rawAttachShader(prog->value, shad->value);
+        rawAttachShader(prog->value.program, shad->value);
+
+        return true;
+    }
+
+    /*
+	===========================
+	program_manager::addUniform
+	===========================
+	*/
+    bool program_manager::addUniform(const char *uniformName, int location, float value)
+    {
+        auto prog = m_Programs[m_CurrentID];
+        if(prog == nullptr)
+            return false;
+
+        prog->value.fUniforms.insert(uniformName, pair(location, value));
+
+        return true;
+    }
+
+    /*
+	===========================
+	program_manager::addUniform
+	===========================
+	*/
+    bool program_manager::addUniform(const char *uniformName, int location, int value)
+    {
+        auto prog = m_Programs[m_CurrentID];
+        if(prog == nullptr)
+            return false;
+
+        prog->value.iUniforms.insert(uniformName, pair(location, value));
+
+        return true;
+    }
+
+    /*
+	===========================
+	program_manager::addUniform
+	===========================
+	*/
+    bool program_manager::addUniform(const char *uniformName, int location, const fvec3 &value)
+    {
+        auto prog = m_Programs[m_CurrentID];
+        if(prog == nullptr)
+            return false;
+
+        prog->value.fv3Uniforms.insert(uniformName, pair(location, value));
+
+        return true;
+    }
+
+    /*
+	===========================
+	program_manager::addUniform
+	===========================
+	*/
+    bool program_manager::addUniform(const char *uniformName, int location, const fmat4x4 &value)
+    {
+        auto prog = m_Programs[m_CurrentID];
+        if(prog == nullptr)
+            return false;
+
+        prog->value.fm4Uniforms.insert(uniformName, pair(location, value));
+
+        return true;
+    }
+
+    /*
+	===========================
+	program_manager::setUniform
+	===========================
+	*/
+    bool program_manager::setUniform(const char *uniformName, float value)
+    {
+        auto prog = m_Programs[m_CurrentID];
+        if(prog == nullptr)
+            return false;
+
+        auto uni = prog->value.fUniforms[uniformName];
+        if(uni == nullptr)
+            return false;
+
+        uni->value.value2() = value;
+
+        return true;
+    }
+
+    /*
+	===========================
+	program_manager::setUniform
+	===========================
+	*/
+    bool program_manager::setUniform(const char *uniformName, int value)
+    {
+        auto prog = m_Programs[m_CurrentID];
+        if(prog == nullptr)
+            return false;
+
+        auto uni = prog->value.iUniforms[uniformName];
+        if(uni == nullptr)
+            return false;
+
+        uni->value.value2() = value;
+
+        return true;
+    }
+
+    /*
+	===========================
+	program_manager::setUniform
+	===========================
+	*/
+    bool program_manager::setUniform(const char *uniformName, const fvec3 &value)
+    {
+        auto prog = m_Programs[m_CurrentID];
+        if(prog == nullptr)
+            return false;
+
+        auto uni = prog->value.fv3Uniforms[uniformName];
+        if(uni == nullptr)
+            return false;
+
+        uni->value.value2() = value;
+
+        return true;
+    }
+
+    /*
+	===========================
+	program_manager::setUniform
+	===========================
+	*/
+    bool program_manager::setUniform(const char *uniformName, const fmat4x4 &value)
+    {
+        auto prog = m_Programs[m_CurrentID];
+        if(prog == nullptr)
+            return false;
+
+        auto uni = prog->value.fm4Uniforms[uniformName];
+        if(uni == nullptr)
+            return false;
+
+        uni->value.value2() = value;
 
         return true;
     }
@@ -742,7 +883,7 @@ namespace de
         if(el == nullptr)
             return false;
 
-        return rawLink(el->value);
+        return rawLink(el->value.program);
     }
 
     /*
@@ -756,7 +897,7 @@ namespace de
         if(el == nullptr)
             return false;
 
-        return rawLink(el->value);
+        return rawLink(el->value.program);
     }
 
 	/*
@@ -781,7 +922,7 @@ namespace de
         if(el == nullptr)
             return false;
 
-        rawUse(el->value);
+        rawUse(el->value.program);
         m_CurrentID = program;
 
         return true;
@@ -798,7 +939,7 @@ namespace de
         if(el == nullptr)
             return false;
 
-        rawUse(el->value);
+        rawUse(el->value.program);
         m_CurrentID = el->key;
 
         return true;
@@ -825,7 +966,7 @@ namespace de
         if(el == nullptr)
             return false;
 
-        rawDestroy(el->value);
+        rawDestroy(el->value.program);
         m_Programs.remove(el->key);
 
         return true;
@@ -842,8 +983,42 @@ namespace de
         if(el == nullptr)
             return false;
 
-        rawDestroy(el->value);
+        rawDestroy(el->value.program);
         m_Programs.remove(el->key);
+
+        return true;
+    }
+
+    /*
+	=============================
+	program_manager::sendUniforms
+	=============================
+	*/
+    bool program_manager::sendUniforms()
+    {
+        auto prog = m_Programs[m_CurrentID];
+        if(prog == nullptr)
+            return false;
+
+        auto &fUniBeg = prog->value.fUniforms.begin();
+        auto &fUniEnd = prog->value.fUniforms.end();
+        for(; fUniBeg != fUniEnd; ++fUniBeg)
+            uniform_manager::send(fUniBeg->value.value1(), fUniBeg->value.value2());
+
+        auto &iUniBeg = prog->value.iUniforms.begin();
+        auto &iUniEnd = prog->value.iUniforms.end();
+        for(; iUniBeg != iUniEnd; ++iUniBeg)
+            uniform_manager::send(iUniBeg->value.value1(), iUniBeg->value.value2());
+
+        auto &fv3UniBeg = prog->value.fv3Uniforms.begin();
+        auto &fv3UniEnd = prog->value.fv3Uniforms.end();
+        for(; fv3UniBeg != fv3UniEnd; ++fv3UniBeg)
+            uniform_manager::send(fv3UniBeg->value.value1(), fv3UniBeg->value.value2());
+
+        auto &fm4UniBeg = prog->value.fm4Uniforms.begin();
+        auto &fm4UniEnd = prog->value.fm4Uniforms.end();
+        for(; fm4UniBeg != fm4UniEnd; ++fm4UniBeg)
+            uniform_manager::send(fm4UniBeg->value.value1(), fm4UniBeg->value.value2());
 
         return true;
     }
@@ -859,7 +1034,7 @@ namespace de
         auto &end = m_Programs.end();
 
         for(; beg != end; ++beg)
-            rawDestroy(beg->value);
+            rawDestroy(beg->value.program);
 
 		m_Programs.clear();
 	}
@@ -884,7 +1059,8 @@ namespace de
 		GLenum error;
 		bool ret = false;
 
-		while((error = glGetError()) != GL_NO_ERROR) {
+		while((error = glGetError()) != GL_NO_ERROR)
+        {
 			fprintf(stderr, "[gl_error] (%d %s) %s %s: %u\n", error, getName(error), function, file, line);
 			ret = true;
 		}
@@ -1007,10 +1183,10 @@ namespace de
 
 	/*
 	=======================
-	texture_manager::create
+	texture_manager::create2D
 	=======================
 	*/
-	texture_id texture_manager::create(const char *name)
+	texture_id texture_manager::create2D(const char *name)
 	{
 		gl_texture_int texture;
 
@@ -1759,7 +1935,7 @@ namespace de
         strName.append("_fb");
 
         // Alloue de la place pour stocker la texture du framebuffer.
-        texture_id texture = texture_manager::create(strName.str());
+        texture_id texture = texture_manager::create2D(strName.str());
         texture_manager::bind(texture, 0);
         texture_manager::allocSpace(width, height);
         texture_manager::setTextureFiltering(gl_texture_filter::Linear);

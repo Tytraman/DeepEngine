@@ -1,38 +1,65 @@
 - Cette page regroupe toutes les choses à faire pour le moteur.
 -
-- Visuel
+- # Visuel
 	- TODO Ajouter le support des images RGB et RGBA.
+	  :LOGBOOK:
+	  CLOCK: [2023-12-13 Wed 21:37:29]--[2023-12-13 Wed 21:37:30] =>  00:00:01
+	  CLOCK: [2023-12-13 Wed 21:40:11]--[2023-12-13 Wed 21:40:11] =>  00:00:00
+	  :END:
 	- TODO Ajouter les animations d'images.
 	- DONE Ajouter le post-processing.
-		- TODO Changer la taille du framebuffer quand la résolution change.
+		- DONE Changer la taille du framebuffer quand la résolution change.
 	- TODO Plusieurs textures pour un même objet.
 	- TODO Pouvoir afficher du texte.
 	- TODO Effets de lumières.
 	- TODO Effets d'ombres.
-- Mémoire
+	- TODO Implémenter le outlining.
+	- TODO Pouvoir dessiner des segments.
+		- Des lignes allant d'un point A à un point B.
+	- TODO Pouvoir modifier un shader dynamiquement.
+		- Si la compilation du shader échoue, garder l'ancien shader actif.
+- # Modélisation
+	- TODO Faire une classe pour gérer les triangles.
+	- TODO Faire un système permettant de créer des formes grâce à des triangles.
+- # Imagerie
+	- TODO BMP : fusionner plusieurs images en une seule.
+	- TODO BMP : mixer plusieurs images.
+	- TODO BMP : retourner une image.
+	- TODO BMP : flipper une image.
+- # Mémoire
 	- TODO Gestion de données par Queue.
 	- DONE Gestion de données par Stack.
 	- TODO Trier les listes de types primitifs.
 	- TODO Trier les listes de String.
-	- TODO Stocker les emplacements d'uniformes pour éviter de les chercher à chaque frame.
-- Traitement
+	- DONE Stocker les emplacements d'uniformes pour éviter de les chercher à chaque frame.
+- # Gestion d'erreurs
+	- TODO Implémenter le même système de logs qu'à FB Technology.
+		- Affiche la date et l'heure du log.
+		- Affiche le nom du thread.
+		- Affiche le type de log.
+		- Affiche le message du log.
+	- TODO Implémenter la même gestion de crash qu'à FB Technology.
+		- En ayant un launcher qui lance le processus du moteur, qui s'échangent ensuite des messages par les "pipes" pour s'assurer que le moteur n'a pas planté.
+- # Traitement
 	- TODO Faire un parseur de shader.
 	- TODO Faire un loader de polices d'écriture.
 	- TODO Faire un loader de meshes.
-- Stockage
+- # Stockage
 	- DONE Créer un format pour stocker des données hiérarchiques.
 	- TODO Créer un format pour stocker les ressources.
 	- TODO Utiliser File Object pour stocker des mondes.
 		- TODO Se renseigner sur les différentes manières de charger un monde.
 	- DONE Sauvegarder une texture en tant qu'image.
 	- DONE Pouvoir faire des screenshots.
-- API
-	- TODO Définir des uniformes prédéfinis par le moteur *(deTime, dePos, deColor...)*
-- Modding
+- # API
+	- TODO Définir des uniformes prédéfinis par le moteur pour GLSL *(deTime, dePos, deColor...)*
+- # Modding
 	- TODO Gestion des mods en Lua.
-- Debug
+- # Debug
 	- TODO Afficher la liste des sons.
-	- DONE Afficher les entités présentes dans une scène.
 	- TODO Gérer les entités présentes dans une scène.
-	-
+		- DONE Afficher les entités présentes dans une scène.
+		- DONE Pouvoir supprimer des entités.
+		- TODO Afficher les informations concernant les entités.
+		- TODO Modifier les paramètres des entités.
 -

@@ -5,7 +5,7 @@
 #include <DE/types.hpp>
 #include <DE/vec.hpp>
 
-namespace de
+namespace deep
 {
 
 	struct DE_API vertex {

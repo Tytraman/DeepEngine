@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-namespace de
+namespace deep
 {
 
 	list<mem_ptr> memory_manager::g_MemoryTrack;

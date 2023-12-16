@@ -6,7 +6,7 @@
 #include <DE/rendering/opengl_utils.hpp>
 #include <DE/string.hpp>
 
-namespace de
+namespace deep
 {
 
     class DE_API resource_manager

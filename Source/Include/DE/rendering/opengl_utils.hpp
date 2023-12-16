@@ -14,7 +14,7 @@
 
 #include <stdint.h>
 
-namespace de
+namespace deep
 {
 
 	/*
@@ -26,16 +26,16 @@ namespace de
 
 #define DE_GL_CALLV(_x)                                                          \
 	[&]() {                                                                      \
-		de::gl_error::clearErrors();                                              \
+		deep::gl_error::clearErrors();                                              \
 		auto ret = _x;                                                           \
-		if(de::gl_error::checkErrors(#_x, DE_FILE_NAME, DE_LINE)) DE_DEBUG_BREAK; \
+		if(deep::gl_error::checkErrors(#_x, DE_FILE_NAME, DE_LINE)) DE_DEBUG_BREAK; \
 		return ret;                                                              \
 	}()
 
 #define DE_GL_CALL(_x)                                                       \
-	de::gl_error::clearErrors();                                              \
+	deep::gl_error::clearErrors();                                              \
 	_x;                                                                      \
-	if(de::gl_error::checkErrors(#_x, DE_FILE_NAME, DE_LINE)) DE_DEBUG_BREAK;
+	if(deep::gl_error::checkErrors(#_x, DE_FILE_NAME, DE_LINE)) DE_DEBUG_BREAK;
 
     using gl_vbo_int          = unsigned int;
     using vbo_id              = uint64_t;
@@ -262,6 +262,17 @@ namespace de
             friend program_manager;
 	};
 
+    struct DE_API program_item
+    {
+        gl_program_int program;
+        hash_table<pair<int, float>> fUniforms;
+        hash_table<pair<int, int>> iUniforms;
+        hash_table<pair<int, fvec3>> fv3Uniforms;
+        hash_table<pair<int, fmat4x4>> fm4Uniforms;
+
+        program_item(gl_program_int program);
+    };
+
 	class DE_API program_manager
     {
 
@@ -273,6 +284,16 @@ namespace de
             static bool attachShader(const char *progName, const char *shadName);
             static bool attachShader(const char *progName, shader_id shader);
             static bool attachShader(program_id program, const char *shadName);
+
+            static bool addUniform(const char *uniformName, int location, float value);
+            static bool addUniform(const char *uniformName, int location, int value);
+            static bool addUniform(const char *uniformName, int location, const fvec3 &value);
+            static bool addUniform(const char *uniformName, int location, const fmat4x4 &value);
+
+            static bool setUniform(const char *uniformName, float value);
+            static bool setUniform(const char *uniformName, int value);
+            static bool setUniform(const char *uniformName, const fvec3 &value);
+            static bool setUniform(const char *uniformName, const fmat4x4 &value);
 
 			static bool rawLink(gl_program_int program);
             static bool link(program_id program);
@@ -286,13 +307,14 @@ namespace de
             static bool destroy(program_id program);
             static bool destroy(const char *name);
 
+            static bool sendUniforms();
 			static void destroyAllPrograms();
 
             static bool exists(program_id program);
             static bool exists(const char *name);
 
-            static hash_entry<gl_program_int> *get(program_id program);
-            static hash_entry<gl_program_int> *get(const char *name);
+            static hash_entry<program_item> *get(program_id program);
+            static hash_entry<program_item> *get(const char *name);
 
 			static gl_program_int currentlyBound();
             static program_id currentID();
@@ -302,7 +324,7 @@ namespace de
 		private:
 			static gl_program_int m_CurrentlyBound;
             static program_id m_CurrentID;
-			static hash_table<gl_program_int> m_Programs;
+			static hash_table<program_item> m_Programs;
 
         public:
             program_manager() = delete;
@@ -334,7 +356,7 @@ namespace de
 	program_manager::get
 	====================
 	*/
-    inline hash_entry<gl_program_int> *program_manager::get(program_id program)
+    inline hash_entry<program_item> *program_manager::get(program_id program)
     {
         return m_Programs[program];
     }
@@ -344,7 +366,7 @@ namespace de
 	program_manager::get
 	====================
 	*/
-    inline hash_entry<gl_program_int> *program_manager::get(const char *name)
+    inline hash_entry<program_item> *program_manager::get(const char *name)
     {
         return m_Programs[name];
     }
@@ -379,25 +401,23 @@ namespace de
         return m_Programs.getHashFunction();
     }
 
-	class DE_API gl_uniform
+	class DE_API uniform_manager
     {
 
 		public:
-			gl_uniform();
+			static int rawFind(gl_program_int program, const char *name);
+            static int find(program_id program, const char *name);
+            static int find(const char *progName, const char *name);
 
-			bool rawFind(gl_program_int program, const char *name);
-            bool find(program_id program, const char *name);
-            bool find(const char *progName, const char *name);
+			static void send(int location, float value);
+			static void send(int location, int value);
+			static void send(int location, const fvec2 &vec);
+			static void send(int location, const fvec3 &vec);
+			static void send(int location, fmat3x3 &mat);
+			static void send(int location, fmat4x4 &mat);
 
-			void send(float value);
-			void send(int value);
-			void send(const fvec2 &vec);
-			void send(const fvec3 &vec);
-			void send(fmat3x3 &mat);
-			void send(fmat4x4 &mat);
-
-		private:
-			int m_Location;
+        public:
+            uniform_manager() = delete;
 
 	};
 
@@ -405,7 +425,7 @@ namespace de
     {
 
 		public:
-			static texture_id create(const char *name);
+			static texture_id create2D(const char *name);
 
 			static void rawBind(gl_texture_int texture, uint8_t unit);
             static bool bind(texture_id texture, uint8_t unit);

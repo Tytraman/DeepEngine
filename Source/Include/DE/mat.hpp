@@ -9,7 +9,7 @@
 #include <stdint.h>
 #include <math.h>
 
-namespace de
+namespace deep
 {
 
 	struct DE_API fmat2x2

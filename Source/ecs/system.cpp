@@ -8,7 +8,7 @@
 
 #include <unordered_map>
 
-namespace de
+namespace deep
 {
 
 	system_id system_manager::m_NextID = 0;
@@ -393,6 +393,8 @@ namespace de
             if(vao_manager::bind(frb.vao()))
             {
                 texture_manager::bind(texture, 0);
+
+                int curr = texture_manager::currentlyBound();
 
                 renderer.draw(vbo_manager::getVerticesNumber(frb.vbo()));
             }

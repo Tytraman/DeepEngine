@@ -7,7 +7,7 @@
 
 #include <png.h>
 
-namespace de
+namespace deep
 {
 
 	enum class image_color_type : int

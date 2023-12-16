@@ -11,7 +11,7 @@
 #include <DE/memory/hash_table.hpp>
 #include <DE/rendering/opengl_utils.hpp>
 
-namespace de
+namespace deep
 {
 
     class component_manager;

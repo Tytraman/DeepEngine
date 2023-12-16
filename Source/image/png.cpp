@@ -3,7 +3,7 @@
 
 #include <string.h>
 
-namespace de {
+namespace deep {
 
 	void mypng_user_read_data(png_structp png_ptr, png_bytep data, png_size_t length)
 	{

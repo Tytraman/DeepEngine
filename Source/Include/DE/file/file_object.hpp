@@ -8,7 +8,7 @@
 #include <DE/memory/hash_table.hpp>
 #include <DE/memory/pair.hpp>
 
-namespace de
+namespace deep
 {
     struct file_object_container;
     class  file_object;

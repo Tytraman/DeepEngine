@@ -12,7 +12,7 @@
 
 #include <stdio.h>
 
-namespace de
+namespace deep
 {
 
     struct shader_fusion
@@ -295,7 +295,7 @@ end:
 
 		png.applyVerticalMirrorEffect();
 
-		texture_id texture = texture_manager::create(name);
+		texture_id texture = texture_manager::create2D(name);
 		texture_manager::bind(texture, unit);
 
 		texture_manager::setTextureWrappingS(gl_texture_wrap::ClampToEdge);

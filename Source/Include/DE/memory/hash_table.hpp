@@ -8,7 +8,7 @@
 #include <DE/memory/list.hpp>
 #include <DE/string.hpp>
 
-namespace de
+namespace deep
 {
 
 	template<typename Value>
@@ -20,7 +20,7 @@ namespace de
     template<typename Value>
     class hash_table_iterator;
 
-    using hash_function = uint64_t (*)(const string &str);
+    using hash_function = uint64_t (*)(const char *str);
 
     template<typename Value>
     using hash_table_free_element_callback = void (*)(Value &val);
@@ -68,9 +68,9 @@ namespace de
     {
 
         public:
-            hash_table(size_t size = 10, hash_function hashfunction = string::hash, hash_table_free_element_callback<Value> freeElementCallback = nullptr);
+            hash_table(size_t size = 10, hash_function hashfunction = string_utils::hash, hash_table_free_element_callback<Value> freeElementCallback = nullptr);
 
-            void init(size_t size = 10, hash_function hashfunction = string::hash, hash_table_free_element_callback<Value> freeElementCallback = nullptr);
+            void init(size_t size = 10, hash_function hashfunction = string_utils::hash, hash_table_free_element_callback<Value> freeElementCallback = nullptr);
 
             hash_entry<Value> &insert(const char *key, const Value &value);
             hash_entry<Value> &insert(uint64_t key, const Value &value);

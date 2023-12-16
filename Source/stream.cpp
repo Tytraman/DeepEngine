@@ -3,7 +3,7 @@
 
 #include <string.h>
 
-namespace de {
+namespace deep {
 
 	/*
 	========================

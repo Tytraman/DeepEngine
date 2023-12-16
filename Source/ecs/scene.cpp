@@ -4,7 +4,7 @@
 
 #include <unordered_map>
 
-namespace de {
+namespace deep {
 
 	scene_id scene::m_ActiveScene = badID;
 	list<scene_id> scene::m_ScenesToDelete;

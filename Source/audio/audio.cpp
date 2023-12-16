@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-namespace de
+namespace deep
 {
 
 	ALCdevice  *audio_device::m_ALCDevice  = nullptr;

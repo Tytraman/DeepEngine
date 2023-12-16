@@ -3,7 +3,7 @@
 
 #include <DE/image/image.hpp>
 
-namespace de
+namespace deep
 {
 
 	constexpr uint16_t BMPSignature = (('M' << 8) | ('B'));

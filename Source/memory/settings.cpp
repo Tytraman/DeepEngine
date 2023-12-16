@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 
-namespace de
+namespace deep
 {
 
 #if DE_DEBUG

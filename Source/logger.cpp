@@ -3,7 +3,7 @@
 
 #include <string>
 
-namespace de {
+namespace deep {
 
 	logger::logger(const char *filename)
 	: output_file_stream(filename)
@@ -52,49 +52,49 @@ namespace de {
 }
 
 de_hlogger de_new_logger(const char *filename) {
-	return reinterpret_cast<de_hlogger>(new de::logger(filename));
+	return reinterpret_cast<de_hlogger>(new deep::logger(filename));
 }
 
 void de_delete_logger(de_hlogger hlogger) {
-	delete reinterpret_cast<de::logger *>(hlogger);
+	delete reinterpret_cast<deep::logger *>(hlogger);
 }
 
 int de_logger_open(de_hlogger hlogger) {
-	return reinterpret_cast<de::logger *>(hlogger)->open();
+	return reinterpret_cast<deep::logger *>(hlogger)->open();
 }
 
 void de_logger_close(de_hlogger hlogger) {
-	reinterpret_cast<de::logger *>(hlogger)->close();
+	reinterpret_cast<deep::logger *>(hlogger)->close();
 }
 
 void de_logger_add(de_hlogger hlogger, const char *title, const char *text) {
-	reinterpret_cast<de::logger *>(hlogger)->add(title, text);
+	reinterpret_cast<deep::logger *>(hlogger)->add(title, text);
 }
 
 void de_logger_info(de_hlogger hlogger, const char *text) {
-	reinterpret_cast<de::logger *>(hlogger)->info(text);
+	reinterpret_cast<deep::logger *>(hlogger)->info(text);
 }
 
 void de_logger_warn(de_hlogger hlogger, const char *text) {
-	reinterpret_cast<de::logger *>(hlogger)->warn(text);
+	reinterpret_cast<deep::logger *>(hlogger)->warn(text);
 }
 	
 void de_logger_error(de_hlogger hlogger, const char *text) {
-	reinterpret_cast<de::logger *>(hlogger)->error(text);
+	reinterpret_cast<deep::logger *>(hlogger)->error(text);
 }
 
 void de_logger_success(de_hlogger hlogger, const char *text) {
-	reinterpret_cast<de::logger *>(hlogger)->success(text);
+	reinterpret_cast<deep::logger *>(hlogger)->success(text);
 }
 
 void de_logger_callback(de_hlogger hlogger, const char *text) {
-	reinterpret_cast<de::logger *>(hlogger)->callback(text);
+	reinterpret_cast<deep::logger *>(hlogger)->callback(text);
 }
 
 void de_logger_instruction(de_hlogger hlogger, const char *text) {
-	reinterpret_cast<de::logger *>(hlogger)->instruction(text);
+	reinterpret_cast<deep::logger *>(hlogger)->instruction(text);
 }
 
 void de_logger_append(de_hlogger hlogger, const char *text) {
-	reinterpret_cast<de::logger *>(hlogger)->append(text);
+	reinterpret_cast<deep::logger *>(hlogger)->append(text);
 }

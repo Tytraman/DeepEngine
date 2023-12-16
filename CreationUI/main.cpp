@@ -53,134 +53,134 @@ extern "C"
 #define RECT1_SPAWN_X  400.0f
 #define RECT1_SPAWN_Y  200.0f
 
-void event_callback(de::window &window, de::devent e)
+void event_callback(deep::window &window, deep::devent e)
 {
-	switch(e->getType())
+    switch(e->getType())
     {
-		default: break;
-		case de::event_type::MouseMotion:
+        default: break;
+        case deep::event_type::MouseMotion:
         {
-			if(!window.isShowingDebugPanel())
+            if(!window.isShowingDebugPanel())
             {
-				de::scene_id sceneID = de::scene::getActiveSceneID();
-				if(sceneID == de::badID)
-					break;
+                deep::scene_id sceneID = deep::scene::getActiveSceneID();
+                if(sceneID == deep::badID)
+                    break;
 
-				de::scene *scene = de::scene::getScene(sceneID);
-				if(scene == nullptr)
-					break;
+                deep::scene *scene = deep::scene::getScene(sceneID);
+                if(scene == nullptr)
+                    break;
 
-				de::Camera &camera = de::scene::getScene(de::scene::getActiveSceneID())->getCamera();
-				float yaw   = camera.yaw();
-				float pitch = camera.pitch();
+                deep::Camera &camera = deep::scene::getScene(deep::scene::getActiveSceneID())->getCamera();
+                float yaw   = camera.yaw();
+                float pitch = camera.pitch();
 
-				float sensitivity = 0.1f;
+                float sensitivity = 0.1f;
 
-				int x = e->getMouseX();
-				int y = e->getMouseY();
+                int x = e->getMouseX();
+                int y = e->getMouseY();
 
-				int xDiff = x - window.getWidth() / 2;
-				int yDiff = y - window.getHeight() / 2;
+                int xDiff = x - window.getWidth() / 2;
+                int yDiff = y - window.getHeight() / 2;
 
-				yaw += xDiff * sensitivity;
-				pitch -= yDiff * sensitivity;
+                yaw += xDiff * sensitivity;
+                pitch -= yDiff * sensitivity;
 
-				if(pitch > 89.0f)
-					pitch = 89.0f;
-				if(pitch < -89.0f)
-					pitch = -89.0f;
+                if(pitch > 89.0f)
+                    pitch = 89.0f;
+                if(pitch < -89.0f)
+                    pitch = -89.0f;
 
-				camera.setYaw(yaw);
-				camera.setPitch(pitch);
+                camera.setYaw(yaw);
+                camera.setPitch(pitch);
 
-				window.setCursorPos(window.getWidth() / 2, window.getHeight() / 2);
+                window.setCursorPos(window.getWidth() / 2, window.getHeight() / 2);
 
-				camera.updateAngleOfView();
-			}
-		};
-	}
+                camera.updateAngleOfView();
+            }
+        };
+    }
 
-	// Appelle le callback par défaut
-	de::window::defaultInputCallback(window, e);
+    // Appelle le callback par défaut
+    deep::window::defaultInputCallback(window, e);
 }
 
 // Fonction appelée en boucle dans la boucle du jeu,
 // pour mettre à jour toutes les valeurs du jeu
-void update_callback(de::window &win)
+void update_callback(deep::window &win)
 {
-	de::scene_id sceneID = de::scene::getActiveSceneID();
-	de::entity_collection_id collectionID;
-	de::scene *scene;
+    deep::scene_id sceneID = deep::scene::getActiveSceneID();
+    deep::entity_collection_id collectionID;
+    deep::scene *scene;
 
-	if(sceneID == de::badID)
-		goto end;
+    if(sceneID == deep::badID)
+        goto end;
 
-	scene = de::scene::getScene(sceneID);
-	if(scene == nullptr)
-		goto end;
+    scene = deep::scene::getScene(sceneID);
+    if(scene == nullptr)
+        goto end;
 
-	collectionID = de::scene::getEntityCollection(sceneID);
+    collectionID = deep::scene::getEntityCollection(sceneID);
 
-	float cameraSpeed = 0.05f;
+    float cameraSpeed = 0.05f;
 
-	de::Camera &camera = scene->getCamera();
-	de::fvec3 cameraPos = camera.position();
-	de::fvec3 cameraFront = camera.front();
-	de::fvec3 cameraRight = de::fvec3::normalize(de::fvec3::cross(cameraFront, camera.up()));
+    deep::Camera &camera = scene->getCamera();
+    deep::fvec3 cameraPos = camera.position();
+    deep::fvec3 cameraFront = camera.front();
+    deep::fvec3 cameraRight = deep::fvec3::normalize(deep::fvec3::cross(cameraFront, camera.up()));
 
-	size_t entityIndex;
-	de::entity entity = de::entity::bad();
+    size_t entityIndex;
+    deep::entity entity = deep::entity::bad();
 
-	// Augmentation de la vitesse de déplacement de la caméra.
-	if(de::key::isPressed(de::dkey::LShift))
+    // Augmentation de la vitesse de déplacement de la caméra.
+    if(deep::key::isPressed(deep::dkey::LShift))
     {
-		cameraSpeed += 0.10f;
-	}
+        cameraSpeed += 0.10f;
+    }
 
-	// Déplacer la caméra vers l'avant.
-	if(de::key::isPressed(de::dkey::Z))
+    // Déplacer la caméra vers l'avant.
+    if(deep::key::isPressed(deep::dkey::Z))
     {
-		camera.moveForward(cameraSpeed);
-	}
+        camera.moveForward(cameraSpeed);
+    }
 
-	// Déplacer la caméra vers la gauche.
-	if(de::key::isPressed(de::dkey::Q))
+    // Déplacer la caméra vers la gauche.
+    if(deep::key::isPressed(deep::dkey::Q))
     {
-		camera.moveLeft(cameraSpeed);
-	}
+        camera.moveLeft(cameraSpeed);
+    }
 
-	// Déplacer la caméra vers la droite.
-	if(de::key::isPressed(de::dkey::D))
+    // Déplacer la caméra vers la droite.
+    if(deep::key::isPressed(deep::dkey::D))
     {
-		camera.moveRight(cameraSpeed);
-	}
+        camera.moveRight(cameraSpeed);
+    }
 
-	// Déplacer la caméra vers l'arrière.
-	if(de::key::isPressed(de::dkey::S))
+    // Déplacer la caméra vers l'arrière.
+    if(deep::key::isPressed(deep::dkey::S))
     {
-		camera.moveBackward(cameraSpeed);
-	}
+        camera.moveBackward(cameraSpeed);
+    }
 
-	// Fait monter la caméra.
-	if(de::key::isPressed(de::dkey::Space))
+    // Fait monter la caméra.
+    if(deep::key::isPressed(deep::dkey::Space))
     {
-		camera.moveUp(cameraSpeed);
-	}
+        camera.moveUp(cameraSpeed);
+    }
 
-	// Fait descendre la caméra.
-	if(de::key::isPressed(de::dkey::LCtrl))
+    // Fait descendre la caméra.
+    if(deep::key::isPressed(deep::dkey::LCtrl))
     {
-		camera.moveDown(cameraSpeed);
-	}
+        camera.moveDown(cameraSpeed);
+    }
 
-	camera.updateAngleOfView();
+    camera.updateAngleOfView();
 
 end:;
 }
 
-void collider_callback(de::entity_collection_id collectionID, de::entity_id entity1, de::entity_id entity2, const de::fvec2 &difference, const de::rect &collision)
+void collider_callback(deep::entity_collection_id collectionID, deep::entity_id entity1, deep::entity_id entity2, const deep::fvec2 &difference, const deep::rect &collision)
 {
-	de::scene_id sceneID = de::scene::getActiveSceneID();
+    deep::scene_id sceneID = deep::scene::getActiveSceneID();
 
 //	// Diff permet de savoir dans quelle direction le joueur va.
 //	de::fvec2 diff = difference;
@@ -345,46 +345,46 @@ void collider_callback(de::entity_collection_id collectionID, de::entity_id enti
 //	}
 }
 
-void collider_out_callback(de::entity_collection_id collectionID, de::entity_id entity1, de::entity_id entity2, const de::fvec2 &difference)
+void collider_out_callback(deep::entity_collection_id collectionID, deep::entity_id entity1, deep::entity_id entity2, const deep::fvec2 &difference)
 {
-	//de::entity_id playerID;
-	//de::entity_id rect1ID;
+    //de::entity_id playerID;
+    //de::entity_id rect1ID;
 
-	//// Diff permet de savoir dans quelle direction le joueur va.
-	//de::fvec2 diff = difference;
+    //// Diff permet de savoir dans quelle direction le joueur va.
+    //de::fvec2 diff = difference;
 
-	//// Vérifie si une des entités est le joueur ou le rectangle 1.
-	//if(entity1 == g_Player.getEntityID()) {
-	//	playerID = entity1;
+    //// Vérifie si une des entités est le joueur ou le rectangle 1.
+    //if(entity1 == g_Player.getEntityID()) {
+    //	playerID = entity1;
 
-	//	if(entity2 == g_Rect1.getEntityID()) {
-	//		rect1ID = entity2;
-	//	}else
-	//		rect1ID = de::badID;
-	//}else if(entity2 == g_Player.getEntityID()) {
-	//	playerID = entity2;
+    //	if(entity2 == g_Rect1.getEntityID()) {
+    //		rect1ID = entity2;
+    //	}else
+    //		rect1ID = de::badID;
+    //}else if(entity2 == g_Player.getEntityID()) {
+    //	playerID = entity2;
 
-	//	if(entity1 == g_Rect1.getEntityID())
-	//		rect1ID = entity1;
-	//	else
-	//		rect1ID = de::badID;
+    //	if(entity1 == g_Rect1.getEntityID())
+    //		rect1ID = entity1;
+    //	else
+    //		rect1ID = de::badID;
 
-	//	diff = de::fvec2::inv(diff);
-	//}else {
-	//	playerID = de::badID;
+    //	diff = de::fvec2::inv(diff);
+    //}else {
+    //	playerID = de::badID;
 
-	//	if(entity1 == g_Rect1.getEntityID()) {
-	//		rect1ID = entity1;
-	//	}else if(entity2 == g_Rect1.getEntityID()) {
-	//		rect1ID = entity2;
-	//		diff = de::fvec2::inv(diff);
-	//	}else
-	//		rect1ID = de::badID;
-	//}
+    //	if(entity1 == g_Rect1.getEntityID()) {
+    //		rect1ID = entity1;
+    //	}else if(entity2 == g_Rect1.getEntityID()) {
+    //		rect1ID = entity2;
+    //		diff = de::fvec2::inv(diff);
+    //	}else
+    //		rect1ID = de::badID;
+    //}
 
-	//if(playerID != de::badID && rect1ID != de::badID) {
-	//	g_CollisionPlayerRectEnabled = true;
-	//}
+    //if(playerID != de::badID && rect1ID != de::badID) {
+    //	g_CollisionPlayerRectEnabled = true;
+    //}
 }
 
 #include <iostream>
@@ -392,204 +392,272 @@ void collider_out_callback(de::entity_collection_id collectionID, de::entity_id 
 #undef main
 int main()
 {
-    de::error_status errorStatus;
+    deep::error_status errorStatus;
 
-    switch(de::core::init("Creation UI [" DE_VERSION "]", 0, 0, 0))
+    switch(deep::core::init("Creation UI [" DE_VERSION "]", 0, 0, 0))
     {
         default:
             break;
-        case de::core_init_status::InstanceAlreadyExists:
+        case deep::core_init_status::InstanceAlreadyExists:
         {
             fprintf(stderr, "Process already running.\n");
         } return EXIT_FAILURE;
-        case de::core_init_status::NoEnoughDiskSpace:
+        case deep::core_init_status::NoEnoughDiskSpace:
         {
             fprintf(stderr, "No enough disk space.\n");
         } return EXIT_FAILURE;
-        case de::core_init_status::NoEnoughMemory:
+        case deep::core_init_status::NoEnoughMemory:
         {
             fprintf(stderr, "No enough memory.\n");
         } return EXIT_FAILURE;
     }
 
-	printf("pwd: %s\n", de::core::getPwd());
+    printf("pwd: %s\n", deep::core::getPwd());
 
-	de::window win(TARGET_MS, TARGET_FPS);
-	win.setEventCallback(event_callback);
-	win.setUpdateCallback(update_callback);
-	errorStatus = de::window::create(win, "Creation UI [" DE_VERSION "]", de::size(WINDOW_WIDTH, WINDOW_HEIGHT));
+    deep::window win(TARGET_MS, TARGET_FPS);
+    win.setEventCallback(event_callback);
+    win.setUpdateCallback(update_callback);
+    errorStatus = deep::window::create(win, "Creation UI [" DE_VERSION "]", deep::size(WINDOW_WIDTH, WINDOW_HEIGHT));
 
-	if(errorStatus != de::error_status::NoError)
+    if(errorStatus != deep::error_status::NoError)
     {
-		de::error::printError(errorStatus);
-		de::core::shutdown();
-		return 1;
-	}
-
-    // Charge les ressources nécessaires au jeu.
-    if(!de::resource_manager::init(de::engine_settings::getResourcesDirectory().str()))
-    {
-        de::core::shutdown();
-		return 1;
+        deep::error::printError(errorStatus);
+        deep::core::shutdown();
+        return 1;
     }
 
-	de::im_gui_window::init(win);
-
-	de::scene_id sceneID = de::scene::createScene("scn_main");
-	de::scene *scene = de::scene::getScene(sceneID);
-	scene->setColliderCallback(collider_callback);
-	scene->setColliderOutCallback(collider_out_callback);
-
-	de::entity_collection_id collectionID = de::scene::getEntityCollection(sceneID);
-
-	printf(
-		DE_TERM_FG_YELLOW "====================[ " DE_TERM_FG_RED "\\OpenGL/" DE_TERM_FG_YELLOW " ]====================\n" DE_TERM_RESET
-		"Version: %s\n"
-		"Max vertex attribs: %d\n"
-		"Max texture image units: %d\n"
-		DE_TERM_FG_YELLOW "====================================================\n" DE_TERM_RESET,
-		
-		de::gpu_core::version(),
-		de::gpu_core::maxVertexAttribs(),
-		de::gpu_core::maxTextureImageUnits()
-	);
-
-	de::texture_id mcGrassSide = de::resource_manager::loadTexture("grass_block_side.png", 0);
-	de::texture_id mcGrassTop  = de::resource_manager::loadTexture("grass_block_top.png", 0);
-
-	de::png pngSkyboxLeft;
-	de::png pngSkyboxFront;
-	de::png pngSkyboxRight;
-	de::png pngSkyboxBack;
-	de::png pngSkyboxBottom;
-	de::png pngSkyboxTop;
-
-	// Charge les images de la skybox
-	if(!pngSkyboxLeft.loadAndRead("..\\resources\\textures\\skybox_left.png"))
+    // Charge les ressources nécessaires au jeu.
+    if(!deep::resource_manager::init(deep::engine_settings::getResourcesDirectory().str()))
     {
-		fprintf(stderr, "Unable to load 'skybox_left'.\n");
-		return 1;
-	}
+        deep::core::shutdown();
+        return 1;
+    }
 
-	if(!pngSkyboxFront.loadAndRead("..\\resources\\textures\\skybox_front.png"))
+    deep::im_gui_window::init(win);
+
+    deep::scene_id sceneID = deep::scene::createScene("scn_main");
+    deep::scene *scene = deep::scene::getScene(sceneID);
+    scene->setColliderCallback(collider_callback);
+    scene->setColliderOutCallback(collider_out_callback);
+
+    deep::entity_collection_id collectionID = deep::scene::getEntityCollection(sceneID);
+
+    printf(
+        DE_TERM_FG_YELLOW "====================[ " DE_TERM_FG_RED "\\OpenGL/" DE_TERM_FG_YELLOW " ]====================\n" DE_TERM_RESET
+        "Version: %s\n"
+        "Max vertex attribs: %d\n"
+        "Max texture image units: %d\n"
+        DE_TERM_FG_YELLOW "====================================================\n" DE_TERM_RESET,
+        
+        deep::gpu_core::version(),
+        deep::gpu_core::maxVertexAttribs(),
+        deep::gpu_core::maxTextureImageUnits()
+    );
+
+    deep::texture_id mcGrassSide = deep::resource_manager::loadTexture("grass_block_side.png", 0);
+    deep::texture_id mcGrassTop  = deep::resource_manager::loadTexture("grass_block_top.png", 0);
+
+    deep::png pngSkyboxLeft;
+    deep::png pngSkyboxFront;
+    deep::png pngSkyboxRight;
+    deep::png pngSkyboxBack;
+    deep::png pngSkyboxBottom;
+    deep::png pngSkyboxTop;
+
+    // Charge les images de la skybox
+    if(!pngSkyboxLeft.loadAndRead("..\\resources\\textures\\skybox_left.png"))
     {
-		fprintf(stderr, "Unable to load 'skybox_front'.\n");
-		return 1;
-	}
+        fprintf(stderr, "Unable to load 'skybox_left'.\n");
+        return 1;
+    }
 
-	if(!pngSkyboxRight.loadAndRead("..\\resources\\textures\\skybox_right.png"))
+    if(!pngSkyboxFront.loadAndRead("..\\resources\\textures\\skybox_front.png"))
     {
-		fprintf(stderr, "Unable to load 'skybox_right'.\n");
-		return 1;
-	}
+        fprintf(stderr, "Unable to load 'skybox_front'.\n");
+        return 1;
+    }
 
-	if(!pngSkyboxBack.loadAndRead("..\\resources\\textures\\skybox_back.png"))
+    if(!pngSkyboxRight.loadAndRead("..\\resources\\textures\\skybox_right.png"))
     {
-		fprintf(stderr, "Unable to load 'skybox_back'.\n");
-		return 1;
-	}
+        fprintf(stderr, "Unable to load 'skybox_right'.\n");
+        return 1;
+    }
 
-	if(!pngSkyboxBottom.loadAndRead("..\\resources\\textures\\skybox_bottom.png"))
+    if(!pngSkyboxBack.loadAndRead("..\\resources\\textures\\skybox_back.png"))
     {
-		fprintf(stderr, "Unable to load 'skybox_bottom'.\n");
-		return 1;
-	}
+        fprintf(stderr, "Unable to load 'skybox_back'.\n");
+        return 1;
+    }
 
-	if(!pngSkyboxTop.loadAndRead("..\\resources\\textures\\skybox_top.png"))
+    if(!pngSkyboxBottom.loadAndRead("..\\resources\\textures\\skybox_bottom.png"))
     {
-		fprintf(stderr, "Unable to load 'skybox_top'.\n");
-		return 1;
-	}
+        fprintf(stderr, "Unable to load 'skybox_bottom'.\n");
+        return 1;
+    }
 
-	pngSkyboxLeft.applyVerticalMirrorEffect();
-	pngSkyboxLeft.applyHorizontalMirrorEffect();
-
-	pngSkyboxFront.applyVerticalMirrorEffect();
-	pngSkyboxFront.applyHorizontalMirrorEffect();
-
-	pngSkyboxRight.applyVerticalMirrorEffect();
-	pngSkyboxRight.applyHorizontalMirrorEffect();
-
-	pngSkyboxBack.applyVerticalMirrorEffect();
-	pngSkyboxBack.applyHorizontalMirrorEffect();
-
-	de::mem_ptr imageLeft   = pngSkyboxLeft.rawImage();
-	de::mem_ptr imageFront  = pngSkyboxFront.rawImage();
-	de::mem_ptr imageRight  = pngSkyboxRight.rawImage();
-	de::mem_ptr imageBack   = pngSkyboxBack.rawImage();
-	de::mem_ptr imageBottom = pngSkyboxBottom.rawImage();
-	de::mem_ptr imageTop    = pngSkyboxTop.rawImage();
-
-	de::texture_id skybox = de::texture_manager::create("skybox");
-	de::texture_manager::bindCubemaps(skybox);
-	de::texture_manager::setTextureWrappingSCubemaps(de::gl_texture_wrap::ClampToEdge);
-	de::texture_manager::setTextureWrappingTCubemaps(de::gl_texture_wrap::ClampToEdge);
-	de::texture_manager::setTextureWrappingRCubemaps(de::gl_texture_wrap::ClampToEdge);
-	de::texture_manager::setTextureFilteringCubemaps(de::gl_texture_filter::Linear);
-	de::texture_manager::transmitTextureCubemaps(imageLeft, imageFront, imageRight, imageBack, imageBottom, imageTop, pngSkyboxLeft.width(), pngSkyboxLeft.height(), pngSkyboxLeft.colorType());
-
-	de::mem::free(imageLeft);
-	de::mem::free(imageFront);
-	de::mem::free(imageRight);
-	de::mem::free(imageBack);
-	de::mem::free(imageBottom);
-	de::mem::free(imageTop);
-
-    de::hash_function hash = de::program_manager::getHashFunction();
-    de::program_id defaultProgram = hash("default");
-    de::program_id skyboxProgram  = hash("skybox");
-
-	de::colora white(255, 255, 255, 255);
-
-	size_t i, j;
-	for(i = 0; i < 50; ++i)
+    if(!pngSkyboxTop.loadAndRead("..\\resources\\textures\\skybox_top.png"))
     {
-		for(j = 0; j < 50; ++j)
+        fprintf(stderr, "Unable to load 'skybox_top'.\n");
+        return 1;
+    }
+
+    pngSkyboxLeft.applyVerticalMirrorEffect();
+    pngSkyboxLeft.applyHorizontalMirrorEffect();
+
+    pngSkyboxFront.applyVerticalMirrorEffect();
+    pngSkyboxFront.applyHorizontalMirrorEffect();
+
+    pngSkyboxRight.applyVerticalMirrorEffect();
+    pngSkyboxRight.applyHorizontalMirrorEffect();
+
+    pngSkyboxBack.applyVerticalMirrorEffect();
+    pngSkyboxBack.applyHorizontalMirrorEffect();
+
+    deep::mem_ptr imageLeft   = pngSkyboxLeft.rawImage();
+    deep::mem_ptr imageFront  = pngSkyboxFront.rawImage();
+    deep::mem_ptr imageRight  = pngSkyboxRight.rawImage();
+    deep::mem_ptr imageBack   = pngSkyboxBack.rawImage();
+    deep::mem_ptr imageBottom = pngSkyboxBottom.rawImage();
+    deep::mem_ptr imageTop    = pngSkyboxTop.rawImage();
+
+    deep::texture_id skybox = deep::texture_manager::create2D("skybox");
+    deep::texture_manager::bindCubemaps(skybox);
+    deep::texture_manager::setTextureWrappingSCubemaps(deep::gl_texture_wrap::ClampToEdge);
+    deep::texture_manager::setTextureWrappingTCubemaps(deep::gl_texture_wrap::ClampToEdge);
+    deep::texture_manager::setTextureWrappingRCubemaps(deep::gl_texture_wrap::ClampToEdge);
+    deep::texture_manager::setTextureFilteringCubemaps(deep::gl_texture_filter::Linear);
+    deep::texture_manager::transmitTextureCubemaps(imageLeft, imageFront, imageRight, imageBack, imageBottom, imageTop, pngSkyboxLeft.width(), pngSkyboxLeft.height(), pngSkyboxLeft.colorType());
+
+    deep::mem::free(imageLeft);
+    deep::mem::free(imageFront);
+    deep::mem::free(imageRight);
+    deep::mem::free(imageBack);
+    deep::mem::free(imageBottom);
+    deep::mem::free(imageTop);
+
+    deep::hash_function hash = deep::program_manager::getHashFunction();
+    deep::program_id defaultProgram = hash("default");
+    deep::program_id skyboxProgram  = hash("skybox");
+    deep::program_id postProcessProgram = hash("post_processing");
+
+    deep::program_manager::use(defaultProgram);
+
+    int mTrs = deep::uniform_manager::find(defaultProgram, "mTrs");
+    if(mTrs != -1)
+        deep::program_manager::addUniform("mTrs", mTrs, deep::fvec3(0.0f));
+
+    int mRotX = deep::uniform_manager::find(defaultProgram, "mRotX");
+    if(mRotX != -1)
+        deep::program_manager::addUniform("mRotX", mRotX, 0.0f);
+
+    int mRotY = deep::uniform_manager::find(defaultProgram, "mRotY");
+    if(mRotY != -1)
+        deep::program_manager::addUniform("mRotY", mRotY, 0.0f);
+
+    int mRotZ = deep::uniform_manager::find(defaultProgram, "mRotZ");
+    if(mRotZ != -1)
+        deep::program_manager::addUniform("mRotZ", mRotZ, 0.0f);
+
+    int mScl = deep::uniform_manager::find(defaultProgram, "mScl");
+    if(mScl != -1)
+        deep::program_manager::addUniform("mScl", mScl, deep::fvec3(0.0f));
+
+    int view = deep::uniform_manager::find(defaultProgram, "view");
+    if(view != -1)
+        deep::program_manager::addUniform("view", view, deep::fmat4x4(0.0f));
+
+    int proj = deep::uniform_manager::find(defaultProgram, "proj");
+    if(proj != -1)
+        deep::program_manager::addUniform("proj", proj, deep::fmat4x4(0.0f));
+
+    int myTex = deep::uniform_manager::find(defaultProgram, "myTex");
+    if(myTex != -1)
+        deep::program_manager::addUniform("myTex", myTex, 0);
+
+    deep::program_manager::use(skyboxProgram);
+
+    int skyboxView = deep::uniform_manager::find(skyboxProgram, "view");
+    if(skyboxView != -1)
+        deep::program_manager::addUniform("view", skyboxView, deep::fmat4x4(0.0f));
+
+    int skyboxProj = deep::uniform_manager::find(skyboxProgram, "proj");
+    if(skyboxProj != -1)
+        deep::program_manager::addUniform("proj", skyboxProj, deep::fmat4x4(0.0f));
+
+    int skyboxCube = deep::uniform_manager::find(skyboxProgram, "skybox");
+    if(skyboxCube != -1)
+        deep::program_manager::addUniform("skybox", skyboxCube, 0);
+
+    deep::program_manager::use(postProcessProgram);
+
+    int postScreenTexture = deep::uniform_manager::find(postProcessProgram, "screenTexture");
+    if(postScreenTexture != -1)
+        deep::program_manager::addUniform("screenTexture", postScreenTexture, 0);
+
+    deep::colora white(255, 255, 255, 255);
+
+    size_t i, j;
+
+    /*for(i = 0; i < 50; ++i)
+    {
+        for(j = 0; j < 50; ++j)
         {
             de::string name = "3d_rect_";
             name.append(std::to_string(i + j).c_str());
 
-			de::entity ent = de::graphic::create3DRectangleTexture(
+            de::entity ent = de::graphic::create3DRectangleTexture(
                 name.str(),
-				defaultProgram,
-				collectionID,
-				de::fvec3(i, 0.0f, j),
-				1.0f,
-				1.0f,
-				1.0f,
-				white,
-				white,
-				white,
-				white,
-				white,
-				white,
-				mcGrassSide,
-				0
-			);
-		}
-	}
+                defaultProgram,
+                collectionID,
+                de::fvec3(i, 0.0f, j),
+                1.0f,
+                1.0f,
+                1.0f,
+                white,
+                white,
+                white,
+                white,
+                white,
+                white,
+                mcGrassSide,
+                0
+            );
+        }
+    }*/
 
-	// Affiche la skybox à la fin pour optimiser les appelles au fragment shader = FPS++
-	de::entity skyboxEnt = de::graphic::createCubemap("skybox", skyboxProgram, collectionID, de::fvec3(0.0f, 0.0f, 0.0f), 200.0f, 200.0f, 200.0f, skybox, 0);
+    deep::polygon pol = deep::graphic::createCube("cube", white, white, white, white, white, white);
 
-	de::scene::setActiveScene(sceneID);
+    for(i = 0; i < 50; ++i)
+    {
+        for(j = 0; j < 50; ++j)
+        {
+            deep::entity entTest = deep::entity_manager::createEntity(collectionID, pol, defaultProgram, deep::fvec3(i * 5.0f, 0.0f, j * 5.0f), deep::fvec3(3.0f, 3.0f, 3.0f), mcGrassSide);
+        }
+    }
 
-	win.setShowingDebugPanel(true);
+    
 
-	// Lance la boucle du jeu, bloquant.
-	win.run();
+    // Affiche la skybox à la fin pour optimiser les appelles au fragment shader = FPS++
+    deep::entity skyboxEnt = deep::graphic::createCubemap("skybox", skyboxProgram, collectionID, deep::fvec3(0.0f, 0.0f, 0.0f), 200.0f, 200.0f, 200.0f, skybox, 0);
 
-	// Détruit tous les composants internes de la fenêtre puis la fenêtre elle-même.
-	win.destroy();
+    deep::scene::setActiveScene(sceneID);
 
-	de::program_manager::destroyAllPrograms();
+    win.setShowingDebugPanel(true);
 
-	de::resource_manager::shutdown();
-	de::core::shutdown();
+    // Lance la boucle du jeu, bloquant.
+    win.run();
+
+    // Détruit tous les composants internes de la fenêtre puis la fenêtre elle-même.
+    win.destroy();
+
+    deep::program_manager::destroyAllPrograms();
+
+    deep::resource_manager::shutdown();
+    deep::core::shutdown();
 
     _CrtDumpMemoryLeaks();
 
-	printf(DE_TERM_FG_RED "~Good-bye~" DE_TERM_RESET "\n");
+    printf(DE_TERM_FG_RED "~Good-bye~" DE_TERM_RESET "\n");
 
-	return EXIT_SUCCESS;
+    return EXIT_SUCCESS;
 }

@@ -5,7 +5,7 @@
 #include <string.h>
 #include <math.h>
 
-namespace de {
+namespace deep {
 
 	/*
 	============

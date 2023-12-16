@@ -12,7 +12,7 @@
 
 DE_API BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved);
 
-namespace de
+namespace deep
 {
 	
 	class DE_API sys_win

@@ -5,7 +5,7 @@
 #include <DE/types.hpp>
 #include <DE/string.hpp>
 
-namespace de
+namespace deep
 {
 
     class engine_settings;

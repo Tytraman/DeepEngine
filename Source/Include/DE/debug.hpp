@@ -7,7 +7,7 @@
 
 #include <stddef.h>
 
-namespace de
+namespace deep
 {
 
 	class DE_API debug

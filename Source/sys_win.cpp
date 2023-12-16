@@ -4,7 +4,7 @@
 
 #include <DE/sys_win.hpp>
 
-namespace de
+namespace deep
 {
     DWORD sys_win::m_TLSIndex  = TLS_OUT_OF_INDEXES;
 }
@@ -21,9 +21,9 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD fdwReason, LPVOID lpvReserved)
         // Quand la DLL est attachée à un processus.
         case DLL_PROCESS_ATTACH: 
         {
-            de::sys_win::m_TLSIndex = TlsAlloc();
+            deep::sys_win::m_TLSIndex = TlsAlloc();
 
-            if(de::sys_win::m_TLSIndex == TLS_OUT_OF_INDEXES)
+            if(deep::sys_win::m_TLSIndex == TLS_OUT_OF_INDEXES)
                 return FALSE;
 
             [[fallthrough]];

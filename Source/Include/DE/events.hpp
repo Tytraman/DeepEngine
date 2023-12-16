@@ -9,7 +9,7 @@
 
 #include <SDL.h>
 
-namespace de
+namespace deep
 {
 
 	class window;

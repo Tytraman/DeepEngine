@@ -5,7 +5,7 @@
 drawable::drawable
 ==================
 */
-de::drawable::drawable(const fvec2 &pos, bool visible)
+deep::drawable::drawable(const fvec2 &pos, bool visible)
 	: m_Pos(pos),
 	  m_Visible(visible),
 	  m_DrawVectors(false)
@@ -16,7 +16,7 @@ de::drawable::drawable(const fvec2 &pos, bool visible)
 ColoredDrawable::ColoredDrawable
 ================================
 */
-de::ColoredDrawable::ColoredDrawable(const fvec2 &pos, const colora &color, bool visible)
+deep::ColoredDrawable::ColoredDrawable(const fvec2 &pos, const colora &color, bool visible)
 	: drawable(pos, visible),
 	  m_Color(color)
 { }

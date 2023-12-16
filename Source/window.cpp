@@ -15,7 +15,7 @@
 
 #include <string>
 
-namespace de
+namespace deep
 {
 
 	/*
@@ -213,11 +213,12 @@ namespace de
 		// Une fois qu'OpenGL a bien été initialisé,
 		// on crée une texture blanche de 1x1 par défaut.
 
-		uint8_t colors[] = {
+		uint8_t colors[] =
+        {
 			255, 255, 255, 255
 		};
 
-		texture_id whiteTex = texture_manager::create("default_white");
+		texture_id whiteTex = texture_manager::create2D("default_white");
 		texture_manager::bind(whiteTex, 0);
 
 		texture_manager::setTextureWrappingS(gl_texture_wrap::Repeat);

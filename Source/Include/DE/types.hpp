@@ -10,7 +10,7 @@
 
 /// @namespace de
 /// @brief Espace de nom regroupant tout ce qui est relatif au DeepEngine.
-namespace de {
+namespace deep {
 
 
 #if DE_WINDOWS

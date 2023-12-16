@@ -1,3 +1,19 @@
-# Commandes
+# Envoyer le code dans un repo distant
 	- Push dans un **remote** : `git push <remote> <branch>`
+- # Stash
+	- ## Description
+		- Traduction littérale : **mettre de côté**.
+		- Permet de faire une *snapshot* du projet et revenir à l'état du dernier commit.
+		- Permet d'éviter de faire un commit en sauvegardant l'état actuel du projet pour y revenir plus tard.
+	- ## ⚠️Importants
+		- Par défaut les fichiers non trackés ne sont pas inclus dans les stash.
+			- Pour les inclure, utiliser l'options `-u`, par exemple : `git stash -u`.
+	- ## Commandes
+		- Sauvegarder le projet et revenir au dernier commit : `git stash`
+			- `-u` : inclure les fichiers non trackés.
+			- `-m "message"` : ajoute un message au stash.
+		- Revenir au projet sauvegardé dans le stash le plus récent puis le supprimer de la liste : `git stash pop`
+			- Version sans retirer le stash de la liste : `git stash apply`
+		- Afficher la liste des stash : `git stash list`
+		-
 	-

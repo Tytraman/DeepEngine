@@ -6,7 +6,7 @@
 #include <DE/memory/memory.hpp>
 #include <DE/string_utils.hpp>
 
-namespace de
+namespace deep
 {
 
     class string;

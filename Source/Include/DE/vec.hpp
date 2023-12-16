@@ -5,7 +5,8 @@
 
 #include <stdint.h>
 
-namespace de {
+namespace deep
+{
 
 	class renderer;
 
@@ -16,8 +17,10 @@ namespace de {
 	struct fmat3x3;
 	struct fmat4x4;
 
-	namespace Vec2Direction {
-		enum e : uint8_t {
+	namespace Vec2Direction
+    {
+		enum e : uint8_t
+        {
 			Up,
 			Left,
 			Down,
@@ -28,7 +31,8 @@ namespace de {
 
 	/// @struct vec2
 	/// @brief  Vecteur à 2 dimensions avec des composantes de type \c int32_t.
-	struct DE_API vec2 {
+	struct DE_API vec2
+    {
 		int32_t x;    ///< Composante X du vecteur.
 		int32_t y;    ///< Composante Y du vecteur.
 

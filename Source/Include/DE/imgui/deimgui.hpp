@@ -5,7 +5,7 @@
 #include <DE/types.hpp>
 #include <DE/memory/list.hpp>
 
-namespace de
+namespace deep
 {
 
 	class window;

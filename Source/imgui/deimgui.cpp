@@ -13,7 +13,7 @@
 #include <backends/imgui_impl_sdl2.h>
 #include <backends/imgui_impl_opengl3.h>
 
-namespace de {
+namespace deep {
 
 	bool im_gui_window::m_Initialized = false;
 

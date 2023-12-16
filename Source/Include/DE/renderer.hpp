@@ -9,7 +9,7 @@
 
 #include <SDL.h>
 
-namespace de
+namespace deep
 {
 
 	// Cette classe est déclarée ici pour éviter une boucle infinie d'inclusion

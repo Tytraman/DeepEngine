@@ -14,7 +14,7 @@
 
 #include <SDL.h>
 
-namespace de
+namespace deep
 {
 
 #if DE_WINDOWS

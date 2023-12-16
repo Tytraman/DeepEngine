@@ -4,9 +4,45 @@
 #include <DE/def.hpp>
 #include <DE/types.hpp>
 #include <DE/vec.hpp>
+#include <DE/rendering/opengl_utils.hpp>
 
-namespace de
+namespace deep
 {
+
+    class DE_API polygon
+    {
+
+        public:
+            polygon(vbo_id vbo, vao_id vao);
+
+            vbo_id vbo() const;
+            vao_id vao() const;
+
+        private:
+            vbo_id m_VBO;
+            vao_id m_VAO;
+
+    };
+
+    /*
+	============
+	polygon::vbo
+	============
+	*/
+    inline vbo_id polygon::vbo() const
+    {
+        return m_VBO;
+    }
+
+    /*
+	============
+	polygon::vao
+	============
+	*/
+    inline vao_id polygon::vao() const
+    {
+        return m_VAO;
+    }
 
 	/// @struct rect
 	/// @brief  Structure représentant un rectangle.

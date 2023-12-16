@@ -7,7 +7,7 @@
 #include <DE/graphics/shape.hpp>
 #include <DE/memory/list.hpp>
 
-namespace de
+namespace deep
 {
 
 	/// @brief	Identifie une entité dans une scène.

@@ -5,7 +5,7 @@
 #include <DE/types.hpp>
 #include <DE/vec.hpp>
 
-namespace de {
+namespace deep {
 
 	/// @brief Les caméras sont ce qui donnent l'effet de voir le monde selon une position.
 	class DE_API Camera {

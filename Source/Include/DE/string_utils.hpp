@@ -4,7 +4,7 @@
 #include <DE/def.hpp>
 #include <DE/types.hpp>
 
-namespace de
+namespace deep
 {
 
 	class DE_API string_utils
@@ -40,6 +40,8 @@ namespace de
 			static void wcharToChar(char *dest, const wchar_t *source);
 
 			static int toUpper(int value);
+
+            static uint64_t hash(const char *str);
 
 			static size_t length(const char *str);
 			static size_t length(const wchar_t *str);

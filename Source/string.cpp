@@ -1,7 +1,7 @@
 #include <DE/string.hpp>
 #include <DE/common.hpp>
 
-namespace de
+namespace deep
 {
 
     /*

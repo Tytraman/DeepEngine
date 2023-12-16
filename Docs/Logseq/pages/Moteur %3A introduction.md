@@ -31,6 +31,7 @@
 	- Quand on parle d'**API graphique**, on fait référence au système qui va nous permettre d'afficher des choses à l'écran. La **SDL** possède tout un tas de fonctions qui permettent d'afficher par exemple des lignes ou des rectangles, c'est ce qu'on appelle une **API graphique**.
 	- Dans le cas du [[🕹️DeepEngine]], le rendu se fait grâce à l'accélération matérielle et utilise [OpenGL](https://fr.wikipedia.org/wiki/OpenGL) comme **API graphique**.
 		- **OpenGL** étant une **spécification** et non une bibliothèque directement utilisable, il est nécessaire de trouver un moyen pour appeler les fonctions, le [[🕹️DeepEngine]] utilise [glad](https://glad.dav1d.de/).
+		- Plus de détails peuvent être lus sur la page [[OpenGL]].
 - # Afficher des choses
 	- ## Post-processing
 	-

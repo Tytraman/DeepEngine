@@ -9,7 +9,7 @@
 #include <DE/renderer.hpp>
 #include <DE/rendering/opengl_utils.hpp>
 
-namespace de
+namespace deep
 {
 
 	struct DE_API system_item

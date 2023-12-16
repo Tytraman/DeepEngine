@@ -6,7 +6,7 @@
 
 #include <stdint.h>
 
-namespace de
+namespace deep
 {
 
     class core;

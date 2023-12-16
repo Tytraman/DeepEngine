@@ -292,7 +292,7 @@
  ;;  :journal?        false} ; Default value: false
 
  ;; Favorites to list on the left sidebar
- :favorites ["🪲Bugs" "📝TODOs" "🕹️deepengine" "DeepEngine"]
+ :favorites ["💀problèmes" "🪲bugs" "📝todos" "🕹️deepengine" "deepengine"]
 
  ;; Set flashcards interval.
  ;; Expected value:
@@ -412,7 +412,7 @@
  ;;      ;use triple underscore `___` for slash `/` in page title
  ;;      ;use Percent-encoding for other invalid characters
  :file/name-format :triple-lowbar
- :graph/settings {:journal? true
- :builtin-pages? true
+ :graph/settings {:journal? false
+ :builtin-pages? false
  :orphan-pages? false
  :excluded-pages? true}}

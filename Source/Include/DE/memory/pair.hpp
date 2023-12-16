@@ -5,7 +5,7 @@
 #include <DE/types.hpp>
 #include <DE/memory/memory.hpp>
 
-namespace de
+namespace deep
 {
 
     template<typename Type1, typename Type2>

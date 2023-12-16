@@ -8,7 +8,7 @@
 #include <AL/al.h>
 #include <AL/alc.h>
 
-namespace de
+namespace deep
 {
 
 	class audio_buffer;

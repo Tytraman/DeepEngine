@@ -3,7 +3,7 @@
 
 #include <DE/memory/collection.hpp>
 
-namespace de
+namespace deep
 {
 
     template<typename Type>

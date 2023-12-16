@@ -87,8 +87,6 @@
 #define DE_TRUE  1
 #define DE_FALSE 0
 
-#define de DeepEngine
-
 #define DE_DEG_RAD(__deg) (__deg * (float) M_PI / 180.0f)
 
 #define DE_TERM_ESC        "\033"

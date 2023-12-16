@@ -14,5 +14,6 @@
 	- [[Moteur : introduction]]
 - # Pages importantes
 	- ## #📝TODOs
+	- ## #💀Problèmes
 	- ## #🪲Bugs
 -

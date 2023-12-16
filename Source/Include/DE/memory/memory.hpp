@@ -7,7 +7,7 @@
 
 #include <utility>
 
-namespace de
+namespace deep
 {
 
 #if DE_WINDOWS

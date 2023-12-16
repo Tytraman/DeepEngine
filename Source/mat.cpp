@@ -1,6 +1,6 @@
 #include <DE/mat.hpp>
 
-namespace de {
+namespace deep {
 
 	/*
 	================

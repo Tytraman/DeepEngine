@@ -1,6 +1,6 @@
 #include <de/mutex.hpp>
 
-namespace de
+namespace deep
 {
 
     mutex_handle mutex::create(const char *name)
