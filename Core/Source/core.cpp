@@ -48,7 +48,7 @@ namespace deep
         }
 #endif
 
-        printf(DE_TERM_FG_GREEN "core::init" DE_TERM_RESET " - " DE_TERM_FG_RED "this is where it all begins" DE_TERM_RESET "\n");
+        printf(DE_TERM_FG_GREEN "core::init" DE_TERM_RESET " v" DE_VERSION " - " DE_TERM_FG_RED "this is where it all begins" DE_TERM_RESET "\n");
 
         // Vérifie s'il y a une autre instance du programme et
         // si c'est le cas, lui donne le focus.

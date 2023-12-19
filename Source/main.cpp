@@ -414,6 +414,25 @@ int main()
 
     printf("pwd: %s\n", deep::core::getPwd());
 
+    deep::bmp bmpTest;
+
+    if(!bmpTest.createFromFile("C:\\Users\\tytra\\Pictures\\test\\bmp\\4.bmp"))
+    {
+        fprintf(stderr, "Error opening bmp file...\n");
+        return 1;
+    }
+
+    bmpTest.verticalFlip();
+    bmpTest.cutColumns(0, 300);
+    bmpTest.cutColumns(1080, bmpTest.getWidth());
+
+    if(!bmpTest.save("testBmp.bmp"))
+    {
+        fprintf(stderr, "Error saving bmp file...\n");
+    }
+
+    
+
     deep::window win(TARGET_MS, TARGET_FPS);
     win.setEventCallback(event_callback);
     win.setUpdateCallback(update_callback);
@@ -454,8 +473,17 @@ int main()
         deep::gpu_core::maxTextureImageUnits()
     );
 
+    deep::texture_id blueGirl = deep::texture_manager::create2D("girl");
+	deep::texture_manager::bind(blueGirl, 0);
+    deep::texture_manager::setTextureWrappingS(deep::gl_texture_wrap::ClampToEdge);
+	deep::texture_manager::setTextureWrappingT(deep::gl_texture_wrap::ClampToEdge);
+	deep::texture_manager::setTextureFiltering(deep::gl_texture_filter::Nearest);
+    deep::texture_manager::transmitTexture(bmpTest.image(), bmpTest.getWidth(), bmpTest.getHeight(), bmpTest.getColorType());
+
     deep::texture_id mcGrassSide = deep::resource_manager::loadTexture("grass_block_side.png", 0);
     deep::texture_id mcGrassTop  = deep::resource_manager::loadTexture("grass_block_top.png", 0);
+
+    bmpTest.destroy();
 
     deep::png pngSkyboxLeft;
     deep::png pngSkyboxFront;
@@ -631,7 +659,7 @@ int main()
     {
         for(j = 0; j < 50; ++j)
         {
-            deep::entity entTest = deep::entity_manager::createEntity(collectionID, pol, defaultProgram, deep::fvec3(i * 5.0f, 0.0f, j * 5.0f), deep::fvec3(3.0f, 3.0f, 3.0f), mcGrassSide);
+            deep::entity entTest = deep::entity_manager::createEntity(collectionID, pol, defaultProgram, deep::fvec3(i * 5.0f, 0.0f, j * 5.0f), deep::fvec3(3.0f, 3.0f, 3.0f), blueGirl);
         }
     }
 

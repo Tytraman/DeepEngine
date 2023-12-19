@@ -129,6 +129,24 @@ namespace deep
 		  m_Size(size)
 	{ }
 
+    /*
+	==========================
+	memory_chunk::memory_chunk
+	==========================
+	*/
+    memory_chunk::memory_chunk(const memory_chunk &other)
+    {
+        m_Data = mem::alloc(other.m_Size);
+
+        if(m_Data != nullptr)
+        {
+            m_Size = other.m_Size;
+            memcpy(m_Data, other.m_Data, m_Size);
+        }
+        else
+            m_Size = 0;
+    }
+
 	/*
 	====================
 	memory_chunk::create

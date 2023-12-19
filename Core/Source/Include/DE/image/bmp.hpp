@@ -56,20 +56,59 @@ namespace deep
 		}
 	);
     
-
+	/// @brief Classe permettant l'ouverture, la modification et la conversion d'images bitmap.
 	class DE_API bmp
     {
 
 		public:
+			/// @brief Constructeur qui initialise les variables internes à leurs valeurs par défaut.
 			bmp();
 
+            /// @brief Construit une nouvelle image bmp en faisant une copie de la mémoire d'une autre image bmp.
+            /// @param other L'image bmp à copier.
+            bmp(const bmp &other);
+
 			bool create(int32_t width, int32_t height, uint16_t colorDepth, image_color_type colorType);
+
+            /// @brief Crée une image bmp en l'ouvrant depuis un fichier.
+            /// @param filename Le chemin du fichier à ouvrir.
+            /// @return \c true si l'opération réussie.
+            bool createFromFile(const char *filename);
+
+			/// @brief Libère la mémoire utilisée par l'image.
 			void destroy();
 
+            /// @brief Convertie une zone mémoire brute en image bmp.
+            /// @param raw Zone mémoire à convertir.
             void convertRaw(uint8_t *raw);
 
+			/// @brief Convertie une image png en image bmp.
+			/// @param png L'image bmp à convertir.
 			void convertFrom(png &png);
+
+			/// @brief Sauvegarde l'image bmp.
+			/// @param filename Le chemin du fichier dans lequel sauvegarder l'image.
+			/// @return \c true si l'opération réussie.
 			bool save(const char *filename);
+
+            bool copyColumn(int32_t index, int32_t dest, int32_t start, int32_t end, uint8_t *from, uint8_t *to);
+            bool copyColumn(int32_t index, int32_t dest, int32_t start, int32_t end);
+
+            bool copyRow(int32_t index, int32_t dest, int32_t colEnd, uint32_t fromRowSize, uint32_t toRowSize, uint8_t *from, uint8_t *to);
+            bool copyRow(int32_t index, int32_t dest, int32_t colEnd);
+
+            bool copyRow(int32_t index, int32_t dest, uint8_t *from, uint8_t *to);
+
+            bool cutColumns(int32_t start, int32_t end);
+
+            void swapColumns(int32_t first, int32_t second, mem_ptr buffer, uint8_t bytes);
+
+            void verticalFlip();
+            void horizontalFlip();
+
+            bool add(const bmp &other);
+
+            bool resize(int32_t width, int32_t height);
 
 			int32_t getWidth() const;
 			int32_t getHeight() const;
@@ -83,6 +122,8 @@ namespace deep
 			int32_t m_Width;
 			int32_t m_Height;
 			image_color_type m_ColorType;
+            uint16_t m_ColorDepth;
+            uint32_t m_InfoHeaderSize;
 
 	};
 

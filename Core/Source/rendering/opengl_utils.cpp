@@ -1444,6 +1444,7 @@ namespace deep
         {
 			default:
                 return;
+            // TODO: case BGR
 			case image_color_type::RGB:
             {
 				internalFormat = GL_RGB8;

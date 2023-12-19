@@ -37,7 +37,7 @@ namespace deep
 
 		public:
 			virtual bool open() = 0;
-			virtual bool open(bool append);
+			virtual bool open(bool append, bool recreate);
 			virtual void close() = 0;
 			virtual bool write(const mem_ptr buffer, size_t size, size_t *bytesWritten) = 0;
 			
@@ -48,7 +48,7 @@ namespace deep
 	output_stream::open
 	===================
 	*/
-	inline bool output_stream::open(bool append)
+	inline bool output_stream::open(bool append, bool recreate)
 	{
 		return open();
 	}
@@ -182,7 +182,7 @@ namespace deep
 		public:
 			output_file_stream(const char *filename);
 			bool open() override;
-			bool open(bool append) override;
+			bool open(bool append, bool recreate) override;
 			void close() override;
 			bool write(const mem_ptr buffer, size_t size, size_t *bytesWritten) override;
 
@@ -200,7 +200,7 @@ namespace deep
 	*/
 	inline bool output_file_stream::open()
 	{
-		return open(false);
+		return open(false, false);
 	}
 
     /*
@@ -208,11 +208,12 @@ namespace deep
 	output_file_stream::open
 	========================
 	*/
-	inline bool output_file_stream::open(bool append)
+	inline bool output_file_stream::open(bool append, bool recreate)
 	{
 #ifdef DE_WINDOWS
 
-		if(append) {
+		if(append)
+        {
 			m_FD = CreateFileA(m_Filename, FILE_APPEND_DATA, FILE_SHARE_READ, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 			if(m_FD == INVALID_HANDLE_VALUE)
 				return false;
@@ -220,8 +221,16 @@ namespace deep
 				close();
 				return false;
 			}
-		}else {
-			m_FD = CreateFileA(m_Filename, FILE_GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+		}
+        else
+        {
+            DWORD f;
+            if(recreate)
+                f = CREATE_ALWAYS;
+            else
+                f = OPEN_ALWAYS;
+
+			m_FD = CreateFileA(m_Filename, FILE_GENERIC_WRITE, FILE_SHARE_READ, NULL, f, FILE_ATTRIBUTE_NORMAL, NULL);
 			if(m_FD == INVALID_HANDLE_VALUE)
 				return false;
 		}

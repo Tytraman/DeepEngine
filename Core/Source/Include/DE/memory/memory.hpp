@@ -76,6 +76,7 @@ namespace deep
 
         public:
             memory_chunk(mem_ptr data = nullptr, size_t size = 0);
+            memory_chunk(const memory_chunk &other);
 
             static bool alloc(memory_chunk &dest, size_t size);
             void free();
