@@ -31,7 +31,7 @@ set(CORE_INCLUDE "${CORE_SOURCE}/Include" CACHE INTERNAL "")
 set(SDL_INCLUDE "C:/Users/tytra/Documents/libs/SDL2/include")
 set(SDL_LIB "C:/Users/tytra/Documents/libs/SDL2/lib/x64")
 
-set(IMGUI_INCLUDE "${CORE_INCLUDE}/imgui")
+set(IMGUI_INCLUDE "${CMAKE_CURRENT_LIST_DIR}/../Third-party/Libs/imgui")
 
 set(LIBPNG_INCLUDE "C:/Users/tytra/Documents/libs/libpng/1.6.40")
 set(LIBPNG_LIB "C:/Users/tytra/Documents/libs/libpng/1.6.40/build/Debug")

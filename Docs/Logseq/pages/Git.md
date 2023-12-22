@@ -1,5 +1,26 @@
-# Envoyer le code dans un repo distant
-	- Push dans un **remote** : `git push <remote> <branch>`
+# Gérer la base de données git dans un repo distant
+	- ## Ajouts
+	  id:: 65849c26-5195-4a20-99ed-b2f653ad9d9a
+		- ### Commits
+			- Envoyer les nouveaux commits : `git push <remote> <branch>`
+		- ### Tags
+			- Envoyer un tag : `git push <remote> <tagname>`
+			- Envoyer tous les tags qui ne sont pas dans le remote : `git push <remote> --tags`
+	- ## Suppressions
+		- ### Tags
+			- Version 1 : `git push <remote> :refs/tags/<tagname>`
+			- Version 2 *(plus intuitive)* : `git push <remote> --delete <tagname>`
+- # Branches
+	- ## Description
+		- Une branche permet de diviser son projet en plusieurs directions en partant d'un commit.
+		- Il est possible de fusionner plusieurs branches entre-elles.
+	- ## Commandes
+		- ### Création
+			- Création d'une branche qui part de la branche actuelle : `git branch <branch>`
+		- ### Changement
+			- Changer de branche : `git checkout <branch>`
+			- Créer une branche et aller directement dessus : `git checkout -b <branch>`
+		-
 - # Stash
 	- ## Description
 		- Traduction littérale : **mettre de côté**.
@@ -15,5 +36,32 @@
 		- Revenir au projet sauvegardé dans le stash le plus récent puis le supprimer de la liste : `git stash pop`
 			- Version sans retirer le stash de la liste : `git stash apply`
 		- Afficher la liste des stash : `git stash list`
-		-
-	-
+- # Tag
+	- ## Description
+		- Permet de tagger un point spécifique dans un projet.
+		- En général utilisé pour marquer les versions *(v1.0, v1.1)*.
+	- ## ⚠️Importants
+		- `git push` n'envoie pas les tags aux serveurs remotes, il faut explicitement les envoyer.
+			- Voir ((65849c26-5195-4a20-99ed-b2f653ad9d9a)) pour voir la commande.
+	- ## Types de tag
+		- Git possède **2** types de tag :
+			- `lightweight` : pointeur vers un commit spécifique.
+			  logseq.order-list-type:: number
+			- `annotated` : stock l'objet tout entier dans la base de données git.
+			  logseq.order-list-type:: number
+	- ## Commandes
+		- Afficher la liste des tags : `git tag`
+		- ### Créer des tags
+			- Créer un tag *lightweight* : `git tag <tagname>`
+			- Créer un tag annoté : `git tag -a <tagname> -m "<message>"`
+				- `-a` indique que l'on crée un tag annoté.
+				- `-m` indique le message associé à ce tag.
+			- Il est possible d'ajouter un tag sur un ancien commit en ajoutant le *checksum* du commit à la fin de la commande :
+				- `git tag -a v1.0 9fceb02`
+		- Voir les informations d'un tag : `git show <tagname>`
+		- Supprimer un tag : `git tag -d <tagname>`
+			- Cela ne supprime pas le tag du remote, pour cela :
+				- `git push <remote> :refs/tags/<tagname>`
+					- Le fait qu'il n'y ai rien collé à gauche de `:` indique une valeur `null`, donc la supprime du serveur.
+				- `git push <remote> --delete <tagname>`
+					- Plus intuitive que la précédente.
