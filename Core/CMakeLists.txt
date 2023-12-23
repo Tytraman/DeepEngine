@@ -25,14 +25,17 @@ project(${CORE_PROJECT} VERSION 0.0.1)
 set(THIRD_PARTY_LIBS "${CMAKE_CURRENT_LIST_DIR}/../Third-party/Libs")
 set(ZLIB_BUILD_DIRECTORY "${THIRD_PARTY_LIBS}/Build/zlib")
 set(LIBPNG_BUILD_DIRECTORY "${THIRD_PARTY_LIBS}/Build/libpng")
+set(SDL_BUILD_DIRECTORY "${THIRD_PARTY_LIBS}/Build/SDL")
 
 # Crée un dossier au moment de la génération du projet CMake.
 file(MAKE_DIRECTORY "${ZLIB_BUILD_DIRECTORY}")
 file(MAKE_DIRECTORY "${LIBPNG_BUILD_DIRECTORY}")
+file(MAKE_DIRECTORY "${SDL_BUILD_DIRECTORY}")
 
 # Indique à CMake qu'un sous projet CMake est présent et doit être compilé.
 add_subdirectory("${THIRD_PARTY_LIBS}/zlib" "${ZLIB_BUILD_DIRECTORY}")
 add_subdirectory("${THIRD_PARTY_LIBS}/libpng" "${LIBPNG_BUILD_DIRECTORY}")
+add_subdirectory("${THIRD_PARTY_LIBS}/SDL" "${SDL_BUILD_DIRECTORY}")
 
 # Ajoute des constantes au préprocesseur.
 add_compile_definitions(PRIVATE DE_AUTHORS=${DE_AUTHORS})   # Le nom des auteurs stockés dans les variables partagées.
@@ -42,8 +45,7 @@ set(CORE_SOURCE "${CMAKE_CURRENT_LIST_DIR}/Source" CACHE INTERNAL "")
 set(CORE_INCLUDE "${CORE_SOURCE}/Include" CACHE INTERNAL "")
 
 # Variables qui stockent les chemins des différentes librairies utilisées.
-set(SDL_INCLUDE "C:/Users/tytra/Documents/libs/SDL2/include")
-set(SDL_LIB "C:/Users/tytra/Documents/libs/SDL2/lib/x64")
+set(SDL_INCLUDE "${THIRD_PARTY_LIBS}/SDL/include")
 
 set(IMGUI_INCLUDE "${THIRD_PARTY_LIBS}/imgui")
 
@@ -110,14 +112,13 @@ target_include_directories(${CORE_PROJECT} PUBLIC
 )
 
 target_link_directories(${CORE_PROJECT} PUBLIC
-	${SDL_LIB}
     ${ZLIB_LIB}
 	${LIBPNG_LIB}
     ${OPENAL_LIB}
 )
 
 target_link_libraries(${CORE_PROJECT}
-	SDL2.lib
+	SDL2-static
     zlibstatic      # Nom de la cible de zlib pour que CMake crée une dépendance.
 	png_static      # Nom de la cible de libpng pour que CMake crée une dépendance.
 	OpenGL32.lib

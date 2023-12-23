@@ -39,7 +39,6 @@ add_executable(${DE_PROJECT} ${DE_SOURCES})
 
 target_include_directories(${DE_PROJECT} PUBLIC
 	${CORE_INCLUDE}
-	${SDL_INCLUDE}
 )
 
 target_link_directories(${DE_PROJECT} PUBLIC "${CMAKE_CURRENT_LIST_DIR}/out/build/x64-Debug")
