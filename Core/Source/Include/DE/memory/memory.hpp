@@ -5,6 +5,7 @@
 #include <DE/types.hpp>
 #include <DE/common.hpp>
 
+#include <stddef.h>
 #include <utility>
 
 namespace deep

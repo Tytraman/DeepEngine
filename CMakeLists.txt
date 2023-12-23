@@ -21,7 +21,12 @@ include("variables.cmake")
 
 project(${DE_PROJECT} VERSION 0.0.1)
 
-add_subdirectory(Core)
+set(CORE_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/Core")
+set(CORE_BUILD_DIRECTORY "${CORE_DIRECTORY}/Build")
+
+# Crée un dossier au moment de la génération du projet CMake.
+file(MAKE_DIRECTORY "${CORE_BUILD_DIRECTORY}")
+add_subdirectory("${CORE_DIRECTORY}" "${CORE_BUILD_DIRECTORY}")
 
 add_compile_definitions(PRIVATE DE_AUTHORS=${DE_AUTHORS})
 add_compile_definitions(PRIVATE DE_VERSION=${DE_VERSION})

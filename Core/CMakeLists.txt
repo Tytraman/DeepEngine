@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 3.8)
 # Indique les versions à utiliser des langages.
 set(CMAKE_CXX_STANDARD 17)
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/../Build")
+# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/Build")
 
 enable_language(C ASM_MASM)
 
@@ -17,12 +17,26 @@ if(MSVC)
 	endif()
 endif()
 
+# Inclue les variables partagées.
 include("${CMAKE_CURRENT_LIST_DIR}/../variables.cmake")
 
 project(${CORE_PROJECT} VERSION 0.0.1)
 
-add_compile_definitions(PRIVATE DE_AUTHORS=${DE_AUTHORS})
-add_compile_definitions(PRIVATE DE_VERSION=${DE_VERSION})
+set(THIRD_PARTY_LIBS "${CMAKE_CURRENT_LIST_DIR}/../Third-party/Libs")
+set(ZLIB_BUILD_DIRECTORY "${THIRD_PARTY_LIBS}/Build/zlib")
+set(LIBPNG_BUILD_DIRECTORY "${THIRD_PARTY_LIBS}/Build/libpng")
+
+# Crée un dossier au moment de la génération du projet CMake.
+file(MAKE_DIRECTORY "${ZLIB_BUILD_DIRECTORY}")
+file(MAKE_DIRECTORY "${LIBPNG_BUILD_DIRECTORY}")
+
+# Indique à CMake qu'un sous projet CMake est présent et doit être compilé.
+add_subdirectory("${THIRD_PARTY_LIBS}/zlib" "${ZLIB_BUILD_DIRECTORY}")
+add_subdirectory("${THIRD_PARTY_LIBS}/libpng" "${LIBPNG_BUILD_DIRECTORY}")
+
+# Ajoute des constantes au préprocesseur.
+add_compile_definitions(PRIVATE DE_AUTHORS=${DE_AUTHORS})   # Le nom des auteurs stockés dans les variables partagées.
+add_compile_definitions(PRIVATE DE_VERSION=${DE_VERSION})   # Le nom de la version actuelle stockée dans les variables partagées.
 
 set(CORE_SOURCE "${CMAKE_CURRENT_LIST_DIR}/Source" CACHE INTERNAL "")
 set(CORE_INCLUDE "${CORE_SOURCE}/Include" CACHE INTERNAL "")
@@ -31,15 +45,25 @@ set(CORE_INCLUDE "${CORE_SOURCE}/Include" CACHE INTERNAL "")
 set(SDL_INCLUDE "C:/Users/tytra/Documents/libs/SDL2/include")
 set(SDL_LIB "C:/Users/tytra/Documents/libs/SDL2/lib/x64")
 
-set(IMGUI_INCLUDE "${CMAKE_CURRENT_LIST_DIR}/../Third-party/Libs/imgui")
+set(IMGUI_INCLUDE "${THIRD_PARTY_LIBS}/imgui")
 
-set(LIBPNG_INCLUDE "C:/Users/tytra/Documents/libs/libpng/1.6.40")
-set(LIBPNG_LIB "C:/Users/tytra/Documents/libs/libpng/1.6.40/build/Debug")
+set(ZLIB_INCLUDE "${THIRD_PARTY_LIBS}/zlib")
+set(ZLIB_LIB "${ZLIB_BUILD_DIRECTORY}")
+set(ZLIB_INCLUDE_2 "${ZLIB_BUILD_DIRECTORY}")
+
+set(LIBPNG_INCLUDE "${THIRD_PARTY_LIBS}/libpng")
+set(LIBPNG_LIB "${LIBPNG_BUILD_DIRECTORY}")
 
 set(OPENAL_INCLUDE "C:/Users/tytra/Documents/libs/openal-soft/include")
 set(OPENAL_LIB "C:/Users/tytra/Documents/libs/openal-soft/libs/Win64")
 
 file(GLOB CORE_HEADERS
+    "${CORE_INCLUDE}/glad/*.hpp" "${CORE_INCLUDE}/glad/*.h"
+	"${CORE_INCLUDE}/KHR/*.hpp" "${CORE_INCLUDE}/KHR/*.h"
+
+    "${IMGUI_INCLUDE}/*.hpp" "${IMGUI_INCLUDE}/*.h"
+	"${IMGUI_INCLUDE}/backends/*.hpp" "${IMGUI_INCLUDE}/backends/*.h"
+
 	"${CORE_INCLUDE}/*.hpp" "${CORE_INCLUDE}/*.h"
 	"${CORE_INCLUDE}/DE/*.hpp" "${CORE_INCLUDE}/DE/*.h"
 	"${CORE_INCLUDE}/DE/audio/*.hpp" "${CORE_INCLUDE}/DE/audio/*.h"
@@ -52,15 +76,13 @@ file(GLOB CORE_HEADERS
 	"${CORE_INCLUDE}/DE/rendering/*.hpp" "${CORE_INCLUDE}/DE/rendering/*.h"
     "${CORE_INCLUDE}/DE/resource/*.hpp" "${CORE_INCLUDE}/DE/resource/*.h"
     "${CORE_INCLUDE}/DE/file/*.hpp" "${CORE_INCLUDE}/DE/file/*.h"
-
-	"${CORE_INCLUDE}/glad/*.hpp" "${CORE_INCLUDE}/glad/*.h"
-	"${CORE_INCLUDE}/KHR/*.hpp" "${CORE_INCLUDE}/KHR/*.h"
-
-	"${IMGUI_INCLUDE}/*.hpp" "${IMGUI_INCLUDE}/*.h"
-	"${IMGUI_INCLUDE}/backends/*.hpp" "${IMGUI_INCLUDE}/backends/*.h"
 )
 
 file(GLOB CORE_SOURCES
+    "${IMGUI_INCLUDE}/*.cpp" "${IMGUI_INCLUDE}/*.c"
+	"${IMGUI_INCLUDE}/backends/imgui_impl_sdl2.cpp"
+	"${IMGUI_INCLUDE}/backends/imgui_impl_opengl3.cpp"
+
 	"${CORE_SOURCE}/*.cpp" "${CORE_SOURCE}/*.c"
 	"${CORE_SOURCE}/audio/*.cpp" "${CORE_SOURCE}/audio/*.c"
 	"${CORE_SOURCE}/ecs/*.cpp" "${CORE_SOURCE}/ecs/*.c"
@@ -72,10 +94,6 @@ file(GLOB CORE_SOURCES
 	"${CORE_SOURCE}/rendering/*.cpp" "${CORE_SOURCE}/rendering/*.c"
     "${CORE_SOURCE}/resource/*.cpp" "${CORE_SOURCE}/resource/*.c"
     "${CORE_SOURCE}/file/*.cpp" "${CORE_SOURCE}/file/*.c"
-
-	"${IMGUI_INCLUDE}/*.cpp" "${IMGUI_INCLUDE}/*.c"
-	"${IMGUI_INCLUDE}/backends/imgui_impl_sdl2.cpp"
-	"${IMGUI_INCLUDE}/backends/imgui_impl_opengl3.cpp"
 )
 
 
@@ -85,19 +103,23 @@ target_include_directories(${CORE_PROJECT} PRIVATE ${CORE_INCLUDE})
 target_include_directories(${CORE_PROJECT} PUBLIC
 	${SDL_INCLUDE}
 	${IMGUI_INCLUDE}
+    ${ZLIB_INCLUDE_2}
+    ${ZLIB_INCLUDE}
 	${LIBPNG_INCLUDE}
     ${OPENAL_INCLUDE}
 )
 
 target_link_directories(${CORE_PROJECT} PUBLIC
 	${SDL_LIB}
+    ${ZLIB_LIB}
 	${LIBPNG_LIB}
     ${OPENAL_LIB}
 )
 
 target_link_libraries(${CORE_PROJECT}
 	SDL2.lib
-	libpng16d.lib
+    zlibstatic      # Nom de la cible de zlib pour que CMake crée une dépendance.
+	png_static      # Nom de la cible de libpng pour que CMake crée une dépendance.
 	OpenGL32.lib
     OpenAL32.lib
 )

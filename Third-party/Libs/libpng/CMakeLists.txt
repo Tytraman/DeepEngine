@@ -43,11 +43,15 @@ set(PNGLIB_SHARED_VERSION ${PNGLIB_SHARED_SOVERSION}.${PNGLIB_REVISION}.${PNGLIB
 
 include(GNUInstallDirs)
 
+set(ZLIB_LIBRARIES "${CMAKE_CURRENT_SOURCE_DIR}/../Build/zlib/zlibd.lib")
+set(ZLIB_INCLUDE_DIRS "${CMAKE_CURRENT_SOURCE_DIR}/../zlib" "${CMAKE_CURRENT_SOURCE_DIR}/../Build/zlib/")
+
 # Allow users to specify location of zlib.
 # Useful if zlib is being built alongside this as a sub-project.
-option(PNG_BUILD_ZLIB "Custom zlib Location, else find_package is used" OFF)
+option(PNG_BUILD_ZLIB "Custom zlib Location, else find_package is used" ON)
 
 if(NOT PNG_BUILD_ZLIB)
+  message("Condition PNG_BUILD_ZLIB: dossier include: ${ZLIB_INCLUDE_DIRS}")
   find_package(ZLIB REQUIRED)
   include_directories(${ZLIB_INCLUDE_DIRS})
 endif()
@@ -580,11 +584,13 @@ if(PNG_DEBUG)
 endif()
 
 # Now build our target.
+message("ZLIB_INCLUDE_DIRS: ${ZLIB_INCLUDE_DIRS}")
 include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${ZLIB_INCLUDE_DIRS})
 
 unset(PNG_LIB_TARGETS)
 
 if(PNG_SHARED)
+  message("PNG_SHARED")
   add_library(png SHARED ${libpng_sources})
   set(PNG_LIB_TARGETS png)
   set_target_properties(png PROPERTIES OUTPUT_NAME ${PNG_LIB_NAME})
@@ -610,6 +616,7 @@ endif()
 if(PNG_STATIC)
   # does not work without changing name
   set(PNG_LIB_NAME_STATIC png_static)
+  message("PNG_STATIC")
   add_library(png_static STATIC ${libpng_sources})
   add_dependencies(png_static genfiles)
   # MSVC doesn't use a different file extension for shared vs. static
@@ -634,6 +641,7 @@ endif()
 
 if(PNG_FRAMEWORK)
   set(PNG_LIB_NAME_FRAMEWORK png_framework)
+  message("PNG_FRAMEWORK")
   add_library(png_framework SHARED ${libpng_sources})
   add_dependencies(png_framework genfiles)
   list(APPEND PNG_LIB_TARGETS png_framework)

@@ -363,5 +363,7 @@ MigrationBackup/
 FodyWeavers.xsd
 
 # ==================== #
-build
+Build
+Third-Party/Libs/Build
 Core/Source/Include/imgui
+Third-party/Libs/zlib/zconf.h.included
