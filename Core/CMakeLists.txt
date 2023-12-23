@@ -26,16 +26,23 @@ set(THIRD_PARTY_LIBS "${CMAKE_CURRENT_LIST_DIR}/../Third-party/Libs")
 set(ZLIB_BUILD_DIRECTORY "${THIRD_PARTY_LIBS}/Build/zlib")
 set(LIBPNG_BUILD_DIRECTORY "${THIRD_PARTY_LIBS}/Build/libpng")
 set(SDL_BUILD_DIRECTORY "${THIRD_PARTY_LIBS}/Build/SDL")
+set(OPENALSOFT_BUILD_DIRECTORY "${THIRD_PARTY_LIBS}/Build/openal-soft")
 
 # Crée un dossier au moment de la génération du projet CMake.
 file(MAKE_DIRECTORY "${ZLIB_BUILD_DIRECTORY}")
 file(MAKE_DIRECTORY "${LIBPNG_BUILD_DIRECTORY}")
 file(MAKE_DIRECTORY "${SDL_BUILD_DIRECTORY}")
+file(MAKE_DIRECTORY "${OPENALSOFT_BUILD_DIRECTORY}")
+
+# Certaines dépendances ont besion de zlib, généralement ce sont ces 2 variables qui sont utilisées.
+set(ZLIB_INCLUDE_DIR "${THIRD_PARTY_LIBS}/zlib" CACHE INTERNAL "zlib_include")
+set(ZLIB_LIBRARY "${ZLIB_BUILD_DIRECTORY}/zlibd.lib")
 
 # Indique à CMake qu'un sous projet CMake est présent et doit être compilé.
 add_subdirectory("${THIRD_PARTY_LIBS}/zlib" "${ZLIB_BUILD_DIRECTORY}")
 add_subdirectory("${THIRD_PARTY_LIBS}/libpng" "${LIBPNG_BUILD_DIRECTORY}")
 add_subdirectory("${THIRD_PARTY_LIBS}/SDL" "${SDL_BUILD_DIRECTORY}")
+add_subdirectory("${THIRD_PARTY_LIBS}/openal-soft" "${OPENALSOFT_BUILD_DIRECTORY}")
 
 # Ajoute des constantes au préprocesseur.
 add_compile_definitions(PRIVATE DE_AUTHORS=${DE_AUTHORS})   # Le nom des auteurs stockés dans les variables partagées.
@@ -56,8 +63,7 @@ set(ZLIB_INCLUDE_2 "${ZLIB_BUILD_DIRECTORY}")
 set(LIBPNG_INCLUDE "${THIRD_PARTY_LIBS}/libpng")
 set(LIBPNG_LIB "${LIBPNG_BUILD_DIRECTORY}")
 
-set(OPENAL_INCLUDE "C:/Users/tytra/Documents/libs/openal-soft/include")
-set(OPENAL_LIB "C:/Users/tytra/Documents/libs/openal-soft/libs/Win64")
+set(OPENAL_INCLUDE "${THIRD_PARTY_LIBS}/openal-soft/include")
 
 file(GLOB CORE_HEADERS
     "${CORE_INCLUDE}/glad/*.hpp" "${CORE_INCLUDE}/glad/*.h"
@@ -118,11 +124,11 @@ target_link_directories(${CORE_PROJECT} PUBLIC
 )
 
 target_link_libraries(${CORE_PROJECT}
-	SDL2-static
+	SDL2-static     # Nom de la cible de la SDL2 pour que CMake crée une dépendance.
     zlibstatic      # Nom de la cible de zlib pour que CMake crée une dépendance.
 	png_static      # Nom de la cible de libpng pour que CMake crée une dépendance.
 	OpenGL32.lib
-    OpenAL32.lib
+    OpenAL          # Nom de la cible de OpenAL pour que CMake crée une dépendance.
 )
 
 target_compile_definitions(${CORE_PROJECT} PRIVATE DEEPENGINE_LIB=1)
