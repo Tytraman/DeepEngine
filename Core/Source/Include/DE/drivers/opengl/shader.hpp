@@ -1,0 +1,210 @@
+#ifndef __DEEP_ENGINE_OPENGL_SHADER_HPP__
+#define __DEEP_ENGINE_OPENGL_SHADER_HPP__
+
+#include "DE/def.hpp"
+#include "DE/types.hpp"
+#include "DE/memory/hash_table.hpp"
+#include "DE/memory/pair.hpp"
+#include "DE/vec.hpp"
+#include "DE/mat.hpp"
+#include "DE/drivers/opengl/def.hpp"
+
+namespace deep
+{
+
+    namespace GL3
+    {
+
+        class program_manager;
+
+        class shader_manager
+        {
+
+            public:
+                enum class gl_shader_type : GLenum
+                {
+                    Fragment = GL_FRAGMENT_SHADER,
+                    Vertex   = GL_VERTEX_SHADER
+                };
+
+            public:
+                DE_API static shader_manager *get_singleton();
+
+                DE_API gl_id create(const char *name, gl_shader_type shaderType);
+
+                DE_API void raw_load(GLuint shader, memory_chunk &program);
+                DE_API bool load(gl_id shader, memory_chunk &program);
+                DE_API bool load(const char *name, memory_chunk &program);
+
+                DE_API bool raw_compile(GLuint shader);
+                DE_API bool compile(gl_id shader);
+                DE_API bool compile(const char *name);
+
+                DE_API void raw_destroy(GLuint shader);
+                DE_API bool destroy(gl_id shader);
+                DE_API bool destroy(const char *name);
+
+            private:
+                shader_manager();
+
+                hash_table<GLuint> m_Shaders;
+
+            public:
+                friend program_manager;
+
+                shader_manager(const shader_manager &) = delete;
+                shader_manager(shader_manager &&) = delete;
+
+        };
+
+        class program_manager
+        {
+
+            public:
+                struct program_item
+                {
+                    GLuint program;
+                    hash_table<pair<int, float>> fUniforms;
+                    hash_table<pair<int, int>> iUniforms;
+                    hash_table<pair<int, fvec3>> fv3Uniforms;
+                    hash_table<pair<int, fmat4x4>> fm4Uniforms;
+
+                    DE_API program_item(GLuint program);
+                };
+
+            public:
+                DE_API static program_manager *get_singleton();
+
+                DE_API gl_id create(const char *name);
+
+                DE_API void raw_attach_shader(GLuint program, GLuint shader);
+                DE_API bool attach_shader(gl_id program, gl_id shader);
+                DE_API bool attach_shader(const char *progName, const char *shadName);
+                DE_API bool attach_shader(const char *progName, gl_id shader);
+                DE_API bool attach_shader(gl_id program, const char *shadName);
+
+                DE_API bool add_uniform(const char *uniformName, int location, float value);
+                DE_API bool add_uniform(const char *uniformName, int location, int value);
+                DE_API bool add_uniform(const char *uniformName, int location, const fvec3 &value);
+                DE_API bool add_uniform(const char *uniformName, int location, const fmat4x4 &value);
+
+                DE_API bool set_uniform(const char *uniformName, float value);
+                DE_API bool set_uniform(const char *uniformName, int value);
+                DE_API bool set_uniform(const char *uniformName, const fvec3 &value);
+                DE_API bool set_uniform(const char *uniformName, const fmat4x4 &value);
+
+                DE_API bool raw_link(GLuint program);
+                DE_API bool link(gl_id program);
+                DE_API bool link(const char *name);
+
+                DE_API void raw_use(GLuint program);
+                DE_API bool use(gl_id program);
+                DE_API bool use(const char *name);
+
+                DE_API void raw_destroy(GLuint program);
+                DE_API bool destroy(gl_id program);
+                DE_API bool destroy(const char *name);
+
+                DE_API bool send_uniforms();
+                DE_API void destroy_all_programs();
+
+                DE_API bool exists(gl_id program);
+                DE_API bool exists(const char *name);
+
+                DE_API hash_entry<program_item> *get(gl_id program);
+                DE_API hash_entry<program_item> *get(const char *name);
+
+                DE_API GLuint currently_bound();
+                DE_API gl_id current_id();
+
+                DE_API hash_function get_hash_function();
+
+            private:
+                program_manager();
+
+                GLuint m_CurrentlyBound;
+                gl_id m_CurrentID;
+                hash_table<program_item> m_Programs;
+
+            public:
+                program_manager(const program_manager &) = delete;
+                program_manager(program_manager &&) = delete;
+
+        };
+
+        /*
+        =======================
+        program_manager::exists
+        =======================
+        */
+        inline bool program_manager::exists(gl_id program)
+        {
+            return m_Programs[program] != nullptr;
+        }
+
+        /*
+        =======================
+        program_manager::exists
+        =======================
+        */
+        inline bool program_manager::exists(const char *name)
+        {
+            return m_Programs[name] != nullptr;
+        }
+
+        /*
+        ====================
+        program_manager::get
+        ====================
+        */
+        inline hash_entry<program_manager::program_item> *program_manager::get(gl_id program)
+        {
+            return m_Programs[program];
+        }
+
+        /*
+        ====================
+        program_manager::get
+        ====================
+        */
+        inline hash_entry<program_manager::program_item> *program_manager::get(const char *name)
+        {
+            return m_Programs[name];
+        }
+
+        /*
+        ===============================
+        program_manager::currently_bound
+        ===============================
+        */
+        inline GLuint program_manager::currently_bound()
+        {
+            return m_CurrentlyBound;
+        }
+
+        /*
+        ==========================
+        program_manager::current_id
+        ==========================
+        */
+        inline gl_id program_manager::current_id()
+        {
+            return m_CurrentID;
+        }
+
+        /*
+        ================================
+        program_manager::get_hash_function
+        ================================
+        */
+        inline hash_function program_manager::get_hash_function()
+        {
+            return m_Programs.getHashFunction();
+        }
+
+    }
+
+}
+
+
+#endif

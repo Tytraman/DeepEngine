@@ -247,7 +247,7 @@ namespace deep
     uint64_t string::hash() const
     {
         uint64_t val = 5381;
-		size_t len = m_Length;
+        size_t len = m_Length;
         size_t i;
 
         const char *chars = m_Chars.get();
@@ -255,7 +255,7 @@ namespace deep
         for(i = 0; i < len; ++i)
             val = ((val << 5) + val) + chars[i]; /* val * 33 + chars[i] */
 
-		return val;
+        return val;
     }
 
     /*

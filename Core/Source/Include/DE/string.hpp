@@ -12,50 +12,50 @@ namespace deep
     class string;
     class string_finder;
 
-    class DE_API string
+    class string
     {
 
         public:
-            string();
-            string(const char *str);
-            string(mem_ptr rawStr);
-            string(const string &other);
-            string(string &&other) noexcept;
+            DE_API string();
+            DE_API string(const char *str);
+            DE_API string(mem_ptr rawStr);
+            DE_API string(const string &other);
+            DE_API string(string &&other) noexcept;
 
-            string &operator=(const string &other);
-            string &operator=(string &&other) noexcept;
-            string &operator=(const char *str);
+            DE_API string &operator=(const string &other);
+            DE_API string &operator=(string &&other) noexcept;
+            DE_API string &operator=(const char *str);
 
-            char operator[](size_t index) const;
+            DE_API char operator[](size_t index) const;
 
-            void clear();
+            DE_API void clear();
 
-            bool append(const char *str);
-            bool append(uint8_t *buffer, size_t size);
+            DE_API bool append(const char *str);
+            DE_API bool append(uint8_t *buffer, size_t size);
 
-            size_t removeAll(char caractere);
+            DE_API size_t removeAll(char caractere);
 
-            string newSubstring(size_t start, size_t end) const;
-            bool substring(size_t start, size_t end);
+            DE_API string newSubstring(size_t start, size_t end) const;
+            DE_API bool substring(size_t start, size_t end);
 
-            size_t find(char charactere) const;
-            size_t findFromEnd(char charactere) const;
+            DE_API size_t find(char charactere) const;
+            DE_API size_t findFromEnd(char charactere) const;
 
-            static uint64_t hash(const string &str);
-            uint64_t hash() const;
+            DE_API static uint64_t hash(const string &str);
+            DE_API uint64_t hash() const;
 
-            bool equals(const char *str) const;
+            DE_API bool equals(const char *str) const;
 
             // ===== Converter ===== //
 
-            bool toBool() const;
-            uint8_t toUint8() const;
-            uint16_t toUint16() const;
-            uint32_t toUint32() const;
-            uint64_t toUint64() const;
+            DE_API bool toBool() const;
+            DE_API uint8_t toUint8() const;
+            DE_API uint16_t toUint16() const;
+            DE_API uint32_t toUint32() const;
+            DE_API uint64_t toUint64() const;
 
-            size_t length() const;
-            const char *str() const;
+            DE_API size_t length() const;
+            DE_API const char *str() const;
 
         private:
             unique_ptr<char> m_Chars;

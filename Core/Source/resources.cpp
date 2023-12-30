@@ -1,14 +1,15 @@
-#include <DE/resources.hpp>
-#include <DE/string_utils.hpp>
-#include <DE/memory/memory.hpp>
-#include <DE/memory/pair.hpp>
-#include <DE/file.hpp>
-#include <DE/stream.hpp>
-#include <DE/rendering/opengl_utils.hpp>
-#include <DE/image/png.hpp>
-#include <DE/common.hpp>
-#include <DE/file/file_object.hpp>
-#include <DE/memory/hash_table.hpp>
+#include "DE/resources.hpp"
+#include "DE/string_utils.hpp"
+#include "DE/memory/memory.hpp"
+#include "DE/memory/pair.hpp"
+#include "DE/file.hpp"
+#include "DE/stream.hpp"
+#include "DE/image/png.hpp"
+#include "DE/common.hpp"
+#include "DE/file/file_object.hpp"
+#include "DE/memory/hash_table.hpp"
+#include "DE/drivers/opengl/shader.hpp"
+#include "DE/drivers/opengl/texture.hpp"
 
 #include <stdio.h>
 
@@ -29,12 +30,6 @@ namespace deep
           vertexFilename(second),
           fragmentFilename(third)
     { }
-
-    string resource_manager::m_ResourcesFolder;
-    string resource_manager::m_ShadersFolder;
-    string resource_manager::m_TexturesFolder;
-    string resource_manager::m_SoundsFolder;
-    string resource_manager::m_ScreenshotsFolder;
 
     bool enum_shaders_config_fobj(file_object_container &container, string &currentPath, mem_ptr args)
     {
@@ -60,52 +55,75 @@ namespace deep
     }
 
     bool enum_shader_files_callback_ascii(const char *filename, bool isDirectory, void *args)
-	{
-		if(!isDirectory)
+    {
+        if(!isDirectory)
         {
-			list<pair<string, gl_shader_type>> *ls = static_cast<list<pair<string, gl_shader_type>>*>(args);
+            list<pair<string, GL3::shader_manager::gl_shader_type>> *ls = static_cast<list<pair<string, GL3::shader_manager::gl_shader_type>>*>(args);
 
             if(string_utils::endsWith(filename, ".vert"))
             {
-                ls->add(pair<string, gl_shader_type>(filename, gl_shader_type::Vertex));
+                ls->add(pair<string, GL3::shader_manager::gl_shader_type>(filename, GL3::shader_manager::gl_shader_type::Vertex));
             }
             else if(string_utils::endsWith(filename, ".frag"))
             {
-                ls->add(pair<string, gl_shader_type>(filename, gl_shader_type::Fragment));
+                ls->add(pair<string, GL3::shader_manager::gl_shader_type>(filename, GL3::shader_manager::gl_shader_type::Fragment));
             }
-		}
+        }
 
-		return true;
-	}
+        return true;
+    }
 
-	/*
-	======================
-	resource_manager::init
-	======================
-	*/
-	bool resource_manager::init(const char *filepath)
-	{
-		bool ret = true;
+    /*
+    ==================================
+    resource_manager::resource_manager
+    ==================================
+    */
+    resource_manager::resource_manager()
+    { }
 
-		m_ResourcesFolder = filepath;
+    /*
+    ===============================
+    resource_manager::get_singleton
+    ===============================
+    */
+    resource_manager *resource_manager::get_singleton()
+    {
+        static resource_manager singleton;
 
-		m_ShadersFolder = m_ResourcesFolder;
-		m_ShadersFolder.append("shaders\\");
+        return &singleton;
+    }
 
-		m_TexturesFolder = m_ResourcesFolder;
-		m_TexturesFolder.append("textures\\");
+    /*
+    ======================
+    resource_manager::init
+    ======================
+    */
+    bool resource_manager::init(const char *filepath)
+    {
+        GL3::shader_manager *shaderManager = GL3::shader_manager::get_singleton();
+        GL3::program_manager *programManager = GL3::program_manager::get_singleton();
 
-		m_SoundsFolder = m_ResourcesFolder;
-		m_SoundsFolder.append("sounds\\");
+        bool ret = true;
+
+        m_ResourcesFolder = filepath;
+
+        m_ShadersFolder = m_ResourcesFolder;
+        m_ShadersFolder.append("shaders\\");
+
+        m_TexturesFolder = m_ResourcesFolder;
+        m_TexturesFolder.append("textures\\");
+
+        m_SoundsFolder = m_ResourcesFolder;
+        m_SoundsFolder.append("sounds\\");
 
         m_ScreenshotsFolder = m_ResourcesFolder;
         m_ScreenshotsFolder.append("screenshots\\");
 
-		// Création des dossiers.
-		CreateDirectoryA(m_ResourcesFolder.str(), NULL);
-		CreateDirectoryA(m_ShadersFolder.str(), NULL);
-		CreateDirectoryA(m_TexturesFolder.str(), NULL);
-		CreateDirectoryA(m_SoundsFolder.str(), NULL);
+        // Création des dossiers.
+        CreateDirectoryA(m_ResourcesFolder.str(), NULL);
+        CreateDirectoryA(m_ShadersFolder.str(), NULL);
+        CreateDirectoryA(m_TexturesFolder.str(), NULL);
+        CreateDirectoryA(m_SoundsFolder.str(), NULL);
         CreateDirectoryA(m_ScreenshotsFolder.str(), NULL);
 
         string shadersConfig(m_ShadersFolder);
@@ -124,9 +142,9 @@ namespace deep
 
         hash_table<shader_fusion> shaderFiles;
         shadersFobj.enumerate(nullptr, enum_shaders_config_fobj, static_cast<mem_ptr>(&shaderFiles), 1);
-		size_t numberOfShaders = shaderFiles.getNumberOfElements();
+        size_t numberOfShaders = shaderFiles.getNumberOfElements();
 
-		printf("Found %llu shaders.\n", numberOfShaders);
+        printf("Found %llu shaders.\n", numberOfShaders);
 
         auto &currentShader = shaderFiles.begin();
         auto &endShader = shaderFiles.end();
@@ -139,73 +157,73 @@ namespace deep
             vertexShaderFilename.append(currentShader->value.vertexFilename.str());
             fragmentShaderFilename.append(currentShader->value.fragmentFilename.str());
 
-			printf("(\n  %s\n  %s\n  Opening files...\n  ", vertexShaderFilename.str(), fragmentShaderFilename.str());
+            printf("(\n  %s\n  %s\n  Opening files...\n  ", vertexShaderFilename.str(), fragmentShaderFilename.str());
 
-			input_file_stream vis(vertexShaderFilename.str());
-			if(!vis.open())
+            input_file_stream vis(vertexShaderFilename.str());
+            if(!vis.open())
             {
-				fprintf(stderr, "Unable to open vertex shader file.\n");
-				printf(")\n");
+                fprintf(stderr, "Unable to open vertex shader file.\n");
+                printf(")\n");
 
-				ret = false;
-				goto end;
-			}
+                ret = false;
+                goto end;
+            }
 
             input_file_stream fis(fragmentShaderFilename.str());
-			if(!fis.open())
+            if(!fis.open())
             {
-				fprintf(stderr, "Unable to open fragment shader file.\n");
-				printf(")\n");
+                fprintf(stderr, "Unable to open fragment shader file.\n");
+                printf(")\n");
 
                 vis.close();
 
-				ret = false;
-				goto end;
-			}
+                ret = false;
+                goto end;
+            }
 
-			memory_chunk vertexShaderChunk;
+            memory_chunk vertexShaderChunk;
             memory_chunk fragmentShaderChunk;
-			memory_chunk::alloc(vertexShaderChunk, vis.getFileSize() + 1);
+            memory_chunk::alloc(vertexShaderChunk, vis.getFileSize() + 1);
             memory_chunk::alloc(fragmentShaderChunk, fis.getFileSize() + 1);
 
-			size_t bytesRead;
+            size_t bytesRead;
 
-			printf("Reading files...\n  ");
+            printf("Reading files...\n  ");
 
-			if(!vis.readAll(vertexShaderChunk.data(), &bytesRead))
+            if(!vis.readAll(vertexShaderChunk.data(), &bytesRead))
             {
-				fprintf(stderr, "Can't read vertex shader.\n");
-				printf(")\n");
+                fprintf(stderr, "Can't read vertex shader.\n");
+                printf(")\n");
 
-				vertexShaderChunk.free();
+                vertexShaderChunk.free();
                 fragmentShaderChunk.free();
 
-				vis.close();
+                vis.close();
                 fis.close();
 
-				ret = false;
-				goto end;
-			}
+                ret = false;
+                goto end;
+            }
 
             if(!fis.readAll(fragmentShaderChunk.data(), &bytesRead))
             {
-				fprintf(stderr, "Can't read fragment shader.\n");
-				printf(")\n");
+                fprintf(stderr, "Can't read fragment shader.\n");
+                printf(")\n");
 
-				vertexShaderChunk.free();
+                vertexShaderChunk.free();
                 fragmentShaderChunk.free();
 
-				vis.close();
+                vis.close();
                 fis.close();
 
-				ret = false;
-				goto end;
-			}
+                ret = false;
+                goto end;
+            }
 
-			((char *) vertexShaderChunk.data())[vertexShaderChunk.size() - 1] = '\0';
+            ((char *) vertexShaderChunk.data())[vertexShaderChunk.size() - 1] = '\0';
             ((char *) fragmentShaderChunk.data())[fragmentShaderChunk.size() - 1] = '\0';
 
-			vis.close();
+            vis.close();
             fis.close();
 
             string vertexShaderName = currentShader->value.name;
@@ -213,100 +231,118 @@ namespace deep
             vertexShaderName.append("_vert");
             fragmentShaderName.append("_frag");
 
-			shader_id vertexShader = shader_manager::create(vertexShaderName.str(), gl_shader_type::Vertex);
-            shader_id fragmentShader = shader_manager::create(fragmentShaderName.str(), gl_shader_type::Fragment);
+            GL3::gl_id vertexShader = shaderManager->create(vertexShaderName.str(), GL3::shader_manager::gl_shader_type::Vertex);
+            GL3::gl_id fragmentShader = shaderManager->create(fragmentShaderName.str(), GL3::shader_manager::gl_shader_type::Fragment);
 
-			shader_manager::load(vertexShader, vertexShaderChunk);
-            shader_manager::load(fragmentShader, fragmentShaderChunk);
+            shaderManager->load(vertexShader, vertexShaderChunk);
+            shaderManager->load(fragmentShader, fragmentShaderChunk);
 
-			vertexShaderChunk.free();
+            vertexShaderChunk.free();
             fragmentShaderChunk.free();
 
-			printf("Compiling shaders...\n");
-			if(!shader_manager::compile(vertexShader))
+            printf("Compiling shaders...\n");
+            if(!shaderManager->compile(vertexShader))
             {
-				shader_manager::destroy(vertexShader);
-                shader_manager::destroy(fragmentShader);
-							
-				ret = false;
-				goto end;
-			}
+                shaderManager->destroy(vertexShader);
+                shaderManager->destroy(fragmentShader);
+                            
+                ret = false;
+                goto end;
+            }
 
-            if(!shader_manager::compile(fragmentShader))
+            if(!shaderManager->compile(fragmentShader))
             {
-				shader_manager::destroy(vertexShader);
-                shader_manager::destroy(fragmentShader);
-							
-				ret = false;
-				goto end;
-			}
-						
-			program_id program = program_manager::create(currentShader->value.name.str());
+                shaderManager->destroy(vertexShader);
+                shaderManager->destroy(fragmentShader);
+                            
+                ret = false;
+                goto end;
+            }
+                        
+            GL3::gl_id program = programManager->create(currentShader->value.name.str());
 
-			program_manager::attachShader(program, vertexShader);
-            program_manager::attachShader(program, fragmentShader);
+            programManager->attach_shader(program, vertexShader);
+            programManager->attach_shader(program, fragmentShader);
 
-			printf("  Linking shaders...\n");
-			if(!program_manager::link(program))
+            printf("  Linking shaders...\n");
+            if(!programManager->link(program))
             {
-				printf(")\n");
-				shader_manager::destroy(vertexShader);
-                shader_manager::destroy(fragmentShader);
-							
-				ret = false;
-				goto end;
-			}
+                printf(")\n");
+                shaderManager->destroy(vertexShader);
+                shaderManager->destroy(fragmentShader);
+                            
+                ret = false;
+                goto end;
+            }
 
-			shader_manager::destroy(vertexShader);
-            shader_manager::destroy(fragmentShader);
+            shaderManager->destroy(vertexShader);
+            shaderManager->destroy(fragmentShader);
 
-			printf("  " DE_TERM_FG_GREEN "Done." DE_TERM_RESET "\n)\n");
+            printf("  " DE_TERM_FG_GREEN "Done." DE_TERM_RESET "\n)\n");
         }
 
 end:
-		return ret;
-	}
+        return ret;
+    }
 
-	/*
-	==========================
-	resource_manager::shutdown
-	==========================
-	*/
-	void resource_manager::shutdown()
-	{
+    /*
+    ==========================
+    resource_manager::shutdown
+    ==========================
+    */
+    void resource_manager::shutdown()
+    {
 
-	}
+    }
 
-	/*
-	=============================
-	resource_manager::loadTexture
-	=============================
-	*/
-	texture_id resource_manager::loadTexture(const char *name, uint8_t unit)
-	{
-		png png;
-		string filename = m_TexturesFolder;
-		filename.append(name);
+    /*
+    =============================
+    resource_manager::loadTexture
+    =============================
+    */
+    GL3::gl_id resource_manager::loadTexture(const char *name, uint8_t unit)
+    {
+        png png;
+        string filename = m_TexturesFolder;
+        filename.append(name);
 
-		if(!png.loadAndRead(filename.str()))
-			return 0;
+        if(!png.loadAndRead(filename.str()))
+            return 0;
 
-		printf("Texture \"%s\" loaded: %s\n", name, png::colorTypeName(png.colorType()));
+        printf("Texture \"%s\" loaded: %s\n", name, png::colorTypeName(png.colorType()));
 
-		png.applyVerticalMirrorEffect();
+        GL3::texture_manager *textureManager = GL3::texture_manager::get_singleton();
 
-		texture_id texture = texture_manager::create2D(name);
-		texture_manager::bind(texture, unit);
+        png.applyVerticalMirrorEffect();
 
-		texture_manager::setTextureWrappingS(gl_texture_wrap::ClampToEdge);
-		texture_manager::setTextureWrappingT(gl_texture_wrap::ClampToEdge);
-		texture_manager::setTextureFiltering(gl_texture_filter::Nearest);
+        GL3::gl_id texture = textureManager->create_2D(name);
+        textureManager->bind(texture, unit);
 
-		mem_ptr image = png.rawImage();
-		texture_manager::transmitTexture(image, png.width(), png.height(), png.colorType());
-		mem::free(image);
+        textureManager->set_texture_wrapping_s(GL3::texture_manager::gl_texture_wrap::ClampToEdge);
+        textureManager->set_texture_wrapping_t(GL3::texture_manager::gl_texture_wrap::ClampToEdge);
+        textureManager->set_texture_filtering(GL3::texture_manager::gl_texture_filter::Nearest);
 
-		return texture;
-	}
+        mem_ptr image = png.rawImage();
+        textureManager->transmit_texture(image, png.width(), png.height(), png.colorType());
+        mem::free(image);
+
+        return texture;
+    }
+
+    /*
+    =========================
+    resource_manager::loadBMP
+    =========================
+    */
+    bool resource_manager::loadBMP(const char *name, bmp &dest)
+    {
+        string filename = m_TexturesFolder;
+        filename.append(name);
+
+        if(!dest.create_from_file(filename.str()))
+            return false;
+
+        return true;
+    }
 
 }

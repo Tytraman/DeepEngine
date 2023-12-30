@@ -1,9 +1,11 @@
-#include <DE/ecs/component.hpp>
-#include <DE/graphics/graphic.hpp>
-#include <DE/mat.hpp>
-#include <DE/window.hpp>
-
-#include <unordered_map>
+#include "DE/ecs/component.hpp"
+#include "DE/graphics/graphic.hpp"
+#include "DE/mat.hpp"
+#include "DE/window.hpp"
+#include "DE/drivers/opengl/core.hpp"
+#include "DE/drivers/opengl/vbo.hpp"
+#include "DE/drivers/opengl/vao.hpp"
+#include "DE/drivers/opengl/shader.hpp"
 
 namespace deep
 {
@@ -12,56 +14,54 @@ namespace deep
     {
         drawable_component *drawable = (drawable_component *) ptr;
 
-        vao_manager::destroy(drawable->vao);
-        vbo_manager::destroy(drawable->vbo);
+        GL3::vbo_manager *vboManager = GL3::vbo_manager::get_singleton();
+        GL3::vao_manager *vaoManager = GL3::vao_manager::get_singleton();
+
+        vaoManager->destroy(drawable->vao);
+        vboManager->destroy(drawable->vbo);
     }
-
-    component_id component_manager::m_ComponentCount = 0;
-
-    hash_table<component_type> component_manager::m_ComponentsType(1000);
-    hash_table<drawable_component> component_manager::m_DrawableComponents(1000/*, destroy_drawable_callback*/);
-    hash_table<transformation_component> component_manager::m_TransformationComponents(1000);
-    hash_table<velocity_component> component_manager::m_VelocityComponents(1000);
-    hash_table<collider_component> component_manager::m_ColliderComponents(1000);
-    hash_table<acceleration_component> component_manager::m_AccelerationComponents(1000);
-    hash_table<health_component> component_manager::m_HealthComponents(1000);
 
     /*
     =========================================
     drawable_component::classicRenderCallback
     =========================================
     */
-    void drawable_component::classicRenderCallback(gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, Camera *camera)
+    void drawable_component::classicRenderCallback(GL3::gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, Camera *camera)
     {
-        program_id program = drawable->program;
-        vao_id vao = drawable->vao;
-        texture_id texture = drawable->texture;
+        GL3::gl_id program = drawable->program;
+        GL3::gl_id vao = drawable->vao;
+        GL3::gl_id texture = drawable->texture;
         uint8_t textureUnit = drawable->textureUnit;
 
+        GL3::program_manager *programManager = GL3::program_manager::get_singleton();
+        GL3::vbo_manager *vboManager = GL3::vbo_manager::get_singleton();
+        GL3::vao_manager *vaoManager = GL3::vao_manager::get_singleton();
+        GL3::texture_manager *textureManager = GL3::texture_manager::get_singleton();
+
         // Pas besoin d'indiquer à OpenGL d'utiliser un programme qui est déjà en cours d'utilisation.
-        if(program != program_manager::currentID())
-            program_manager::use(program);
+        if(program != programManager->current_id())
+            programManager->use(program);
 
         // Pas besoin d'indiquer à OpenGL d'utiliser un VAO qui est déjà en cours d'utilisation.
-        if(vao != vao_manager::currentID())
-            vao_manager::bind(vao);
+        if(vao != vaoManager->current_id())
+            vaoManager->bind(vao);
 
         // Pas besoin d'indiquer à OpenGL d'utiliser une texture si elle est déjà en cours d'utilisation.
-        if(texture != texture_manager::currentID() || textureUnit != texture_manager::currentUnit())
-            texture_manager::bind(texture, textureUnit);
+        if(texture != textureManager->current_id() || textureUnit != textureManager->current_unit())
+            textureManager->bind(texture, textureUnit);
 
-        program_manager::setUniform("myTex", 0);
-        program_manager::setUniform("mTrs", transformation->getTranslation());
-        program_manager::setUniform("mRotX", transformation->getRotationX());
-        program_manager::setUniform("mRotY", transformation->getRotationY());
-        program_manager::setUniform("mRotZ", transformation->getRotationZ());
-        program_manager::setUniform("mScl", transformation->getScaling());
-        program_manager::setUniform("view", camera->lookAt());
-        program_manager::setUniform("proj", fmat4x4::perspective(fmat4x4(), 45.0f, (float) window->getWidth() / (float) window->getHeight(), 0.1f, 1000.0f));
+        programManager->set_uniform("myTex", 0);
+        programManager->set_uniform("mTrs", transformation->getTranslation());
+        programManager->set_uniform("mRotX", transformation->getRotationX());
+        programManager->set_uniform("mRotY", transformation->getRotationY());
+        programManager->set_uniform("mRotZ", transformation->getRotationZ());
+        programManager->set_uniform("mScl", transformation->getScaling());
+        programManager->set_uniform("view", camera->lookAt());
+        programManager->set_uniform("proj", fmat4x4::perspective(fmat4x4(), 45.0f, (float) window->getWidth() / (float) window->getHeight(), 0.1f, 1000.0f));
 
-        program_manager::sendUniforms();
+        programManager->send_uniforms();
 
-        renderer.draw(vbo_manager::getVerticesNumber(drawable->vbo));
+        renderer.draw(vboManager->get_vertices_number(drawable->vbo));
     }
 
     /*
@@ -69,29 +69,62 @@ namespace deep
     drawable_component::skyboxRenderCallback
     ========================================
     */
-    void drawable_component::skyboxRenderCallback(gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, Camera *camera)
+    void drawable_component::skyboxRenderCallback(GL3::gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, Camera *camera)
     {
-        gpu_core::enableDepthMask(false);
-        gpu_core::setDepthFunction(gl_depth_function::Lequal);
+        GL3::program_manager *programManager = GL3::program_manager::get_singleton();
+        GL3::vbo_manager *vboManager = GL3::vbo_manager::get_singleton();
+        GL3::vao_manager *vaoManager = GL3::vao_manager::get_singleton();
+        GL3::texture_manager *textureManager = GL3::texture_manager::get_singleton();
 
-        program_manager::use(drawable->program);
-        vao_manager::bind(drawable->vao);
+        GL3::core::disable_depth_mask();
+        GL3::core::set_depth_function(GL3::core::gl_depth_function::Lequal);
 
-        texture_manager::bindCubemaps(drawable->texture);
+        programManager->use(drawable->program);
+        vaoManager->bind(drawable->vao);
+
+        textureManager->bind_cubemaps(drawable->texture);
         fmat4x4 view = camera->lookAt();
         view[static_cast<uint8_t>(fmat4x4_index::w1)] = 0.0f;
         view[static_cast<uint8_t>(fmat4x4_index::w2)] = 0.0f;
         view[static_cast<uint8_t>(fmat4x4_index::w3)] = 0.0f;
 
-        program_manager::setUniform("skybox", 0);
-        program_manager::setUniform("view", view);
-        program_manager::setUniform("proj", fmat4x4::perspective(fmat4x4(), 45.0f, (float) window->getWidth() / (float) window->getHeight(), 0.1f, 1000.0f));
+        programManager->set_uniform("skybox", 0);
+        programManager->set_uniform("view", view);
+        programManager->set_uniform("proj", fmat4x4::perspective(fmat4x4(), 45.0f, (float) window->getWidth() / (float) window->getHeight(), 0.1f, 1000.0f));
 
-        program_manager::sendUniforms();
+        programManager->send_uniforms();
 
-        renderer.draw(vbo_manager::getVerticesNumber(drawable->vbo));
-        gpu_core::setDepthFunction(gl_depth_function::Less);
-        gpu_core::enableDepthMask(true);
+        renderer.draw(vboManager->get_vertices_number(drawable->vbo));
+        GL3::core::set_depth_function(GL3::core::gl_depth_function::Less);
+        GL3::core::enable_depth_mask();
+    }
+
+    /*
+    ====================================
+    component_manager::component_manager
+    ====================================
+    */
+    component_manager::component_manager()
+        : m_ComponentCount(0),
+          m_ComponentsType(1000),
+          m_DrawableComponents(1000),
+          m_TransformationComponents(1000),
+          m_VelocityComponents(1000),
+          m_ColliderComponents(1000),
+          m_AccelerationComponents(1000),
+          m_HealthComponents(1000)
+    { }
+
+    /*
+    ================================
+    component_manager::get_singleton
+    ================================
+    */
+    component_manager *component_manager::get_singleton()
+    {
+        static component_manager singleton;
+
+        return &singleton;
     }
 
     /*
@@ -113,7 +146,7 @@ namespace deep
     drawable_component::drawable_component
     ======================================
     */
-    drawable_component::drawable_component(program_id _program, vbo_id _vbo, vao_id _vao, texture_id _texture, uint8_t _textureUnit)
+    drawable_component::drawable_component(GL3::gl_id _program, GL3::gl_id _vbo, GL3::gl_id _vao, GL3::gl_id _texture, uint8_t _textureUnit)
         : vbo(_vbo),
           vao(_vao),
           texture(_texture),
@@ -127,7 +160,7 @@ namespace deep
     component_manager::createDrawableComponent
     ==========================================
     */
-    component_id component_manager::createDrawableComponent(program_id program, vbo_id vbo, vao_id vao, texture_id texture, uint8_t textureUnit)
+    component_id component_manager::createDrawableComponent(GL3::gl_id program, GL3::gl_id vbo, GL3::gl_id vao, GL3::gl_id texture, uint8_t textureUnit)
     {
         component_id id = m_ComponentCount;
         drawable_component drawable(program, vbo, vao, texture, textureUnit);
@@ -148,13 +181,15 @@ namespace deep
     */
     component_id component_manager::createDrawableComponent(const char *progName, const char *vboName, const char *vaoName, const char *textName, uint8_t textureUnit)
     {
-        hash_function hash = program_manager::getHashFunction();
+        GL3::program_manager *programManager = GL3::program_manager::get_singleton();
 
-        program_id prog = hash(progName);
-        vbo_id vbo = hash(vboName);
-        vao_id vao = hash(vaoName);
+        hash_function hash = programManager->get_hash_function();
 
-        texture_id texture = 0;
+        GL3::gl_id prog = hash(progName);
+        GL3::gl_id vbo  = hash(vboName);
+        GL3::gl_id vao  = hash(vaoName);
+
+        GL3::gl_id texture = 0;
         if(textName != nullptr)
             texture = hash(textName);
 

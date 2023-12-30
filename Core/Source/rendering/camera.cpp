@@ -29,10 +29,10 @@ namespace deep {
 	{
 		fvec3 front;
 
-		float cosYaw   = cosf(m_Yaw * M_PI / 180.0f);
-		float cosPitch = cosf(m_Pitch * M_PI / 180.0f);
-		float sinYaw   = sinf(m_Yaw * M_PI / 180.0f);
-		float sinPitch = sinf(m_Pitch * M_PI / 180.0f);
+		float cosYaw   = cosf(m_Yaw * static_cast<float>(M_PI) / 180.0f);
+		float cosPitch = cosf(m_Pitch * static_cast<float>(M_PI) / 180.0f);
+		float sinYaw   = sinf(m_Yaw * static_cast<float>(M_PI) / 180.0f);
+		float sinPitch = sinf(m_Pitch * static_cast<float>(M_PI) / 180.0f);
 
 		front.x = cosYaw * cosPitch;
 		front.y = sinPitch;

@@ -14,29 +14,29 @@
 namespace deep
 {
 
-	#ifdef DE_WINDOWS
-	uint64_t deep::core::m_InitTime = GetTickCount64();
-	#else
-	#error Need implementation
-	#endif
+    #ifdef DE_WINDOWS
+    uint64_t deep::core::m_InitTime = GetTickCount64();
+    #else
+    #error Need implementation
+    #endif
 
     /*
     ======================
     core::getMousePosition
     ======================
     */
-	uint32_t core::getMousePosition(int *x, int *y)
-	{
-		return SDL_GetMouseState(x, y);
-	}
+    uint32_t core::getMousePosition(int *x, int *y)
+    {
+        return SDL_GetMouseState(x, y);
+    }
 
     /*
-	==========
-	core::init
-	==========
-	*/
-	core_init_status core::init(const char *gameTitle, uint64_t diskSpaceRequired, uint64_t physicalRamNeeded, uint64_t virtualRamNeeded)
-	{
+    ==========
+    core::init
+    ==========
+    */
+    core_init_status core::init(const char *gameTitle, uint64_t diskSpaceRequired, uint64_t physicalRamNeeded, uint64_t virtualRamNeeded)
+    {
 #if DE_WINDOWS
         HANDLE stdHandle = GetStdHandle(STD_OUTPUT_HANDLE);
         if(stdHandle != INVALID_HANDLE_VALUE)
@@ -48,7 +48,7 @@ namespace deep
         }
 #endif
 
-        printf(DE_TERM_FG_GREEN "core::init" DE_TERM_RESET " v" DE_VERSION " - " DE_TERM_FG_RED "this is where it all begins" DE_TERM_RESET "\n");
+        printf(DE_TERM_FG_GREEN "core::init" DE_TERM_RESET " " DE_VERSION " - " DE_TERM_FG_RED "this is where it all begins" DE_TERM_RESET "\n");
 
         // Vérifie s'il y a une autre instance du programme et
         // si c'est le cas, lui donne le focus.
@@ -63,23 +63,25 @@ namespace deep
         if(!checkMemory(physicalRamNeeded, virtualRamNeeded))
             return core_init_status::NoEnoughMemory;
 
+        deep::engine_settings *engineSettings = deep::engine_settings::get_singleton();
+
         // Charge les paramètres liés au moteur.
-        if(!engine_settings::init("engine_config.fobj"))
+        if(!engineSettings->init("engine_config.fobj"))
             return core_init_status::CannotLoadEngineSettings;
 
-		if(SDL_Init(SDL_INIT_VIDEO) != 0)
-			return core_init_status::Unknown;
+        if(SDL_Init(SDL_INIT_VIDEO) != 0)
+            return core_init_status::Unknown;
 
         printf(DE_TERM_FG_GREEN "core::init'ialisation successful" DE_TERM_RESET "\n");
 
-		return core_init_status::OK;
-	}
+        return core_init_status::OK;
+    }
 
     /*
-	=============================
-	core::checkAvailableDiskSpace
-	=============================
-	*/
+    =============================
+    core::checkAvailableDiskSpace
+    =============================
+    */
     bool core::checkAvailableDiskSpace(uint64_t diskSpaceRequired)
     {
         printf("Checking available disk space... ");
@@ -108,10 +110,10 @@ namespace deep
     }
 
     /*
-	=================
-	core::checkMemory
-	=================
-	*/
+    =================
+    core::checkMemory
+    =================
+    */
     bool core::checkMemory(uint64_t physicalRamNeeded, uint64_t virtualRamNeeded)
     {
         printf("Checking memory... ");
@@ -156,10 +158,10 @@ namespace deep
     }
 
     /*
-	====================
-	core::isOnlyInstance
-	====================
-	*/
+    ====================
+    core::isOnlyInstance
+    ====================
+    */
     bool core::focusInstance(const char *gameTitle)
     {
         const char *retText = "OK";
@@ -202,27 +204,27 @@ end:
     core::shutdown
     ==============
     */
-	void core::shutdown()
-	{
-		im_gui_window::shutdown();
-		scene::shutdown();
-		SDL_Quit();
-	}
+    void core::shutdown()
+    {
+        im_gui_window::shutdown();
+        scene::shutdown();
+        SDL_Quit();
+    }
 
     /*
     ==========================
     core::getCurrentTimeMillis
     ==========================
     */
-	uint64_t core::getCurrentTimeMillis()
-	{
-		FILETIME t;
-		uint64_t millis;
-		GetSystemTimeAsFileTime(&t);
-		millis = ((uint64_t) t.dwLowDateTime + ((uint64_t) (t.dwHighDateTime) << 32)) / 10000;
+    uint64_t core::getCurrentTimeMillis()
+    {
+        FILETIME t;
+        uint64_t millis;
+        GetSystemTimeAsFileTime(&t);
+        millis = ((uint64_t) t.dwLowDateTime + ((uint64_t) (t.dwHighDateTime) << 32)) / 10000;
 
-		return millis;
-	}
+        return millis;
+    }
 
     /*
     ==================
@@ -265,21 +267,21 @@ end:
     core::getPwd
     ============
     */
-	const char *core::getPwd()
-	{
-		static string p;
+    const char *core::getPwd()
+    {
+        static string p;
 
 #if DE_WINDOWS
-		DWORD pwdLength = GetCurrentDirectoryA(0, NULL);
-		char *buffer = (char *) mem::allocNoTrack(pwdLength);
-		GetCurrentDirectoryA(pwdLength, buffer);
-		p = buffer;
+        DWORD pwdLength = GetCurrentDirectoryA(0, NULL);
+        char *buffer = (char *) mem::allocNoTrack(pwdLength);
+        GetCurrentDirectoryA(pwdLength, buffer);
+        p = buffer;
 #else
 #error Need implementation.
 #endif
 
-		return p.str();
-	}
+        return p.str();
+    }
 
 }
 
@@ -289,5 +291,5 @@ de_core_get_tick
 ================
 */
 de_uint64 de_core_get_tick() {
-	return deep::core::getTick();
+    return deep::core::getTick();
 }

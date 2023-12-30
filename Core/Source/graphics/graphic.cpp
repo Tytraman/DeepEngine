@@ -1,172 +1,185 @@
-#include <DE/graphics/graphic.hpp>
-#include <DE/graphics/vertex.hpp>
-
-#include <DE/ecs/entity.hpp>
-#include <DE/ecs/component.hpp>
+#include "DE/graphics/graphic.hpp"
+#include "DE/graphics/vertex.hpp"
+#include "DE/ecs/entity.hpp"
+#include "DE/ecs/component.hpp"
+#include "DE/drivers/opengl/vbo.hpp"
+#include "DE/drivers/opengl/vao.hpp"
+#include "DE/drivers/opengl/texture.hpp"
 
 namespace deep
 {
 
-	/*
-	==========
-	rect::rect
-	==========
-	*/
-	rect::rect(const fvec2 &position, float width, float height)
-		: pos(position),
-		  w(width),
-		  h(height)
-	{ }
+    /*
+    ==========
+    rect::rect
+    ==========
+    */
+    rect::rect(const fvec2 &position, float width, float height)
+        : pos(position),
+          w(width),
+          h(height)
+    { }
 
     /*
-	================
-	polygon::polygon
-	================
-	*/
-    polygon::polygon(vbo_id vbo, vao_id vao)
+    ================
+    polygon::polygon
+    ================
+    */
+    polygon::polygon(GL3::gl_id vbo, GL3::gl_id vao)
         : m_VBO(vbo),
           m_VAO(vao)
     { }
 
-	/*
-	========================
-	graphic::createRectangle
-	========================
-	*/
-	entity graphic::createRectangle(
+    /*
+    ========================
+    graphic::createRectangle
+    ========================
+    */
+    entity graphic::createRectangle(
         const char *name,
-        program_id program,
+        GL3::gl_id program,
         entity_collection_id collectionID,
         const fvec3 &position,
         float width,
         float height,
         const colora &color,
         bool collidable)
-	{
-		component_id drawableComponentID       = component_manager::createDrawableComponent(program, vbo_manager::create(name), vao_manager::create(name));
-		component_id transformationComponentID = component_manager::createTransformationComponent(position, fvec3(width, height, 1.0f), 0.0f);
+    {
+        component_manager *componentManager = component_manager::get_singleton();
+        entity_manager *entityManager = entity_manager::get_singleton();
+        GL3::vbo_manager *vboManager = GL3::vbo_manager::get_singleton();
+        GL3::vao_manager *vaoManager = GL3::vao_manager::get_singleton();
+        GL3::texture_manager *textureManager = GL3::texture_manager::get_singleton();
 
-		drawable_component *drawableComponent = component_manager::getDrawableComponent(drawableComponentID);
-		drawableComponent->texture = texture_manager::getWhiteTexture();
-		drawableComponent->textureUnit = 0;
-		drawableComponent->renderCallback = drawable_component::classicRenderCallback;
+        component_id drawableComponentID       = componentManager->createDrawableComponent(program, vboManager->create(name), vaoManager->create(name));
+        component_id transformationComponentID = componentManager->createTransformationComponent(position, fvec3(width, height, 1.0f), 0.0f);
 
-		float vPos[] =
+        drawable_component *drawableComponent = componentManager->getDrawableComponent(drawableComponentID);
+        drawableComponent->texture = textureManager->get_white_texture();
+        drawableComponent->textureUnit = 0;
+        drawableComponent->renderCallback = drawable_component::classicRenderCallback;
+
+        float vPos[] =
         {
-			-0.5f,	-0.5f, color.R, color.G, color.B, color.A, 0.0f, 1.0f,
-			 0.5f,	-0.5f, color.R, color.G, color.B, color.A, 1.0f, 1.0f,
-			 0.5f,	 0.5f, color.R, color.G, color.B, color.A, 1.0f, 0.0f, 
-			-0.5f,	-0.5f, color.R, color.G, color.B, color.A, 0.0f, 1.0f,
-			 0.5f,	 0.5f, color.R, color.G, color.B, color.A, 1.0f, 0.0f,
-			-0.5f,   0.5f, color.R, color.G, color.B, color.A, 0.0f, 0.0f
-		};
+            -0.5f,	-0.5f, static_cast<float>(color.R), static_cast<float>(color.G), static_cast<float>(color.B), static_cast<float>(color.A), 0.0f, 1.0f,
+             0.5f,	-0.5f, static_cast<float>(color.R), static_cast<float>(color.G), static_cast<float>(color.B), static_cast<float>(color.A), 1.0f, 1.0f,
+             0.5f,	 0.5f, static_cast<float>(color.R), static_cast<float>(color.G), static_cast<float>(color.B), static_cast<float>(color.A), 1.0f, 0.0f, 
+            -0.5f,	-0.5f, static_cast<float>(color.R), static_cast<float>(color.G), static_cast<float>(color.B), static_cast<float>(color.A), 0.0f, 1.0f,
+             0.5f,	 0.5f, static_cast<float>(color.R), static_cast<float>(color.G), static_cast<float>(color.B), static_cast<float>(color.A), 1.0f, 0.0f,
+            -0.5f,   0.5f, static_cast<float>(color.R), static_cast<float>(color.G), static_cast<float>(color.B), static_cast<float>(color.A), 0.0f, 0.0f
+        };
 
-		memory_chunk chunk(vPos, sizeof(vPos));
+        memory_chunk chunk(vPos, sizeof(vPos));
 
-		vbo_manager::bind(drawableComponent->vbo);
-		vao_manager::bind(drawableComponent->vao);
+        vboManager->bind(drawableComponent->vbo);
+        vaoManager->bind(drawableComponent->vao);
 
-		vbo_manager::transmitData(chunk);
-		vbo_manager::setVerticesNumber(6);
+        vboManager->transmit_data(chunk);
+        vboManager->set_vertices_number(6);
 
-		vbo_manager::addAttribute(0, gl_attrib_components_number::x2, gl_type::Float, 8 * sizeof(float), 0);
-		vbo_manager::addAttribute(1, gl_attrib_components_number::x4, gl_type::Float, 8 * sizeof(float), 2 * sizeof(float));
-		vbo_manager::addAttribute(2, gl_attrib_components_number::x2, gl_type::Float, 8 * sizeof(float), 6 * sizeof(float));
+        vboManager->add_attribute(0, GL3::gl_attrib_components_number::x2, GL3::gl_type::Float, 8 * sizeof(float), 0);
+        vboManager->add_attribute(1, GL3::gl_attrib_components_number::x4, GL3::gl_type::Float, 8 * sizeof(float), 2 * sizeof(float));
+        vboManager->add_attribute(2, GL3::gl_attrib_components_number::x2, GL3::gl_type::Float, 8 * sizeof(float), 6 * sizeof(float));
 
-		entity entity = entity_manager::createEntity(collectionID);
-		entity_manager::attachComponent(entity, drawableComponentID);
-		entity_manager::attachComponent(entity, transformationComponentID);
+        entity entity = entityManager->createEntity(collectionID);
+        entityManager->attachComponent(entity, drawableComponentID);
+        entityManager->attachComponent(entity, transformationComponentID);
 
-		if(collidable)
+        if(collidable)
         {
-			component_id colliderComponentID = component_manager::createColliderComponent();
+            component_id colliderComponentID = componentManager->createColliderComponent();
 
-			collider_component *colliderComponent = component_manager::getColliderComponent(colliderComponentID);
-			colliderComponent->contour.pos.x = position.x - width / 2;
-			colliderComponent->contour.pos.y = position.y - height / 2;
-			colliderComponent->contour.w = width;
-			colliderComponent->contour.h = height;
+            collider_component *colliderComponent = componentManager->getColliderComponent(colliderComponentID);
+            colliderComponent->contour.pos.x = position.x - width / 2;
+            colliderComponent->contour.pos.y = position.y - height / 2;
+            colliderComponent->contour.w = width;
+            colliderComponent->contour.h = height;
 
-			entity_manager::attachComponent(entity, colliderComponentID);
-		}
+            entityManager->attachComponent(entity, colliderComponentID);
+        }
 
-		return entity;
-	}
+        return entity;
+    }
 
-	/*
-	===============================
-	graphic::createRectangleTexture
-	===============================
-	*/
-	entity graphic::createRectangleTexture(
+    /*
+    ===============================
+    graphic::createRectangleTexture
+    ===============================
+    */
+    entity graphic::createRectangleTexture(
         const char *name,
-        program_id program,
+        GL3::gl_id program,
         entity_collection_id collectionID,
         const fvec3 &position,
         float width,
         float height,
         const colora &color,
-        texture_id texture,
+        GL3::gl_id texture,
         uint8_t textureUnit,
         bool collidable)
-	{
-		component_id drawableComponentID       = component_manager::createDrawableComponent(program, vbo_manager::create(name), vao_manager::create(name), texture, textureUnit);
-		component_id transformationComponentID = component_manager::createTransformationComponent(position, fvec3(width, height, 1.0f), 0.0f);
+    {
+        component_manager *componentManager = component_manager::get_singleton();
+        entity_manager *entityManager = entity_manager::get_singleton();
+        GL3::vbo_manager *vboManager = GL3::vbo_manager::get_singleton();
+        GL3::vao_manager *vaoManager = GL3::vao_manager::get_singleton();
 
-		drawable_component *drawableComponent = component_manager::getDrawableComponent(drawableComponentID);
-		drawableComponent->renderCallback = drawable_component::classicRenderCallback;
+        component_id drawableComponentID       = componentManager->createDrawableComponent(program, vboManager->create(name), vaoManager->create(name), texture, textureUnit);
+        component_id transformationComponentID = componentManager->createTransformationComponent(position, fvec3(width, height, 1.0f), 0.0f);
 
-		float vPos[] =
+        drawable_component *drawableComponent = componentManager->getDrawableComponent(drawableComponentID);
+        drawableComponent->renderCallback = drawable_component::classicRenderCallback;
+
+        float vPos[] =
         {
-			// Positions   // Couleur                          // Coordonnées de texture
-			-0.5f,	-0.5f, color.R, color.G, color.B, color.A, 0.0f, 1.0f, // Haut gauche
-			 0.5f,	-0.5f, color.R, color.G, color.B, color.A, 1.0f, 1.0f, // Haut droite
-			 0.5f,	 0.5f, color.R, color.G, color.B, color.A, 1.0f, 0.0f, // Bas droite
-			-0.5f,	-0.5f, color.R, color.G, color.B, color.A, 0.0f, 1.0f, // Haut gauche
-			 0.5f,	 0.5f, color.R, color.G, color.B, color.A, 1.0f, 0.0f, // Bas droite
-			-0.5f,   0.5f, color.R, color.G, color.B, color.A, 0.0f, 0.0f  // Bas gauche
-		};
+            // Positions   // Couleur                          // Coordonnées de texture
+            -0.5f,	-0.5f, static_cast<float>(color.R), static_cast<float>(color.G), static_cast<float>(color.B), static_cast<float>(color.A), 0.0f, 1.0f, // Haut gauche
+             0.5f,	-0.5f, static_cast<float>(color.R), static_cast<float>(color.G), static_cast<float>(color.B), static_cast<float>(color.A), 1.0f, 1.0f, // Haut droite
+             0.5f,	 0.5f, static_cast<float>(color.R), static_cast<float>(color.G), static_cast<float>(color.B), static_cast<float>(color.A), 1.0f, 0.0f, // Bas droite
+            -0.5f,	-0.5f, static_cast<float>(color.R), static_cast<float>(color.G), static_cast<float>(color.B), static_cast<float>(color.A), 0.0f, 1.0f, // Haut gauche
+             0.5f,	 0.5f, static_cast<float>(color.R), static_cast<float>(color.G), static_cast<float>(color.B), static_cast<float>(color.A), 1.0f, 0.0f, // Bas droite
+            -0.5f,   0.5f, static_cast<float>(color.R), static_cast<float>(color.G), static_cast<float>(color.B), static_cast<float>(color.A), 0.0f, 0.0f  // Bas gauche
+        };
 
-		memory_chunk chunk(vPos, sizeof(vPos));
+        memory_chunk chunk(vPos, sizeof(vPos));
         
-		vbo_manager::bind(drawableComponent->vbo);
-		vao_manager::bind(drawableComponent->vao);
+        vboManager->bind(drawableComponent->vbo);
+        vaoManager->bind(drawableComponent->vao);
 
-		vbo_manager::transmitData(chunk);
-		vbo_manager::setVerticesNumber(6);
-		
-		vbo_manager::addAttribute(0, gl_attrib_components_number::x2, gl_type::Float, 8 * sizeof(float), 0);
-		vbo_manager::addAttribute(1, gl_attrib_components_number::x4, gl_type::Float, 8 * sizeof(float), 2 * sizeof(float));
-		vbo_manager::addAttribute(2, gl_attrib_components_number::x2, gl_type::Float, 8 * sizeof(float), 6 * sizeof(float));
+        vboManager->transmit_data(chunk);
+        vboManager->set_vertices_number(6);
+        
+        vboManager->add_attribute(0, GL3::gl_attrib_components_number::x2, GL3::gl_type::Float, 8 * sizeof(float), 0);
+        vboManager->add_attribute(1, GL3::gl_attrib_components_number::x4, GL3::gl_type::Float, 8 * sizeof(float), 2 * sizeof(float));
+        vboManager->add_attribute(2, GL3::gl_attrib_components_number::x2, GL3::gl_type::Float, 8 * sizeof(float), 6 * sizeof(float));
 
-		entity entity = entity_manager::createEntity(collectionID);
-		entity_manager::attachComponent(entity, drawableComponentID);
-		entity_manager::attachComponent(entity, transformationComponentID);
+        entity entity = entityManager->createEntity(collectionID);
+        entityManager->attachComponent(entity, drawableComponentID);
+        entityManager->attachComponent(entity, transformationComponentID);
 
-		if(collidable)
+        if(collidable)
         {
-			component_id colliderComponentID = component_manager::createColliderComponent();
+            component_id colliderComponentID = componentManager->createColliderComponent();
 
-			collider_component *colliderComponent = component_manager::getColliderComponent(colliderComponentID);
-			colliderComponent->contour.pos.x = position.x - width / 2;
-			colliderComponent->contour.pos.y = position.y - height / 2;
-			colliderComponent->contour.w = width;
-			colliderComponent->contour.h = height;
+            collider_component *colliderComponent = componentManager->getColliderComponent(colliderComponentID);
+            colliderComponent->contour.pos.x = position.x - width / 2;
+            colliderComponent->contour.pos.y = position.y - height / 2;
+            colliderComponent->contour.w = width;
+            colliderComponent->contour.h = height;
 
-			entity_manager::attachComponent(entity, colliderComponentID);
-		}
+            entityManager->attachComponent(entity, colliderComponentID);
+        }
 
-		return entity;
-	}
+        return entity;
+    }
 
-	/*
-	==========================
-	graphic::create3DRectangle
-	==========================
-	*/
-	entity graphic::create3DRectangle(
+    /*
+    ==========================
+    graphic::create3DRectangle
+    ==========================
+    */
+    entity graphic::create3DRectangle(
         const char *name,
-        program_id program,
+        GL3::gl_id program,
         entity_collection_id collectionID,
         const fvec3 &position,
         float width,
@@ -179,117 +192,124 @@ namespace deep
         const colora &color5,
         const colora &color6,
         bool collidable)
-	{
-		component_id drawableComponentID       = component_manager::createDrawableComponent(program, vbo_manager::create(name), vao_manager::create(name));
-		component_id transformationComponentID = component_manager::createTransformationComponent(position, fvec3(width, height, length), 0.0f);
+    {
+        component_manager *componentManager = component_manager::get_singleton();
+        GL3::vbo_manager *vboManager = GL3::vbo_manager::get_singleton();
+        GL3::vao_manager *vaoManager = GL3::vao_manager::get_singleton();
+        GL3::texture_manager *textureManager = GL3::texture_manager::get_singleton();
 
-		drawable_component *drawableComponent = component_manager::getDrawableComponent(drawableComponentID);
-		drawableComponent->texture = texture_manager::getWhiteTexture();
-		drawableComponent->textureUnit = 0;
-		drawableComponent->renderCallback = drawable_component::classicRenderCallback;
+        component_id drawableComponentID       = componentManager->createDrawableComponent(program, vboManager->create(name), vaoManager->create(name));
+        component_id transformationComponentID = componentManager->createTransformationComponent(position, fvec3(width, height, length), 0.0f);
 
-		float vPos[] = {
+        drawable_component *drawableComponent = componentManager->getDrawableComponent(drawableComponentID);
+        drawableComponent->texture = textureManager->get_white_texture();
+        drawableComponent->textureUnit = 0;
+        drawableComponent->renderCallback = drawable_component::classicRenderCallback;
 
-			// Face avant
-			-0.5f, -0.5f, -0.5f, color1.R, color1.G, color1.B, color1.A, 0.0f, 1.0f,  // Haut gauche
-			 0.5f,  0.5f, -0.5f, color1.R, color1.G, color1.B, color1.A, 1.0f, 0.0f,  // Bas droite
-			 0.5f, -0.5f, -0.5f, color1.R, color1.G, color1.B, color1.A, 1.0f, 1.0f,  // Haut droite
-			 
-			-0.5f, -0.5f, -0.5f, color1.R, color1.G, color1.B, color1.A, 1.0f, 0.0f,  // Haut gauche
-			-0.5f,  0.5f, -0.5f, color1.R, color1.G, color1.B, color1.A, 0.0f, 1.0f,  // Bas gauche
-			 0.5f,  0.5f, -0.5f, color1.R, color1.G, color1.B, color1.A, 0.0f, 0.0f,  // Bas droite
-			
-			// Face arrière
-			 0.5f, -0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 0.0f, 1.0f,  // Haut gauche
-			-0.5f,  0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 1.0f, 0.0f,  // Bas droite
-			-0.5f, -0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 1.0f, 1.0f,  // Haut droite
+        float vPos[] = {
 
-			 0.5f, -0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 1.0f, 0.0f,  // Haut gauche
-			 0.5f,  0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 0.0f, 1.0f,  // Bas gauche
-			-0.5f,  0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 0.0f, 0.0f,  // Bas droite
-			
+            // Face avant
+            -0.5f, -0.5f, -0.5f, static_cast<float>(color1.R), static_cast<float>(color1.G), static_cast<float>(color1.B), static_cast<float>(color1.A), 0.0f, 1.0f,  // Haut gauche
+             0.5f,  0.5f, -0.5f, static_cast<float>(color1.R), static_cast<float>(color1.G), static_cast<float>(color1.B), static_cast<float>(color1.A), 1.0f, 0.0f,  // Bas droite
+             0.5f, -0.5f, -0.5f, static_cast<float>(color1.R), static_cast<float>(color1.G), static_cast<float>(color1.B), static_cast<float>(color1.A), 1.0f, 1.0f,  // Haut droite
+             
+            -0.5f, -0.5f, -0.5f, static_cast<float>(color1.R), static_cast<float>(color1.G), static_cast<float>(color1.B), static_cast<float>(color1.A), 1.0f, 0.0f,  // Haut gauche
+            -0.5f,  0.5f, -0.5f, static_cast<float>(color1.R), static_cast<float>(color1.G), static_cast<float>(color1.B), static_cast<float>(color1.A), 0.0f, 1.0f,  // Bas gauche
+             0.5f,  0.5f, -0.5f, static_cast<float>(color1.R), static_cast<float>(color1.G), static_cast<float>(color1.B), static_cast<float>(color1.A), 0.0f, 0.0f,  // Bas droite
+            
+            // Face arrière
+             0.5f, -0.5f,  0.5f, static_cast<float>(color2.R), static_cast<float>(color2.G), static_cast<float>(color2.B), static_cast<float>(color2.A), 0.0f, 1.0f,  // Haut gauche
+            -0.5f,  0.5f,  0.5f, static_cast<float>(color2.R), static_cast<float>(color2.G), static_cast<float>(color2.B), static_cast<float>(color2.A), 1.0f, 0.0f,  // Bas droite
+            -0.5f, -0.5f,  0.5f, static_cast<float>(color2.R), static_cast<float>(color2.G), static_cast<float>(color2.B), static_cast<float>(color2.A), 1.0f, 1.0f,  // Haut droite
 
-			// Face droite
-			-0.5f,  0.5f,  0.5f, color3.R, color3.G, color3.B, color3.A, 0.0f, 1.0f,  // Bas gauche
-			-0.5f,  0.5f, -0.5f, color3.R, color3.G, color3.B, color3.A, 1.0f, 1.0f,  // Bas droite
-			-0.5f, -0.5f, -0.5f, color3.R, color3.G, color3.B, color3.A, 1.0f, 0.0f,  // Haut droite
+             0.5f, -0.5f,  0.5f, static_cast<float>(color2.R), static_cast<float>(color2.G), static_cast<float>(color2.B), static_cast<float>(color2.A), 1.0f, 0.0f,  // Haut gauche
+             0.5f,  0.5f,  0.5f, static_cast<float>(color2.R), static_cast<float>(color2.G), static_cast<float>(color2.B), static_cast<float>(color2.A), 0.0f, 1.0f,  // Bas gauche
+            -0.5f,  0.5f,  0.5f, static_cast<float>(color2.R), static_cast<float>(color2.G), static_cast<float>(color2.B), static_cast<float>(color2.A), 0.0f, 0.0f,  // Bas droite
+            
 
-			-0.5f, -0.5f, -0.5f, color3.R, color3.G, color3.B, color3.A, 1.0f, 0.0f,  // Haut droite
-			-0.5f, -0.5f,  0.5f, color3.R, color3.G, color3.B, color3.A, 0.0f, 0.0f,  // Haut gauche
-			-0.5f,  0.5f,  0.5f, color3.R, color3.G, color3.B, color3.A, 0.0f, 1.0f,  // Bas gauche
+            // Face droite
+            -0.5f,  0.5f,  0.5f, static_cast<float>(color3.R), static_cast<float>(color3.G), static_cast<float>(color3.B), static_cast<float>(color3.A), 0.0f, 1.0f,  // Bas gauche
+            -0.5f,  0.5f, -0.5f, static_cast<float>(color3.R), static_cast<float>(color3.G), static_cast<float>(color3.B), static_cast<float>(color3.A), 1.0f, 1.0f,  // Bas droite
+            -0.5f, -0.5f, -0.5f, static_cast<float>(color3.R), static_cast<float>(color3.G), static_cast<float>(color3.B), static_cast<float>(color3.A), 1.0f, 0.0f,  // Haut droite
 
-
-			// Face gauche
-			 0.5f,  0.5f,  0.5f, color4.R, color4.G, color4.B, color4.A, 0.0f, 1.0f,  // Bas droite
-			 0.5f, -0.5f, -0.5f, color4.R, color4.G, color4.B, color4.A, 1.0f, 0.0f,  // Haut gauche
-			 0.5f,  0.5f, -0.5f, color4.R, color4.G, color4.B, color4.A, 1.0f, 1.0f,  // Bas gauche
-
-			 0.5f, -0.5f, -0.5f, color4.R, color4.G, color4.B, color4.A, 1.0f, 0.0f,  // Haut gauche
-			 0.5f,  0.5f,  0.5f, color4.R, color4.G, color4.B, color4.A, 0.0f, 1.0f,  // Bas droite
-			 0.5f, -0.5f,  0.5f, color4.R, color4.G, color4.B, color4.A, 0.0f, 0.0f,  // Haut droite
+            -0.5f, -0.5f, -0.5f, static_cast<float>(color3.R), static_cast<float>(color3.G), static_cast<float>(color3.B), static_cast<float>(color3.A), 1.0f, 0.0f,  // Haut droite
+            -0.5f, -0.5f,  0.5f, static_cast<float>(color3.R), static_cast<float>(color3.G), static_cast<float>(color3.B), static_cast<float>(color3.A), 0.0f, 0.0f,  // Haut gauche
+            -0.5f,  0.5f,  0.5f, static_cast<float>(color3.R), static_cast<float>(color3.G), static_cast<float>(color3.B), static_cast<float>(color3.A), 0.0f, 1.0f,  // Bas gauche
 
 
-			// Face bas
-			0.5f, -0.5f,  0.5f, color5.R, color5.G, color5.B, color5.A, 1.0f, 0.0f,  // Bas droite
-			-0.5f, -0.5f, -0.5f, color5.R, color5.G, color5.B, color5.A, 0.0f, 1.0f,  // Haut gauche
-			 0.5f, -0.5f, -0.5f, color5.R, color5.G, color5.B, color5.A, 1.0f, 1.0f,  // Haut droite
+            // Face gauche
+             0.5f,  0.5f,  0.5f, static_cast<float>(color4.R), static_cast<float>(color4.G), static_cast<float>(color4.B), static_cast<float>(color4.A), 0.0f, 1.0f,  // Bas droite
+             0.5f, -0.5f, -0.5f, static_cast<float>(color4.R), static_cast<float>(color4.G), static_cast<float>(color4.B), static_cast<float>(color4.A), 1.0f, 0.0f,  // Haut gauche
+             0.5f,  0.5f, -0.5f, static_cast<float>(color4.R), static_cast<float>(color4.G), static_cast<float>(color4.B), static_cast<float>(color4.A), 1.0f, 1.0f,  // Bas gauche
 
-			 -0.5f, -0.5f, -0.5f, color5.R, color5.G, color5.B, color5.A, 0.0f, 1.0f,  // Haut gauche
-			 0.5f, -0.5f,  0.5f, color5.R, color5.G, color5.B, color5.A, 1.0f, 0.0f,  // Bas droite
-			-0.5f, -0.5f,  0.5f, color5.R, color5.G, color5.B, color5.A, 0.0f, 0.0f,  // Bas gauche
-			
+             0.5f, -0.5f, -0.5f, static_cast<float>(color4.R), static_cast<float>(color4.G), static_cast<float>(color4.B), static_cast<float>(color4.A), 1.0f, 0.0f,  // Haut gauche
+             0.5f,  0.5f,  0.5f, static_cast<float>(color4.R), static_cast<float>(color4.G), static_cast<float>(color4.B), static_cast<float>(color4.A), 0.0f, 1.0f,  // Bas droite
+             0.5f, -0.5f,  0.5f, static_cast<float>(color4.R), static_cast<float>(color4.G), static_cast<float>(color4.B), static_cast<float>(color4.A), 0.0f, 0.0f,  // Haut droite
 
-			// Face haut
-			-0.5f,  0.5f, -0.5f, color6.R, color6.G, color6.B, color6.A, 0.0f, 1.0f,  // Haut gauche
-			 0.5f,  0.5f,  0.5f, color6.R, color6.G, color6.B, color6.A, 1.0f, 0.0f,  // Bas droite
-			 0.5f,  0.5f, -0.5f, color6.R, color6.G, color6.B, color6.A, 1.0f, 1.0f,  // Haut droite
 
-			 0.5f,  0.5f,  0.5f, color6.R, color6.G, color6.B, color6.A, 1.0f, 0.0f,  // Bas droite
-			-0.5f,  0.5f, -0.5f, color6.R, color6.G, color6.B, color6.A, 0.0f, 1.0f,   // Haut gauche
-			-0.5f,  0.5f,  0.5f, color6.R, color6.G, color6.B, color6.A, 0.0f, 0.0f  // Bas gauche
-			
-		};
+             // Face bas
+             0.5f, -0.5f,  0.5f, static_cast<float>(color5.R), static_cast<float>(color5.G), static_cast<float>(color5.B), static_cast<float>(color5.A), 1.0f, 0.0f,  // Bas droite
+            -0.5f, -0.5f, -0.5f, static_cast<float>(color5.R), static_cast<float>(color5.G), static_cast<float>(color5.B), static_cast<float>(color5.A), 0.0f, 1.0f,  // Haut gauche
+             0.5f, -0.5f, -0.5f, static_cast<float>(color5.R), static_cast<float>(color5.G), static_cast<float>(color5.B), static_cast<float>(color5.A), 1.0f, 1.0f,  // Haut droite
 
-		memory_chunk chunk(vPos, sizeof(vPos));
+            -0.5f, -0.5f, -0.5f, static_cast<float>(color5.R), static_cast<float>(color5.G), static_cast<float>(color5.B), static_cast<float>(color5.A), 0.0f, 1.0f,  // Haut gauche
+             0.5f, -0.5f,  0.5f, static_cast<float>(color5.R), static_cast<float>(color5.G), static_cast<float>(color5.B), static_cast<float>(color5.A), 1.0f, 0.0f,  // Bas droite
+            -0.5f, -0.5f,  0.5f, static_cast<float>(color5.R), static_cast<float>(color5.G), static_cast<float>(color5.B), static_cast<float>(color5.A), 0.0f, 0.0f,  // Bas gauche
+            
 
-		vbo_manager::bind(drawableComponent->vbo);
-		vao_manager::bind(drawableComponent->vao);
+            // Face haut
+            -0.5f,  0.5f, -0.5f, static_cast<float>(color6.R), static_cast<float>(color6.G), static_cast<float>(color6.B), static_cast<float>(color6.A), 0.0f, 1.0f,  // Haut gauche
+             0.5f,  0.5f,  0.5f, static_cast<float>(color6.R), static_cast<float>(color6.G), static_cast<float>(color6.B), static_cast<float>(color6.A), 1.0f, 0.0f,  // Bas droite
+             0.5f,  0.5f, -0.5f, static_cast<float>(color6.R), static_cast<float>(color6.G), static_cast<float>(color6.B), static_cast<float>(color6.A), 1.0f, 1.0f,  // Haut droite
 
-		vbo_manager::transmitData(chunk);
-		vbo_manager::setVerticesNumber(36);
+             0.5f,  0.5f,  0.5f, static_cast<float>(color6.R), static_cast<float>(color6.G), static_cast<float>(color6.B), static_cast<float>(color6.A), 1.0f, 0.0f,  // Bas droite
+            -0.5f,  0.5f, -0.5f, static_cast<float>(color6.R), static_cast<float>(color6.G), static_cast<float>(color6.B), static_cast<float>(color6.A), 0.0f, 1.0f,   // Haut gauche
+            -0.5f,  0.5f,  0.5f, static_cast<float>(color6.R), static_cast<float>(color6.G), static_cast<float>(color6.B), static_cast<float>(color6.A), 0.0f, 0.0f  // Bas gauche
+            
+        };
 
-		vbo_manager::addAttribute(0, gl_attrib_components_number::x3, gl_type::Float, 9 * sizeof(float), 0);
-		vbo_manager::addAttribute(1, gl_attrib_components_number::x4, gl_type::Float, 9 * sizeof(float), 3 * sizeof(float));
-		vbo_manager::addAttribute(2, gl_attrib_components_number::x2, gl_type::Float, 9 * sizeof(float), 7 * sizeof(float));
+        memory_chunk chunk(vPos, sizeof(vPos));
 
-		entity entity = entity_manager::createEntity(collectionID);
-		entity_manager::attachComponent(entity, drawableComponentID);
-		entity_manager::attachComponent(entity, transformationComponentID);
+        vboManager->bind(drawableComponent->vbo);
+        vaoManager->bind(drawableComponent->vao);
 
-		if(collidable)
+        vboManager->transmit_data(chunk);
+        vboManager->set_vertices_number(36);
+
+        vboManager->add_attribute(0, GL3::gl_attrib_components_number::x3, GL3::gl_type::Float, 9 * sizeof(float), 0);
+        vboManager->add_attribute(1, GL3::gl_attrib_components_number::x4, GL3::gl_type::Float, 9 * sizeof(float), 3 * sizeof(float));
+        vboManager->add_attribute(2, GL3::gl_attrib_components_number::x2, GL3::gl_type::Float, 9 * sizeof(float), 7 * sizeof(float));
+
+        entity_manager *entityManager = entity_manager::get_singleton();
+
+        entity entity = entityManager->createEntity(collectionID);
+        entityManager->attachComponent(entity, drawableComponentID);
+        entityManager->attachComponent(entity, transformationComponentID);
+
+        if(collidable)
         {
-			component_id colliderComponentID = component_manager::createColliderComponent();
+            component_id colliderComponentID = componentManager->createColliderComponent();
 
-			collider_component *colliderComponent = component_manager::getColliderComponent(colliderComponentID);
-			colliderComponent->contour.pos.x = position.x - width / 2;
-			colliderComponent->contour.pos.y = position.y - height / 2;
-			colliderComponent->contour.w = width;
-			colliderComponent->contour.h = height;
+            collider_component *colliderComponent = componentManager->getColliderComponent(colliderComponentID);
+            colliderComponent->contour.pos.x = position.x - width / 2;
+            colliderComponent->contour.pos.y = position.y - height / 2;
+            colliderComponent->contour.w = width;
+            colliderComponent->contour.h = height;
 
-			entity_manager::attachComponent(entity, colliderComponentID);
-		}
+            entityManager->attachComponent(entity, colliderComponentID);
+        }
 
-		return entity;
-	}
+        return entity;
+    }
 
-	/*
-	=================================
-	graphic::create3DRectangleTexture
-	=================================
-	*/
-	entity graphic::create3DRectangleTexture(
+    /*
+    =================================
+    graphic::create3DRectangleTexture
+    =================================
+    */
+    entity graphic::create3DRectangleTexture(
         const char *name,
-        program_id program,
+        GL3::gl_id program,
         entity_collection_id collectionID,
         const fvec3 &position,
         float width,
@@ -301,302 +321,316 @@ namespace deep
         const colora &color4,
         const colora &color5,
         const colora &color6,
-        texture_id texture,
+        GL3::gl_id texture,
         uint8_t textureUnit,
         bool collidable)
-	{
-		component_id drawableComponentID       = component_manager::createDrawableComponent(program, vbo_manager::create(name), vao_manager::create(name), texture, textureUnit);
-		component_id transformationComponentID = component_manager::createTransformationComponent(position, fvec3(width, height, length), 0.0f);
+    {
+        component_manager *componentManager = component_manager::get_singleton();
+        GL3::vbo_manager *vboManager = GL3::vbo_manager::get_singleton();
+        GL3::vao_manager *vaoManager = GL3::vao_manager::get_singleton();
 
-		drawable_component *drawableComponent = component_manager::getDrawableComponent(drawableComponentID);
-		drawableComponent->renderCallback = drawable_component::classicRenderCallback;
+        component_id drawableComponentID       = componentManager->createDrawableComponent(program, vboManager->create(name), vaoManager->create(name), texture, textureUnit);
+        component_id transformationComponentID = componentManager->createTransformationComponent(position, fvec3(width, height, length), 0.0f);
 
-		float vPos[] =
+        drawable_component *drawableComponent = componentManager->getDrawableComponent(drawableComponentID);
+        drawableComponent->renderCallback = drawable_component::classicRenderCallback;
+
+        float vPos[] =
         {
 
-			// Face avant
-			-0.5f, -0.5f, -0.5f, color1.R, color1.G, color1.B, color1.A, 1.0f, 1.0f,  // Haut gauche
-			 0.5f,  0.5f, -0.5f, color1.R, color1.G, color1.B, color1.A, 0.0f, 0.0f,  // Bas droite
-			 0.5f, -0.5f, -0.5f, color1.R, color1.G, color1.B, color1.A, 0.0f, 1.0f,  // Haut droite
-			 
-			-0.5f, -0.5f, -0.5f, color1.R, color1.G, color1.B, color1.A, 1.0f, 1.0f,  // Haut gauche
-			-0.5f,  0.5f, -0.5f, color1.R, color1.G, color1.B, color1.A, 1.0f, 0.0f,  // Bas gauche
-			 0.5f,  0.5f, -0.5f, color1.R, color1.G, color1.B, color1.A, 0.0f, 0.0f,  // Bas droite
-			
-			// Face arrière
-			 0.5f, -0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 1.0f, 1.0f,  // Haut gauche
-			-0.5f,  0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 0.0f, 0.0f,  // Bas droite
-			-0.5f, -0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 0.0f, 1.0f,  // Haut droite
+            // Face avant
+            -0.5f, -0.5f, -0.5f, static_cast<float>(color1.R), static_cast<float>(color1.G), static_cast<float>(color1.B), static_cast<float>(color1.A), 1.0f, 1.0f,  // Haut gauche
+             0.5f,  0.5f, -0.5f, static_cast<float>(color1.R), static_cast<float>(color1.G), static_cast<float>(color1.B), static_cast<float>(color1.A), 0.0f, 0.0f,  // Bas droite
+             0.5f, -0.5f, -0.5f, static_cast<float>(color1.R), static_cast<float>(color1.G), static_cast<float>(color1.B), static_cast<float>(color1.A), 0.0f, 1.0f,  // Haut droite
+             
+            -0.5f, -0.5f, -0.5f, static_cast<float>(color1.R), static_cast<float>(color1.G), static_cast<float>(color1.B), static_cast<float>(color1.A), 1.0f, 1.0f,  // Haut gauche
+            -0.5f,  0.5f, -0.5f, static_cast<float>(color1.R), static_cast<float>(color1.G), static_cast<float>(color1.B), static_cast<float>(color1.A), 1.0f, 0.0f,  // Bas gauche
+             0.5f,  0.5f, -0.5f, static_cast<float>(color1.R), static_cast<float>(color1.G), static_cast<float>(color1.B), static_cast<float>(color1.A), 0.0f, 0.0f,  // Bas droite
+            
+            // Face arrière
+             0.5f, -0.5f,  0.5f, static_cast<float>(color2.R), static_cast<float>(color2.G), static_cast<float>(color2.B), static_cast<float>(color2.A), 1.0f, 1.0f,  // Haut gauche
+            -0.5f,  0.5f,  0.5f, static_cast<float>(color2.R), static_cast<float>(color2.G), static_cast<float>(color2.B), static_cast<float>(color2.A), 0.0f, 0.0f,  // Bas droite
+            -0.5f, -0.5f,  0.5f, static_cast<float>(color2.R), static_cast<float>(color2.G), static_cast<float>(color2.B), static_cast<float>(color2.A), 0.0f, 1.0f,  // Haut droite
 
-			 0.5f, -0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 1.0f, 1.0f,  // Haut gauche
-			 0.5f,  0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 1.0f, 0.0f,  // Bas gauche
-			-0.5f,  0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 0.0f, 0.0f,  // Bas droite
-			
+             0.5f, -0.5f,  0.5f, static_cast<float>(color2.R), static_cast<float>(color2.G), static_cast<float>(color2.B), static_cast<float>(color2.A), 1.0f, 1.0f,  // Haut gauche
+             0.5f,  0.5f,  0.5f, static_cast<float>(color2.R), static_cast<float>(color2.G), static_cast<float>(color2.B), static_cast<float>(color2.A), 1.0f, 0.0f,  // Bas gauche
+            -0.5f,  0.5f,  0.5f, static_cast<float>(color2.R), static_cast<float>(color2.G), static_cast<float>(color2.B), static_cast<float>(color2.A), 0.0f, 0.0f,  // Bas droite
+            
 
-			// Face droite
-			-0.5f,  0.5f,  0.5f, color3.R, color3.G, color3.B, color3.A, 1.0f, 0.0f,  // Bas gauche
-			-0.5f,  0.5f, -0.5f, color3.R, color3.G, color3.B, color3.A, 0.0f, 0.0f,  // Bas droite
-			-0.5f, -0.5f, -0.5f, color3.R, color3.G, color3.B, color3.A, 0.0f, 1.0f,  // Haut droite
+            // Face droite
+            -0.5f,  0.5f,  0.5f, static_cast<float>(color3.R), static_cast<float>(color3.G), static_cast<float>(color3.B), static_cast<float>(color3.A), 1.0f, 0.0f,  // Bas gauche
+            -0.5f,  0.5f, -0.5f, static_cast<float>(color3.R), static_cast<float>(color3.G), static_cast<float>(color3.B), static_cast<float>(color3.A), 0.0f, 0.0f,  // Bas droite
+            -0.5f, -0.5f, -0.5f, static_cast<float>(color3.R), static_cast<float>(color3.G), static_cast<float>(color3.B), static_cast<float>(color3.A), 0.0f, 1.0f,  // Haut droite
 
-			-0.5f, -0.5f, -0.5f, color3.R, color3.G, color3.B, color3.A, 0.0f, 1.0f,  // Haut droite
-			-0.5f, -0.5f,  0.5f, color3.R, color3.G, color3.B, color3.A, 1.0f, 1.0f,  // Haut gauche
-			-0.5f,  0.5f,  0.5f, color3.R, color3.G, color3.B, color3.A, 1.0f, 0.0f,  // Bas gauche
-
-
-			// Face gauche
-			 0.5f,  0.5f,  0.5f, color4.R, color4.G, color4.B, color4.A, 0.0f, 0.0f,  // Bas droite
-			 0.5f, -0.5f, -0.5f, color4.R, color4.G, color4.B, color4.A, 1.0f, 1.0f,  // Haut gauche
-			 0.5f,  0.5f, -0.5f, color4.R, color4.G, color4.B, color4.A, 1.0f, 0.0f,  // Bas gauche
-
-			 0.5f, -0.5f, -0.5f, color4.R, color4.G, color4.B, color4.A, 1.0f, 1.0f,  // Haut gauche
-			 0.5f,  0.5f,  0.5f, color4.R, color4.G, color4.B, color4.A, 0.0f, 0.0f,  // Bas droite
-			 0.5f, -0.5f,  0.5f, color4.R, color4.G, color4.B, color4.A, 0.0f, 1.0f,  // Haut droite
+            -0.5f, -0.5f, -0.5f, static_cast<float>(color3.R), static_cast<float>(color3.G), static_cast<float>(color3.B), static_cast<float>(color3.A), 0.0f, 1.0f,  // Haut droite
+            -0.5f, -0.5f,  0.5f, static_cast<float>(color3.R), static_cast<float>(color3.G), static_cast<float>(color3.B), static_cast<float>(color3.A), 1.0f, 1.0f,  // Haut gauche
+            -0.5f,  0.5f,  0.5f, static_cast<float>(color3.R), static_cast<float>(color3.G), static_cast<float>(color3.B), static_cast<float>(color3.A), 1.0f, 0.0f,  // Bas gauche
 
 
-			// Face bas
-			 0.5f, -0.5f,  0.5f, color5.R, color5.G, color5.B, color5.A, 1.0f, 0.0f,  // Bas droite
-			-0.5f, -0.5f, -0.5f, color5.R, color5.G, color5.B, color5.A, 0.0f, 1.0f,  // Haut gauche
-			 0.5f, -0.5f, -0.5f, color5.R, color5.G, color5.B, color5.A, 1.0f, 1.0f,  // Haut droite
+            // Face gauche
+             0.5f,  0.5f,  0.5f, static_cast<float>(color4.R), static_cast<float>(color4.G), static_cast<float>(color4.B), static_cast<float>(color4.A), 0.0f, 0.0f,  // Bas droite
+             0.5f, -0.5f, -0.5f, static_cast<float>(color4.R), static_cast<float>(color4.G), static_cast<float>(color4.B), static_cast<float>(color4.A), 1.0f, 1.0f,  // Haut gauche
+             0.5f,  0.5f, -0.5f, static_cast<float>(color4.R), static_cast<float>(color4.G), static_cast<float>(color4.B), static_cast<float>(color4.A), 1.0f, 0.0f,  // Bas gauche
 
-			-0.5f, -0.5f, -0.5f, color5.R, color5.G, color5.B, color5.A, 0.0f, 1.0f,  // Haut gauche
-			 0.5f, -0.5f,  0.5f, color5.R, color5.G, color5.B, color5.A, 1.0f, 0.0f,  // Bas droite
-			-0.5f, -0.5f,  0.5f, color5.R, color5.G, color5.B, color5.A, 0.0f, 0.0f,  // Bas gauche
-			
+             0.5f, -0.5f, -0.5f, static_cast<float>(color4.R), static_cast<float>(color4.G), static_cast<float>(color4.B), static_cast<float>(color4.A), 1.0f, 1.0f,  // Haut gauche
+             0.5f,  0.5f,  0.5f, static_cast<float>(color4.R), static_cast<float>(color4.G), static_cast<float>(color4.B), static_cast<float>(color4.A), 0.0f, 0.0f,  // Bas droite
+             0.5f, -0.5f,  0.5f, static_cast<float>(color4.R), static_cast<float>(color4.G), static_cast<float>(color4.B), static_cast<float>(color4.A), 0.0f, 1.0f,  // Haut droite
 
-			// Face haut
-			-0.5f,  0.5f, -0.5f, color6.R, color6.G, color6.B, color6.A, 1.0f, 1.0f,  // Haut gauche
-			 0.5f,  0.5f,  0.5f, color6.R, color6.G, color6.B, color6.A, 0.0f, 0.0f,  // Bas droite
-			 0.5f,  0.5f, -0.5f, color6.R, color6.G, color6.B, color6.A, 0.0f, 1.0f,  // Haut droite
 
-			 0.5f,  0.5f,  0.5f, color6.R, color6.G, color6.B, color6.A, 0.0f, 0.0f,  // Bas droite
-			-0.5f,  0.5f, -0.5f, color6.R, color6.G, color6.B, color6.A, 1.0f, 1.0f,  // Haut gauche
-			-0.5f,  0.5f,  0.5f, color6.R, color6.G, color6.B, color6.A, 1.0f, 0.0f   // Bas gauche
-			
-		};
+            // Face bas
+             0.5f, -0.5f,  0.5f, static_cast<float>(color5.R), static_cast<float>(color5.G), static_cast<float>(color5.B), static_cast<float>(color5.A), 1.0f, 0.0f,  // Bas droite
+            -0.5f, -0.5f, -0.5f, static_cast<float>(color5.R), static_cast<float>(color5.G), static_cast<float>(color5.B), static_cast<float>(color5.A), 0.0f, 1.0f,  // Haut gauche
+             0.5f, -0.5f, -0.5f, static_cast<float>(color5.R), static_cast<float>(color5.G), static_cast<float>(color5.B), static_cast<float>(color5.A), 1.0f, 1.0f,  // Haut droite
 
-		memory_chunk chunk(vPos, sizeof(vPos));
+            -0.5f, -0.5f, -0.5f, static_cast<float>(color5.R), static_cast<float>(color5.G), static_cast<float>(color5.B), static_cast<float>(color5.A), 0.0f, 1.0f,  // Haut gauche
+             0.5f, -0.5f,  0.5f, static_cast<float>(color5.R), static_cast<float>(color5.G), static_cast<float>(color5.B), static_cast<float>(color5.A), 1.0f, 0.0f,  // Bas droite
+            -0.5f, -0.5f,  0.5f, static_cast<float>(color5.R), static_cast<float>(color5.G), static_cast<float>(color5.B), static_cast<float>(color5.A), 0.0f, 0.0f,  // Bas gauche
+            
 
-		vbo_manager::bind(drawableComponent->vbo);
-		vao_manager::bind(drawableComponent->vao);
+            // Face haut
+            -0.5f,  0.5f, -0.5f, static_cast<float>(color6.R), static_cast<float>(color6.G), static_cast<float>(color6.B), static_cast<float>(color6.A), 1.0f, 1.0f,  // Haut gauche
+             0.5f,  0.5f,  0.5f, static_cast<float>(color6.R), static_cast<float>(color6.G), static_cast<float>(color6.B), static_cast<float>(color6.A), 0.0f, 0.0f,  // Bas droite
+             0.5f,  0.5f, -0.5f, static_cast<float>(color6.R), static_cast<float>(color6.G), static_cast<float>(color6.B), static_cast<float>(color6.A), 0.0f, 1.0f,  // Haut droite
 
-		vbo_manager::transmitData(chunk);
-		vbo_manager::setVerticesNumber(36);
+             0.5f,  0.5f,  0.5f, static_cast<float>(color6.R), static_cast<float>(color6.G), static_cast<float>(color6.B), static_cast<float>(color6.A), 0.0f, 0.0f,  // Bas droite
+            -0.5f,  0.5f, -0.5f, static_cast<float>(color6.R), static_cast<float>(color6.G), static_cast<float>(color6.B), static_cast<float>(color6.A), 1.0f, 1.0f,  // Haut gauche
+            -0.5f,  0.5f,  0.5f, static_cast<float>(color6.R), static_cast<float>(color6.G), static_cast<float>(color6.B), static_cast<float>(color6.A), 1.0f, 0.0f   // Bas gauche
+            
+        };
 
-		vbo_manager::addAttribute(0, gl_attrib_components_number::x3, gl_type::Float, 9 * sizeof(float), 0);
-		vbo_manager::addAttribute(1, gl_attrib_components_number::x4, gl_type::Float, 9 * sizeof(float), 3 * sizeof(float));
-		vbo_manager::addAttribute(2, gl_attrib_components_number::x2, gl_type::Float, 9 * sizeof(float), 7 * sizeof(float));
+        memory_chunk chunk(vPos, sizeof(vPos));
 
-		entity entity = entity_manager::createEntity(collectionID);
-		entity_manager::attachComponent(entity, drawableComponentID);
-		entity_manager::attachComponent(entity, transformationComponentID);
+        vboManager->bind(drawableComponent->vbo);
+        vaoManager->bind(drawableComponent->vao);
 
-		if(collidable)
+        vboManager->transmit_data(chunk);
+        vboManager->set_vertices_number(36);
+
+        vboManager->add_attribute(0, GL3::gl_attrib_components_number::x3, GL3::gl_type::Float, 9 * sizeof(float), 0);
+        vboManager->add_attribute(1, GL3::gl_attrib_components_number::x4, GL3::gl_type::Float, 9 * sizeof(float), 3 * sizeof(float));
+        vboManager->add_attribute(2, GL3::gl_attrib_components_number::x2, GL3::gl_type::Float, 9 * sizeof(float), 7 * sizeof(float));
+
+        entity_manager *entityManager = entity_manager::get_singleton();
+
+        entity entity = entityManager->createEntity(collectionID);
+        entityManager->attachComponent(entity, drawableComponentID);
+        entityManager->attachComponent(entity, transformationComponentID);
+
+        if(collidable)
         {
-			component_id colliderComponentID = component_manager::createColliderComponent();
+            component_id colliderComponentID = componentManager->createColliderComponent();
 
-			collider_component *colliderComponent = component_manager::getColliderComponent(colliderComponentID);
-			colliderComponent->contour.pos.x = position.x - width / 2;
-			colliderComponent->contour.pos.y = position.y - height / 2;
-			colliderComponent->contour.w = width;
-			colliderComponent->contour.h = height;
+            collider_component *colliderComponent = componentManager->getColliderComponent(colliderComponentID);
+            colliderComponent->contour.pos.x = position.x - width / 2;
+            colliderComponent->contour.pos.y = position.y - height / 2;
+            colliderComponent->contour.w = width;
+            colliderComponent->contour.h = height;
 
-			entity_manager::attachComponent(entity, colliderComponentID);
-		}
+            entityManager->attachComponent(entity, colliderComponentID);
+        }
 
-		return entity;
-	}
+        return entity;
+    }
 
     polygon graphic::createCube(
         const char *name,
         const colora &color1,
-	    const colora &color2,
-	    const colora &color3,
-	    const colora &color4,
-	    const colora &color5,
-	    const colora &color6
+        const colora &color2,
+        const colora &color3,
+        const colora &color4,
+        const colora &color5,
+        const colora &color6
     )
     {
+        GL3::vbo_manager *vboManager = GL3::vbo_manager::get_singleton();
+        GL3::vao_manager *vaoManager = GL3::vao_manager::get_singleton();
+
         float vPos[] =
         {
 
-			// Face avant
-			-0.5f, -0.5f, -0.5f, color1.R, color1.G, color1.B, color1.A, 1.0f, 1.0f,  // Haut gauche
-			 0.5f,  0.5f, -0.5f, color1.R, color1.G, color1.B, color1.A, 0.0f, 0.0f, // Bas droite
-			 0.5f, -0.5f, -0.5f, color1.R, color1.G, color1.B, color1.A, 0.0f, 1.0f, // Haut droite
-			 
-			-0.5f, -0.5f, -0.5f, color1.R, color1.G, color1.B, color1.A, 1.0f, 1.0f, // Haut gauche
-			-0.5f,  0.5f, -0.5f, color1.R, color1.G, color1.B, color1.A, 1.0f, 0.0f, // Bas gauche
-			 0.5f,  0.5f, -0.5f, color1.R, color1.G, color1.B, color1.A, 0.0f, 0.0f, // Bas droite
-			
-			// Face arrière
-			 0.5f, -0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 1.0f, 1.0f, // Haut gauche
-			-0.5f,  0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 0.0f, 0.0f, // Bas droite
-			-0.5f, -0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 0.0f, 1.0f, // Haut droite
+            // Face avant
+            -0.5f, -0.5f, -0.5f, static_cast<float>(color1.R), static_cast<float>(color1.G), static_cast<float>(color1.B), static_cast<float>(color1.A), 1.0f, 1.0f,  // Haut gauche
+             0.5f,  0.5f, -0.5f, static_cast<float>(color1.R), static_cast<float>(color1.G), static_cast<float>(color1.B), static_cast<float>(color1.A), 0.0f, 0.0f, // Bas droite
+             0.5f, -0.5f, -0.5f, static_cast<float>(color1.R), static_cast<float>(color1.G), static_cast<float>(color1.B), static_cast<float>(color1.A), 0.0f, 1.0f, // Haut droite
+             
+            -0.5f, -0.5f, -0.5f, static_cast<float>(color1.R), static_cast<float>(color1.G), static_cast<float>(color1.B), static_cast<float>(color1.A), 1.0f, 1.0f, // Haut gauche
+            -0.5f,  0.5f, -0.5f, static_cast<float>(color1.R), static_cast<float>(color1.G), static_cast<float>(color1.B), static_cast<float>(color1.A), 1.0f, 0.0f, // Bas gauche
+             0.5f,  0.5f, -0.5f, static_cast<float>(color1.R), static_cast<float>(color1.G), static_cast<float>(color1.B), static_cast<float>(color1.A), 0.0f, 0.0f, // Bas droite
+            
+            // Face arrière
+             0.5f, -0.5f,  0.5f, static_cast<float>(color2.R), static_cast<float>(color2.G), static_cast<float>(color2.B), static_cast<float>(color2.A), 1.0f, 1.0f, // Haut gauche
+            -0.5f,  0.5f,  0.5f, static_cast<float>(color2.R), static_cast<float>(color2.G), static_cast<float>(color2.B), static_cast<float>(color2.A), 0.0f, 0.0f, // Bas droite
+            -0.5f, -0.5f,  0.5f, static_cast<float>(color2.R), static_cast<float>(color2.G), static_cast<float>(color2.B), static_cast<float>(color2.A), 0.0f, 1.0f, // Haut droite
 
-			 0.5f, -0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 1.0f, 1.0f, // Haut gauche
-			 0.5f,  0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 1.0f, 0.0f, // Bas gauche
-			-0.5f,  0.5f,  0.5f, color2.R, color2.G, color2.B, color2.A, 0.0f, 0.0f, // Bas droite
-			
+             0.5f, -0.5f,  0.5f, static_cast<float>(color2.R), static_cast<float>(color2.G), static_cast<float>(color2.B), static_cast<float>(color2.A), 1.0f, 1.0f, // Haut gauche
+             0.5f,  0.5f,  0.5f, static_cast<float>(color2.R), static_cast<float>(color2.G), static_cast<float>(color2.B), static_cast<float>(color2.A), 1.0f, 0.0f, // Bas gauche
+            -0.5f,  0.5f,  0.5f, static_cast<float>(color2.R), static_cast<float>(color2.G), static_cast<float>(color2.B), static_cast<float>(color2.A), 0.0f, 0.0f, // Bas droite
+            
 
-			// Face droite
-			-0.5f,  0.5f,  0.5f, color3.R, color3.G, color3.B, color3.A, 1.0f, 0.0f, // Bas gauche
-			-0.5f,  0.5f, -0.5f, color3.R, color3.G, color3.B, color3.A, 0.0f, 0.0f, // Bas droite
-			-0.5f, -0.5f, -0.5f, color3.R, color3.G, color3.B, color3.A, 0.0f, 1.0f, // Haut droite
+            // Face droite
+            -0.5f,  0.5f,  0.5f, static_cast<float>(color3.R), static_cast<float>(color3.G), static_cast<float>(color3.B), static_cast<float>(color3.A), 1.0f, 0.0f, // Bas gauche
+            -0.5f,  0.5f, -0.5f, static_cast<float>(color3.R), static_cast<float>(color3.G), static_cast<float>(color3.B), static_cast<float>(color3.A), 0.0f, 0.0f, // Bas droite
+            -0.5f, -0.5f, -0.5f, static_cast<float>(color3.R), static_cast<float>(color3.G), static_cast<float>(color3.B), static_cast<float>(color3.A), 0.0f, 1.0f, // Haut droite
 
-			-0.5f, -0.5f, -0.5f, color3.R, color3.G, color3.B, color3.A, 0.0f, 1.0f, // Haut droite
-			-0.5f, -0.5f,  0.5f, color3.R, color3.G, color3.B, color3.A, 1.0f, 1.0f, // Haut gauche
-			-0.5f,  0.5f,  0.5f, color3.R, color3.G, color3.B, color3.A, 1.0f, 0.0f, // Bas gauche
-
-
-			// Face gauche
-			 0.5f,  0.5f,  0.5f, color4.R, color4.G, color4.B, color4.A, 0.0f, 0.0f, // Bas droite
-			 0.5f, -0.5f, -0.5f, color4.R, color4.G, color4.B, color4.A, 1.0f, 1.0f, // Haut gauche
-			 0.5f,  0.5f, -0.5f, color4.R, color4.G, color4.B, color4.A, 1.0f, 0.0f, // Bas gauche
-
-			 0.5f, -0.5f, -0.5f, color4.R, color4.G, color4.B, color4.A, 1.0f, 1.0f, // Haut gauche
-			 0.5f,  0.5f,  0.5f, color4.R, color4.G, color4.B, color4.A, 0.0f, 0.0f, // Bas droite
-			 0.5f, -0.5f,  0.5f, color4.R, color4.G, color4.B, color4.A, 0.0f, 1.0f, // Haut droite
+            -0.5f, -0.5f, -0.5f, static_cast<float>(color3.R), static_cast<float>(color3.G), static_cast<float>(color3.B), static_cast<float>(color3.A), 0.0f, 1.0f, // Haut droite
+            -0.5f, -0.5f,  0.5f, static_cast<float>(color3.R), static_cast<float>(color3.G), static_cast<float>(color3.B), static_cast<float>(color3.A), 1.0f, 1.0f, // Haut gauche
+            -0.5f,  0.5f,  0.5f, static_cast<float>(color3.R), static_cast<float>(color3.G), static_cast<float>(color3.B), static_cast<float>(color3.A), 1.0f, 0.0f, // Bas gauche
 
 
-			// Face bas
-			 0.5f, -0.5f,  0.5f, color5.R, color5.G, color5.B, color5.A, 1.0f, 0.0f, // Bas droite
-			-0.5f, -0.5f, -0.5f, color5.R, color5.G, color5.B, color5.A, 0.0f, 1.0f, // Haut gauche
-			 0.5f, -0.5f, -0.5f, color5.R, color5.G, color5.B, color5.A, 1.0f, 1.0f, // Haut droite
+            // Face gauche
+             0.5f,  0.5f,  0.5f, static_cast<float>(color4.R), static_cast<float>(color4.G), static_cast<float>(color4.B), static_cast<float>(color4.A), 0.0f, 0.0f, // Bas droite
+             0.5f, -0.5f, -0.5f, static_cast<float>(color4.R), static_cast<float>(color4.G), static_cast<float>(color4.B), static_cast<float>(color4.A), 1.0f, 1.0f, // Haut gauche
+             0.5f,  0.5f, -0.5f, static_cast<float>(color4.R), static_cast<float>(color4.G), static_cast<float>(color4.B), static_cast<float>(color4.A), 1.0f, 0.0f, // Bas gauche
 
-			-0.5f, -0.5f, -0.5f, color5.R, color5.G, color5.B, color5.A, 0.0f, 1.0f, // Haut gauche
-			 0.5f, -0.5f,  0.5f, color5.R, color5.G, color5.B, color5.A, 1.0f, 0.0f, // Bas droite
-			-0.5f, -0.5f,  0.5f, color5.R, color5.G, color5.B, color5.A, 0.0f, 0.0f, // Bas gauche
-			
+             0.5f, -0.5f, -0.5f, static_cast<float>(color4.R), static_cast<float>(color4.G), static_cast<float>(color4.B), static_cast<float>(color4.A), 1.0f, 1.0f, // Haut gauche
+             0.5f,  0.5f,  0.5f, static_cast<float>(color4.R), static_cast<float>(color4.G), static_cast<float>(color4.B), static_cast<float>(color4.A), 0.0f, 0.0f, // Bas droite
+             0.5f, -0.5f,  0.5f, static_cast<float>(color4.R), static_cast<float>(color4.G), static_cast<float>(color4.B), static_cast<float>(color4.A), 0.0f, 1.0f, // Haut droite
 
-			// Face haut
-			-0.5f,  0.5f, -0.5f, color6.R, color6.G, color6.B, color6.A, 1.0f, 1.0f, // Haut gauche
-			 0.5f,  0.5f,  0.5f, color6.R, color6.G, color6.B, color6.A, 0.0f, 0.0f, // Bas droite
-			 0.5f,  0.5f, -0.5f, color6.R, color6.G, color6.B, color6.A, 0.0f, 1.0f, // Haut droite
 
-			 0.5f,  0.5f,  0.5f, color6.R, color6.G, color6.B, color6.A, 0.0f, 0.0f, // Bas droite
-			-0.5f,  0.5f, -0.5f, color6.R, color6.G, color6.B, color6.A, 1.0f, 1.0f, // Haut gauche
-			-0.5f,  0.5f,  0.5f, color6.R, color6.G, color6.B, color6.A, 1.0f, 0.0f // Bas gauche
-			
-		};
+            // Face bas
+             0.5f, -0.5f,  0.5f, static_cast<float>(color5.R), static_cast<float>(color5.G), static_cast<float>(color5.B), static_cast<float>(color5.A), 1.0f, 0.0f, // Bas droite
+            -0.5f, -0.5f, -0.5f, static_cast<float>(color5.R), static_cast<float>(color5.G), static_cast<float>(color5.B), static_cast<float>(color5.A), 0.0f, 1.0f, // Haut gauche
+             0.5f, -0.5f, -0.5f, static_cast<float>(color5.R), static_cast<float>(color5.G), static_cast<float>(color5.B), static_cast<float>(color5.A), 1.0f, 1.0f, // Haut droite
 
-        polygon pol(vbo_manager::create(name), vao_manager::create(name));
+            -0.5f, -0.5f, -0.5f, static_cast<float>(color5.R), static_cast<float>(color5.G), static_cast<float>(color5.B), static_cast<float>(color5.A), 0.0f, 1.0f, // Haut gauche
+             0.5f, -0.5f,  0.5f, static_cast<float>(color5.R), static_cast<float>(color5.G), static_cast<float>(color5.B), static_cast<float>(color5.A), 1.0f, 0.0f, // Bas droite
+            -0.5f, -0.5f,  0.5f, static_cast<float>(color5.R), static_cast<float>(color5.G), static_cast<float>(color5.B), static_cast<float>(color5.A), 0.0f, 0.0f, // Bas gauche
+            
+
+            // Face haut
+            -0.5f,  0.5f, -0.5f, static_cast<float>(color6.R), static_cast<float>(color6.G), static_cast<float>(color6.B), static_cast<float>(color6.A), 1.0f, 1.0f, // Haut gauche
+             0.5f,  0.5f,  0.5f, static_cast<float>(color6.R), static_cast<float>(color6.G), static_cast<float>(color6.B), static_cast<float>(color6.A), 0.0f, 0.0f, // Bas droite
+             0.5f,  0.5f, -0.5f, static_cast<float>(color6.R), static_cast<float>(color6.G), static_cast<float>(color6.B), static_cast<float>(color6.A), 0.0f, 1.0f, // Haut droite
+
+             0.5f,  0.5f,  0.5f, static_cast<float>(color6.R), static_cast<float>(color6.G), static_cast<float>(color6.B), static_cast<float>(color6.A), 0.0f, 0.0f, // Bas droite
+            -0.5f,  0.5f, -0.5f, static_cast<float>(color6.R), static_cast<float>(color6.G), static_cast<float>(color6.B), static_cast<float>(color6.A), 1.0f, 1.0f, // Haut gauche
+            -0.5f,  0.5f,  0.5f, static_cast<float>(color6.R), static_cast<float>(color6.G), static_cast<float>(color6.B), static_cast<float>(color6.A), 1.0f, 0.0f // Bas gauche
+            
+        };
+
+        polygon pol(vboManager->create(name), vaoManager->create(name));
         memory_chunk chunk(vPos, sizeof(vPos));
 
-        vbo_manager::bind(pol.vbo());
-		vao_manager::bind(pol.vao());
+        vboManager->bind(pol.vbo());
+        vaoManager->bind(pol.vao());
 
-		vbo_manager::transmitData(chunk);
-		vbo_manager::setVerticesNumber(36);
+        vboManager->transmit_data(chunk);
+        vboManager->set_vertices_number(36);
 
-		vbo_manager::addAttribute(0, gl_attrib_components_number::x3, gl_type::Float, 9 * sizeof(float), 0);
-		vbo_manager::addAttribute(1, gl_attrib_components_number::x4, gl_type::Float, 9 * sizeof(float), 3 * sizeof(float));
-		vbo_manager::addAttribute(2, gl_attrib_components_number::x2, gl_type::Float, 9 * sizeof(float), 7 * sizeof(float));
+        vboManager->add_attribute(0, GL3::gl_attrib_components_number::x3, GL3::gl_type::Float, 9 * sizeof(float), 0);
+        vboManager->add_attribute(1, GL3::gl_attrib_components_number::x4, GL3::gl_type::Float, 9 * sizeof(float), 3 * sizeof(float));
+        vboManager->add_attribute(2, GL3::gl_attrib_components_number::x2, GL3::gl_type::Float, 9 * sizeof(float), 7 * sizeof(float));
 
-        vao_manager::bindDefault();
+        vaoManager->bind_default();
 
         return pol;
     }
 
-	entity graphic::createCubemap(
+    entity graphic::createCubemap(
         const char *name,
-		program_id program,
-		entity_collection_id collectionID,
-		const fvec3 &position,
-		float width,
-		float height,
-		float length,
-		texture_id texture,
-		uint8_t textureUnit,
-		bool collidable
-	)
-	{
-		component_id drawableComponentID       = component_manager::createDrawableComponent(program, vbo_manager::create(name), vao_manager::create(name), texture, textureUnit);
-		component_id transformationComponentID = component_manager::createTransformationComponent(position, fvec3(width, height, length), 0.0f);
+        GL3::gl_id program,
+        entity_collection_id collectionID,
+        const fvec3 &position,
+        float width,
+        float height,
+        float length,
+        GL3::gl_id texture,
+        uint8_t textureUnit,
+        bool collidable
+    )
+    {
+        component_manager *componentManager = component_manager::get_singleton();
+        GL3::vbo_manager *vboManager = GL3::vbo_manager::get_singleton();
+        GL3::vao_manager *vaoManager = GL3::vao_manager::get_singleton();
 
-		drawable_component *drawableComponent = component_manager::getDrawableComponent(drawableComponentID);
-		drawableComponent->renderCallback = drawable_component::skyboxRenderCallback;
+        component_id drawableComponentID       = componentManager->createDrawableComponent(program, vboManager->create(name), vaoManager->create(name), texture, textureUnit);
+        component_id transformationComponentID = componentManager->createTransformationComponent(position, fvec3(width, height, length), 0.0f);
 
-		float vPos[] = {
-			-1.0f,  1.0f, -1.0f,
-			-1.0f, -1.0f, -1.0f,
-			1.0f, -1.0f, -1.0f,
-			
+        drawable_component *drawableComponent = componentManager->getDrawableComponent(drawableComponentID);
+        drawableComponent->renderCallback = drawable_component::skyboxRenderCallback;
 
-			 1.0f, -1.0f, -1.0f,
-			 1.0f,  1.0f, -1.0f,
-			 -1.0f,  1.0f, -1.0f,
-			 
-
-
-			-1.0f, -1.0f,  1.0f,
-			-1.0f, -1.0f, -1.0f,
-			-1.0f,  1.0f, -1.0f,
-			-1.0f,  1.0f, -1.0f,
-			-1.0f,  1.0f,  1.0f,
-			-1.0f, -1.0f,  1.0f,
-
-
-			1.0f, -1.0f, -1.0f,
-			1.0f, -1.0f,  1.0f,
-			1.0f,  1.0f,  1.0f,
-			1.0f,  1.0f,  1.0f,
-			1.0f,  1.0f, -1.0f,
-			1.0f, -1.0f, -1.0f,
-
-
-			-1.0f, -1.0f,  1.0f,
-			-1.0f,  1.0f,  1.0f,
-			 1.0f,  1.0f,  1.0f,
-			 1.0f,  1.0f,  1.0f,
-			 1.0f, -1.0f,  1.0f,
-			-1.0f, -1.0f,  1.0f,
-
-
-			-1.0f,  1.0f, -1.0f,
-			 1.0f,  1.0f, -1.0f,
-			 1.0f,  1.0f,  1.0f,
-			 1.0f,  1.0f,  1.0f,
-			-1.0f,  1.0f,  1.0f,
-			-1.0f,  1.0f, -1.0f,
-
-
-			-1.0f, -1.0f, -1.0f,
-			-1.0f, -1.0f,  1.0f,
-			 1.0f, -1.0f, -1.0f,
-			 1.0f, -1.0f, -1.0f,
-			-1.0f, -1.0f,  1.0f,
-			 1.0f, -1.0f,  1.0f
-
-		};
-
-		memory_chunk chunk(vPos, sizeof(vPos));
-
-		vbo_manager::bind(drawableComponent->vbo);
-		vao_manager::bind(drawableComponent->vao);
-
-		vbo_manager::transmitData(chunk);
-		vbo_manager::setVerticesNumber(36);
-
-		vbo_manager::addAttribute(0, gl_attrib_components_number::x3, gl_type::Float, 3 * sizeof(float), 0);
-
-		entity entity = entity_manager::createEntity(collectionID);
-		entity_manager::attachComponent(entity, drawableComponentID);
-		entity_manager::attachComponent(entity, transformationComponentID);
-
-		if(collidable)
+        float vPos[] =
         {
-			component_id colliderComponentID = component_manager::createColliderComponent();
+            -1.0f,  1.0f, -1.0f,
+            -1.0f, -1.0f, -1.0f,
+             1.0f, -1.0f, -1.0f,
+             1.0f, -1.0f, -1.0f,
+             1.0f,  1.0f, -1.0f,
+            -1.0f,  1.0f, -1.0f,
+             
 
-			collider_component *colliderComponent = component_manager::getColliderComponent(colliderComponentID);
-			colliderComponent->contour.pos.x = position.x - width / 2;
-			colliderComponent->contour.pos.y = position.y - height / 2;
-			colliderComponent->contour.w = width;
-			colliderComponent->contour.h = height;
 
-			entity_manager::attachComponent(entity, colliderComponentID);
-		}
+            -1.0f, -1.0f,  1.0f,
+            -1.0f, -1.0f, -1.0f,
+            -1.0f,  1.0f, -1.0f,
+            -1.0f,  1.0f, -1.0f,
+            -1.0f,  1.0f,  1.0f,
+            -1.0f, -1.0f,  1.0f,
 
-		return entity;
-	}
+
+            1.0f, -1.0f, -1.0f,
+            1.0f, -1.0f,  1.0f,
+            1.0f,  1.0f,  1.0f,
+            1.0f,  1.0f,  1.0f,
+            1.0f,  1.0f, -1.0f,
+            1.0f, -1.0f, -1.0f,
+
+
+            -1.0f, -1.0f,  1.0f,
+            -1.0f,  1.0f,  1.0f,
+             1.0f,  1.0f,  1.0f,
+             1.0f,  1.0f,  1.0f,
+             1.0f, -1.0f,  1.0f,
+            -1.0f, -1.0f,  1.0f,
+
+
+            -1.0f,  1.0f, -1.0f,
+             1.0f,  1.0f, -1.0f,
+             1.0f,  1.0f,  1.0f,
+             1.0f,  1.0f,  1.0f,
+            -1.0f,  1.0f,  1.0f,
+            -1.0f,  1.0f, -1.0f,
+
+
+            -1.0f, -1.0f, -1.0f,
+            -1.0f, -1.0f,  1.0f,
+             1.0f, -1.0f, -1.0f,
+             1.0f, -1.0f, -1.0f,
+            -1.0f, -1.0f,  1.0f,
+             1.0f, -1.0f,  1.0f
+
+        };
+
+        memory_chunk chunk(vPos, sizeof(vPos));
+
+        vboManager->bind(drawableComponent->vbo);
+        vaoManager->bind(drawableComponent->vao);
+
+        vboManager->transmit_data(chunk);
+        vboManager->set_vertices_number(36);
+
+        vboManager->add_attribute(0, GL3::gl_attrib_components_number::x3, GL3::gl_type::Float, 3 * sizeof(float), 0);
+
+        entity_manager *entityManager = entity_manager::get_singleton();
+
+        entity entity = entityManager->createEntity(collectionID);
+        entityManager->attachComponent(entity, drawableComponentID);
+        entityManager->attachComponent(entity, transformationComponentID);
+
+        if(collidable)
+        {
+            component_id colliderComponentID = componentManager->createColliderComponent();
+
+            collider_component *colliderComponent = componentManager->getColliderComponent(colliderComponentID);
+            colliderComponent->contour.pos.x = position.x - width / 2;
+            colliderComponent->contour.pos.y = position.y - height / 2;
+            colliderComponent->contour.w = width;
+            colliderComponent->contour.h = height;
+
+            entityManager->attachComponent(entity, colliderComponentID);
+        }
+
+        return entity;
+    }
 
 }

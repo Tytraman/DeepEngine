@@ -2,155 +2,225 @@
 #define __DEEP_ENGINE_MYBMP_HPP__
 
 #include <DE/image/image.hpp>
+#include <DE/vec.hpp>
 
 namespace deep
 {
 
-	constexpr uint16_t BMPSignature = (('M' << 8) | ('B'));
+    constexpr uint16_t BMPSignature = (('M' << 8) | ('B'));
 
-	class png;
+    class png;
 
-	DE_PACK(
-		struct DE_API bmp_file_header
+    DE_PACK(
+        struct DE_API bmp_file_header
         {
-			uint16_t signature;          // 2
-			uint32_t size;               // 4
-			uint16_t reserved1;          // 2
-			uint16_t reserved2;          // 2
-			uint32_t imageDataOffset;    // 4
-		}
-	);
+            uint16_t signature;          // 2
+            uint32_t size;               // 4
+            uint16_t reserved1;          // 2
+            uint16_t reserved2;          // 2
+            uint32_t imageDataOffset;    // 4
+        }
+    );
 
+    DE_PACK(
+        struct DE_API bmp_core_header
+        {
+            uint32_t size;
+            int16_t width;
+            int16_t height;
+            uint16_t colorPlanes;
+            uint16_t colorDepth;
+        }
+    );
+
+    DE_PACK(
+        struct DE_API bmp_info_header
+        {
+            uint32_t size;
+            int32_t width;
+            int32_t height;
+            uint16_t colorPlanes;
+            uint16_t colorDepth;                 // Ou bit depth.
+            uint32_t compressionMethod;
+            uint32_t imageSize;
+            uint32_t hResolution;                // Mettre à 0 pour aucune préférence.
+            uint32_t vResolution;                // Mettre à 0 pour aucune préférence.
+            uint32_t numberOfColors;
+            uint32_t numberOfImportantColors;
+        }
+    );
+
+    DE_PACK(
+        struct DE_API bmp_v4_header
+        {
+            bmp_info_header infoHeader;
+            uint32_t redChannelBitmask;
+            uint32_t greenChannelBitmask;
+            uint32_t blueChannelBitmask;
+            uint32_t alphaChannelBitmask;
+            uint32_t colorSpaceType;
+            uint8_t  endpoints[0x24];
+            uint32_t gammaRed;
+            uint32_t gammaGreen;
+            uint32_t gammaBlue;
+        }
+    );
     
-
-	DE_PACK(
-		struct DE_API bmp_info_header
-        {
-			uint32_t size;
-			int32_t width;
-			int32_t height;
-			uint16_t colorPlanes;
-			uint16_t colorDepth;                 // Ou bit depth.
-			uint32_t compressionMethod;
-			uint32_t imageSize;
-			uint32_t hResolution;                // Mettre à 0 pour aucune préférence.
-			uint32_t vResolution;                // Mettre à 0 pour aucune préférence.
-			uint32_t numberOfColors;
-			uint32_t numberOfImportantColors;
-		}
-	);
-
-	DE_PACK(
-		struct DE_API bmp_v4_header
-        {
-			bmp_info_header infoHeader;
-			uint32_t redChannelBitmask;
-			uint32_t greenChannelBitmask;
-			uint32_t blueChannelBitmask;
-			uint32_t alphaChannelBitmask;
-			uint32_t colorSpaceType;
-			uint8_t  endpoints[0x24];
-			uint32_t gammaRed;
-			uint32_t gammaGreen;
-			uint32_t gammaBlue;
-		}
-	);
-    
-	/// @brief Classe permettant l'ouverture, la modification et la conversion d'images bitmap.
-	class DE_API bmp
+    /// @brief Classe permettant l'ouverture, la modification et la conversion d'images bitmap.
+    class DE_API bmp
     {
 
-		public:
-			/// @brief Constructeur qui initialise les variables internes à leurs valeurs par défaut.
-			bmp();
+        public:
+            /// @brief Constructeur qui initialise les variables internes à leurs valeurs par défaut.
+            bmp();
 
             /// @brief Construit une nouvelle image bmp en faisant une copie de la mémoire d'une autre image bmp.
             /// @param other L'image bmp à copier.
             bmp(const bmp &other);
 
-			bool create(int32_t width, int32_t height, uint16_t colorDepth, image_color_type colorType);
+            bool create(int32_t width, int32_t height, uint16_t colorDepth, image_color_space colorType);
 
             /// @brief Crée une image bmp en l'ouvrant depuis un fichier.
             /// @param filename Le chemin du fichier à ouvrir.
             /// @return \c true si l'opération réussie.
-            bool createFromFile(const char *filename);
+            bool create_from_file(const char *filename);
 
-			/// @brief Libère la mémoire utilisée par l'image.
-			void destroy();
+            /// @brief Libère la mémoire utilisée par l'image.
+            void destroy();
 
             /// @brief Convertie une zone mémoire brute en image bmp.
             /// @param raw Zone mémoire à convertir.
-            void convertRaw(uint8_t *raw);
+            void convert_raw(uint8_t *raw);
 
-			/// @brief Convertie une image png en image bmp.
-			/// @param png L'image bmp à convertir.
-			void convertFrom(png &png);
+            /// @brief Convertie une image png en image bmp.
+            /// @param png L'image bmp à convertir.
+            void convert_from(png &png);
 
-			/// @brief Sauvegarde l'image bmp.
-			/// @param filename Le chemin du fichier dans lequel sauvegarder l'image.
-			/// @return \c true si l'opération réussie.
-			bool save(const char *filename);
+            /// @brief Sauvegarde l'image bmp.
+            /// @param filename Le chemin du fichier dans lequel sauvegarder l'image.
+            /// @return \c true si l'opération réussie.
+            bool save(const char *filename);
 
-            bool copyColumn(int32_t index, int32_t dest, int32_t start, int32_t end, uint8_t *from, uint8_t *to);
-            bool copyColumn(int32_t index, int32_t dest, int32_t start, int32_t end);
+            bool copy_column(int32_t fromCol, int32_t destCol, int32_t startRow, int32_t endRow, int32_t destRow, uint32_t fromRowSize, uint32_t toRowSize, uint8_t *from, uint8_t *to);
+            bool copy_column(int32_t index, int32_t dest, int32_t start, int32_t end);
 
-            bool copyRow(int32_t index, int32_t dest, int32_t colEnd, uint32_t fromRowSize, uint32_t toRowSize, uint8_t *from, uint8_t *to);
-            bool copyRow(int32_t index, int32_t dest, int32_t colEnd);
+            bool copy_row(int32_t index, int32_t dest, int32_t colEnd, uint32_t fromRowSize, uint32_t toRowSize, uint8_t *from, uint8_t *to);
+            bool copy_row(int32_t index, int32_t dest, int32_t colEnd);
+            bool copy_row(int32_t index, int32_t dest, uint8_t *from, uint8_t *to);
 
-            bool copyRow(int32_t index, int32_t dest, uint8_t *from, uint8_t *to);
+            bool cut_columns(int32_t start, int32_t end);
 
-            bool cutColumns(int32_t start, int32_t end);
+            void swap_columns(int32_t first, int32_t second, mem_ptr buffer, uint8_t bytes);
+            void swap_rows(int32_t first, int32_t second);
 
-            void swapColumns(int32_t first, int32_t second, mem_ptr buffer, uint8_t bytes);
+            void vertical_flip();
+            void horizontal_flip();
 
-            void verticalFlip();
-            void horizontalFlip();
+            bool convert_to_BGR();
 
-            bool add(const bmp &other);
+            bool add(bmp &other, const vec2 &position);
+            bool add(bmp &other);
 
             bool resize(int32_t width, int32_t height);
 
-			int32_t getWidth() const;
-			int32_t getHeight() const;
-			image_color_type getColorType() const;
-			mem_ptr data();
-			mem_ptr image();
+            int32_t get_width() const;
+            int32_t get_height() const;
+            image_color_space get_color_type() const;
+            mem_ptr get_data();
+            mem_ptr get_image();
+            mem_ptr get_color_table();
 
-		private:
-			memory_chunk m_MemoryChunk;
-			uint32_t m_RowSize;
-			int32_t m_Width;
-			int32_t m_Height;
-			image_color_type m_ColorType;
+        private:
+            memory_chunk m_MemoryChunk;
+            uint32_t m_ImageDataOffset;
+            uint32_t m_ColorTableOffset;
+            uint8_t m_ColorEntrySize;
+            uint32_t m_RowSize;
+            int32_t m_Width;
+            int32_t m_Height;
+            image_color_space m_ColorType;
             uint16_t m_ColorDepth;
             uint32_t m_InfoHeaderSize;
 
-	};
+    };
 
-	inline int32_t bmp::getWidth() const
-	{
-		return m_Width;
-	}
+    /*
+    ========
+    bmp::add
+    ========
+    */
+    inline bool bmp::add(bmp &other)
+    {
+        return add(other, vec2(m_Width, 0));
+    }
 
-	inline int32_t bmp::getHeight() const
-	{
-		return m_Height;
-	}
+    /*
+    =============
+    bmp::get_width
+    =============
+    */
+    inline int32_t bmp::get_width() const
+    {
+        return m_Width;
+    }
 
-	inline image_color_type bmp::getColorType() const
-	{
-		return m_ColorType;
-	}
+    /*
+    ==============
+    bmp::get_height
+    ==============
+    */
+    inline int32_t bmp::get_height() const
+    {
+        return m_Height;
+    }
 
-	inline mem_ptr bmp::data()
-	{
-		return m_MemoryChunk.data();
-	}
+    /*
+    =================
+    bmp::get_color_type
+    =================
+    */
+    inline image_color_space bmp::get_color_type() const
+    {
+        return m_ColorType;
+    }
 
-	inline mem_ptr bmp::image()
-	{
-		return (uint8_t *) m_MemoryChunk.data() + ((bmp_file_header *) m_MemoryChunk.data())->imageDataOffset;
-	}
+    /*
+    =========
+    bmp::data
+    =========
+    */
+    inline mem_ptr bmp::get_data()
+    {
+        return m_MemoryChunk.data();
+    }
+
+    /*
+    ==========
+    bmp::image
+    ==========
+    */
+    inline mem_ptr bmp::get_image()
+    {
+        uint8_t *memData = (uint8_t *) m_MemoryChunk.data();
+        uint8_t *data = memData + m_ImageDataOffset;
+
+        return data;
+    }
+
+    /*
+    ===============
+    bmp::get_color_table
+    ===============
+    */
+    inline mem_ptr bmp::get_color_table()
+    {
+        if(m_ColorTableOffset == 0)
+            return nullptr;
+
+        uint8_t *memData = (uint8_t *) m_MemoryChunk.data();
+
+        return memData + m_ColorTableOffset;
+    }
 
 }
 

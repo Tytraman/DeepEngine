@@ -18,30 +18,30 @@ namespace deep
     using file_object_enum_element_callback = bool (*)(hash_entry<pair<string, string>> &entry, string &currentPath, mem_ptr args);
     using file_object_enum_container_callback = bool (*)(file_object_container &container, string &currentPath, mem_ptr args);
 
-    struct DE_API file_object_container
+    struct file_object_container
     {
         string name;
         hash_table<pair<string, string>> items;
         hash_table<file_object_container> containers;
 
-        file_object_container();
-        file_object_container(const char *key);
+        DE_API file_object_container();
+        DE_API file_object_container(const char *key);
 
-        void enumerate(file_object_enum_element_callback elementCallback, file_object_enum_container_callback containerCallback, mem_ptr args, size_t maxSubContainer = -1, file_object_container **container = nullptr, pair<string, string> **element = nullptr);
-        file_object_container *searchContainer(const char *path);
-        pair<string, string> *searchElement(const char *path);
+        DE_API void enumerate(file_object_enum_element_callback elementCallback, file_object_enum_container_callback containerCallback, mem_ptr args, size_t maxSubContainer = -1, file_object_container **container = nullptr, pair<string, string> **element = nullptr);
+        DE_API file_object_container *searchContainer(const char *path);
+        DE_API pair<string, string> *searchElement(const char *path);
     };
 
-    class DE_API file_object : public input_file_stream
+    class file_object : public input_file_stream
     {
 
         public:
-            file_object(const char *filename);
-            bool load(file_object_load_warning_callback warningCallback = nullptr);
+            DE_API file_object(const char *filename);
+            DE_API bool load(file_object_load_warning_callback warningCallback = nullptr);
 
-            void enumerate(file_object_enum_element_callback elementCallback, file_object_enum_container_callback containerCallback, mem_ptr args, size_t maxSubContainer = -1, file_object_container **container = nullptr, pair<string, string> **element = nullptr);
-            file_object_container *searchContainer(const char *path);
-            pair<string, string> *searchElement(const char *path);
+            DE_API void enumerate(file_object_enum_element_callback elementCallback, file_object_enum_container_callback containerCallback, mem_ptr args, size_t maxSubContainer = -1, file_object_container **container = nullptr, pair<string, string> **element = nullptr);
+            DE_API file_object_container *searchContainer(const char *path);
+            DE_API pair<string, string> *searchElement(const char *path);
 
         private:
             file_object_container m_Container;

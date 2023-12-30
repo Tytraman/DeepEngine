@@ -11,7 +11,7 @@
 namespace deep
 {
 
-	template<typename Value>
+    template<typename Value>
     struct hash_entry;
 
     template<typename Value>
@@ -38,10 +38,10 @@ namespace deep
     };
 
     /*
-	=============================
-	hash_entry<Value>::hash_entry
-	=============================
-	*/
+    =============================
+    hash_entry<Value>::hash_entry
+    =============================
+    */
     template<typename Value>
     hash_entry<Value>::hash_entry()
         : key(-1),
@@ -51,10 +51,10 @@ namespace deep
     { }
 
     /*
-	=============================
-	hash_entry<Value>::hash_entry
-	=============================
-	*/
+    =============================
+    hash_entry<Value>::hash_entry
+    =============================
+    */
     template<typename Value>
     hash_entry<Value>::hash_entry(uint64_t _key, const Value &_value, hash_entry<Value> *_previous)
         : key(_key),
@@ -106,10 +106,10 @@ namespace deep
     };
 
     /*
-	=============================
-	hash_table<Value>::hash_table
-	=============================
-	*/
+    =============================
+    hash_table<Value>::hash_table
+    =============================
+    */
     template<typename Value>
     hash_table<Value>::hash_table(size_t size, hash_function hashfunction, hash_table_free_element_callback<Value> freeElementCallback)
         : m_Table(new hash_entry<Value>*[size]),
@@ -125,10 +125,10 @@ namespace deep
     }
 
     /*
-	=======================
-	hash_table<Value>::init
-	=======================
-	*/
+    =======================
+    hash_table<Value>::init
+    =======================
+    */
     template<typename Value>
     void hash_table<Value>::init(size_t size, hash_function hashfunction, hash_table_free_element_callback<Value> freeElementCallback)
     {
@@ -145,10 +145,10 @@ namespace deep
     }
 
     /*
-	=========================
-	hash_table<Value>::insert
-	=========================
-	*/
+    =========================
+    hash_table<Value>::insert
+    =========================
+    */
     template<typename Value>
     hash_entry<Value> &hash_table<Value>::insert(const char *key, const Value &value)
     {
@@ -156,10 +156,10 @@ namespace deep
     }
 
     /*
-	=========================
-	hash_table<Value>::insert
-	=========================
-	*/
+    =========================
+    hash_table<Value>::insert
+    =========================
+    */
     template<typename Value>
     hash_entry<Value> &hash_table<Value>::insert(uint64_t key, const Value &value)
     {
@@ -201,10 +201,10 @@ namespace deep
     }
 
     /*
-	=============================
-	hash_table<Value>::operator[]
-	=============================
-	*/
+    =============================
+    hash_table<Value>::operator[]
+    =============================
+    */
     template<typename Value>
     hash_entry<Value> *hash_table<Value>::operator[](const char *str)
     {
@@ -212,10 +212,10 @@ namespace deep
     }
 
     /*
-	=============================
-	hash_table<Value>::operator[]
-	=============================
-	*/
+    =============================
+    hash_table<Value>::operator[]
+    =============================
+    */
     template<typename Value>
     hash_entry<Value> *hash_table<Value>::operator[](uint64_t key)
     {
@@ -240,10 +240,10 @@ namespace deep
     }
 
     /*
-	========================
-	hash_table<Value>::first
-	========================
-	*/
+    ========================
+    hash_table<Value>::first
+    ========================
+    */
     template<typename Value>
     hash_entry<Value> *hash_table<Value>::first(uint64_t *bucket)
     {
@@ -269,10 +269,10 @@ namespace deep
     }
 
     /*
-	=======================
-	hash_table<Value>::last
-	=======================
-	*/
+    =======================
+    hash_table<Value>::last
+    =======================
+    */
     template<typename Value>
     hash_entry<Value> *hash_table<Value>::last(uint64_t *bucket, uint64_t *count)
     {
@@ -308,10 +308,10 @@ namespace deep
     }
 
     /*
-	=========================
-	hash_table<Value>::remove
-	=========================
-	*/
+    =========================
+    hash_table<Value>::remove
+    =========================
+    */
     template<typename Value>
     bool hash_table<Value>::remove(const char *str)
     {
@@ -319,10 +319,10 @@ namespace deep
     }
 
     /*
-	=========================
-	hash_table<Value>::remove
-	=========================
-	*/
+    =========================
+    hash_table<Value>::remove
+    =========================
+    */
     template<typename Value>
     bool hash_table<Value>::remove(uint64_t key)
     {
@@ -354,10 +354,10 @@ namespace deep
     }
 
     /*
-	========================
-	hash_table<Value>::clear
-	========================
-	*/
+    ========================
+    hash_table<Value>::clear
+    ========================
+    */
     template<typename Value>
     void hash_table<Value>::clear()
     {
@@ -376,10 +376,10 @@ namespace deep
     }
 
     /*
-	========================
-	hash_table<Value>::begin
-	========================
-	*/
+    ========================
+    hash_table<Value>::begin
+    ========================
+    */
     template<typename Value>
     hash_table_iterator<Value> hash_table<Value>::begin()
     {
@@ -389,10 +389,10 @@ namespace deep
     }
 
     /*
-	======================
-	hash_table<Value>::end
-	======================
-	*/
+    ======================
+    hash_table<Value>::end
+    ======================
+    */
     template<typename Value>
     hash_table_iterator<Value> hash_table<Value>::end()
     {
@@ -403,10 +403,10 @@ namespace deep
     }
 
     /*
-	=======================
-	hash_table<Value>::size
-	=======================
-	*/
+    =======================
+    hash_table<Value>::size
+    =======================
+    */
     template<typename Value>
     size_t hash_table<Value>::size() const
     {
@@ -414,10 +414,10 @@ namespace deep
     }
 
     /*
-	======================================
-	hash_table<Value>::getNumberOfElements
-	======================================
-	*/
+    ======================================
+    hash_table<Value>::getNumberOfElements
+    ======================================
+    */
     template<typename Value>
     size_t hash_table<Value>::getNumberOfElements() const
     {
@@ -425,10 +425,10 @@ namespace deep
     }
 
     /*
-	==================================
-	hash_table<Value>::getHashFunction
-	==================================
-	*/
+    ==================================
+    hash_table<Value>::getHashFunction
+    ==================================
+    */
     template<typename Value>
     hash_function hash_table<Value>::getHashFunction() const
     {
@@ -464,10 +464,10 @@ namespace deep
     };
 
     /*
-	===============================================
-	hash_table_iterator<Value>::hash_table_iterator
-	===============================================
-	*/
+    ===============================================
+    hash_table_iterator<Value>::hash_table_iterator
+    ===============================================
+    */
     template<typename Value>
     hash_table_iterator<Value>::hash_table_iterator(hash_table<Value> *hashtable, hash_entry<Value> *hashentry, uint64_t bucket, uint64_t count)
         : m_HashTable(hashtable),
@@ -477,10 +477,10 @@ namespace deep
     { }
 
     /*
-	=====================================
-	hash_table_iterator<Value>::operator*
-	=====================================
-	*/
+    =====================================
+    hash_table_iterator<Value>::operator*
+    =====================================
+    */
     template<typename Value>
     hash_entry<Value> &hash_table_iterator<Value>::operator*()
     {
@@ -488,10 +488,10 @@ namespace deep
     }
 
     /*
-	======================================
-	hash_table_iterator<Value>::operator->
-	======================================
-	*/
+    ======================================
+    hash_table_iterator<Value>::operator->
+    ======================================
+    */
     template<typename Value>
     hash_entry<Value> *hash_table_iterator<Value>::operator->()
     {
@@ -499,10 +499,10 @@ namespace deep
     }
 
     /*
-	======================================
-	hash_table_iterator<Value>::operator++
-	======================================
-	*/
+    ======================================
+    hash_table_iterator<Value>::operator++
+    ======================================
+    */
     template<typename Value>
     hash_table_iterator<Value> &hash_table_iterator<Value>::operator++()
     {
@@ -532,10 +532,10 @@ namespace deep
     }
 
     /*
-	======================================
-	hash_table_iterator<Value>::operator++
-	======================================
-	*/
+    ======================================
+    hash_table_iterator<Value>::operator++
+    ======================================
+    */
     template<typename Value>
     hash_table_iterator<Value> hash_table_iterator<Value>::operator++(int)
     {
@@ -547,10 +547,10 @@ namespace deep
     }
 
     /*
-	======================================
-	hash_table_iterator<Value>::operator==
-	======================================
-	*/
+    ======================================
+    hash_table_iterator<Value>::operator==
+    ======================================
+    */
     template<typename Value>
     bool hash_table_iterator<Value>::operator==(const hash_table_iterator<Value> &other) const
     {
@@ -559,10 +559,10 @@ namespace deep
     }
 
     /*
-	======================================
-	hash_table_iterator<Value>::operator!=
-	======================================
-	*/
+    ======================================
+    hash_table_iterator<Value>::operator!=
+    ======================================
+    */
     template<typename Value>
     bool hash_table_iterator<Value>::operator!=(const hash_table_iterator<Value> &other) const
     {
@@ -571,10 +571,10 @@ namespace deep
     }
 
     /*
-	============================================
-	hash_table_iterator<Value>::getCurrentBucket
-	============================================
-	*/
+    ============================================
+    hash_table_iterator<Value>::getCurrentBucket
+    ============================================
+    */
     template<typename Value>
     uint64_t hash_table_iterator<Value>::getCurrentBucket() const
     {

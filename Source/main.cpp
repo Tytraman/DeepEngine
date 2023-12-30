@@ -35,7 +35,9 @@ extern "C"
 
 #include <DE/imgui/deimgui.hpp>
 
-#include <DE/rendering/opengl_utils.hpp>
+#include <DE/drivers/opengl/core.hpp>
+#include <DE/drivers/opengl/shader.hpp>
+#include <DE/drivers/opengl/uniform.hpp>
 
 #define WINDOW_WIDTH	1745
 #define WINDOW_HEIGHT	980
@@ -128,7 +130,6 @@ void update_callback(deep::window &win)
     deep::fvec3 cameraFront = camera.front();
     deep::fvec3 cameraRight = deep::fvec3::normalize(deep::fvec3::cross(cameraFront, camera.up()));
 
-    size_t entityIndex;
     deep::entity entity = deep::entity::bad();
 
     // Augmentation de la vitesse de déplacement de la caméra.
@@ -414,25 +415,6 @@ int main()
 
     printf("pwd: %s\n", deep::core::getPwd());
 
-    deep::bmp bmpTest;
-
-    if(!bmpTest.createFromFile("C:\\Users\\tytra\\Pictures\\test\\bmp\\4.bmp"))
-    {
-        fprintf(stderr, "Error opening bmp file...\n");
-        return 1;
-    }
-
-    bmpTest.verticalFlip();
-    bmpTest.cutColumns(0, 300);
-    bmpTest.cutColumns(1080, bmpTest.getWidth());
-
-    if(!bmpTest.save("testBmp.bmp"))
-    {
-        fprintf(stderr, "Error saving bmp file...\n");
-    }
-
-    
-
     deep::window win(TARGET_MS, TARGET_FPS);
     win.setEventCallback(event_callback);
     win.setUpdateCallback(update_callback);
@@ -445,8 +427,12 @@ int main()
         return 1;
     }
 
+    deep::engine_settings *engineSettings = deep::engine_settings::get_singleton();
+    deep::resource_manager *resourcesManager = deep::resource_manager::get_singleton();
+    deep::GL3::texture_manager *textureManager = deep::GL3::texture_manager::get_singleton();
+
     // Charge les ressources nécessaires au jeu.
-    if(!deep::resource_manager::init(deep::engine_settings::getResourcesDirectory().str()))
+    if(!resourcesManager->init(engineSettings->getResourcesDirectory().str()))
     {
         deep::core::shutdown();
         return 1;
@@ -468,159 +454,145 @@ int main()
         "Max texture image units: %d\n"
         DE_TERM_FG_YELLOW "====================================================\n" DE_TERM_RESET,
         
-        deep::gpu_core::version(),
-        deep::gpu_core::maxVertexAttribs(),
-        deep::gpu_core::maxTextureImageUnits()
+        deep::GL3::core::query_version(),
+        deep::GL3::core::query_max_vertex_attribs(),
+        deep::GL3::core::query_max_texture_image_units()
     );
 
-    deep::texture_id blueGirl = deep::texture_manager::create2D("girl");
-	deep::texture_manager::bind(blueGirl, 0);
-    deep::texture_manager::setTextureWrappingS(deep::gl_texture_wrap::ClampToEdge);
-	deep::texture_manager::setTextureWrappingT(deep::gl_texture_wrap::ClampToEdge);
-	deep::texture_manager::setTextureFiltering(deep::gl_texture_filter::Nearest);
-    deep::texture_manager::transmitTexture(bmpTest.image(), bmpTest.getWidth(), bmpTest.getHeight(), bmpTest.getColorType());
-
-    deep::texture_id mcGrassSide = deep::resource_manager::loadTexture("grass_block_side.png", 0);
-    deep::texture_id mcGrassTop  = deep::resource_manager::loadTexture("grass_block_top.png", 0);
-
-    bmpTest.destroy();
-
-    deep::png pngSkyboxLeft;
-    deep::png pngSkyboxFront;
-    deep::png pngSkyboxRight;
-    deep::png pngSkyboxBack;
-    deep::png pngSkyboxBottom;
-    deep::png pngSkyboxTop;
-
-    // Charge les images de la skybox
-    if(!pngSkyboxLeft.loadAndRead("..\\resources\\textures\\skybox_left.png"))
+    deep::bmp mcGrass, mcGrassTop, mcDirt;
+    if(!resourcesManager->loadBMP("grass_block_side.bmp", mcGrass))
     {
-        fprintf(stderr, "Unable to load 'skybox_left'.\n");
-        return 1;
+        fprintf(stderr, "Unable to load resource.\n");
+        return EXIT_FAILURE;
     }
 
-    if(!pngSkyboxFront.loadAndRead("..\\resources\\textures\\skybox_front.png"))
+    if(!resourcesManager->loadBMP("grass_block_top.bmp", mcGrassTop))
     {
-        fprintf(stderr, "Unable to load 'skybox_front'.\n");
-        return 1;
+        fprintf(stderr, "Unable to load resource.\n");
+        return EXIT_FAILURE;
     }
 
-    if(!pngSkyboxRight.loadAndRead("..\\resources\\textures\\skybox_right.png"))
+    if(!resourcesManager->loadBMP("dirt.bmp", mcDirt))
     {
-        fprintf(stderr, "Unable to load 'skybox_right'.\n");
-        return 1;
+        fprintf(stderr, "Unable to load resource.\n");
+        return EXIT_FAILURE;
     }
 
-    if(!pngSkyboxBack.loadAndRead("..\\resources\\textures\\skybox_back.png"))
+    if(!mcGrass.add(mcGrassTop))
     {
-        fprintf(stderr, "Unable to load 'skybox_back'.\n");
-        return 1;
+        fprintf(stderr, "Unable to add bmp image.\n");
+        return EXIT_FAILURE;
     }
 
-    if(!pngSkyboxBottom.loadAndRead("..\\resources\\textures\\skybox_bottom.png"))
+    if(!mcGrass.add(mcDirt, deep::vec2(0, mcGrass.get_height())))
     {
-        fprintf(stderr, "Unable to load 'skybox_bottom'.\n");
-        return 1;
+        fprintf(stderr, "Unable to add bmp image.\n");
+        return EXIT_FAILURE;
     }
 
-    if(!pngSkyboxTop.loadAndRead("..\\resources\\textures\\skybox_top.png"))
-    {
-        fprintf(stderr, "Unable to load 'skybox_top'.\n");
-        return 1;
-    }
+    mcGrass.horizontal_flip();
 
-    pngSkyboxLeft.applyVerticalMirrorEffect();
-    pngSkyboxLeft.applyHorizontalMirrorEffect();
+    deep::GL3::gl_id mcTexture = textureManager->create_2D("mc_texture");
+    textureManager->bind(mcTexture, 0);
+    textureManager->set_texture_wrapping_s(deep::GL3::texture_manager::gl_texture_wrap::ClampToEdge);
+    textureManager->set_texture_wrapping_t(deep::GL3::texture_manager::gl_texture_wrap::ClampToEdge);
+    textureManager->set_texture_filtering(deep::GL3::texture_manager::gl_texture_filter::Nearest);
+    textureManager->transmit_texture(mcGrass.get_image(), mcGrass.get_width(), mcGrass.get_height(), mcGrass.get_color_type());
 
-    pngSkyboxFront.applyVerticalMirrorEffect();
-    pngSkyboxFront.applyHorizontalMirrorEffect();
+    deep::bmp skyboxLeft;
+    skyboxLeft.create_from_file("..\\resources\\textures\\skybox_left.bmp");
+    skyboxLeft.vertical_flip();
+    skyboxLeft.horizontal_flip();
 
-    pngSkyboxRight.applyVerticalMirrorEffect();
-    pngSkyboxRight.applyHorizontalMirrorEffect();
+    deep::bmp skyboxFront;
+    skyboxFront.create_from_file("..\\resources\\textures\\skybox_front.bmp");
+    skyboxFront.vertical_flip();
+    skyboxFront.horizontal_flip();
 
-    pngSkyboxBack.applyVerticalMirrorEffect();
-    pngSkyboxBack.applyHorizontalMirrorEffect();
+    deep::bmp skyboxRight;
+    skyboxRight.create_from_file("..\\resources\\textures\\skybox_right.bmp");
+    skyboxRight.vertical_flip();
+    skyboxRight.horizontal_flip();
 
-    deep::mem_ptr imageLeft   = pngSkyboxLeft.rawImage();
-    deep::mem_ptr imageFront  = pngSkyboxFront.rawImage();
-    deep::mem_ptr imageRight  = pngSkyboxRight.rawImage();
-    deep::mem_ptr imageBack   = pngSkyboxBack.rawImage();
-    deep::mem_ptr imageBottom = pngSkyboxBottom.rawImage();
-    deep::mem_ptr imageTop    = pngSkyboxTop.rawImage();
+    deep::bmp skyboxBack;
+    skyboxBack.create_from_file("..\\resources\\textures\\skybox_back.bmp");
+    skyboxBack.vertical_flip();
+    skyboxBack.horizontal_flip();
 
-    deep::texture_id skybox = deep::texture_manager::create2D("skybox");
-    deep::texture_manager::bindCubemaps(skybox);
-    deep::texture_manager::setTextureWrappingSCubemaps(deep::gl_texture_wrap::ClampToEdge);
-    deep::texture_manager::setTextureWrappingTCubemaps(deep::gl_texture_wrap::ClampToEdge);
-    deep::texture_manager::setTextureWrappingRCubemaps(deep::gl_texture_wrap::ClampToEdge);
-    deep::texture_manager::setTextureFilteringCubemaps(deep::gl_texture_filter::Linear);
-    deep::texture_manager::transmitTextureCubemaps(imageLeft, imageFront, imageRight, imageBack, imageBottom, imageTop, pngSkyboxLeft.width(), pngSkyboxLeft.height(), pngSkyboxLeft.colorType());
+    deep::bmp skyboxBottom;
+    skyboxBottom.create_from_file("..\\resources\\textures\\skybox_bottom.bmp");
 
-    deep::mem::free(imageLeft);
-    deep::mem::free(imageFront);
-    deep::mem::free(imageRight);
-    deep::mem::free(imageBack);
-    deep::mem::free(imageBottom);
-    deep::mem::free(imageTop);
+    deep::bmp skyboxTop;
+    skyboxTop.create_from_file("..\\resources\\textures\\skybox_top.bmp");
 
-    deep::hash_function hash = deep::program_manager::getHashFunction();
-    deep::program_id defaultProgram = hash("default");
-    deep::program_id skyboxProgram  = hash("skybox");
-    deep::program_id postProcessProgram = hash("post_processing");
+    deep::GL3::gl_id skybox = textureManager->create_2D("skybox");
+    textureManager->bind_cubemaps(skybox);
+    textureManager->set_texture_wrapping_s_cubemaps(deep::GL3::texture_manager::gl_texture_wrap::ClampToEdge);
+    textureManager->set_texture_wrapping_t_cubemaps(deep::GL3::texture_manager::gl_texture_wrap::ClampToEdge);
+    textureManager->set_texture_wrapping_r_cubemaps(deep::GL3::texture_manager::gl_texture_wrap::ClampToEdge);
+    textureManager->set_texture_filtering_cubemaps(deep::GL3::texture_manager::gl_texture_filter::Linear);
+    textureManager->transmit_texture_cubemaps(skyboxLeft.get_image(), skyboxFront.get_image(), skyboxRight.get_image(), skyboxBack.get_image(), skyboxBottom.get_image(), skyboxTop.get_image(), skyboxTop.get_width(), skyboxTop.get_height(), skyboxTop.get_color_type());
 
-    deep::program_manager::use(defaultProgram);
+    deep::GL3::program_manager *programManager = deep::GL3::program_manager::get_singleton();
 
-    int mTrs = deep::uniform_manager::find(defaultProgram, "mTrs");
+    deep::hash_function hash = programManager->get_hash_function();
+    deep::GL3::gl_id defaultProgram = hash("default");
+    deep::GL3::gl_id skyboxProgram  = hash("skybox");
+    deep::GL3::gl_id postProcessProgram = hash("post_processing");
+
+    programManager->use(defaultProgram);
+
+    int mTrs = deep::GL3::uniform_manager::find(defaultProgram, "mTrs");
     if(mTrs != -1)
-        deep::program_manager::addUniform("mTrs", mTrs, deep::fvec3(0.0f));
+        programManager->add_uniform("mTrs", mTrs, deep::fvec3(0.0f));
 
-    int mRotX = deep::uniform_manager::find(defaultProgram, "mRotX");
+    int mRotX = deep::GL3::uniform_manager::find(defaultProgram, "mRotX");
     if(mRotX != -1)
-        deep::program_manager::addUniform("mRotX", mRotX, 0.0f);
+        programManager->add_uniform("mRotX", mRotX, 0.0f);
 
-    int mRotY = deep::uniform_manager::find(defaultProgram, "mRotY");
+    int mRotY = deep::GL3::uniform_manager::find(defaultProgram, "mRotY");
     if(mRotY != -1)
-        deep::program_manager::addUniform("mRotY", mRotY, 0.0f);
+        programManager->add_uniform("mRotY", mRotY, 0.0f);
 
-    int mRotZ = deep::uniform_manager::find(defaultProgram, "mRotZ");
+    int mRotZ = deep::GL3::uniform_manager::find(defaultProgram, "mRotZ");
     if(mRotZ != -1)
-        deep::program_manager::addUniform("mRotZ", mRotZ, 0.0f);
+        programManager->add_uniform("mRotZ", mRotZ, 0.0f);
 
-    int mScl = deep::uniform_manager::find(defaultProgram, "mScl");
+    int mScl = deep::GL3::uniform_manager::find(defaultProgram, "mScl");
     if(mScl != -1)
-        deep::program_manager::addUniform("mScl", mScl, deep::fvec3(0.0f));
+        programManager->add_uniform("mScl", mScl, deep::fvec3(0.0f));
 
-    int view = deep::uniform_manager::find(defaultProgram, "view");
+    int view = deep::GL3::uniform_manager::find(defaultProgram, "view");
     if(view != -1)
-        deep::program_manager::addUniform("view", view, deep::fmat4x4(0.0f));
+        programManager->add_uniform("view", view, deep::fmat4x4(0.0f));
 
-    int proj = deep::uniform_manager::find(defaultProgram, "proj");
+    int proj = deep::GL3::uniform_manager::find(defaultProgram, "proj");
     if(proj != -1)
-        deep::program_manager::addUniform("proj", proj, deep::fmat4x4(0.0f));
+        programManager->add_uniform("proj", proj, deep::fmat4x4(0.0f));
 
-    int myTex = deep::uniform_manager::find(defaultProgram, "myTex");
+    int myTex = deep::GL3::uniform_manager::find(defaultProgram, "myTex");
     if(myTex != -1)
-        deep::program_manager::addUniform("myTex", myTex, 0);
+        programManager->add_uniform("myTex", myTex, 0);
 
-    deep::program_manager::use(skyboxProgram);
+    programManager->use(skyboxProgram);
 
-    int skyboxView = deep::uniform_manager::find(skyboxProgram, "view");
+    int skyboxView = deep::GL3::uniform_manager::find(skyboxProgram, "view");
     if(skyboxView != -1)
-        deep::program_manager::addUniform("view", skyboxView, deep::fmat4x4(0.0f));
+        programManager->add_uniform("view", skyboxView, deep::fmat4x4(0.0f));
 
-    int skyboxProj = deep::uniform_manager::find(skyboxProgram, "proj");
+    int skyboxProj = deep::GL3::uniform_manager::find(skyboxProgram, "proj");
     if(skyboxProj != -1)
-        deep::program_manager::addUniform("proj", skyboxProj, deep::fmat4x4(0.0f));
+        programManager->add_uniform("proj", skyboxProj, deep::fmat4x4(0.0f));
 
-    int skyboxCube = deep::uniform_manager::find(skyboxProgram, "skybox");
+    int skyboxCube = deep::GL3::uniform_manager::find(skyboxProgram, "skybox");
     if(skyboxCube != -1)
-        deep::program_manager::addUniform("skybox", skyboxCube, 0);
+        programManager->add_uniform("skybox", skyboxCube, 0);
 
-    deep::program_manager::use(postProcessProgram);
+    programManager->use(postProcessProgram);
 
-    int postScreenTexture = deep::uniform_manager::find(postProcessProgram, "screenTexture");
+    int postScreenTexture = deep::GL3::uniform_manager::find(postProcessProgram, "screenTexture");
     if(postScreenTexture != -1)
-        deep::program_manager::addUniform("screenTexture", postScreenTexture, 0);
+        programManager->add_uniform("screenTexture", postScreenTexture, 0);
 
     deep::colora white(255, 255, 255, 255);
 
@@ -653,20 +625,20 @@ int main()
         }
     }*/
 
+    deep::entity_manager *entityManager = deep::entity_manager::get_singleton();
+
     deep::polygon pol = deep::graphic::createCube("cube", white, white, white, white, white, white);
 
     for(i = 0; i < 50; ++i)
     {
         for(j = 0; j < 50; ++j)
         {
-            deep::entity entTest = deep::entity_manager::createEntity(collectionID, pol, defaultProgram, deep::fvec3(i * 5.0f, 0.0f, j * 5.0f), deep::fvec3(3.0f, 3.0f, 3.0f), blueGirl);
+            deep::entity entTest = entityManager->createEntity(collectionID, pol, defaultProgram, deep::fvec3(i * 5.0f, 0.0f, j * 5.0f), deep::fvec3(3.0f, 3.0f, 3.0f), mcTexture);
         }
     }
 
-    
-
     // Affiche la skybox à la fin pour optimiser les appelles au fragment shader = FPS++
-    deep::entity skyboxEnt = deep::graphic::createCubemap("skybox", skyboxProgram, collectionID, deep::fvec3(0.0f, 0.0f, 0.0f), 200.0f, 200.0f, 200.0f, skybox, 0);
+    deep::entity skyboxEnt = deep::graphic::createCubemap("skybox", skyboxProgram, collectionID, deep::fvec3(0.0f, 0.0f, 0.0f), 5005.0f, 105.0f, 2005.0f, skybox, 0);
 
     deep::scene::setActiveScene(sceneID);
 
@@ -678,9 +650,9 @@ int main()
     // Détruit tous les composants internes de la fenêtre puis la fenêtre elle-même.
     win.destroy();
 
-    deep::program_manager::destroyAllPrograms();
+    programManager->destroy_all_programs();
 
-    deep::resource_manager::shutdown();
+    resourcesManager->shutdown();
     deep::core::shutdown();
 
     _CrtDumpMemoryLeaks();

@@ -1,0 +1,40 @@
+# Description
+	- Godot est un moteur de jeux multi-plateformes 2D / 3D **libre** et [open-source](https://github.com/godotengine/godot).
+	- Développé en C++.
+- # 📝Notes
+	- Chaque **concept** et chaque **notion** possède une classe spécifique.
+		- Il n'y a presque pas de classe *fourre-tout*.
+		- Tout est bien structuré.
+	- Ils n'hésitent pas à utiliser le système de namespace du C++ pour mieux organiser le code.
+	- Il n'y a pratiquement aucun commentaire car le code s'explique de lui-même.
+	- Les classes qui n'ont qu'une seule instance sont des **singleton**, il n'y a aucune classe *statique*.
+	- Ils ne servent pas de la **STL** pour les conteneurs car la taille des **symboles** une fois compilée est énorme, les templates héritent de plusieurs autres templates et pour débugger c'est un cauchemard.
+	- Ils ne servent pas beaucoup de la **STL** sauf dans les cas où l'implémentation d'une fonctionnalité est trop complexe.
+- # Cross-plateform
+	- Pour gérer les différents systèmes d'exploitation, un dossier **os** se trouve dans le dossier **core**.
+	- Une classe **singleton** nommée **OS** ne possédant presque que des fonctions *virtuelles* est disponible.
+	- ## OS
+		- Tout ce qui est propre au système d'exploitation et gérée par cette classe.
+		- Certaines notions, comme les **mutex**, les **threads**, sont propres à chaque OS, mais une abstraction plus haut niveau a été faite.
+- # RID
+	- ## Description
+		- "Resource Identifier"
+		- Identifie de manière unique une ressource du moteur.
+- # RenderingDevice
+	- Abrégé en **RD**.
+	- **Documentation** : https://docs.godotengine.org/en/stable/classes/class_renderingdevice.html
+	- ## Description
+		- Une abstraction pour utiliser les APIs bas niveaux de rendu graphique comme **OpenGL**, **Vulkan**, **Direct3D** etc...
+- # SafeNumeric
+	- **Type** : class template.
+	- ## Description
+		- Utilise en interne `std::atomic` qui fait en sorte que les threads ne voient pas les états intermédiaires d'une variable lors d'un changement de valeur.
+- # Notification
+	- Chaque objet dans Godot peut répondre à une notification.
+	- Par exemple, si le moteur demande à l'objet `CanvasItem` de se dessiner, il va appeler `_notification(NOTIFICATION_DRAW)`.
+- # Sky
+	- ## Ressources
+		- **Documentation** : https://docs.godotengine.org/en/stable/contributing/development/core_and_modules/internal_rendering_architecture.html#sky-rendering
+		- [Custom sky shaders in Godot 4.0](https://godotengine.org/article/custom-sky-shaders-godot-4-0/)
+	- La plupart des shaders s'appuient sur la direction de la caméra et la position de la caméra.
+	-

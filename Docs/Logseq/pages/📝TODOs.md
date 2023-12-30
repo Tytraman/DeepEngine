@@ -1,5 +1,14 @@
 - Cette page regroupe toutes les choses à faire pour le moteur.
 -
+- # Technique
+	- TODO Se renseigner sur tout ce qui est `thread-safe`.
+		- Les variables **atomiques**.
+		- Les **spinlocks**.
+- # Gestion des ressources
+	- TODO Utiliser une classe `RID` pour identifier chaque ressource.
+- # Structuration du code
+	- TODO Séparer chaque concept et chaque notion dans des classes biens spécifiques.
+		- Arrêter de vouloir tout mettre dans une seule et unique classe.
 - # Visuel
 	- TODO Ajouter le support des images RGB et RGBA.
 	  :LOGBOOK:
@@ -25,7 +34,7 @@
 	- TODO BMP : fusionner plusieurs images en une seule.
 	- TODO BMP : mixer plusieurs images.
 	- TODO BMP : retourner une image.
-	- TODO BMP : flipper une image.
+	- DONE BMP : flipper une image.
 - # Mémoire
 	- TODO Gestion de données par Queue.
 	- DONE Gestion de données par Stack.

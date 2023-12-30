@@ -24,7 +24,7 @@ namespace deep
             /// @return                L'entité nouvellement créée ou \ref entity::bad() si une erreur est survenue.
             static entity createRectangle(
                 const char *name,
-                program_id program,
+                GL3::gl_id program,
                 entity_collection_id collectionID,
                 const fvec3 &position,
                 float width,
@@ -34,19 +34,19 @@ namespace deep
 
             static entity createRectangleTexture(
                 const char *name,
-                program_id program,
+                GL3::gl_id program,
                 entity_collection_id collectionID,
                 const fvec3 &position,
                 float width,
                 float height,
                 const colora &color,
-                texture_id texture,
+                GL3::gl_id texture,
                 uint8_t textureUnit,
                 bool collidable = false);
 
             static entity create3DRectangle(
                 const char *name,
-                program_id program,
+                GL3::gl_id program,
                 entity_collection_id collectionID,
                 const fvec3 &position,
                 float width,
@@ -63,7 +63,7 @@ namespace deep
             
             static entity create3DRectangleTexture(
                 const char *name,
-                program_id program,
+                GL3::gl_id program,
                 entity_collection_id collectionID,
                 const fvec3 &position,
                 float width,
@@ -75,7 +75,7 @@ namespace deep
                 const colora &color4,
                 const colora &color5,
                 const colora &color6,
-                texture_id texture,
+                GL3::gl_id texture,
                 uint8_t textureUnit,
                 bool collidable = false
             );
@@ -92,13 +92,13 @@ namespace deep
 
             static entity createCubemap(
                 const char *name,
-                program_id program,
+                GL3::gl_id program,
                 entity_collection_id collectionID,
                 const fvec3 &position,
                 float width,
                 float height,
                 float length,
-                texture_id texture,
+                GL3::gl_id texture,
                 uint8_t textureUnit,
                 bool collidable = false
             );

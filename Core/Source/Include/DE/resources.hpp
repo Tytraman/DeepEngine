@@ -3,36 +3,41 @@
 
 #include <DE/def.hpp>
 #include <DE/types.hpp>
-#include <DE/rendering/opengl_utils.hpp>
 #include <DE/string.hpp>
+#include <DE/image/bmp.hpp>
+#include "DE/drivers/opengl/def.hpp"
 
 namespace deep
 {
 
-    class DE_API resource_manager
+    class resource_manager
     {
 
         public:
-            static bool init(const char *filepath);
-            static void shutdown();
+            DE_API static resource_manager *get_singleton();
+            
+            DE_API bool init(const char *filepath);
+            DE_API void shutdown();
 
-            static texture_id loadTexture(const char *name, uint8_t unit);
+            DE_API GL3::gl_id loadTexture(const char *name, uint8_t unit);
+            DE_API bool loadBMP(const char *name, bmp &dest);
 
-            static string getResourcesFolder();
-            static string getShadersFolder();
-            static string getTexturesFolder();
-            static string getSoundsFolder();
-            static string getScreenshotsFolder();
+            DE_API string getResourcesFolder();
+            DE_API string getShadersFolder();
+            DE_API string getTexturesFolder();
+            DE_API string getSoundsFolder();
+            DE_API string getScreenshotsFolder();
 
         private:
-            static string m_ResourcesFolder;
-            static string m_ShadersFolder;
-            static string m_TexturesFolder;
-            static string m_SoundsFolder;
-            static string m_ScreenshotsFolder;
+            resource_manager();
+
+            string m_ResourcesFolder;
+            string m_ShadersFolder;
+            string m_TexturesFolder;
+            string m_SoundsFolder;
+            string m_ScreenshotsFolder;
 
         public:
-            resource_manager() = delete;
             resource_manager(const resource_manager &) = delete;
             resource_manager(resource_manager &&) = delete;
 

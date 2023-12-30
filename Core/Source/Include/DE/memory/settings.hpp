@@ -8,43 +8,43 @@
 namespace deep
 {
 
-    class engine_settings;
-
-
-
-    class DE_API engine_settings
+    class engine_settings
     {
 
         public:
-            static bool init(const char *filepath);
+            DE_API static engine_settings *get_singleton();
 
-            static bool getDebugMode();
-            static string &getResourcesDirectory();
+            DE_API bool init(const char *filepath);
+
+            DE_API bool getDebugMode();
+            DE_API string &getResourcesDirectory();
 
         private:
-            static bool m_DebugMode;
-            static string m_ResourcesDirectory;
+            engine_settings();
+
+            bool m_DebugMode;
+            string m_ResourcesDirectory;
 
         public:
-            engine_settings() = delete;
+            engine_settings(const engine_settings &) = delete;
 
     };
 
     /*
-	=============================
-	engine_settings::getDebugMode
-	=============================
-	*/
+    =============================
+    engine_settings::getDebugMode
+    =============================
+    */
     inline bool engine_settings::getDebugMode()
     {
         return m_DebugMode;
     }
 
     /*
-	======================================
-	engine_settings::getResourcesDirectory
-	======================================
-	*/
+    ======================================
+    engine_settings::getResourcesDirectory
+    ======================================
+    */
     inline string &engine_settings::getResourcesDirectory()
     {
         return m_ResourcesDirectory;

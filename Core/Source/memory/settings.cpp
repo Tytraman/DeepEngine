@@ -7,19 +7,42 @@
 namespace deep
 {
 
+    /*
+    ================================
+    engine_settings::engine_settings
+    ================================
+    */
+    engine_settings::engine_settings()
+        :
 #if DE_DEBUG
-    bool engine_settings::m_DebugMode = true;
+          m_DebugMode(true)
 #else
-    bool engine_settings::m_DebugMode = false;
+          m_DebugMode(false)
 #endif
+    { }
 
-    string engine_settings::m_ResourcesDirectory;
+    /*
+    ==============================
+    engine_settings::get_singleton
+    ==============================
+    */
+    engine_settings *engine_settings::get_singleton()
+    {
+        static engine_settings singleton;
+
+        return &singleton;
+    }
 
     void fobj_load_warning_callback(const char *filename, uint64_t line, char charactere)
     {
         fprintf(stderr, "[WARNING] File Object \"%s\" invalid charactere '%c' at line %llu. Ignoring the line.\n", filename, charactere, line);
     }
 
+    /*
+    =====================
+    engine_settings::init
+    =====================
+    */
     bool engine_settings::init(const char *filepath)
     {
         file_object fobj(filepath);

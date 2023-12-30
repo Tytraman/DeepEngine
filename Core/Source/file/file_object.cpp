@@ -7,20 +7,20 @@ namespace deep
 {
 
     /*
-	========================
-	file_object::file_object
-	========================
-	*/
+    ========================
+    file_object::file_object
+    ========================
+    */
     file_object::file_object(const char *filename)
         : input_file_stream(filename),
           m_WarningsNumber(0)
     { }
 
     /*
-	========================
-	file_object::file_object
-	========================
-	*/
+    ========================
+    file_object::file_object
+    ========================
+    */
     bool file_object::load(file_object_load_warning_callback warningCallback)
     {
         uint8_t buffer[4096];
@@ -116,7 +116,7 @@ rread:
                     
                     startIndex = finder.position();
 
-                    if(finder.skipUntil(skipTo, 2));
+                    finder.skipUntil(skipTo, 2);
 
                     endIndex = finder.position();
 
@@ -157,23 +157,25 @@ rread:
             if(finder.position() >= text.length())
                 processing = false;
         }
+
+        return true;
     }
 
     /*
-	============================================
-	file_object_container::file_object_container
-	============================================
-	*/
+    ============================================
+    file_object_container::file_object_container
+    ============================================
+    */
     file_object_container::file_object_container()
         : items(20),
           containers(20)
     { }
 
     /*
-	============================================
-	file_object_container::file_object_container
-	============================================
-	*/
+    ============================================
+    file_object_container::file_object_container
+    ============================================
+    */
     file_object_container::file_object_container(const char *key)
         : name(key),
           items(20),
@@ -181,10 +183,10 @@ rread:
     { }
 
     /*
-	================================
-	file_object_container::enumerate
-	================================
-	*/
+    ================================
+    file_object_container::enumerate
+    ================================
+    */
     void file_object_container::enumerate(file_object_enum_element_callback elementCallback, file_object_enum_container_callback containerCallback, mem_ptr args, size_t maxSubContainer, file_object_container **container, pair<string, string> **element)
     {
         // Permet de garder une trace des conteneurs parents lorsqu'un sous conteneur existe.
@@ -311,10 +313,10 @@ end: ;
     }
 
     /*
-	======================================
-	file_object_container::searchContainer
-	======================================
-	*/
+    ======================================
+    file_object_container::searchContainer
+    ======================================
+    */
     file_object_container *file_object_container::searchContainer(const char *path)
     {
         file_object_container *container = nullptr;
@@ -332,10 +334,10 @@ end: ;
     }
 
     /*
-	====================================
-	file_object_container::searchElement
-	====================================
-	*/
+    ====================================
+    file_object_container::searchElement
+    ====================================
+    */
     pair<string, string> *file_object_container::searchElement(const char *path)
     {
         pair<string, string> *element = nullptr;

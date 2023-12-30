@@ -10,25 +10,27 @@
 namespace deep
 {
 
-	enum class image_color_type : int
+    enum class image_color_space : int
     {
-		None    = -1,
-		Gray    = PNG_COLOR_TYPE_GRAY,
-		Palette = PNG_COLOR_TYPE_PALETTE,
-		RGB     = PNG_COLOR_TYPE_RGB,
-		RGBA    = PNG_COLOR_TYPE_RGBA,
-		GA      = PNG_COLOR_TYPE_GA
-	};
+        None    = -1,
+        Gray,
+        Palette,
+        RGB,
+        RGBA,
+        GA,
+        BGR,
+        BGRA
+    };
 
-	enum class image_channel : uint8_t
+    enum class image_channel : uint8_t
     {
-		Red,
-		Green,
-		Blue,
-		Alpha
-	};
+        Red,
+        Green,
+        Blue,
+        Alpha
+    };
 
-	constexpr uint32_t ImageColorSpaceSRGB = (('B' << 24) | ('G' << 16) | ('R' << 8) | ('s'));
+    constexpr uint32_t ImageColorSpaceSRGB = (('B' << 24) | ('G' << 16) | ('R' << 8) | ('s'));
 
 }
 
