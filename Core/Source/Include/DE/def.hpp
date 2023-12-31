@@ -36,6 +36,7 @@
 #define DE_WINDOWS 1
 
 #define DE_DEBUG_BREAK __debugbreak()
+#define DE_ALIGN(__x) __declspec(align(__x))
 
 #else
 // Pour le moment la librairie vise des plateformes sous Windows mais il est prévu

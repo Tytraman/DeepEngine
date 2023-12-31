@@ -22,6 +22,7 @@
 #include <DE/string.hpp>
 #include <DE/file/file_object.hpp>
 #include <DE/memory/settings.hpp>
+#include <DE/safe_integer.hpp>
 
 extern "C"
 {
@@ -411,6 +412,14 @@ int main()
         {
             fprintf(stderr, "No enough memory.\n");
         } return EXIT_FAILURE;
+    }
+
+    {
+        deep::safe_int64 safe1 = 0x0001;
+
+        printf("result: %llx\n", safe1.get());
+
+        return 0;
     }
 
     printf("pwd: %s\n", deep::core::getPwd());
