@@ -82,7 +82,7 @@ namespace deep
 
                             if(m_FRB.saveTextureAsImage(destpath.str()))
                             {
-                                printf(DE_TERM_FG_GREEN "Screeshot saved" DE_TERM_RESET ": %s\n", destpath.str());
+                                printf(DE_TERM_FG_GREEN "Screenshot saved" DE_TERM_RESET ": %s\n", destpath.str());
                             }
                         }
                     } break;

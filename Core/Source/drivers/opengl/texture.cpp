@@ -43,7 +43,7 @@ namespace deep
 
             DE_GL_CALL(glGenTextures(1, &texture));
 
-            auto &el = m_Textures.insert(name, texture);
+            hash_entry<GLuint> &el = m_Textures.insert(name, texture);
 
             return el.key;
         }
@@ -69,7 +69,7 @@ namespace deep
         */
         bool texture_manager::bind(gl_id texture, uint8_t unit)
         {
-            auto el = m_Textures[texture];
+            hash_entry<GLuint> *el = m_Textures[texture];
             if(el == nullptr)
                 return false;
 
@@ -87,7 +87,7 @@ namespace deep
         */
         bool texture_manager::bind(const char *name, uint8_t unit)
         {
-            auto el = m_Textures[name];
+            hash_entry<GLuint> *el = m_Textures[name];
             if(el == nullptr)
                 return false;
 
@@ -117,7 +117,7 @@ namespace deep
         */
         bool texture_manager::bind_cubemaps(gl_id texture)
         {
-            auto el = m_Textures[texture];
+            hash_entry<GLuint> *el = m_Textures[texture];
             if(el == nullptr)
                 return false;
 
@@ -135,7 +135,7 @@ namespace deep
         */
         bool texture_manager::bind_cubemaps(const char *name)
         {
-            auto el = m_Textures[name];
+            hash_entry<GLuint> *el = m_Textures[name];
             if(el == nullptr)
                 return false;
 
@@ -163,7 +163,7 @@ namespace deep
         */
         bool texture_manager::destroy(gl_id texture)
         {
-            auto el = m_Textures[texture];
+            hash_entry<GLuint> *el = m_Textures[texture];
             if(el == nullptr)
                 return false;
 
@@ -180,7 +180,7 @@ namespace deep
         */
         bool texture_manager::destroy(const char *name)
         {
-            auto el = m_Textures[name];
+            hash_entry<GLuint> *el = m_Textures[name];
             if(el == nullptr)
                 return false;
 

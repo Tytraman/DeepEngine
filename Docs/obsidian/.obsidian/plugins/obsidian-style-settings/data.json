@@ -1,0 +1,7 @@
+{
+  "checkbox@@check-color": true,
+  "checkbox@@check-bg": true,
+  "checkbox@@checkbox-strike-regular": true,
+  "checkbox@@checkbox-strike-checked": true,
+  "checkbox@@checkbox-strike-half": false
+}

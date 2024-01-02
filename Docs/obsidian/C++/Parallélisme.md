@@ -33,5 +33,4 @@ Il existe plusieurs moyens qui cumulés permettent de rendre l'exécution du cod
 		width=1280
 		src="https://fr.wikipedia.org/wiki/Atomicit%C3%A9_%28informatique%29">
 		</iframe>
-### Explication du problème
-Lorsque **plusieurs** threads manipulent la **même** variable, il y a 
+

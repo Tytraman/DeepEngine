@@ -9,14 +9,14 @@
 namespace deep
 {
 
-    class DE_API polygon
+    class polygon
     {
 
         public:
-            polygon(GL3::gl_id vbo, GL3::gl_id vao);
+            DE_API polygon(GL3::gl_id vbo, GL3::gl_id vao);
 
-            GL3::gl_id vbo() const;
-            GL3::gl_id vao() const;
+            DE_API GL3::gl_id vbo() const;
+            DE_API GL3::gl_id vao() const;
 
         private:
             GL3::gl_id m_VBO;

@@ -38,7 +38,7 @@ namespace deep
             textureManager->set_texture_filtering(texture_manager::gl_texture_filter::Linear);
 
             // Indique que le framebuffer doit utiliser la place précédemment allouée.
-            framebufferManager->attachTexture(texture);
+            framebufferManager->attach_texture(texture);
 
             // Crée un renderbuffer.
             string renderbufferName = name;
@@ -46,15 +46,15 @@ namespace deep
             m_Renderbuffer = renderbufferManager->create(renderbufferName.str());
             renderbufferManager->bind(m_Renderbuffer);
             renderbufferManager->store(width, height);     // Indique la taille du renderbuffer, a la même taille que le framebuffer car ils seront liés.
-            renderbufferManager->bindDefault();
+            renderbufferManager->bind_default();
 
             // Lie le renderbuffer au framebuffer.
-            framebufferManager->attachRenderbuffer(m_Framebuffer, m_Renderbuffer);
+            framebufferManager->attach_renderbuffer(m_Framebuffer, m_Renderbuffer);
 
             // Vérifie que le framebuffer a bien été créé et fonctionnel.
             bool ret = framebufferManager->check();
 
-            framebufferManager->bindDefault();
+            framebufferManager->bind_default();
 
             if(!ret)
             {
@@ -129,12 +129,12 @@ namespace deep
         {
             framebuffer_manager *framebufferManager = framebuffer_manager::get_singleton();
 
-            gl_id currentBuffer = framebufferManager->currentID();
+            gl_id currentBuffer = framebufferManager->current_id();
 
             if(!framebufferManager->bind(m_Framebuffer))
                 return false;
 
-            bool ret = framebufferManager->saveTextureAsImage(m_Width, m_Height, destpath);
+            bool ret = framebufferManager->save_texture_as_image(m_Width, m_Height, destpath);
 
             framebufferManager->bind(currentBuffer);
 

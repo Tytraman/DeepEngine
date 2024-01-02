@@ -337,7 +337,8 @@ namespace deep
         if(entry->previous != nullptr)
         {
             entry->previous->next = entry->next;
-            entry->next->previous = entry->previous;
+            if(entry->next != nullptr)
+                entry->next->previous = entry->previous;
         }
         else
         {

@@ -30,10 +30,10 @@ namespace deep
 
         /*
         ===============================
-        renderbuffer_manager::rawCreate
+        renderbuffer_manager::raw_create
         ===============================
         */
-        GLuint renderbuffer_manager::rawCreate()
+        GLuint renderbuffer_manager::raw_create()
         {
             GLuint rbo;
             DE_GL_CALL(glGenRenderbuffers(1, &rbo));
@@ -48,19 +48,19 @@ namespace deep
         */
         gl_id renderbuffer_manager::create(const char *name)
         {
-            GLuint rbo = rawCreate();
+            GLuint rbo = raw_create();
 
-            auto &el = m_Renderbuffers.insert(name, rbo);
+            hash_entry<GLuint> &el = m_Renderbuffers.insert(name, rbo);
 
             return el.key;
         }
 
         /*
         =============================
-        renderbuffer_manager::rawBind
+        renderbuffer_manager::raw_bind
         =============================
         */
-        void renderbuffer_manager::rawBind(GLuint rbo)
+        void renderbuffer_manager::raw_bind(GLuint rbo)
         {
             DE_GL_CALL(glBindRenderbuffer(GL_RENDERBUFFER, rbo));
         }
@@ -72,11 +72,11 @@ namespace deep
         */
         bool renderbuffer_manager::bind(gl_id rbo)
         {
-            auto el = m_Renderbuffers[rbo];
+            hash_entry<GLuint> *el = m_Renderbuffers[rbo];
             if(el == nullptr)
                 return false;
 
-            rawBind(el->value);
+            raw_bind(el->value);
             m_CurrentID = rbo;
 
             return true;
@@ -89,11 +89,11 @@ namespace deep
         */
         bool renderbuffer_manager::bind(const char *name)
         {
-            auto el = m_Renderbuffers[name];
+            hash_entry<GLuint> *el = m_Renderbuffers[name];
             if(el == nullptr)
                 return false;
 
-            rawBind(el->value);
+            raw_bind(el->value);
             m_CurrentID = el->key;
 
             return true;
@@ -101,10 +101,10 @@ namespace deep
 
         /*
         =================================
-        renderbuffer_manager::bindDefault
+        renderbuffer_manager::bind_default
         =================================
         */
-        void renderbuffer_manager::bindDefault()
+        void renderbuffer_manager::bind_default()
         {
             DE_GL_CALL(glBindRenderbuffer(GL_RENDERBUFFER, 0));
 
@@ -129,24 +129,24 @@ namespace deep
         */
         bool renderbuffer_manager::resize(int width, int height)
         {
-            auto el = m_Renderbuffers[m_CurrentID];
+            hash_entry<GLuint> *el = m_Renderbuffers[m_CurrentID];
             if(el == nullptr)
                 return false;
 
-            rawDestroy(m_CurrentlyBound);
+            raw_destroy(m_CurrentlyBound);
             m_CurrentlyBound = 0;
 
-            el->value = rawCreate();
+            el->value = raw_create();
 
             return true;
         }
 
         /*
         ================================
-        renderbuffer_manager::rawDestroy
+        renderbuffer_manager::raw_destroy
         ================================
         */
-        void renderbuffer_manager::rawDestroy(GLuint rbo)
+        void renderbuffer_manager::raw_destroy(GLuint rbo)
         {
             DE_GL_CALL(glDeleteRenderbuffers(1, &rbo));
         }
@@ -158,11 +158,11 @@ namespace deep
         */
         bool renderbuffer_manager::destroy(gl_id rbo)
         {
-            auto el = m_Renderbuffers[rbo];
+            hash_entry<GLuint> *el = m_Renderbuffers[rbo];
             if(el == nullptr)
                 return false;
 
-            rawDestroy(el->value);
+            raw_destroy(el->value);
             m_Renderbuffers.remove(el->key);
 
             return true;
@@ -175,11 +175,11 @@ namespace deep
         */
         bool renderbuffer_manager::destroy(const char *name)
         {
-            auto el = m_Renderbuffers[name];
+            hash_entry<GLuint> *el = m_Renderbuffers[name];
             if(el == nullptr)
                 return false;
 
-            rawDestroy(el->value);
+            raw_destroy(el->value);
             m_Renderbuffers.remove(el->key);
 
             return true;

@@ -6,6 +6,7 @@
 #include "DE/memory/memory.hpp"
 #include "DE/memory/hash_table.hpp"
 #include "DE/image/image.hpp"
+#include "DE/vec.hpp"
 #include "DE/drivers/opengl/def.hpp"
 
 namespace deep
@@ -31,6 +32,12 @@ namespace deep
                 {
                     Nearest = GL_NEAREST,
                     Linear  = GL_LINEAR
+                };
+
+                struct texture_2D_mapping_point
+                {
+                    fvec2 screenPos;
+                    fvec2 texturePos;
                 };
 
             public:

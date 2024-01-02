@@ -85,7 +85,7 @@ namespace deep
           m_Name(string_utils::copy(name))
     {
         entity_manager *entityManager = entity_manager::get_singleton();
-        m_EntityCollection = entityManager->createEntityCollection();
+        m_EntityCollection = entityManager->create_entity_collection();
     }
 
     /*
@@ -102,7 +102,7 @@ namespace deep
 
         entity_manager *entityManager = entity_manager::get_singleton();
 
-        return entityManager->createEntity(s->value.m_EntityCollection);
+        return entityManager->create_entity(s->value.m_EntityCollection);
     }
 
     /*

@@ -52,17 +52,17 @@ namespace deep
             GLuint fbo;
             DE_GL_CALL(glGenFramebuffers(1, &fbo));
 
-            auto &el = m_Framebuffers.insert(name, framebuffer_item(fbo));
+            hash_entry<framebuffer_item> &el = m_Framebuffers.insert(name, framebuffer_item(fbo));
 
             return el.key;
         }
 
         /*
         ============================
-        framebuffer_manager::rawBind
+        framebuffer_manager::raw_bind
         ============================
         */
-        void framebuffer_manager::rawBind(GLuint fbo)
+        void framebuffer_manager::raw_bind(GLuint fbo)
         {
             DE_GL_CALL(glBindFramebuffer(GL_FRAMEBUFFER, fbo));
 
@@ -82,7 +82,7 @@ namespace deep
 
             renderbuffer_manager *renderbufferManager = renderbuffer_manager::get_singleton();
 
-            rawBind(el->value.fbo);
+            raw_bind(el->value.fbo);
             m_CurrentID = fbo;
 
             hash_entry<GLuint> *al = renderbufferManager->get(el->value.rbo);
@@ -102,11 +102,11 @@ namespace deep
         */
         bool framebuffer_manager::bind(const char *name)
         {
-            auto el = m_Framebuffers[name];
+            hash_entry<framebuffer_item> *el = m_Framebuffers[name];
             if(el == nullptr)
                 return false;
 
-            rawBind(el->value.fbo);
+            raw_bind(el->value.fbo);
             m_CurrentID = el->key;
 
             return true;
@@ -124,10 +124,10 @@ namespace deep
 
         /*
         ================================
-        framebuffer_manager::bindDefault
+        framebuffer_manager::bind_default
         ================================
         */
-        void framebuffer_manager::bindDefault()
+        void framebuffer_manager::bind_default()
         {
             DE_GL_CALL(glBindFramebuffer(GL_FRAMEBUFFER, 0));
             m_CurrentlyBound = 0;
@@ -136,10 +136,10 @@ namespace deep
 
         /*
         ===============================
-        framebuffer_manager::rawDestroy
+        framebuffer_manager::raw_destroy
         ===============================
         */
-        void framebuffer_manager::rawDestroy(GLuint fbo)
+        void framebuffer_manager::raw_destroy(GLuint fbo)
         {
             DE_GL_CALL(glDeleteFramebuffers(1, &fbo));
         }
@@ -151,7 +151,7 @@ namespace deep
         */
         bool framebuffer_manager::destroy(gl_id fbo, bool destroyTexture)
         {
-            auto el = m_Framebuffers[fbo];
+            hash_entry<framebuffer_item> *el = m_Framebuffers[fbo];
             if(el == nullptr)
                 return false;
 
@@ -161,7 +161,7 @@ namespace deep
             }
             
 
-            rawDestroy(el->value.fbo);
+            raw_destroy(el->value.fbo);
             m_Framebuffers.remove(el->key);
 
             return true;
@@ -174,14 +174,14 @@ namespace deep
         */
         bool framebuffer_manager::destroy(const char *name, bool destroyTexture)
         {
-            auto el = m_Framebuffers[name];
+            hash_entry<framebuffer_item> *el = m_Framebuffers[name];
             if(el == nullptr)
                 return false;
 
             if(destroyTexture)
                 texture_manager::get_singleton()->destroy(el->value.texture);
 
-            rawDestroy(el->value.fbo);
+            raw_destroy(el->value.fbo);
             m_Framebuffers.remove(el->key);
 
             return true;
@@ -189,16 +189,16 @@ namespace deep
 
         /*
         ==================================
-        framebuffer_manager::attachTexture
+        framebuffer_manager::attach_texture
         ==================================
         */
-        bool framebuffer_manager::attachTexture(GL3::gl_id texture)
+        bool framebuffer_manager::attach_texture(GL3::gl_id texture)
         {
-            auto el = GL3::texture_manager::get_singleton()->get(texture);
+            hash_entry<GLuint> *el = GL3::texture_manager::get_singleton()->get(texture);
             if(el == nullptr)
                 return false;
 
-            auto al = m_Framebuffers[m_CurrentID];
+            hash_entry<framebuffer_item> *al = m_Framebuffers[m_CurrentID];
             if(al == nullptr)
                 return false;
 
@@ -211,12 +211,12 @@ namespace deep
 
         /*
         ==================================
-        framebuffer_manager::attachTexture
+        framebuffer_manager::attach_texture
         ==================================
         */
-        bool framebuffer_manager::attachTexture(const char *name)
+        bool framebuffer_manager::attach_texture(const char *name)
         {
-            auto el = GL3::texture_manager::get_singleton()->get(name);
+            hash_entry<GLuint> *el = GL3::texture_manager::get_singleton()->get(name);
             if(el == nullptr)
                 return false;
 
@@ -229,10 +229,10 @@ namespace deep
 
         /*
         =======================================
-        framebuffer_manager::attachRenderbuffer
+        framebuffer_manager::attach_renderbuffer
         =======================================
         */
-        bool framebuffer_manager::attachRenderbuffer(gl_id fbo, gl_id rbo)
+        bool framebuffer_manager::attach_renderbuffer(gl_id fbo, gl_id rbo)
         {
             hash_entry<framebuffer_item> *el = m_Framebuffers[fbo];
             if(el == nullptr)
@@ -252,10 +252,10 @@ namespace deep
 
         /*
         =======================================
-        framebuffer_manager::attachRenderbuffer
+        framebuffer_manager::attach_renderbuffer
         =======================================
         */
-        bool framebuffer_manager::attachRenderbuffer(const char *fboName, const char *rboName)
+        bool framebuffer_manager::attach_renderbuffer(const char *fboName, const char *rboName)
         {
             hash_entry<framebuffer_item> *el = m_Framebuffers[fboName];
             if(el == nullptr)
@@ -275,10 +275,10 @@ namespace deep
 
         /*
         =======================================
-        framebuffer_manager::saveTextureAsImage
+        framebuffer_manager::save_texture_as_image
         =======================================
         */
-        bool framebuffer_manager::saveTextureAsImage(int width, int height, const char *filedest)
+        bool framebuffer_manager::save_texture_as_image(int width, int height, const char *filedest)
         {
             uint8_t *buffer = static_cast<uint8_t *>(mem::alloc(static_cast<uint64_t>(width) * height * sizeof(uint8_t) * 4));
             if(buffer == nullptr)

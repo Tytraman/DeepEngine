@@ -4,7 +4,7 @@
 	- [[Source]] : contient le code du moteur.
 	- [[Assets]] : contient tous les assets du jeu.
 	- [[Docs]] : contient toutes les documentations peu importe leurs formes.
-	- [[Build]] : contient0 l'exécutable final ainsi que toutes les bibliothèques requises.
+	- [[Build]] : contient l'exécutable final ainsi que toutes les bibliothèques requises.
 - # Compilation du projet
 	- [[CMake]] est l'outil utilisé pour gérer toute la compilation et l'exécution des scripts.
 - # Versioning

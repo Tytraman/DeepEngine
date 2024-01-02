@@ -188,7 +188,7 @@ namespace deep {
                     case ImGuiDebugMenuEntitiesView:
                     {
                         // Affiche le nombre d'entités de la scène.
-                        ImGui::Text(std::string("Nombre d'entités: " + std::to_string(entityManager->getNumberOfEntities(collection))).c_str()); ImGui::SameLine();
+                        ImGui::Text(std::string("Nombre d'entités: " + std::to_string(entityManager->get_number_of_entities(collection))).c_str()); ImGui::SameLine();
                         if(ImGui::Button("Tout supprimer"))
                         {
                             entityManager->destroyAllEntities(collection);
@@ -199,7 +199,7 @@ namespace deep {
                         // Affiche toutes les entités de la scène.
                         if(ImGui::CollapsingHeader("Liste des entités de la scène"))
                         {
-                            entityManager->enumEntities(collection, entities_enum_callback);
+                            entityManager->enum_entities(collection, entities_enum_callback);
                         }
                     } break;
                 }

@@ -99,16 +99,16 @@ namespace deep
         public:
             DE_API static entity_manager *get_singleton();
 
-            DE_API void enumEntities(entity_collection_id collection, entity_enum_callback callback);
-            DE_API size_t getNumberOfEntities(entity_collection_id collection);
+            DE_API void enum_entities(entity_collection_id collection, entity_enum_callback callback);
+            DE_API size_t get_number_of_entities(entity_collection_id collection);
 
-            DE_API entity_collection_id createEntityCollection();
+            DE_API entity_collection_id create_entity_collection();
 
             /// @brief	Crée une entité.
             /// @return L'entité nouvellement créée.
-            DE_API entity createEntity(entity_collection_id collection);
+            DE_API entity create_entity(entity_collection_id collection);
 
-            DE_API entity createEntity(
+            DE_API entity create_entity(
                 entity_collection_id collection,
                 const polygon &pol,
                 GL3::gl_id program,

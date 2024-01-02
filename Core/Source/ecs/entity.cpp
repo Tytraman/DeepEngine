@@ -48,10 +48,10 @@ namespace deep
 
     /*
     ============================
-    entity_manager::enumEntities
+    entity_manager::enum_entities
     ============================
     */
-    void entity_manager::enumEntities(entity_collection_id collection, entity_enum_callback callback)
+    void entity_manager::enum_entities(entity_collection_id collection, entity_enum_callback callback)
     {
         const auto hs = m_Collections[collection];
         if(hs == nullptr)
@@ -65,10 +65,10 @@ namespace deep
 
     /*
     ===================================
-    entity_manager::getNumberOfEntities
+    entity_manager::get_number_of_entities
     ===================================
     */
-    size_t entity_manager::getNumberOfEntities(entity_collection_id collection)
+    size_t entity_manager::get_number_of_entities(entity_collection_id collection)
     {
         const auto hs = m_Collections[collection];
 
@@ -80,10 +80,10 @@ namespace deep
 
     /*
     =====================================
-    entity_manager::createEntityCollection
+    entity_manager::create_entity_collection
     =====================================
     */
-    entity_collection_id entity_manager::createEntityCollection()
+    entity_collection_id entity_manager::create_entity_collection()
     {
         entity_collection_id id = m_NextCollectionID;
         entity_id entID = 0;
@@ -123,10 +123,10 @@ namespace deep
 
     /*
     ============================
-    entity_manager::createEntity
+    entity_manager::create_entity
     ============================
     */
-    entity entity_manager::createEntity(entity_collection_id collection)
+    entity entity_manager::create_entity(entity_collection_id collection)
     {
         hash_entry<entity_item> *hti = __createEntity(collection);
         if(hti == nullptr)
@@ -137,10 +137,10 @@ namespace deep
 
     /*
     ============================
-    entity_manager::createEntity
+    entity_manager::create_entity
     ============================
     */
-    entity entity_manager::createEntity(
+    entity entity_manager::create_entity(
         entity_collection_id collection,
         const polygon &pol,
         GL3::gl_id program,

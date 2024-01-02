@@ -18,14 +18,14 @@ namespace deep
             public:
                 DE_API static renderbuffer_manager *get_singleton();
 
-                DE_API GLuint rawCreate();
+                DE_API GLuint raw_create();
                 DE_API gl_id create(const char *name);
 
-                DE_API void rawBind(GLuint rbo);
+                DE_API void raw_bind(GLuint rbo);
                 DE_API bool bind(gl_id rbo);
                 DE_API bool bind(const char *name);
 
-                DE_API void bindDefault();
+                DE_API void bind_default();
 
                 DE_API hash_entry<GLuint> *get(gl_id rbo);
                 DE_API hash_entry<GLuint> *get(const char *name);
@@ -33,12 +33,12 @@ namespace deep
                 DE_API void store(int width, int height);
                 DE_API bool resize(int width, int height);
 
-                DE_API void rawDestroy(GLuint rbo);
+                DE_API void raw_destroy(GLuint rbo);
                 DE_API bool destroy(gl_id rbo);
                 DE_API bool destroy(const char *name);
 
-                DE_API GLuint currentlyBound();
-                DE_API gl_id currentID();
+                DE_API GLuint currently_bound();
+                DE_API gl_id current_id();
 
                 DE_API void set_currently_bound(GLuint rbo);
                 DE_API void set_current_id(gl_id rbo);
@@ -74,20 +74,20 @@ namespace deep
 
         /*
         ====================================
-        renderbuffer_manager::currentlyBound
+        renderbuffer_manager::currently_bound
         ====================================
         */
-        inline GLuint renderbuffer_manager::currentlyBound()
+        inline GLuint renderbuffer_manager::currently_bound()
         {
             return m_CurrentlyBound;
         }
 
         /*
         ===============================
-        renderbuffer_manager::currentID
+        renderbuffer_manager::current_id
         ===============================
         */
-        inline gl_id renderbuffer_manager::currentID()
+        inline gl_id renderbuffer_manager::current_id()
         {
             return m_CurrentID;
         }

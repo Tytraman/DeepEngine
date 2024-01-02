@@ -377,7 +377,7 @@ namespace deep
 
         // Le rendu est d'abord stocké dans un framebuffer pour pouvoir faire du post-processing.
         framebufferManager->bind(frb.framebuffer());
-        GL3::gl_id texture = framebufferManager->currentTextureID();
+        GL3::gl_id texture = framebufferManager->current_texture_id();
 
         GL3::core::enable_depth_test();
 
@@ -425,7 +425,7 @@ namespace deep
 
         // Toute cette partie là permet de faire du post-processing.
 
-        framebufferManager->bindDefault();
+        framebufferManager->bind_default();
         GL3::core::disable_depth_test();
 
         renderer.set_clear_color( { 0, 0, 0, 0 } );

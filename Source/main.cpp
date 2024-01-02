@@ -414,14 +414,6 @@ int main()
         } return EXIT_FAILURE;
     }
 
-    {
-        deep::safe_int64 safe1 = 0x0001;
-
-        printf("result: %llx\n", safe1.get());
-
-        return 0;
-    }
-
     printf("pwd: %s\n", deep::core::getPwd());
 
     deep::window win(TARGET_MS, TARGET_FPS);
@@ -498,8 +490,6 @@ int main()
         fprintf(stderr, "Unable to add bmp image.\n");
         return EXIT_FAILURE;
     }
-
-    mcGrass.horizontal_flip();
 
     deep::GL3::gl_id mcTexture = textureManager->create_2D("mc_texture");
     textureManager->bind(mcTexture, 0);
@@ -614,7 +604,7 @@ int main()
             de::string name = "3d_rect_";
             name.append(std::to_string(i + j).c_str());
 
-            de::entity ent = de::graphic::create3DRectangleTexture(
+            de::entity ent = de::graphic::create_3D_rectangle_texture(
                 name.str(),
                 defaultProgram,
                 collectionID,
@@ -636,18 +626,46 @@ int main()
 
     deep::entity_manager *entityManager = deep::entity_manager::get_singleton();
 
-    deep::polygon pol = deep::graphic::createCube("cube", white, white, white, white, white, white);
+    deep::graphic::cube_texture_points points;
+    points.frontTopLeft.x     = points.backTopLeft.x     = points.rightTopLeft.x     = points.leftTopLeft.x     = 0.0f;
+    points.frontTopLeft.y     = points.backTopLeft.y     = points.rightTopLeft.y     = points.leftTopLeft.y     = 0.5f;
+    points.frontTopRight.x    = points.backTopRight.x    = points.rightTopRight.x    = points.leftTopRight.x    = 0.5f;
+    points.frontTopRight.y    = points.backTopRight.y    = points.rightTopRight.y    = points.leftTopRight.y    = 0.5f;
+    points.frontBottomLeft.x  = points.backBottomLeft.x  = points.rightBottomLeft.x  = points.leftBottomLeft.x  = 0.0f;
+    points.frontBottomLeft.y  = points.backBottomLeft.y  = points.rightBottomLeft.y  = points.leftBottomLeft.y  = 0.0f;
+    points.frontBottomRight.x = points.backBottomRight.x = points.rightBottomRight.x = points.leftBottomRight.x = 0.5f;
+    points.frontBottomRight.y = points.backBottomRight.y = points.rightBottomRight.y = points.leftBottomRight.y = 0.0f;
+
+    points.bottomTopLeft.x     = 0.0f;
+    points.bottomTopLeft.y     = 1.0f;
+    points.bottomTopRight.x    = 0.5f;
+    points.bottomTopRight.y    = 1.0f;
+    points.bottomBottomLeft.x  = 0.0f;
+    points.bottomBottomLeft.y  = 0.5f;
+    points.bottomBottomRight.x = 0.5f;
+    points.bottomBottomRight.y = 0.5f;
+
+    points.topTopLeft.x     = 0.5f;
+    points.topTopLeft.y     = 0.5f;
+    points.topTopRight.x    = 1.0f;
+    points.topTopRight.y    = 0.5f;
+    points.topBottomLeft.x  = 0.5f;
+    points.topBottomLeft.y  = 0.0f;
+    points.topBottomRight.x = 1.0f;
+    points.topBottomRight.y = 0.0f;
+
+    deep::polygon pol = deep::graphic::create_cube("grass_cube", white, white, white, white, white, white, points);
 
     for(i = 0; i < 50; ++i)
     {
         for(j = 0; j < 50; ++j)
         {
-            deep::entity entTest = entityManager->createEntity(collectionID, pol, defaultProgram, deep::fvec3(i * 5.0f, 0.0f, j * 5.0f), deep::fvec3(3.0f, 3.0f, 3.0f), mcTexture);
+            deep::entity entTest = entityManager->create_entity(collectionID, pol, defaultProgram, deep::fvec3(i * 5.0f, 0.0f, j * 5.0f), deep::fvec3(3.0f, 3.0f, 3.0f), mcTexture);
         }
     }
 
     // Affiche la skybox à la fin pour optimiser les appelles au fragment shader = FPS++
-    deep::entity skyboxEnt = deep::graphic::createCubemap("skybox", skyboxProgram, collectionID, deep::fvec3(0.0f, 0.0f, 0.0f), 5005.0f, 105.0f, 2005.0f, skybox, 0);
+    deep::entity skyboxEnt = deep::graphic::create_cubemap("skybox", skyboxProgram, collectionID, deep::fvec3(0.0f, 0.0f, 0.0f), 5005.0f, 105.0f, 2005.0f, skybox, 0);
 
     deep::scene::setActiveScene(sceneID);
 
