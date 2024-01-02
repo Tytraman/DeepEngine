@@ -31,7 +31,7 @@ namespace deep
 
     /// @class window
     /// @brief Permet la gestion d'une fenêtre.
-    class DE_API window
+    class window
     {
 
         public:
@@ -41,57 +41,55 @@ namespace deep
             typedef void (*update_callback)(window &window);
 
         public:
-            window(uint16_t targetMS, uint16_t targetFPS);
+            DE_API window(uint16_t targetMS, uint16_t targetFPS);
             
             /// @brief			Crée une fenêtre avec un titre et une taille.
             /// @param win		La fenêtre à créer.
             /// @param title	Titre de la fenêtre.
             /// @param size		Taille de la fenêtre.
             /// @return			Le code d'erreur.
-            static error_status create(window &win, const char *title, const size &size);
+            DE_API static error_status create(window &win, const char *title, const size &size);
 
-            static window_handle find(const char *className);
-            static void show(window_handle win);
-            static void focus(window_handle win);
-            static void setForeground(window_handle win);
-            static void setActive(window_handle win);
+            DE_API static window_handle find(const char *className);
+            DE_API static void show(window_handle win);
+            DE_API static void focus(window_handle win);
+            DE_API static void set_foreground(window_handle win);
+            DE_API static void set_active(window_handle win);
             
             /// @brief Détruit la fenêtre ainsi que tous ses composants internes.
-            void destroy();
+            DE_API void destroy();
             
             /// @brief Game Loop
-            void run();
+            DE_API void run();
 
-            bool addPreEventCallback(pre_event_callback callback);
+            DE_API bool add_pre_event_callback(pre_event_callback callback);
             
             /// @brief			Récupère et retire l'évènement le plus vieux de la queue.
             /// @return			Un \ref de::devent lorsqu'un évènement s'est produit ou \c nullptr s'il n'y a aucun évènement.
             /// @remark			La valeur retournée par cette méthode doit être \c delete.
-            devent pollEvent() const;
+            DE_API devent poll_event() const;
 
-            void setCursorPos(int x, int y);
+            DE_API void set_cursor_position(int x, int y);
 
-            static void defaultInputCallback(window &window, devent e);
+            DE_API static void default_input_callback(window &window, devent e);
 
 
             //===== GETTERS =====//
 
-            SDL_Window *getWindow();
-            size getSize() const;
-            uint32_t getWidth() const;
-            uint32_t getHeight() const;
-            const char *getTitle() const;
-            GL3::gl_renderer &getRenderer();
-            bool isShowingDebugPanel() const;
-            GL3::framerenderbuffer m_FRB;
-
+            DE_API SDL_Window *get_window();
+            DE_API size get_size() const;
+            DE_API uint32_t get_width() const;
+            DE_API uint32_t get_height() const;
+            DE_API const char *get_title() const;
+            DE_API GL3::gl_renderer &get_renderer();
+            DE_API bool is_showing_debug_panel() const;
 
             //===== SETTERS =====//
 
-            void setEventCallback(event_callback callabck);
-            void setUpdateCallback(update_callback callback);
-            void setTitle(const char *title) const;
-            void setShowingDebugPanel(bool value);
+            DE_API void set_event_callback(event_callback callabck);
+            DE_API void set_update_callback(update_callback callback);
+            DE_API void set_title(const char *title) const;
+            DE_API void set_showing_debug_panel(bool value);
 
         private:
             SDL_Window              *m_Window;
@@ -103,6 +101,7 @@ namespace deep
             uint16_t                 m_TargetFPS;
             bool                     m_Running;
             bool                     m_ShowDebugPanel;
+            GL3::framerenderbuffer m_FRB;
 
             void internalEventCallback(devent e);
 
@@ -152,10 +151,10 @@ namespace deep
 
     /*
     =====================
-    window::setForeground
+    window::set_foreground
     =====================
     */
-    inline void window::setForeground(window_handle win)
+    inline void window::set_foreground(window_handle win)
     {
 #if DE_WINDOWS
         SetForegroundWindow(win);
@@ -164,7 +163,7 @@ namespace deep
 #endif
     }
 
-    inline void window::setActive(window_handle win)
+    inline void window::set_active(window_handle win)
     {
 #if DE_WINDOWS
         SetActiveWindow(win);
@@ -175,70 +174,70 @@ namespace deep
 
     /*
     ===========================
-    window::addPreEventCallback
+    window::add_pre_event_callback
     ===========================
     */
-    inline bool window::addPreEventCallback(pre_event_callback callback)
+    inline bool window::add_pre_event_callback(pre_event_callback callback)
     {
         return m_PreEventCallbacks.add(callback);
     }
 
     /*
     =================
-    window::getWindow
+    window::get_window
     =================
     */
-    inline SDL_Window *window::getWindow()
+    inline SDL_Window *window::get_window()
     {
         return m_Window;
     }
 
     /*
     ===================
-    window::getRenderer
+    window::get_renderer
     ===================
     */
-    inline GL3::gl_renderer &window::getRenderer()
+    inline GL3::gl_renderer &window::get_renderer()
     {
         return m_Renderer;
     }
 
     /*
     ===========================
-    window::isShowingDebugPanel
+    window::is_showing_debug_panel
     ===========================
     */
-    inline bool window::isShowingDebugPanel() const
+    inline bool window::is_showing_debug_panel() const
     {
         return m_ShowDebugPanel;
     }
 
     /*
     ========================
-    window::setEventCallback
+    window::set_event_callback
     ========================
     */
-    inline void window::setEventCallback(event_callback callback)
+    inline void window::set_event_callback(event_callback callback)
     {
         m_EventCallback = callback;
     }
 
     /*
     =========================
-    window::setUpdateCallback
+    window::set_update_callback
     =========================
     */
-    inline void window::setUpdateCallback(update_callback callback)
+    inline void window::set_update_callback(update_callback callback)
     {
         m_UpdateCallback = callback;
     }
 
     /*
     ============================
-    window::setShowingDebugPanel
+    window::set_showing_debug_panel
     ============================
     */
-    inline void window::setShowingDebugPanel(bool value)
+    inline void window::set_showing_debug_panel(bool value)
     {
         if(value)
             im_gui_debug_menu::addWindow(this);

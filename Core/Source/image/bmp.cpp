@@ -605,7 +605,6 @@ namespace deep
         int32_t newWidth = width - diff;
 
         uint8_t *memData = (uint8_t *) m_MemoryChunk.data();
-        uint32_t imageDataOffset = ((bmp_file_header *) memData)->imageDataOffset;
         uint8_t *data = memData + ((bmp_file_header *) memData)->imageDataOffset;
 
         int32_t index, dest = start;

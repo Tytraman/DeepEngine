@@ -28,8 +28,8 @@ namespace deep
         static bool insertPressed = false;
         static bool f2Pressed     = false;
         static bool f11Pressed    = false;
-        static int lastWindowWidth  = getWidth();
-        static int lastWindowHeight = getHeight();
+        static int lastWindowWidth  = get_width();
+        static int lastWindowHeight = get_height();
 
         // Vérifie le type d'évènement qui vient de se produire.
         switch(e->getType())
@@ -49,7 +49,7 @@ namespace deep
                         {
                             m_ShowDebugPanel = !m_ShowDebugPanel;
                             SDL_SetRelativeMouseMode((SDL_bool) !m_ShowDebugPanel);
-                            setCursorPos(getWidth() / 2, getHeight() / 2);
+                            set_cursor_position(get_width() / 2, get_height() / 2);
                             insertPressed = true;
                         }
                     } break;
@@ -96,7 +96,7 @@ namespace deep
                                 SDL_SetWindowFullscreen(m_Window, 0);
                                 SDL_SetWindowSize(m_Window, lastWindowWidth, lastWindowHeight);
                                 GL3::core::update_viewport(lastWindowWidth, lastWindowHeight);
-                                setCursorPos(getWidth() / 2, getHeight() / 2);
+                                set_cursor_position(get_width() / 2, get_height() / 2);
 
                                 m_FRB.resize("primary_frb", lastWindowWidth, lastWindowHeight);
                             }
@@ -105,13 +105,13 @@ namespace deep
                                 SDL_DisplayMode DM;
                                 SDL_GetCurrentDisplayMode(0, &DM);
 
-                                lastWindowWidth  = getWidth();
-                                lastWindowHeight = getHeight();
+                                lastWindowWidth  = get_width();
+                                lastWindowHeight = get_height();
                                 
                                 SDL_SetWindowSize(m_Window, DM.w, DM.h);
                                 GL3::core::update_viewport(DM.w, DM.h);
                                 SDL_SetWindowFullscreen(m_Window, SDL_WINDOW_FULLSCREEN);
-                                setCursorPos(getWidth() / 2, getHeight() / 2);
+                                set_cursor_position(get_width() / 2, get_height() / 2);
 
                                 m_FRB.resize("primary_frb", DM.w, DM.h);
                             }
@@ -166,7 +166,7 @@ namespace deep
     */
     window::window(uint16_t targetMS, uint16_t targetFPS)
         : m_Window(NULL),
-          m_EventCallback(defaultInputCallback),
+          m_EventCallback(default_input_callback),
           m_UpdateCallback(nullptr),
           m_TargetMSPerUpdate(targetMS),
           m_TargetFPS(targetFPS),
@@ -189,7 +189,7 @@ namespace deep
             return error_status::CreateWindowSDL;
 
         SDL_SetRelativeMouseMode(SDL_TRUE);
-        win.setCursorPos(win.getWidth() / 2, win.getHeight() / 2);
+        win.set_cursor_position(win.get_width() / 2, win.get_height() / 2);
         
         if(!GL3::gl_renderer::create(win.m_Renderer, &win)) {
             win.destroy();
@@ -233,7 +233,7 @@ namespace deep
 
         textureManager->set_white_texture(whiteTex);
 
-        if(!win.m_FRB.create("primary_frb", win.getWidth(), win.getHeight()))
+        if(!win.m_FRB.create("primary_frb", win.get_width(), win.get_height()))
         {
             fprintf(stderr, "Unable to create the Frame Render Buffer.\n");
         }
@@ -285,8 +285,7 @@ namespace deep
         uint64_t elapsed;
         uint32_t cn = 0;
         uint32_t updates = 0;
-        uint16_t desiredDelta = 1000 / m_TargetFPS;
-        std::string title(getTitle());
+        std::string title(get_title());
 
         system_manager *systemManager = system_manager::get_singleton();
 
@@ -318,7 +317,7 @@ namespace deep
 
             // Récupère les évènements système, les entrées utilisateurs etc...
             // et exécute un callback s'il y en a un.
-            while((e = pollEvent()) != nullptr)
+            while((e = poll_event()) != nullptr)
             {
                 // Gère les évènements internes.
                 internalEventCallback(e);
@@ -369,25 +368,21 @@ namespace deep
             if(elapsed >= 1000)
             {
                 // TODO: Retirer au moment de la release.
-                setTitle((title + " | UPS: " + std::to_string(updates) + " | FPS: " + std::to_string(cn)).c_str());
+                set_title((title + " | UPS: " + std::to_string(updates) + " | FPS: " + std::to_string(cn)).c_str());
 
                 cn = 0;
                 updates = 0;
                 startTime = endTime;
             }
-
-            /*elapsed = end - current;
-            if(elapsed < desiredDelta)
-                core::sleep((uint32_t) ((uint64_t ) desiredDelta - elapsed));*/
         }
     }
 
     /*
     =================
-    window::pollEvent
+    window::poll_event
     =================
     */
-    devent window::pollEvent() const
+    devent window::poll_event() const
     {
         devent e = devent_s::create();
         if(!e->pollEvent())
@@ -401,10 +396,10 @@ namespace deep
 
     /*
     ============================
-    window::defaultInputCallback
+    window::default_input_callback
     ============================
     */
-    void window::defaultInputCallback(window &window, devent e)
+    void window::default_input_callback(window &window, devent e)
     {
         switch(e->getType())
         {
@@ -438,10 +433,10 @@ namespace deep
 
     /*
     ===============
-    window::getSize
+    window::get_size
     ===============
     */
-    size window::getSize() const
+    size window::get_size() const
     {
         size windowSize;
         SDL_GetWindowSize(m_Window, (int *) &windowSize.width, (int *) &windowSize.height);
@@ -453,7 +448,7 @@ namespace deep
     window::get_width
     ================
     */
-    uint32_t window::getWidth() const
+    uint32_t window::get_width() const
     {
         int w, h;
         SDL_GetWindowSize(m_Window, &w, &h);
@@ -465,24 +460,24 @@ namespace deep
     window::get_height
     =================
     */
-    uint32_t window::getHeight() const
+    uint32_t window::get_height() const
     {
         int w, h;
         SDL_GetWindowSize(m_Window, &w, &h);
         return h;
     }
 
-    const char *window::getTitle() const
+    const char *window::get_title() const
     {
         return SDL_GetWindowTitle(m_Window);
     }
 
-    void window::setTitle(const char *title) const
+    void window::set_title(const char *title) const
     {
         SDL_SetWindowTitle(m_Window, title);
     }
 
-    void window::setCursorPos(int x, int y)
+    void window::set_cursor_position(int x, int y)
     {
         SDL_WarpMouseInWindow(m_Window, x, y);
     }

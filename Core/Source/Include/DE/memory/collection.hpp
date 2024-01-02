@@ -19,7 +19,7 @@ namespace deep
     {
 
         public:
-            static constexpr size_t nothing = -1;
+            static constexpr size_t nothing = static_cast<size_t>(-1);
 
         public:
             icollection();

@@ -185,8 +185,8 @@ namespace deep
         {
             window::show(win);
             window::focus(win);
-            window::setForeground(win);
-            window::setActive(win);
+            window::set_foreground(win);
+            window::set_active(win);
 
             retText = "BAD";
             ret = true;

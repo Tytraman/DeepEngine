@@ -31,7 +31,7 @@ namespace deep
           fragmentFilename(third)
     { }
 
-    bool enum_shaders_config_fobj(file_object_container &container, string &currentPath, mem_ptr args)
+    bool enum_shaders_config_fobj(file_object_container &container, string & /* currentPath */, mem_ptr args)
     {
         // Contient la liste des fusions Vertex Fragment shaders.
         hash_table<shader_fusion> *table = static_cast<hash_table<shader_fusion>*>(args);
@@ -146,16 +146,16 @@ namespace deep
 
         printf("Found %llu shaders.\n", numberOfShaders);
 
-        auto &currentShader = shaderFiles.begin();
-        auto &endShader = shaderFiles.end();
+        hash_table_iterator<shader_fusion> shaderIterator = shaderFiles.begin();
+        hash_table_iterator<shader_fusion> shaderEndIterator = shaderFiles.end();
 
         // Compile et link les shaders.
-        for(; currentShader != endShader; ++currentShader)
+        for(; shaderIterator != shaderEndIterator; ++shaderIterator)
         {   
             string vertexShaderFilename(m_ShadersFolder);
             string fragmentShaderFilename(m_ShadersFolder);
-            vertexShaderFilename.append(currentShader->value.vertexFilename.str());
-            fragmentShaderFilename.append(currentShader->value.fragmentFilename.str());
+            vertexShaderFilename.append(shaderIterator->value.vertexFilename.str());
+            fragmentShaderFilename.append(shaderIterator->value.fragmentFilename.str());
 
             printf("(\n  %s\n  %s\n  Opening files...\n  ", vertexShaderFilename.str(), fragmentShaderFilename.str());
 
@@ -226,8 +226,8 @@ namespace deep
             vis.close();
             fis.close();
 
-            string vertexShaderName = currentShader->value.name;
-            string fragmentShaderName = currentShader->value.name;
+            string vertexShaderName = shaderIterator->value.name;
+            string fragmentShaderName = shaderIterator->value.name;
             vertexShaderName.append("_vert");
             fragmentShaderName.append("_frag");
 
@@ -259,7 +259,7 @@ namespace deep
                 goto end;
             }
                         
-            GL3::gl_id program = programManager->create(currentShader->value.name.str());
+            GL3::gl_id program = programManager->create(shaderIterator->value.name.str());
 
             programManager->attach_shader(program, vertexShader);
             programManager->attach_shader(program, fragmentShader);

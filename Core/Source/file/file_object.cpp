@@ -189,35 +189,27 @@ rread:
     */
     void file_object_container::enumerate(file_object_enum_element_callback elementCallback, file_object_enum_container_callback containerCallback, mem_ptr args, size_t maxSubContainer, file_object_container **container, pair<string, string> **element)
     {
-        // Permet de garder une trace des conteneurs parents lorsqu'un sous conteneur existe.
         stack<pair<hash_table_iterator<file_object_container>, file_object_container *>> snapshots;
-        bool back = false;
+        bool containerProcessed = false;
         string currentPath = "";
         size_t indexContainer = 0;
 
         snapshots.add(pair<hash_table_iterator<file_object_container>, file_object_container *>(this->containers.begin(), this));
 
-        // Tant qu'il reste un conteneur à traiter.
         while(snapshots.count() > 0)
         {
-            // Récupère la snapshot précédente contenant la paire itérateur + conteneur actif.
-            auto pairIt = snapshots.get();
+            auto lastSnapshot = snapshots.get();
+            hash_table_iterator<file_object_container> &lastIterator = lastSnapshot->value1();
+            file_object_container *currentContainer = lastSnapshot->value2();
+            hash_table_iterator<file_object_container> containerEndIterator = currentContainer->containers.end();
 
-            // Récupère l'itérateur contenant le prochain conteneur dans lequel énumérer.
-            auto &it = pairIt->value1();
-            // Récupère le conteneur actif actuellement en train d'être énuméré.
-            file_object_container *current = pairIt->value2();
-            auto &end = current->containers.end();
-
-            // Si les éléments du conteneur n'ont pas été traités.
-            if(!back)
+            if(!containerProcessed)
             {
-                // Traite d'abord les éléments du conteneur.
-                auto elIt  = pairIt->value2()->items.begin();
-                auto elEnd = pairIt->value2()->items.end();
-
                 if(elementCallback != nullptr)
                 {
+                    hash_table_iterator<pair<string, string>> itemsIterator  = currentContainer->items.begin();
+                    hash_table_iterator<pair<string, string>> itemsEndIterator = currentContainer->items.end();
+
                     size_t currentPathLength = currentPath.length();
                     if(currentPathLength > 0)
                     {
@@ -225,16 +217,14 @@ rread:
                         currentPathLength++;
                     }
 
-                    // Boucle parmis tous les éléments du conteneur.
-                    for(; elIt != elEnd; ++elIt)
+                    for(; itemsIterator != itemsEndIterator; ++itemsIterator)
                     {
-                        currentPath.append(elIt->value.value1().str());
+                        currentPath.append(itemsIterator->value.value1().str());
 
-                        // Si le callback retourne faux, alors stop l'énumération.
-                        if(!elementCallback(*elIt, currentPath, args))
+                        if(!elementCallback(*itemsIterator, currentPath, args))
                         {
                             if(element != nullptr)
-                                *element = &elIt->value;
+                                *element = &itemsIterator->value;
 
                             goto end;
                         }
@@ -250,12 +240,11 @@ rread:
                 }
             }
 
-            back = false;
+            containerProcessed = false;
 
-            auto itBackup = it;
+            hash_table_iterator<file_object_container> lastIteratorBackup = lastIterator;
 
-            // Si le conteneur ne possède pas d'autres conteneurs.
-            if(it == end)
+            if(lastIterator == containerEndIterator)
             {
                 // Retire la clé du conteneur du chemin total.
                 size_t dotIndex = currentPath.findFromEnd('.');
@@ -264,7 +253,7 @@ rread:
                 else
                     currentPath.substring(0, dotIndex);
 
-                back = true;
+                containerProcessed = true;
                 snapshots.pop();
                 indexContainer--;
             }
@@ -272,29 +261,28 @@ rread:
             {
                 if(indexContainer >= maxSubContainer)
                 {
-                    it = end;
+                    lastIterator = containerEndIterator;
                     goto end_loop;
                 }
 
                 // Ajoute la clé du conteneur dans le chemin total.
                 if(currentPath.length() > 0)
                     currentPath.append(".");
-                currentPath.append(it->value.name.str());
+                currentPath.append(lastIterator->value.name.str());
 
                 // Le conteneur possède d'autres conteneurs.
-                // Ajoute une spapshot dans la liste pour y revenir plus tard.
-                auto el = it->value.containers.begin();
-                snapshots.add(pair<hash_table_iterator<file_object_container>, file_object_container *>(el, &it->value));
-                it++;
+                // Ajoute une snapshot dans la liste pour y revenir plus tard.
+                hash_table_iterator<file_object_container> nextContainersIterator = lastIterator->value.containers.begin();
+                snapshots.add(pair<hash_table_iterator<file_object_container>, file_object_container *>(nextContainersIterator, &lastIterator->value));
+                lastIterator++;
                 indexContainer++;
 
                 if(containerCallback)
                 {
-                    // Si le callback retourne faux, alors stop l'énumération.
-                    if(!containerCallback(itBackup->value, currentPath, args))
+                    if(!containerCallback(lastIteratorBackup->value, currentPath, args))
                     {
                         if(container != nullptr)
-                            *container = &itBackup->value;
+                            *container = &lastIteratorBackup->value;
 
                         goto end;
                     }
@@ -305,7 +293,7 @@ end_loop: ;
 end: ;
     }
 
-    bool __de_file_object_container_search_callback(file_object_container &container, string &currentPath, mem_ptr args)
+    bool __de_file_object_container_search_callback(file_object_container &, string &currentPath, mem_ptr args)
     {
         const char *path = static_cast<const char *>(args);
 
@@ -321,12 +309,12 @@ end: ;
     {
         file_object_container *container = nullptr;
 
-        enumerate(nullptr, __de_file_object_container_search_callback, (mem_ptr) path, -1, &container, nullptr);
+        enumerate(nullptr, __de_file_object_container_search_callback, (mem_ptr) path, static_cast<size_t>(-1), &container, nullptr);
 
         return container;
     }
 
-    bool __de_file_object_element_search_callback(hash_entry<pair<string, string>> &entry, string &currentPath, mem_ptr args)
+    bool __de_file_object_element_search_callback(hash_entry<pair<string, string>> & /* entry */, string &currentPath, mem_ptr args)
     {
         const char *path = static_cast<const char *>(args);
 

@@ -44,9 +44,9 @@ namespace deep
         }
 
         /*
-        ======================
+        ========================
         shader_manager::raw_load
-        ======================
+        ========================
         */
         void shader_manager::raw_load(GLuint shader, memory_chunk &program)
         {
@@ -87,9 +87,9 @@ namespace deep
         }
 
         /*
-        ==========================
+        ===========================
         shader_manager::raw_compile
-        ==========================
+        ===========================
         */
         bool shader_manager::raw_compile(GLuint shader)
         {
@@ -139,9 +139,9 @@ namespace deep
         }
 
         /*
-        ==========================
+        ===========================
         shader_manager::raw_destroy
-        ==========================
+        ===========================
         */
         void shader_manager::raw_destroy(GLuint shader)
         {
@@ -236,9 +236,9 @@ namespace deep
         }
 
         /*
-        ================================
+        ==================================
         program_manager::raw_attach_shader
-        ================================
+        ==================================
         */
         void program_manager::raw_attach_shader(GLuint program, GLuint shader)
         {
@@ -246,9 +246,9 @@ namespace deep
         }
 
         /*
-        =============================
+        ==============================
         program_manager::attach_shader
-        =============================
+        ==============================
         */
         bool program_manager::attach_shader(gl_id program, gl_id shader)
         {
@@ -268,9 +268,9 @@ namespace deep
         }
 
         /*
-        =============================
+        ==============================
         program_manager::attach_shader
-        =============================
+        ==============================
         */
         bool program_manager::attach_shader(const char *progName, const char *shadName)
         {
@@ -290,9 +290,9 @@ namespace deep
         }
 
         /*
-        =============================
+        ==============================
         program_manager::attach_shader
-        =============================
+        ==============================
         */
         bool program_manager::attach_shader(const char *progName, gl_id shader)
         {
@@ -312,9 +312,9 @@ namespace deep
         }
 
         /*
-        =============================
+        ==============================
         program_manager::attach_shader
-        =============================
+        ==============================
         */
         bool program_manager::attach_shader(gl_id program, const char *shadName)
         {
@@ -334,9 +334,9 @@ namespace deep
         }
 
         /*
-        ===========================
+        ============================
         program_manager::add_uniform
-        ===========================
+        ============================
         */
         bool program_manager::add_uniform(const char *uniformName, int location, float value)
         {
@@ -350,9 +350,9 @@ namespace deep
         }
 
         /*
-        ===========================
+        ============================
         program_manager::add_uniform
-        ===========================
+        ============================
         */
         bool program_manager::add_uniform(const char *uniformName, int location, int value)
         {
@@ -366,9 +366,9 @@ namespace deep
         }
 
         /*
-        ===========================
+        ============================
         program_manager::add_uniform
-        ===========================
+        ============================
         */
         bool program_manager::add_uniform(const char *uniformName, int location, const fvec3 &value)
         {
@@ -382,9 +382,9 @@ namespace deep
         }
 
         /*
-        ===========================
+        ============================
         program_manager::add_uniform
-        ===========================
+        ============================
         */
         bool program_manager::add_uniform(const char *uniformName, int location, const fmat4x4 &value)
         {
@@ -398,9 +398,9 @@ namespace deep
         }
 
         /*
-        ===========================
+        ============================
         program_manager::set_uniform
-        ===========================
+        ============================
         */
         bool program_manager::set_uniform(const char *uniformName, float value)
         {
@@ -418,9 +418,9 @@ namespace deep
         }
 
         /*
-        ===========================
+        ============================
         program_manager::set_uniform
-        ===========================
+        ============================
         */
         bool program_manager::set_uniform(const char *uniformName, int value)
         {
@@ -438,9 +438,9 @@ namespace deep
         }
 
         /*
-        ===========================
+        ============================
         program_manager::set_uniform
-        ===========================
+        ============================
         */
         bool program_manager::set_uniform(const char *uniformName, const fvec3 &value)
         {
@@ -458,9 +458,9 @@ namespace deep
         }
 
         /*
-        ===========================
+        ============================
         program_manager::set_uniform
-        ===========================
+        ============================
         */
         bool program_manager::set_uniform(const char *uniformName, const fmat4x4 &value)
         {
@@ -478,9 +478,9 @@ namespace deep
         }
 
         /*
-        ========================
+        =========================
         program_manager::raw_link
-        ========================
+        =========================
         */
         bool program_manager::raw_link(GLuint program)
         {
@@ -530,9 +530,9 @@ namespace deep
         }
 
         /*
-        =======================
+        ========================
         program_manager::raw_use
-        =======================
+        ========================
         */
         void program_manager::raw_use(GLuint program)
         {
@@ -575,9 +575,9 @@ namespace deep
         }
 
         /*
-        ===========================
+        ============================
         program_manager::raw_destroy
-        ===========================
+        ============================
         */
         void program_manager::raw_destroy(GLuint program)
         {
@@ -619,9 +619,9 @@ namespace deep
         }
 
         /*
-        =============================
+        ==============================
         program_manager::send_uniforms
-        =============================
+        ==============================
         */
         bool program_manager::send_uniforms()
         {
@@ -629,23 +629,23 @@ namespace deep
             if(prog == nullptr)
                 return false;
 
-            auto &fUniBeg = prog->value.fUniforms.begin();
-            auto &fUniEnd = prog->value.fUniforms.end();
+            hash_table_iterator<pair<int, float>> fUniBeg = prog->value.fUniforms.begin();
+            hash_table_iterator<pair<int, float>> fUniEnd = prog->value.fUniforms.end();
             for(; fUniBeg != fUniEnd; ++fUniBeg)
                 uniform_manager::send(fUniBeg->value.value1(), fUniBeg->value.value2());
 
-            auto &iUniBeg = prog->value.iUniforms.begin();
-            auto &iUniEnd = prog->value.iUniforms.end();
+            hash_table_iterator<pair<int, int>> iUniBeg = prog->value.iUniforms.begin();
+            hash_table_iterator<pair<int, int>> iUniEnd = prog->value.iUniforms.end();
             for(; iUniBeg != iUniEnd; ++iUniBeg)
                 uniform_manager::send(iUniBeg->value.value1(), iUniBeg->value.value2());
 
-            auto &fv3UniBeg = prog->value.fv3Uniforms.begin();
-            auto &fv3UniEnd = prog->value.fv3Uniforms.end();
+            hash_table_iterator<pair<int, fvec3>> fv3UniBeg = prog->value.fv3Uniforms.begin();
+            hash_table_iterator<pair<int, fvec3>> fv3UniEnd = prog->value.fv3Uniforms.end();
             for(; fv3UniBeg != fv3UniEnd; ++fv3UniBeg)
                 uniform_manager::send(fv3UniBeg->value.value1(), fv3UniBeg->value.value2());
 
-            auto &fm4UniBeg = prog->value.fm4Uniforms.begin();
-            auto &fm4UniEnd = prog->value.fm4Uniforms.end();
+            hash_table_iterator<pair<int, fmat4x4>> fm4UniBeg = prog->value.fm4Uniforms.begin();
+            hash_table_iterator<pair<int, fmat4x4>> fm4UniEnd = prog->value.fm4Uniforms.end();
             for(; fm4UniBeg != fm4UniEnd; ++fm4UniBeg)
                 uniform_manager::send(fm4UniBeg->value.value1(), fm4UniBeg->value.value2());
 
@@ -653,14 +653,14 @@ namespace deep
         }
 
         /*
-        ===================================
+        =====================================
         program_manager::destroy_all_programs
-        ===================================
+        =====================================
         */
         void program_manager::destroy_all_programs()
         {
-            auto &beg = m_Programs.begin();
-            auto &end = m_Programs.end();
+            hash_table_iterator<program_item> beg = m_Programs.begin();
+            hash_table_iterator<program_item> end = m_Programs.end();
 
             for(; beg != end; ++beg)
                 raw_destroy(beg->value.program);

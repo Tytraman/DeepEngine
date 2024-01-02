@@ -209,7 +209,7 @@ namespace deep
                 return index;
         }
 
-        return -1;
+        return static_cast<size_t>(-1);
     }
 
     /*
@@ -220,7 +220,7 @@ namespace deep
     size_t string::findFromEnd(char charactere) const
     {
         if(m_Length == 0)
-            return -1;
+            return static_cast<size_t>(-1);
 
         size_t index = m_Length - 1;
         char *text = m_Chars.get();
@@ -236,7 +236,7 @@ namespace deep
             index--;
         }
 
-        return -1;
+        return static_cast<size_t>(-1);
     }
 
     /*

@@ -286,8 +286,6 @@ namespace deep {
         size_t columns  = m_Width;
         png_bytep *r = rowPointers + rows - 1;
 
-        uint8_t *memData = (uint8_t *) m_MemoryChunk.data();
-
         uint8_t b;
 
         size_t row, column;

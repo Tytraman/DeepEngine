@@ -42,10 +42,10 @@ namespace deep {
         // Défini ImGui sur le mode sombre.
         ImGui::StyleColorsDark();
 
-        //SDL_Renderer *renderer = window.getRenderer().getRenderer();
+        //SDL_Renderer *renderer = window.get_renderer().get_renderer();
 
         // Initialise ImGui pour utiliser le Renderer de SDL2.
-        ImGui_ImplSDL2_InitForOpenGL(window.getWindow(), window.getRenderer().get_context());
+        ImGui_ImplSDL2_InitForOpenGL(window.get_window(), window.get_renderer().get_context());
         ImGui_ImplOpenGL3_Init("#version 330 core");
 
         m_Initialized = true;

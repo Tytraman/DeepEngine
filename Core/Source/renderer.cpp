@@ -27,7 +27,7 @@ namespace deep {
     */
     error_status renderer::create(renderer &dest, window &window)
     {
-        dest.m_Renderer = SDL_CreateRenderer(window.getWindow(), -1, SDL_RENDERER_ACCELERATED);
+        dest.m_Renderer = SDL_CreateRenderer(window.get_window(), -1, SDL_RENDERER_ACCELERATED);
         if(dest.m_Renderer == NULL)
             return error_status::CreateRendererSDL;
 

@@ -168,11 +168,11 @@ namespace deep
     /// @param newVal   La valeur à récupérer.
     /// @return         L'ancienne valeur de \ref val.
     template<typename Type, typename K = Type>
-    rm_ref<Type> &&exchange(Type &val, K &&newVal) noexcept
+    Type exchange(Type &val, K &&newVal) noexcept
     {
-        auto temp = rvalue_cast(val);
-        val = static_cast<Type &&>(rvalue_cast(newVal));
-        return static_cast<rm_ref<Type> &&>(temp);
+        Type oldVal = static_cast<Type &&>(val);
+        val = static_cast<K &&>(newVal);
+        return oldVal;
     }
 
     

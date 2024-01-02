@@ -57,7 +57,7 @@ namespace deep
         programManager->set_uniform("mRotZ", transformation->getRotationZ());
         programManager->set_uniform("mScl", transformation->getScaling());
         programManager->set_uniform("view", camera->lookAt());
-        programManager->set_uniform("proj", fmat4x4::perspective(fmat4x4(), 45.0f, (float) window->getWidth() / (float) window->getHeight(), 0.1f, 1000.0f));
+        programManager->set_uniform("proj", fmat4x4::perspective(fmat4x4(), 45.0f, (float) window->get_width() / (float) window->get_height(), 0.1f, 1000.0f));
 
         programManager->send_uniforms();
 
@@ -69,7 +69,7 @@ namespace deep
     drawable_component::skyboxRenderCallback
     ========================================
     */
-    void drawable_component::skyboxRenderCallback(GL3::gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, Camera *camera)
+    void drawable_component::skyboxRenderCallback(GL3::gl_renderer &renderer, drawable_component *drawable, transformation_component *, window *window, Camera *camera)
     {
         GL3::program_manager *programManager = GL3::program_manager::get_singleton();
         GL3::vbo_manager *vboManager = GL3::vbo_manager::get_singleton();
@@ -90,7 +90,7 @@ namespace deep
 
         programManager->set_uniform("skybox", 0);
         programManager->set_uniform("view", view);
-        programManager->set_uniform("proj", fmat4x4::perspective(fmat4x4(), 45.0f, (float) window->getWidth() / (float) window->getHeight(), 0.1f, 1000.0f));
+        programManager->set_uniform("proj", fmat4x4::perspective(fmat4x4(), 45.0f, (float) window->get_width() / (float) window->get_height(), 0.1f, 1000.0f));
 
         programManager->send_uniforms();
 

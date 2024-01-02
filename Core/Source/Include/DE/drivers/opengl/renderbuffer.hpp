@@ -31,7 +31,7 @@ namespace deep
                 DE_API hash_entry<GLuint> *get(const char *name);
 
                 DE_API void store(int width, int height);
-                DE_API bool resize(int width, int height);
+                DE_API bool resize();
 
                 DE_API void raw_destroy(GLuint rbo);
                 DE_API bool destroy(gl_id rbo);

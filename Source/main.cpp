@@ -63,7 +63,7 @@ void event_callback(deep::window &window, deep::devent e)
         default: break;
         case deep::event_type::MouseMotion:
         {
-            if(!window.isShowingDebugPanel())
+            if(!window.is_showing_debug_panel())
             {
                 deep::scene_id sceneID = deep::scene::getActiveSceneID();
                 if(sceneID == deep::badID)
@@ -82,8 +82,8 @@ void event_callback(deep::window &window, deep::devent e)
                 int x = e->getMouseX();
                 int y = e->getMouseY();
 
-                int xDiff = x - window.getWidth() / 2;
-                int yDiff = y - window.getHeight() / 2;
+                int xDiff = x - window.get_width() / 2;
+                int yDiff = y - window.get_height() / 2;
 
                 yaw += xDiff * sensitivity;
                 pitch -= yDiff * sensitivity;
@@ -96,7 +96,7 @@ void event_callback(deep::window &window, deep::devent e)
                 camera.setYaw(yaw);
                 camera.setPitch(pitch);
 
-                window.setCursorPos(window.getWidth() / 2, window.getHeight() / 2);
+                window.set_cursor_position(window.get_width() / 2, window.get_height() / 2);
 
                 camera.updateAngleOfView();
             }
@@ -104,23 +104,23 @@ void event_callback(deep::window &window, deep::devent e)
     }
 
     // Appelle le callback par défaut
-    deep::window::defaultInputCallback(window, e);
+    deep::window::default_input_callback(window, e);
 }
 
 // Fonction appelée en boucle dans la boucle du jeu,
 // pour mettre à jour toutes les valeurs du jeu
-void update_callback(deep::window &win)
+void update_callback(deep::window & /* win */)
 {
     deep::scene_id sceneID = deep::scene::getActiveSceneID();
     deep::entity_collection_id collectionID;
     deep::scene *scene;
 
     if(sceneID == deep::badID)
-        goto end;
+        return;
 
     scene = deep::scene::getScene(sceneID);
     if(scene == nullptr)
-        goto end;
+        return;
 
     collectionID = deep::scene::getEntityCollection(sceneID);
 
@@ -176,217 +176,6 @@ void update_callback(deep::window &win)
     }
 
     camera.updateAngleOfView();
-
-end:;
-}
-
-void collider_callback(deep::entity_collection_id collectionID, deep::entity_id entity1, deep::entity_id entity2, const deep::fvec2 &difference, const deep::rect &collision)
-{
-    deep::scene_id sceneID = deep::scene::getActiveSceneID();
-
-//	// Diff permet de savoir dans quelle direction le joueur va.
-//	de::fvec2 diff = difference;
-//
-//	// Vérifie si une des entités est le joueur ou le rectangle 1.
-//	if(entity1 == g_Player.getEntityID()) {
-//		playerID = entity1;
-//
-//		if(entity2 == g_Rect1.getEntityID()) {
-//			rect1ID = entity2;
-//		}else
-//			rect1ID = de::badID;
-//	}else if(entity2 == g_Player.getEntityID()) {
-//		playerID = entity2;
-//
-//		if(entity1 == g_Rect1.getEntityID())
-//			rect1ID = entity1;
-//		else
-//			rect1ID = de::badID;
-//
-//		diff = de::fvec2::inv(diff);
-//	}else {
-//		playerID = de::badID;
-//
-//		if(entity1 == g_Rect1.getEntityID()) {
-//			rect1ID = entity1;
-//		}else if(entity2 == g_Rect1.getEntityID()) {
-//			rect1ID = entity2;
-//			diff = de::fvec2::inv(diff);
-//		}else
-//			rect1ID = de::badID;
-//	}
-//
-//rewatch:
-//
-//
-//	// Collision entre le joueur et le rectangle 1.
-//	if(playerID != de::badID && rect1ID != de::badID) {
-//		if(g_CollisionPlayerRectEnabled) {
-//			if(diff.y <= 0 || diff.y <= fabs(diff.x)) {
-//				playerID = de::badID;
-//				diff = de::fvec2::inv(diff);
-//				goto rewatch;
-//			}else
-//				g_CollisionPlayerRectEnabled = false;
-//		}
-//	}
-//	// Si le joueur est entré en collision avec autre chose.
-//	else if(playerID != de::badID) {
-//		de::component_id playerTransformationComponentID = de::EntityManager::getComponentID(g_Player, de::TransformationComponentType);
-//		de::component_id playerColliderComponentID = de::EntityManager::getComponentID(g_Player, de::ColliderComponentType);
-//		de::component_id playerVelCpnID = de::EntityManager::getComponentID(g_Player, de::VelocityComponentType);
-//		de::component_id playerAccCpnID = de::EntityManager::getComponentID(g_Player, de::AccelerationComponentType);
-//
-//		de::TransformationComponent *playerTransformationComponent = de::ComponentManager::getTransformationComponent(playerTransformationComponentID);
-//		de::ColliderComponent *playerColliderComponent = de::ComponentManager::getColliderComponent(playerColliderComponentID);
-//		de::VelocityComponent *playerVelCpn = de::ComponentManager::getVelocityComponent(playerVelCpnID);
-//		de::AccelerationComponent *playerAccCpn = de::ComponentManager::getAccelerationComponent(playerAccCpnID);
-//
-//		de::fvec3 playerTranslation  = playerTransformationComponent->getTranslation();
-//		de::fvec3 playerVel = playerVelCpn->getVelocity();
-//
-//		float colW = fabs(collision.w);
-//		float colH = fabs(collision.h);
-//
-//		// Une pratique assez courante de repositionner un objet pouvant se déplacer lorsqu'il touche un objet statique
-//		// est de le déplacer par rapport à l'axe le plus petit du rectangle de collision,
-//		// ainsi, si la largeur du rectangle de collision est plus petite que la hauteur, l'objet sera déplacé sur l'axe X, inversemment dans le cas
-//		// où la hauteur est plus petite que la largeur.
-//
-//		// Si la collision est plus petite en largeur, on déplace le joueur sur l'axe X.
-//		if(colW < colH) {
-//			playerVel.x = 0.0f;
-//			playerAccCpn->acceleration.x = 0.0f;
-//			// Si le joueur se déplace vers la droite.
-//			if(diff.x > 0) {
-//				playerTranslation.x -= colW;
-//				playerTransformationComponent->setTranslation(playerTranslation);
-//				playerColliderComponent->contour.pos.x -= colW;
-//			// Si le joueur se déplace vers la gauche.
-//			}else {
-//				playerTranslation.x += colW;
-//				playerTransformationComponent->setTranslation(playerTranslation);
-//				playerColliderComponent->contour.pos.x += colW;
-//			}
-//		}
-//		// Sinon on déplace le joueur sur l'axe Y.
-//		else {
-//			// Si le joueur se déplace vers le bas.
-//			if(diff.y > 0) {
-//				playerTranslation.y -= colH;
-//				playerTransformationComponent->setTranslation(playerTranslation);
-//				playerColliderComponent->contour.pos.y -= colH;
-//				playerVel.y = 0.0f;
-//				playerAccCpn->acceleration.y = 0.0f;
-//			// Si le joueur se déplace vers le haut.
-//			}else {
-//				playerTranslation.y += colH;
-//				playerTransformationComponent->setTranslation(playerTranslation);
-//				playerColliderComponent->contour.pos.y += colH;
-//			}
-//		}
-//
-//		playerVelCpn->setVelocity(playerVel);
-//	}
-//	// Si le rectangle 1 est entré en collision avec autre chose.
-//	else if(rect1ID != de::badID) {
-//		de::component_id rect1TransfCpnID = de::EntityManager::getComponentID(g_Rect1, de::TransformationComponentType);
-//		de::component_id rect1CollCpnID = de::EntityManager::getComponentID(g_Rect1, de::ColliderComponentType);
-//		de::component_id rect1VelCpnID = de::EntityManager::getComponentID(g_Rect1, de::VelocityComponentType);
-//
-//		de::TransformationComponent *rect1TransfCpn = de::ComponentManager::getTransformationComponent(rect1TransfCpnID);
-//		de::ColliderComponent *rect1CollCpn = de::ComponentManager::getColliderComponent(rect1CollCpnID);
-//		de::VelocityComponent *rect1VelCpn = de::ComponentManager::getVelocityComponent(rect1VelCpnID);
-//
-//		de::fvec3 rect1Transl = rect1TransfCpn->getTranslation();
-//		de::fvec3 rect1Vel = rect1VelCpn->getVelocity();
-//
-//		float colW = fabs(collision.w);
-//		float colH = fabs(collision.h);
-//
-//		//== g_AudioSource.play();
-//
-//		// Une pratique assez courante de repositionner un objet pouvant se déplacer lorsqu'il touche un objet statique
-//		// est de le déplacer par rapport à l'axe le plus petit du rectangle de collision,
-//		// ainsi, si la largeur du rectangle de collision est plus petite que la hauteur, l'objet sera déplacé sur l'axe X, inversemment dans le cas
-//		// où la hauteur est plus petite que la largeur.
-//
-//		// Si la collision est plus petite en largeur, on déplace le joueur sur l'axe X.
-//		if(colW < colH) {
-//			// Si le joueur se déplace vers la droite.
-//			if(diff.x > 0) {
-//				rect1Transl.x -= colW;
-//				rect1TransfCpn->setTranslation(rect1Transl);
-//				rect1CollCpn->contour.pos.x -= colW;
-//			// Si le joueur se déplace vers la gauche.
-//			}else {
-//				rect1Transl.x += colW;
-//				rect1TransfCpn->setTranslation(rect1Transl);
-//				rect1CollCpn->contour.pos.x += colW;
-//			}
-//
-//			rect1Vel.x = -rect1Vel.x;
-//			rect1VelCpn->setVelocity(rect1Vel);
-//		}
-//		// Sinon on déplace le joueur sur l'axe Y.
-//		else {
-//			// Si le joueur se déplace vers le bas.
-//			if(diff.y > 0) {
-//				rect1Transl.y -= colH;
-//				rect1TransfCpn->setTranslation(rect1Transl);
-//				rect1CollCpn->contour.pos.y -= colH;
-//			// Si le joueur se déplace vers le haut.
-//			}else {
-//				rect1Transl.y += colH;
-//				rect1TransfCpn->setTranslation(rect1Transl);
-//				rect1CollCpn->contour.pos.y += colH;
-//			}
-//			rect1Vel.y = -rect1Vel.y;
-//			rect1VelCpn->setVelocity(rect1Vel);
-//		}
-//	}
-}
-
-void collider_out_callback(deep::entity_collection_id collectionID, deep::entity_id entity1, deep::entity_id entity2, const deep::fvec2 &difference)
-{
-    //de::entity_id playerID;
-    //de::entity_id rect1ID;
-
-    //// Diff permet de savoir dans quelle direction le joueur va.
-    //de::fvec2 diff = difference;
-
-    //// Vérifie si une des entités est le joueur ou le rectangle 1.
-    //if(entity1 == g_Player.getEntityID()) {
-    //	playerID = entity1;
-
-    //	if(entity2 == g_Rect1.getEntityID()) {
-    //		rect1ID = entity2;
-    //	}else
-    //		rect1ID = de::badID;
-    //}else if(entity2 == g_Player.getEntityID()) {
-    //	playerID = entity2;
-
-    //	if(entity1 == g_Rect1.getEntityID())
-    //		rect1ID = entity1;
-    //	else
-    //		rect1ID = de::badID;
-
-    //	diff = de::fvec2::inv(diff);
-    //}else {
-    //	playerID = de::badID;
-
-    //	if(entity1 == g_Rect1.getEntityID()) {
-    //		rect1ID = entity1;
-    //	}else if(entity2 == g_Rect1.getEntityID()) {
-    //		rect1ID = entity2;
-    //		diff = de::fvec2::inv(diff);
-    //	}else
-    //		rect1ID = de::badID;
-    //}
-
-    //if(playerID != de::badID && rect1ID != de::badID) {
-    //	g_CollisionPlayerRectEnabled = true;
-    //}
 }
 
 #include <iostream>
@@ -417,8 +206,8 @@ int main()
     printf("pwd: %s\n", deep::core::getPwd());
 
     deep::window win(TARGET_MS, TARGET_FPS);
-    win.setEventCallback(event_callback);
-    win.setUpdateCallback(update_callback);
+    win.set_event_callback(event_callback);
+    win.set_update_callback(update_callback);
     errorStatus = deep::window::create(win, "Creation UI [" DE_VERSION "]", deep::size(WINDOW_WIDTH, WINDOW_HEIGHT));
 
     if(errorStatus != deep::error_status::NoError)
@@ -442,9 +231,6 @@ int main()
     deep::im_gui_window::init(win);
 
     deep::scene_id sceneID = deep::scene::createScene("scn_main");
-    deep::scene *scene = deep::scene::getScene(sceneID);
-    scene->setColliderCallback(collider_callback);
-    scene->setColliderOutCallback(collider_out_callback);
 
     deep::entity_collection_id collectionID = deep::scene::getEntityCollection(sceneID);
 
@@ -669,7 +455,7 @@ int main()
 
     deep::scene::setActiveScene(sceneID);
 
-    win.setShowingDebugPanel(true);
+    win.set_showing_debug_panel(true);
 
     // Lance la boucle du jeu, bloquant.
     win.run();

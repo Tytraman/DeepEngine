@@ -437,8 +437,6 @@ namespace deep
             {
                 textureManager->bind(texture, 0);
 
-                int curr = textureManager->currently_bound();
-
                 renderer.draw(vboManager->get_vertices_number(frb.vbo()));
             }
         }

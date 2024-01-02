@@ -127,7 +127,7 @@ namespace deep
         renderbuffer_manager::resize
         ============================
         */
-        bool renderbuffer_manager::resize(int width, int height)
+        bool renderbuffer_manager::resize()
         {
             hash_entry<GLuint> *el = m_Renderbuffers[m_CurrentID];
             if(el == nullptr)

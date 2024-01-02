@@ -1,5 +1,5 @@
 # Indique la version minimum de CMake requise pour exécuter le script.
-cmake_minimum_required(VERSION 3.8)
+cmake_minimum_required(VERSION 3.15)
 
 # Indique les versions à utiliser des langages.
 set(CMAKE_CXX_STANDARD 17)
@@ -7,6 +7,8 @@ set(CMAKE_CXX_STANDARD 17)
 # set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/Build")
 
 enable_language(C ASM_MASM)
+
+project(${CORE_PROJECT} VERSION 0.0.1)
 
 if(MSVC)
     # add_compile_options(/fsanitize=address)
@@ -19,8 +21,6 @@ endif()
 
 # Inclue les variables partagées.
 include("${CMAKE_CURRENT_LIST_DIR}/../variables.cmake")
-
-project(${CORE_PROJECT} VERSION 0.0.1)
 
 set(THIRD_PARTY_LIBS "${CMAKE_CURRENT_LIST_DIR}/../Third-party/Libs")
 set(ZLIB_BUILD_DIRECTORY "${THIRD_PARTY_LIBS}/Build/zlib")
@@ -108,6 +108,10 @@ file(GLOB CORE_SOURCES
 
 
 add_library(${CORE_PROJECT} SHARED ${CORE_HEADERS} ${CORE_SOURCES})
+
+if(MSVC)
+    target_compile_options(${CORE_PROJECT} PRIVATE /W4 /WX)
+endif()
 
 target_include_directories(${CORE_PROJECT} PRIVATE ${CORE_INCLUDE})
 target_include_directories(${CORE_PROJECT} PUBLIC

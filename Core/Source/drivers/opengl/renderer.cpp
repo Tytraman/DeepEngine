@@ -25,7 +25,7 @@ namespace deep
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 
-            dest.m_Context = SDL_GL_CreateContext(window->getWindow());
+            dest.m_Context = SDL_GL_CreateContext(window->get_window());
 
             if(dest.m_Context == NULL)
                 return false;
@@ -54,7 +54,7 @@ namespace deep
         {
             ImGui::Render();
             ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-            SDL_GL_SwapWindow(m_Window->getWindow());
+            SDL_GL_SwapWindow(m_Window->get_window());
         }
 
         void gl_renderer::set_clear_color(const colora color)
