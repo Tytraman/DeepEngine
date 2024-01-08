@@ -60,7 +60,7 @@ namespace deep
             /// @param height          Hauteur du rectangle.
             /// @param color           Couleur du rectangle.
             /// @return                L'entité nouvellement créée ou \ref entity::bad() si une erreur est survenue.
-            DE_API static entity createRectangle(
+            DE_API static entity_manager::entity createRectangle(
                 const char *name,
                 GL3::gl_id program,
                 entity_collection_id collectionID,
@@ -70,7 +70,7 @@ namespace deep
                 const colora &color,
                 bool collidable = false);
 
-            DE_API static entity createRectangleTexture(
+            DE_API static entity_manager::entity createRectangleTexture(
                 const char *name,
                 GL3::gl_id program,
                 entity_collection_id collectionID,
@@ -82,7 +82,7 @@ namespace deep
                 uint8_t textureUnit,
                 bool collidable = false);
 
-            DE_API static entity create3DRectangle(
+            DE_API static entity_manager::entity create3DRectangle(
                 const char *name,
                 GL3::gl_id program,
                 entity_collection_id collectionID,
@@ -99,7 +99,7 @@ namespace deep
                 bool collidable = false
             );
             
-            DE_API static entity create_3D_rectangle_texture(
+            DE_API static entity_manager::entity create_3D_rectangle_texture(
                 const char *name,
                 GL3::gl_id program,
                 entity_collection_id collectionID,
@@ -129,7 +129,7 @@ namespace deep
                 const cube_texture_points &texturePoints = cube_texture_points()
             );
 
-            DE_API static entity create_cubemap(
+            DE_API static entity_manager::entity create_cubemap(
                 const char *name,
                 GL3::gl_id program,
                 entity_collection_id collectionID,

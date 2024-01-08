@@ -29,7 +29,7 @@ namespace deep {
 
 #endif	// else DE_WINDOWS
 
-    using de_id = uint32_t;
+    using de_id = uint64_t;
 
     constexpr size_t nothing = static_cast<size_t>(-1); ///< Quand rien n'a été trouvé.
     constexpr de_id badID = static_cast<de_id>(-1);     ///< Quand un ID n'est pas valide.

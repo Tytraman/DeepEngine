@@ -42,6 +42,9 @@ namespace deep
     */
     char *string_utils::copy(const char *source)
     {
+        if(source == nullptr)
+            return nullptr;
+
         size_t len = strlen(source);
         char *dest = (char *) mem::alloc(len + 1);
 
@@ -187,6 +190,9 @@ namespace deep
     */
     size_t string_utils::length(const char *str)
     {
+        if(str == nullptr)
+            return 0;
+
         size_t len = 0;
 
         while(str[len] != '\0')

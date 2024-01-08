@@ -75,13 +75,13 @@ namespace deep
         if(s == nullptr)
             return;
 
-        scene_id scene = scene::getActiveSceneID();
+        scene_id scene = scene::get_active_scene_id();
         if(scene == badID)
             return;
 
         entity_manager *entityManager = entity_manager::get_singleton();
 
-        entity_collection_id collection = scene::getEntityCollection(scene);
+        entity_collection_id collection = scene::get_entity_collection(scene);
 
         list<entity_id> entities;
         entityManager->query(collection, s->value.componentTypesToInclude, s->value.componentTypesToExclude, entities);
@@ -102,13 +102,13 @@ namespace deep
         size_t length = m_EnabledSystems.count();
         system_id system;
 
-        scene_id scene = scene::getActiveSceneID();
+        scene_id scene = scene::get_active_scene_id();
         if(scene == badID)
             return;
 
         entity_manager *entityManager = entity_manager::get_singleton();
 
-        entity_collection_id collection = scene::getEntityCollection(scene);
+        entity_collection_id collection = scene::get_entity_collection(scene);
 
         list<entity_id> entities;
 
@@ -129,13 +129,13 @@ namespace deep
     }
 
     /*
-    =================================
+    ==================================
     system_manager::accelerationSystem
-    =================================
+    ==================================
     */
     void system_manager::accelerationSystem()
     {
-        scene_id sceneID = scene::getActiveSceneID();
+        scene_id sceneID = scene::get_active_scene_id();
 
         // Si aucune scène n'est active, cela ne sert à rien de continuer la procédure.
         if(sceneID == badID)
@@ -145,7 +145,7 @@ namespace deep
         entity_manager *entityManager = entity_manager::get_singleton();
 
         list<entity_id> entities;
-        entity_collection_id collectionID = scene::getEntityCollection(sceneID);
+        entity_collection_id collectionID = scene::get_entity_collection(sceneID);
 
         // Query toutes les entités possédant une vélocité et une accélération.
         entityManager->query(collectionID, VelocityComponentType | AccelerationComponentType, 0, entities);
@@ -159,13 +159,13 @@ namespace deep
         {
             entity = entities[i];
 
-            component_id velCpnID = entityManager->getComponentID(collectionID, entity, VelocityComponentType);
+            component_id velCpnID = entityManager->get_component_id(collectionID, entity, VelocityComponentType);
             velocity_component *velCpn = componentManager->getVelocityComponent(velCpnID);
 
             if(velCpn == nullptr)
                 continue;
 
-            component_id accCpnID = entityManager->getComponentID(collectionID, entity, AccelerationComponentType);
+            component_id accCpnID = entityManager->get_component_id(collectionID, entity, AccelerationComponentType);
             acceleration_component *accCpn = componentManager->getAccelerationComponent(accCpnID);
 
             if(accCpn == nullptr)
@@ -183,7 +183,7 @@ namespace deep
     */
     void system_manager::velocitySystem()
     {
-        scene_id sceneID = scene::getActiveSceneID();
+        scene_id sceneID = scene::get_active_scene_id();
 
         // Si aucune scène n'est active, cela ne sert à rien de continuer la procédure.
         if(sceneID == badID)
@@ -193,7 +193,7 @@ namespace deep
         entity_manager *entityManager = entity_manager::get_singleton();
 
         list<entity_id> entities;
-        entity_collection_id collectionID = scene::getEntityCollection(sceneID);
+        entity_collection_id collectionID = scene::get_entity_collection(sceneID);
 
         // Query toutes les entités possédant une vélocité et une transformation.
         entityManager->query(collectionID, TransformationComponentType | VelocityComponentType, 0, entities);
@@ -207,14 +207,14 @@ namespace deep
         {
             entity = entities[i];
 
-            component_id transformationComponentID = entityManager->getComponentID(collectionID, entity, TransformationComponentType);
+            component_id transformationComponentID = entityManager->get_component_id(collectionID, entity, TransformationComponentType);
 
             transformation_component *transformationComponent = componentManager->getTransformationComponent(transformationComponentID);
 
             if(transformationComponent == nullptr)
                 continue;
 
-            component_id velocityComponentID = entityManager->getComponentID(collectionID, entity, VelocityComponentType);
+            component_id velocityComponentID = entityManager->get_component_id(collectionID, entity, VelocityComponentType);
 
             velocity_component *velocityComponent = componentManager->getVelocityComponent(velocityComponentID);
 
@@ -228,7 +228,7 @@ namespace deep
             transformationComponent->setTranslation(translation);
 
             // Si l'entité possède une collision, on met à jour sa position aussi.
-            component_id colliderComponentID = entityManager->getComponentID(collectionID, entity, ColliderComponentType);
+            component_id colliderComponentID = entityManager->get_component_id(collectionID, entity, ColliderComponentType);
             if(colliderComponentID != badID)
             {
                 collider_component *colliderComponent = componentManager->getColliderComponent(colliderComponentID);
@@ -244,20 +244,20 @@ namespace deep
     */
     void system_manager::colliderSystem()
     {
-        scene_id sceneID = scene::getActiveSceneID();
+        scene_id sceneID = scene::get_active_scene_id();
 
         // Si aucune scène n'est active, cela ne sert à rien de continuer la procédure.
         if(sceneID == badID)
             return;
 
-        scene *scene = scene::getScene(sceneID);
+        scene *scene = scene::get_scene(sceneID);
 
         // scene n'est pas censée pouvoir valoir nullptr, mais ne sait-on jamais.
         if(scene == nullptr)
             return;
 
-        collider_in_callback callback = scene->getColliderCallback();
-        collider_out_callback outCallback = scene->getColliderOutCallback();
+        collider_in_callback callback = scene->get_collider_callback();
+        collider_out_callback outCallback = scene->get_collider_out_callback();
         
         // S'il n'y a pas de callback à appeler alors ça ne sert à rien de trouver les collisions.
         if(callback == nullptr || outCallback == nullptr)
@@ -267,7 +267,7 @@ namespace deep
         entity_manager *entityManager = entity_manager::get_singleton();
 
         list<entity_id> entities;
-        entity_collection_id collectionID = scene::getEntityCollection(sceneID);
+        entity_collection_id collectionID = scene::get_entity_collection(sceneID);
 
         // Query toutes les entités possédant une boîte de collision.
         entityManager->query(collectionID, ColliderComponentType, 0, entities);
@@ -285,7 +285,7 @@ namespace deep
         {
             entity1 = entities[i];
 
-            component_id colliderComponentID1 = entityManager->getComponentID(collectionID, entity1, ColliderComponentType);
+            component_id colliderComponentID1 = entityManager->get_component_id(collectionID, entity1, ColliderComponentType);
 
             collider_component *colliderComponent1 = componentManager->getColliderComponent(colliderComponentID1);
 
@@ -302,7 +302,7 @@ namespace deep
             {
                 entity2 = entities[j];
 
-                component_id colliderComponentID2 = entityManager->getComponentID(collectionID, entity2, ColliderComponentType);
+                component_id colliderComponentID2 = entityManager->get_component_id(collectionID, entity2, ColliderComponentType);
                 collider_component *colliderComponent2 = componentManager->getColliderComponent(colliderComponentID2);
 
                 if(colliderComponent2 == nullptr)
@@ -388,12 +388,12 @@ namespace deep
         // Si aucune scène n'est active, cela ne sert à rien de continuer la procédure.
         if(sceneID != badID)
         {
-            scene *scene = scene::getScene(sceneID);
+            scene *scene = scene::get_scene(sceneID);
 
-            Camera &cam = scene->getCamera();
+            Camera &cam = scene->get_attached_camera();
 
             static list<entity_id> entities;
-            entity_collection_id collection = scene::getEntityCollection(sceneID);
+            entity_collection_id collection = scene::get_entity_collection(sceneID);
 
             // Récupère toutes les entités dessinables et ayant une transformation.
             entityManager->query(collection, DrawableComponentType | TransformationComponentType, 0, entities);
@@ -403,12 +403,15 @@ namespace deep
 
             component_manager *componentManager = component_manager::get_singleton();
 
+            list_iterator<entity_id> begin = entities.begin();
+            list_iterator<entity_id> end = entities.end();
+
             // Parcourt toutes les entités précédemment récupérées.
-            for(auto ent : entities)
+            for(; begin != end; ++begin)
             {
                 // Récupère les composants de l'entité.
-                drawableComponentID       = entityManager->getComponentID(collection, ent, DrawableComponentType);
-                transformationComponentID = entityManager->getComponentID(collection, ent, TransformationComponentType);
+                drawableComponentID       = entityManager->get_component_id(*begin, collection, DrawableComponentType);
+                transformationComponentID = entityManager->get_component_id(*begin, collection, TransformationComponentType);
 
                 drawable_component *drawableComponent = componentManager->getDrawableComponent(drawableComponentID);
                 transformation_component *transformationComponent = componentManager->getTransformationComponent(transformationComponentID);

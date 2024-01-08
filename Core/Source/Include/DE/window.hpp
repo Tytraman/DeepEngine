@@ -7,7 +7,7 @@
 #include "DE/events.hpp"
 #include "DE/renderer.hpp"
 #include "DE/memory/list.hpp"
-#include "DE/imgui/deimgui.hpp"
+#include "DE/gui/deimgui.hpp"
 #include "DE/drivers/opengl/framerenderbuffer.hpp"
 #include "DE/drivers/opengl/renderer.hpp"
 

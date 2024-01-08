@@ -11,90 +11,50 @@
 namespace deep
 {
 
-    class entity_manager;
-
-    class DE_API entity
-    {
-
-        private:
-            entity_collection_id  m_CollectionID;
-            entity_id m_EntityID;
-
-            friend entity_manager;
-
-        public:
-            static entity bad();
-
-
-            bool isOK() const;
-
-            entity_collection_id getCollectionID() const;
-            entity_id getEntityID() const;
-
-        protected:
-            entity(entity_collection_id collectionID, entity_id entityID);
-
-        public:
-            entity() = delete;
-
-    };
-
-    using entity_enum_callback = void (*)(entity_collection_id collection, entity_id entity);
-
-    /*
-    ===========
-    entity::bad
-    ===========
-    */
-    inline entity entity::bad()
-    {
-        return entity(badID, badID);
-    }
-
-    /*
-    ============
-    entity::isOK
-    ============
-    */
-    inline bool entity::isOK() const
-    {
-        return (m_CollectionID != badID && m_EntityID != badID);
-    }
-
-    /*
-    =======================
-    entity::getCollectionID
-    =======================
-    */
-    inline scene_id entity::getCollectionID() const
-    {
-        return m_CollectionID;
-    }
-
-    /*
-    ===================
-    entity::getEntityID
-    ===================
-    */
-    inline entity_id entity::getEntityID() const
-    {
-        return m_EntityID;
-    }
-
-    /// @struct entity
-    /// @brief	Une entité peut contenir plusieurs composants et est représentée par un ID.
-    struct entity_item
-    {
-        entity ent;
-        list<component_id> components;      ///< Contient tous les composants que l'entité possède.
-        component_type componentsType;      ///< Masque des types de composants attribués à l'entité.
-
-        entity_item(const entity &ent);
-    };
-
     /// @brief	Classe qui permet la gestion des entités, de leur création à leur destruction, en passant par leur modification etc.
     class entity_manager
     {
+
+        public:
+            class entity
+            {
+
+                public:
+                    DE_API static entity bad();
+
+                    DE_API bool is_ok() const;
+
+                    DE_API entity_collection_id get_collection_id() const;
+                    DE_API entity_id get_entity_id() const;
+                    DE_API string &get_name();
+
+                private:
+                    entity_collection_id  m_CollectionID;
+                    entity_id m_EntityID;
+                    string m_Name;
+
+                    friend entity_manager;
+
+                protected:
+                    entity(const char *name, entity_collection_id collectionID, entity_id entityID);
+
+                public:
+                    entity() = delete;
+
+            };
+
+            using entity_enum_callback = void (*)(entity &ent);
+
+            /// @struct entity
+            /// @brief	Une entité peut contenir plusieurs composants et est représentée par un ID.
+            struct entity_item
+            {
+                entity ent;
+                list<component_id> components;      ///< Contient tous les composants que l'entité possède.
+                component_type componentsType;      ///< Masque des types de composants attribués à l'entité.
+
+                DE_API entity_item(const entity &ent);
+            };
 
         public:
             DE_API static entity_manager *get_singleton();
@@ -104,11 +64,10 @@ namespace deep
 
             DE_API entity_collection_id create_entity_collection();
 
-            /// @brief	Crée une entité.
-            /// @return L'entité nouvellement créée.
-            DE_API entity create_entity(entity_collection_id collection);
 
+            DE_API entity create_entity(const char *name, entity_collection_id collection);
             DE_API entity create_entity(
+                const char *name,
                 entity_collection_id collection,
                 const polygon &pol,
                 GL3::gl_id program,
@@ -117,18 +76,18 @@ namespace deep
                 GL3::gl_id texture = GL3::texture_manager::get_singleton()->get_white_texture(),
                 uint8_t textureUnit = 0);
 
-            /// @brief		Supprime une entité de la liste.
-            DE_API void destroyEntity(const entity &entity);
-            DE_API void destroyEntity(entity_collection_id collection, entity_id entity);
-            DE_API void destroyAllEntities(entity_collection_id collection);
+            DE_API void destroy_entity(uint64_t keyName, entity_collection_id collectionID);
+            DE_API void destroy_entity(const char *entityName, entity_collection_id collectionID);
+            DE_API void destroy_entity(const entity &entity);
+            DE_API void destroy_all_entities(entity_collection_id collection);
 
-            DE_API bool mustBeDeleted(entity_collection_id collection, entity_id entity);
-            DE_API void deleteEntities();
+            DE_API bool must_be_deleted(uint64_t keyName, entity_collection_id collectionID);
+            DE_API bool must_be_deleted(const char *entityName, entity_collection_id collectionID);
 
-            /// @brief				Attache un composant à une entité.
-            /// @param entity		L'entité à laquelle attacher le composant.
-            /// @return				\c true si le composant à bien été attaché.
-            DE_API bool attachComponent(const entity &entity, component_id component);
+            DE_API void delete_entities();
+
+            DE_API bool attach_component(uint64_t keyName, entity_collection_id collectionID, component_id component);
+            DE_API bool attach_component(const char *entityName, entity_collection_id collectionID, component_id component);
 
             /// @brief							Cherche toutes les entités qui respectent les conditions d'inclusions et les ajoute dans la liste destination.
             /// @param collection				ID de la collection d'entités dans laquelle chercher.
@@ -137,8 +96,8 @@ namespace deep
             /// @param dest						Pointeur vers la liste qui stockera les entités répondant aux conditions.
             DE_API void query(entity_collection_id collection, component_type componentTypesToInclude, component_type componentTypesToExclude, list<entity_id> &dest);
 
-            DE_API component_id getComponentID(entity_collection_id collection, entity_id entity, component_type componentType);
-            DE_API component_id getComponentID(const entity &entity, component_type componentType);
+            DE_API component_id get_component_id(uint64_t keyName, entity_collection_id collectionID, component_type type);
+            DE_API component_id get_component_id(const char *entityName, entity_collection_id collection, component_type componentType);
 
         private:
             entity_manager();
@@ -147,23 +106,107 @@ namespace deep
             hash_table<entity_id> m_NextEntityID;                ///< À chaque nouvelle entité créée, son ID sera celle de cette variable.
             hash_table<list<entity_id>> m_EntitiesToDelete;      ///< Contient la liste des entités à détruire pour chaque collection.
 
-        private:
-            hash_entry<entity_item> *__createEntity(entity_collection_id collection);
-
         public:
             entity_manager(const entity_manager &) = delete;
             entity_manager(const entity_manager &&) = delete;
 
     };
 
+    
+
+    /*
+    ==============================
+    entity_manager::destroy_entity
+    ==============================
+    */
+    inline void entity_manager::destroy_entity(const char *entityName, entity_collection_id collectionID)
+    {
+        destroy_entity(m_Collections.getHashFunction()(entityName), collectionID);
+    }
+
+    /*
+    ==============================
+    entity_manager::destroy_entity
+    ==============================
+    */
+    inline void entity_manager::destroy_entity(const entity &entity)
+    {
+        destroy_entity(entity.m_EntityID, entity.m_CollectionID);
+    }
+
+    /*
+    ===============================
+    entity_manager::must_be_deleted
+    ===============================
+    */
+    inline bool entity_manager::must_be_deleted(const char *entityName, entity_collection_id collectionID)
+    {
+        return must_be_deleted(m_EntitiesToDelete.getHashFunction()(entityName), collectionID);
+    }
+
+    /*
+    ================================
+    entity_manager::get_component_id
+    ================================
+    */
+    inline component_id entity_manager::get_component_id(const char *entityName, entity_collection_id collection, component_type componentType)
+    {
+        return get_component_id(m_Collections.getHashFunction()(entityName), collection, componentType);
+    }
+
+    /*
+    ================================
+    entity_manager::attach_component
+    ================================
+    */
+    inline bool entity_manager::attach_component(const char *entityName, entity_collection_id collectionID, component_id component)
+    {
+        return attach_component(m_Collections.getHashFunction()(entityName), collectionID, component);
+    }
+
+    /*
+    ===========================
+    entity_manager::entity::bad
+    ===========================
+    */
+    inline entity_manager::entity entity_manager::entity::bad()
+    {
+        return entity(nullptr, badID, badID);
+    }
+
     /*
     =============================
-    entity_manager::getComponentID
+    entity_manager::entity::is_ok
     =============================
     */
-    inline component_id entity_manager::getComponentID(const entity &entity, component_type componentType)
+    inline bool entity_manager::entity::is_ok() const
     {
-        return getComponentID(entity.m_CollectionID, entity.m_EntityID, componentType);
+        return m_EntityID != badID && m_CollectionID != badID;
+    }
+
+    /*
+    =========================================
+    entity_manager::entity::get_collection_id
+    =========================================
+    */
+    inline scene_id entity_manager::entity::get_collection_id() const
+    {
+        return m_CollectionID;
+    }
+
+    /*
+    =====================================
+    entity_manager::entity::get_entity_id
+    =====================================
+    */
+    inline entity_id entity_manager::entity::get_entity_id() const
+    {
+        return m_EntityID;
+    }
+
+    inline string &entity_manager::entity::get_name()
+    {
+        return m_Name;
     }
 
 }

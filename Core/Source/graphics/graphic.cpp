@@ -67,7 +67,7 @@ namespace deep
     graphic::createRectangle
     ========================
     */
-    entity graphic::createRectangle(
+    entity_manager::entity graphic::createRectangle(
         const char *name,
         GL3::gl_id program,
         entity_collection_id collectionID,
@@ -113,9 +113,9 @@ namespace deep
         vboManager->add_attribute(1, GL3::gl_attrib_components_number::x4, GL3::gl_type::Float, 8 * sizeof(float), 2 * sizeof(float));
         vboManager->add_attribute(2, GL3::gl_attrib_components_number::x2, GL3::gl_type::Float, 8 * sizeof(float), 6 * sizeof(float));
 
-        entity entity = entityManager->create_entity(collectionID);
-        entityManager->attachComponent(entity, drawableComponentID);
-        entityManager->attachComponent(entity, transformationComponentID);
+        entity_manager::entity entity = entityManager->create_entity(name, collectionID);
+        entityManager->attach_component(name, collectionID, drawableComponentID);
+        entityManager->attach_component(name, collectionID, transformationComponentID);
 
         if(collidable)
         {
@@ -127,7 +127,7 @@ namespace deep
             colliderComponent->contour.w = width;
             colliderComponent->contour.h = height;
 
-            entityManager->attachComponent(entity, colliderComponentID);
+            entityManager->attach_component(name, collectionID, colliderComponentID);
         }
 
         return entity;
@@ -138,7 +138,7 @@ namespace deep
     graphic::createRectangleTexture
     ===============================
     */
-    entity graphic::createRectangleTexture(
+    entity_manager::entity graphic::createRectangleTexture(
         const char *name,
         GL3::gl_id program,
         entity_collection_id collectionID,
@@ -184,9 +184,9 @@ namespace deep
         vboManager->add_attribute(1, GL3::gl_attrib_components_number::x4, GL3::gl_type::Float, 8 * sizeof(float), 2 * sizeof(float));
         vboManager->add_attribute(2, GL3::gl_attrib_components_number::x2, GL3::gl_type::Float, 8 * sizeof(float), 6 * sizeof(float));
 
-        entity entity = entityManager->create_entity(collectionID);
-        entityManager->attachComponent(entity, drawableComponentID);
-        entityManager->attachComponent(entity, transformationComponentID);
+        entity_manager::entity entity = entityManager->create_entity(name, collectionID);
+        entityManager->attach_component(name, collectionID, drawableComponentID);
+        entityManager->attach_component(name, collectionID, transformationComponentID);
 
         if(collidable)
         {
@@ -198,7 +198,7 @@ namespace deep
             colliderComponent->contour.w = width;
             colliderComponent->contour.h = height;
 
-            entityManager->attachComponent(entity, colliderComponentID);
+            entityManager->attach_component(name, collectionID, colliderComponentID);
         }
 
         return entity;
@@ -209,7 +209,7 @@ namespace deep
     graphic::create3DRectangle
     ==========================
     */
-    entity graphic::create3DRectangle(
+    entity_manager::entity graphic::create3DRectangle(
         const char *name,
         GL3::gl_id program,
         entity_collection_id collectionID,
@@ -314,9 +314,9 @@ namespace deep
 
         entity_manager *entityManager = entity_manager::get_singleton();
 
-        entity entity = entityManager->create_entity(collectionID);
-        entityManager->attachComponent(entity, drawableComponentID);
-        entityManager->attachComponent(entity, transformationComponentID);
+        entity_manager::entity entity = entityManager->create_entity(name, collectionID);
+        entityManager->attach_component(name, collectionID, drawableComponentID);
+        entityManager->attach_component(name, collectionID, transformationComponentID);
 
         if(collidable)
         {
@@ -328,7 +328,7 @@ namespace deep
             colliderComponent->contour.w = width;
             colliderComponent->contour.h = height;
 
-            entityManager->attachComponent(entity, colliderComponentID);
+            entityManager->attach_component(name, collectionID, colliderComponentID);
         }
 
         return entity;
@@ -339,7 +339,7 @@ namespace deep
     graphic::create_3D_rectangle_texture
     =================================
     */
-    entity graphic::create_3D_rectangle_texture(
+    entity_manager::entity graphic::create_3D_rectangle_texture(
         const char *name,
         GL3::gl_id program,
         entity_collection_id collectionID,
@@ -444,9 +444,9 @@ namespace deep
 
         entity_manager *entityManager = entity_manager::get_singleton();
 
-        entity entity = entityManager->create_entity(collectionID);
-        entityManager->attachComponent(entity, drawableComponentID);
-        entityManager->attachComponent(entity, transformationComponentID);
+        entity_manager::entity entity = entityManager->create_entity(name, collectionID);
+        entityManager->attach_component(name, collectionID, drawableComponentID);
+        entityManager->attach_component(name, collectionID, transformationComponentID);
 
         if(collidable)
         {
@@ -458,7 +458,7 @@ namespace deep
             colliderComponent->contour.w = width;
             colliderComponent->contour.h = height;
 
-            entityManager->attachComponent(entity, colliderComponentID);
+            entityManager->attach_component(name, collectionID, colliderComponentID);
         }
 
         return entity;
@@ -560,7 +560,7 @@ namespace deep
         return pol;
     }
 
-    entity graphic::create_cubemap(
+    entity_manager::entity graphic::create_cubemap(
         const char *name,
         GL3::gl_id program,
         entity_collection_id collectionID,
@@ -647,9 +647,9 @@ namespace deep
 
         entity_manager *entityManager = entity_manager::get_singleton();
 
-        entity entity = entityManager->create_entity(collectionID);
-        entityManager->attachComponent(entity, drawableComponentID);
-        entityManager->attachComponent(entity, transformationComponentID);
+        entity_manager::entity entity = entityManager->create_entity(name, collectionID);
+        entityManager->attach_component(name, collectionID, drawableComponentID);
+        entityManager->attach_component(name, collectionID, transformationComponentID);
 
         if(collidable)
         {
@@ -661,7 +661,7 @@ namespace deep
             colliderComponent->contour.w = width;
             colliderComponent->contour.h = height;
 
-            entityManager->attachComponent(entity, colliderComponentID);
+            entityManager->attach_component(name, collectionID, colliderComponentID);
         }
 
         return entity;

@@ -7,8 +7,8 @@
 #include <DE/ecs/entity.hpp>
 #include <DE/memory/list.hpp>
 #include <DE/vec.hpp>
-#include <DE/graphics/shape.hpp>
-#include <DE/rendering/camera.hpp>
+#include "DE/graphics/shape.hpp"
+#include "DE/rendering/camera.hpp"
 
 namespace deep
 {
@@ -23,23 +23,23 @@ namespace deep
 
             /// @brief	Crée une scène.
             /// @return L'ID de la scène nouvellement créée.
-            DE_API static scene_id createScene(const char *name);
+            DE_API static scene_id create_scene(const char *name);
 
             /// @brief			Supprime une scène.
             /// @param scene	L'ID de la scène à supprimer.
-            DE_API static void deleteScene(scene_id scn);
-            DE_API static void deleteAllScenes();
+            DE_API static void delete_scene(scene_id scn);
+            DE_API static void delete_all_scenes();
 
-            DE_API static bool mustBeDeleted(scene_id scn);
-            DE_API static void deleteScenes();
+            DE_API static bool must_be_deleted(scene_id scn);
+            DE_API static void delete_scenes();
 
-            DE_API static void setActiveScene(scene_id scn);
+            DE_API static void set_active_scene(scene_id scn);
 
             /// @brief	Crée une entité dans la scène.
             /// @return L'entité nouvellement créé.
-            DE_API static entity createEntity(scene_id scn);
+            //DE_API static entity create_entity(scene_id scn);
 
-            DE_API static void enumScenes(enum_callback callback);
+            DE_API static void enum_scenes(enum_callback callback);
 
 
             //===== GETTERS =====//
@@ -47,28 +47,28 @@ namespace deep
             /// @brief       Récupère l'ID de la collection d'entités liée à la scène spécifiée.
             /// @param scene L'ID de la scène.
             /// @return      L'ID de la collection d'entités si la scène existe sinon \ref badID.
-            DE_API static entity_collection_id getEntityCollection(scene_id scene);
+            DE_API static entity_collection_id get_entity_collection(scene_id scene);
 
             /// @brief  Récupère l'ID de la scène actuellement active.
             /// @return L'ID de la scène active ou \ref badID si aucune scène n'est active.
-            DE_API static scene_id getActiveSceneID();
+            DE_API static scene_id get_active_scene_id();
 
             /// @brief       Récupère un pointeur vers la structure de la scène spécifié.
             /// @param scene L'ID de la scène.
             /// @return      Le pointeur vers la structure si la scène existe ou \c nullptr si elle n'existe pas.
-            DE_API static scene *getScene(scene_id scene);
+            DE_API static scene *get_scene(scene_id scene);
 
-            DE_API collider_in_callback getColliderCallback() const;
-            DE_API collider_out_callback getColliderOutCallback() const;
+            DE_API collider_in_callback get_collider_callback() const;
+            DE_API collider_out_callback get_collider_out_callback() const;
 
-            DE_API Camera &getCamera();
+            DE_API Camera &get_attached_camera();
 
-            DE_API const char *getName() const;
+            DE_API const char *get_name() const;
 
             //===== SETTERS =====//
 
-            DE_API void setColliderCallback(collider_in_callback callback);
-            DE_API void setColliderOutCallback(collider_out_callback callback);
+            DE_API void set_collider_callback(collider_in_callback callback);
+            DE_API void set_collider_out_callback(collider_out_callback callback);
             
         private:
             scene(const char *name);
@@ -93,15 +93,15 @@ namespace deep
     inline void scene::shutdown()
     {
         m_ScenesToDelete.free();
-        deleteAllScenes();
+        delete_all_scenes();
     }
 
     /*
     ====================
-    scene::mustBeDeleted
+    scene::must_be_deleted
     ====================
     */
-    inline bool scene::mustBeDeleted(scene_id scn)
+    inline bool scene::must_be_deleted(scene_id scn)
     {
         return m_ScenesToDelete.add(scn);
     }
@@ -111,7 +111,7 @@ namespace deep
     scene::setCurrentScene
     ======================
     */
-    inline void scene::setActiveScene(scene_id scn)
+    inline void scene::set_active_scene(scene_id scn)
     {
         m_ActiveScene = scn;
     }
@@ -121,62 +121,62 @@ namespace deep
     scene::getActiveScene
     =====================
     */
-    inline scene_id scene::getActiveSceneID()
+    inline scene_id scene::get_active_scene_id()
     {
         return m_ActiveScene;
     }
 
     /*
     ==========================
-    scene::getColliderCallback
+    scene::get_collider_callback
     ==========================
     */
-    inline collider_in_callback scene::getColliderCallback() const
+    inline collider_in_callback scene::get_collider_callback() const
     {
         return m_ColliderCallback;
     }
 
     /*
     =============================
-    scene::getColliderOutCallback
+    scene::get_collider_out_callback
     =============================
     */
-    inline collider_out_callback scene::getColliderOutCallback() const
+    inline collider_out_callback scene::get_collider_out_callback() const
     {
         return m_ColliderOutCallback;
     }
 
-    inline Camera &scene::getCamera()
+    inline Camera &scene::get_attached_camera()
     {
         return m_Camera;
     }
 
     /*
     ==============
-    scene::getName
+    scene::get_name
     ==============
     */
-    inline const char *scene::getName() const
+    inline const char *scene::get_name() const
     {
         return m_Name;
     }
 
     /*
     ==========================
-    scene::setColliderCallback
+    scene::set_collider_callback
     ==========================
     */
-    inline void scene::setColliderCallback(collider_in_callback callback)
+    inline void scene::set_collider_callback(collider_in_callback callback)
     {
         m_ColliderCallback = callback;
     }
 
     /*
     =============================
-    scene::setColliderOutCallback
+    scene::set_collider_out_callback
     =============================
     */
-    inline void scene::setColliderOutCallback(collider_out_callback callback)
+    inline void scene::set_collider_out_callback(collider_out_callback callback)
     {
         m_ColliderOutCallback = callback;
     }

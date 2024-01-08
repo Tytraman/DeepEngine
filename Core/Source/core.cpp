@@ -1,7 +1,7 @@
 #include "DE/core.hpp"
 #include "DE/memory/memory.hpp"
 #include "DE/c-wrapper/core.h"
-#include "DE/imgui/deimgui.hpp"
+#include "DE/gui/deimgui.hpp"
 #include "DE/ecs/scene.hpp"
 #include "DE/resources.hpp"
 #include "DE/mutex.hpp"

@@ -1,5 +1,5 @@
-#include <DE/ecs/entity.hpp>
-#include <DE/ecs/component.hpp>
+#include "DE/ecs/entity.hpp"
+#include "DE/ecs/component.hpp"
 
 namespace deep
 {
@@ -11,7 +11,7 @@ namespace deep
     entity_item::entity_item
     ========================
     */
-    entity_item::entity_item(const entity &_ent)
+    entity_manager::entity_item::entity_item(const entity &_ent)
         : ent(_ent),
           componentsType(0)
     { }
@@ -21,9 +21,10 @@ namespace deep
     entity::entity
     ==============
     */
-    entity::entity(entity_collection_id collectionID, entity_id entityID)
+    entity_manager::entity::entity(const char *name, entity_collection_id collectionID, entity_id entityID)
         : m_CollectionID(collectionID),
-          m_EntityID(entityID)
+          m_EntityID(entityID),
+          m_Name(name)
     { }
 
     /*
@@ -47,26 +48,29 @@ namespace deep
     }
 
     /*
-    ============================
+    =============================
     entity_manager::enum_entities
-    ============================
+    =============================
     */
     void entity_manager::enum_entities(entity_collection_id collection, entity_enum_callback callback)
     {
-        const auto hs = m_Collections[collection];
+        hash_entry<hash_table<entity_item>> *hs = m_Collections[collection];
         if(hs == nullptr)
             return;
 
-        for(auto &el : (*hs).value)
-            callback(collection, el.value.ent.m_EntityID);
+        hash_table_iterator begin = hs->value.begin();
+        hash_table_iterator end = hs->value.end();
 
-        deleteEntities();
+        for(; begin != end; ++begin)
+            callback(begin->value.ent);
+
+        delete_entities();
     }
 
     /*
-    ===================================
+    ======================================
     entity_manager::get_number_of_entities
-    ===================================
+    ======================================
     */
     size_t entity_manager::get_number_of_entities(entity_collection_id collection)
     {
@@ -79,9 +83,9 @@ namespace deep
     }
 
     /*
-    =====================================
+    ========================================
     entity_manager::create_entity_collection
-    =====================================
+    ========================================
     */
     entity_collection_id entity_manager::create_entity_collection()
     {
@@ -99,48 +103,35 @@ namespace deep
     }
 
     /*
-    ==============================
-    entity_manager::__createEntity
-    ==============================
+    =============================
+    entity_manager::create_entity
+    =============================
     */
-    hash_entry<entity_item> *entity_manager::__createEntity(entity_collection_id collection)
+    entity_manager::entity entity_manager::create_entity(const char *name, entity_collection_id collection)
     {
         hash_entry<hash_table<entity_item>> *hs = m_Collections[collection];
         if(hs == nullptr)
-            return nullptr;
+            return entity::bad();
 
         hash_entry<entity_id> *el = m_NextEntityID[collection];
         if(el == nullptr)
-            return nullptr;
-
-        entity_id di = el->value;
-        el->value++;
-
-        hash_entry<entity_item> &hti = hs->value.insert(di, entity_item(entity(collection, di)));
-
-        return &hti;
-    }
-
-    /*
-    ============================
-    entity_manager::create_entity
-    ============================
-    */
-    entity entity_manager::create_entity(entity_collection_id collection)
-    {
-        hash_entry<entity_item> *hti = __createEntity(collection);
-        if(hti == nullptr)
             return entity::bad();
 
-        return hti->value.ent;
+        el->value++;
+
+        entity_id id = m_Collections.getHashFunction()(name);
+        hash_entry<entity_item> &hti = hs->value.insert(id, entity_item(entity(name, collection, id)));
+
+        return hti.value.ent;
     }
 
     /*
-    ============================
+    =============================
     entity_manager::create_entity
-    ============================
+    =============================
     */
-    entity entity_manager::create_entity(
+    entity_manager::entity entity_manager::create_entity(
+        const char *name,
         entity_collection_id collection,
         const polygon &pol,
         GL3::gl_id program,
@@ -149,11 +140,11 @@ namespace deep
         GL3::gl_id texture,
         uint8_t textureUnit)
     {
-        component_manager *componentManager = component_manager::get_singleton();
+        entity ent = create_entity(name, collection);
+        if(!ent.is_ok())
+            return ent;
 
-        hash_entry<entity_item> *hti = __createEntity(collection);
-        if(hti == nullptr)
-            return entity::bad();
+        component_manager *componentManager = component_manager::get_singleton();
 
         component_id drawableComponentID       = componentManager->createDrawableComponent(program, pol.vbo(), pol.vao());
         component_id transformationComponentID = componentManager->createTransformationComponent(position, size, 0.0f);
@@ -163,54 +154,37 @@ namespace deep
         drawableComponent->textureUnit = textureUnit;
         drawableComponent->renderCallback = drawable_component::classicRenderCallback;
 
-        entity_manager::attachComponent(hti->value.ent, drawableComponentID);
-        entity_manager::attachComponent(hti->value.ent, transformationComponentID);
+        entity_manager::attach_component(name, ent.m_CollectionID, drawableComponentID);
+        entity_manager::attach_component(name, ent.m_CollectionID, transformationComponentID);
 
-        return hti->value.ent;
+        return ent;
     }
 
     /*
-    =============================
-    entity_manager::destroyEntity
-    =============================
+    ==============================
+    entity_manager::destroy_entity
+    ==============================
     */
-    void entity_manager::destroyEntity(const entity &entity)
+    void entity_manager::destroy_entity(uint64_t keyName, entity_collection_id collectionID)
     {
-        const auto hs = m_Collections[entity.m_CollectionID];
+        hash_entry<hash_table<entity_item>> *hs = m_Collections[collectionID];
         if(hs == nullptr)
             return;
 
         // Libère la mémoire utilisée par la liste.
-        entity_item &item = (*hs).value[entity.m_EntityID]->value;
+        entity_item &item = (*hs).value[keyName]->value;
 
         item.components.free();
 
-        hs->value.remove(entity.m_EntityID);
-    }
-
-    /*
-    ============================
-    entity_manager::destroyEntity
-    ============================
-    */
-    void entity_manager::destroyEntity(entity_collection_id collection, entity_id entity)
-    {
-        const auto hs = m_Collections[collection];
-        if(hs == nullptr)
-            return;
-
-        entity_item &item = (*hs).value[entity]->value;
-
-        item.components.free();
-        hs->value.remove(entity);
+        hs->value.remove(keyName);
     }
 
     /*
     =================================
-    entity_manager::destroyAllEntities
+    entity_manager::destroy_all_entities
     =================================
     */
-    void entity_manager::destroyAllEntities(entity_collection_id collection)
+    void entity_manager::destroy_all_entities(entity_collection_id collection)
     {
         const auto hs = m_Collections[collection];
         if(hs == nullptr)
@@ -225,25 +199,25 @@ namespace deep
     }
 
     /*
-    ============================
-    entity_manager::mustBeDeleted
-    ============================
+    ===============================
+    entity_manager::must_be_deleted
+    ===============================
     */
-    bool entity_manager::mustBeDeleted(entity_collection_id collection, entity_id entity)
+    bool entity_manager::must_be_deleted(uint64_t keyName, entity_collection_id collectionID)
     {
-        hash_entry<list<entity_id>> *hs = m_EntitiesToDelete[collection];
+        hash_entry<list<entity_id>> *hs = m_EntitiesToDelete[collectionID];
         hash_entry<list<entity_id>> *ls;
 
         if(hs == nullptr)
         {
-            ls = &m_EntitiesToDelete.insert(collection, list<entity_id>());
+            ls = &m_EntitiesToDelete.insert(collectionID, list<entity_id>());
         }
         else
         {
             ls = hs;
         }
 
-        if(!ls->value.add(entity))
+        if(!ls->value.add(keyName))
             return false;
 
         return true;
@@ -251,38 +225,37 @@ namespace deep
 
     /*
     =============================
-    entity_manager::deleteEntities
+    entity_manager::delete_entities
     =============================
     */
-    void entity_manager::deleteEntities()
+    void entity_manager::delete_entities()
     {
         for(auto &el : m_EntitiesToDelete)
         {
             for(auto &le : el.value)
-                destroyEntity(static_cast<entity_collection_id>(el.key), le);
+                destroy_entity(static_cast<entity_collection_id>(el.key), le);
 
             el.value.free();
         }
     }
 
     /*
-    ==============================
-    entity_manager::attachComponent
-    ==============================
+    ================================
+    entity_manager::attach_component
+    ================================
     */
-    bool entity_manager::attachComponent(const entity &entity, component_id component)
+    bool entity_manager::attach_component(uint64_t keyName, entity_collection_id collectionID, component_id component)
     {
-        const auto hs = m_Collections[entity.m_CollectionID];
+        hash_entry<hash_table<entity_item>> *hs = m_Collections[collectionID];
         if(hs == nullptr)
             return false;
 
-        entity_item &item = hs->value[entity.m_EntityID]->value;
+        entity_item &item = hs->value[keyName]->value;
 
         component_manager *componentManager = component_manager::get_singleton();
 
         component_type type = componentManager->getType(component);
 
-        // Vérifie que l'entité ne possède pas déjà un composant du même type.
         if((item.componentsType & type) == type)
             return false;
 
@@ -293,24 +266,28 @@ namespace deep
     }
 
     /*
-    =============================
-    entity_manager::getComponentID
-    =============================
+    ================================
+    entity_manager::get_component_id
+    ================================
     */
-    component_id entity_manager::getComponentID(entity_collection_id collection, entity_id entity, component_type componentType)
+    component_id entity_manager::get_component_id(uint64_t keyName, entity_collection_id collectionID, component_type type)
     {
-        const auto hs = m_Collections[collection];
+        hash_entry<hash_table<entity_item>> *hs = m_Collections[collectionID];
         if(hs == nullptr)
+            return badID;
+
+        hash_entry<entity_item> *ent =  hs->value[keyName];
+        if(ent == nullptr)
             return badID;
 
         component_manager *componentManager = component_manager::get_singleton();
 
-        entity_item &item = hs->value[entity]->value;
+        entity_item &item = ent->value;
         
-        component_type type;
+        component_type t;
 
-        auto it = item.components.begin();
-        auto end = item.components.end();
+        list_iterator<entity_id> it = item.components.begin();
+        list_iterator<entity_id> end = item.components.end();
 
         component_id component;
 
@@ -319,8 +296,8 @@ namespace deep
         {
             component = *it;
 
-            type = componentManager->getType(component);
-            if(type == componentType)
+            t = componentManager->getType(component);
+            if(t == type)
                 return component;
         }
 
@@ -328,21 +305,24 @@ namespace deep
     }
 
     /*
-    ====================
+    =====================
     entity_manager::query
-    ====================
+    =====================
     */
     void entity_manager::query(entity_collection_id collection, component_type componentTypesToInclude, component_type componentTypesToExclude, list<entity_id> &dest)
     {
-        const auto hs = m_Collections[collection];
+        hash_entry<hash_table<entity_item>> *hs = m_Collections[collection];
         if(hs == nullptr)
             return;
             
-        for(auto &el : hs->value)
+        hash_table_iterator<entity_item> begin = hs->value.begin();
+        hash_table_iterator<entity_item> end = hs->value.end();
+
+        for(; begin != end; ++begin)
         {
-            entity_item &item = el.value;
+            entity_item &item = begin->value;
             if((item.componentsType & componentTypesToInclude) == componentTypesToInclude && (item.componentsType & componentTypesToExclude) == 0)
-                dest.add(item.ent.getEntityID());
+                dest.add(item.ent.get_entity_id());
         }
     }
 

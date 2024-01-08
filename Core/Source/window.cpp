@@ -299,7 +299,7 @@ namespace deep
         uint64_t startTime = core::getCurrentTimeMillis(), endTime;
         while(m_Running)
         {
-            scene_id sceneID = scene::getActiveSceneID();
+            scene_id sceneID = scene::get_active_scene_id();
 
             // Calcule le temps passé à faire la boucle
             current = core::getTick();		// Récupère le tick actuel.

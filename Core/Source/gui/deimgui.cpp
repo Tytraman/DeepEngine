@@ -1,4 +1,4 @@
-#include "DE/imgui/deimgui.hpp"
+#include "DE/gui/deimgui.hpp"
 #include "DE/memory/memory.hpp"
 #include "DE/memory/list.hpp"
 #include "DE/string_utils.hpp"
@@ -86,31 +86,31 @@ namespace deep
 
     void scenes_enum_callback(scene_id id, scene &scene)
     {
-        std::string text("[" + std::to_string(id) + std::string("] ") + scene.getName());
-        if(id == scene::getActiveSceneID())
+        std::string text("[" + std::to_string(id) + std::string("] ") + scene.get_name());
+        if(id == scene::get_active_scene_id())
             text += " (active)";
 
         ImGui::AlignTextToFramePadding();
         ImGui::Text(text.c_str()); ImGui::SameLine();
         if(ImGui::Button(std::string("Supprimer##" + std::to_string(id)).c_str())) {
-            scene::mustBeDeleted(id);
+            scene::must_be_deleted(id);
         }
         ImGui::SameLine();
         if(ImGui::Button(std::string("Rendre active##" + std::to_string(id)).c_str())) {
-            scene::setActiveScene(id);
+            scene::set_active_scene(id);
         }
     }
 
-    void entities_enum_callback(entity_collection_id collection, entity_id entity)
+    void entities_enum_callback(entity_manager::entity &ent)
     {
         entity_manager *entityManager = entity_manager::get_singleton();
 
-        std::string text("[" + std::to_string(entity) + "]");
+        std::string text("[" + std::string(ent.get_name().str()) + "]");
 
         ImGui::AlignTextToFramePadding();
         ImGui::Text(text.c_str()); ImGui::SameLine();
-        if(ImGui::Button(std::string("Supprimer##" + std::to_string(entity)).c_str())) {
-            entityManager->mustBeDeleted(collection, entity);
+        if(ImGui::Button(std::string("Supprimer##" + std::to_string(ent.get_entity_id())).c_str())) {
+            entityManager->must_be_deleted(ent.get_entity_id(), ent.get_collection_id());
         }
     }
 
@@ -127,8 +127,8 @@ namespace deep
 
         auto &options = it->second;
 
-        scene_id scene = scene::getActiveSceneID();
-        entity_collection_id collection = scene::getEntityCollection(scene);
+        scene_id scene = scene::get_active_scene_id();
+        entity_collection_id collection = scene::get_entity_collection(scene);
 
         entity_manager *entityManager = entity_manager::get_singleton();
 
@@ -205,7 +205,7 @@ namespace deep
                             else
                             {
                                 emptyNameBuffer = false;
-                                scene::createScene(nameBuffer);
+                                scene::create_scene(nameBuffer);
                                 nameBuffer[0] = '\0';
                             }
                         }
@@ -218,7 +218,7 @@ namespace deep
                         // Affiche toutes les scènes existantes.
                         if(ImGui::CollapsingHeader("Liste des scènes"))
                         {
-                            scene::enumScenes(scenes_enum_callback);
+                            scene::enum_scenes(scenes_enum_callback);
                         }
                     } break;
                     // Menu des entités.
@@ -229,12 +229,25 @@ namespace deep
                         ImGui::PopFont();
                         ImGui::Separator();
 
-                        // Affiche le nombre d'entités de la scène.
                         ImGui::AlignTextToFramePadding();
+
+                        // Menu pour ajouter une entité.
+                        if(ImGui::CollapsingHeader("Ajouter une entité"))
+                        {
+                            static char nameBuffer[128] = "";
+
+                            ImGui::Text("Nom:"); ImGui::SameLine(); ImGui::InputText("##", nameBuffer, sizeof(nameBuffer)); ImGui::SameLine();
+                            if(ImGui::Button("Créer"))
+                            {
+                                entityManager->create_entity(nameBuffer, scene::get_entity_collection(scene::get_active_scene_id()));
+                            }
+                        }
+
+                        // Affiche le nombre d'entités de la scène.
                         ImGui::Text(std::string("Nombre d'entités: " + std::to_string(entityManager->get_number_of_entities(collection))).c_str()); ImGui::SameLine();
                         if(ImGui::Button("Tout supprimer"))
                         {
-                            entityManager->destroyAllEntities(collection);
+                            entityManager->destroy_all_entities(collection);
                         }
 
                         ImGui::Spacing();

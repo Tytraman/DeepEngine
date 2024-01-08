@@ -13,10 +13,10 @@ namespace deep
 
     /*
     ==================
-    scene::createScene
+    scene::create_scene
     ==================
     */
-    scene_id scene::createScene(const char *name)
+    scene_id scene::create_scene(const char *name)
     {
         scene_id id = (scene_id) m_Scenes.size();
 
@@ -27,12 +27,12 @@ namespace deep
 
     /*
     ==================
-    scene::deleteScene
+    scene::delete_scene
     ==================
     */
-    void scene::deleteScene(scene_id scn)
+    void scene::delete_scene(scene_id scn)
     {
-        scene *s = getScene(scn);
+        scene *s = get_scene(scn);
         if(s != nullptr)
             mem::free(s->m_Name);
 
@@ -41,10 +41,10 @@ namespace deep
 
     /*
     ======================
-    scene::deleteAllScenes
+    scene::delete_all_scenes
     ======================
     */
-    void scene::deleteAllScenes()
+    void scene::delete_all_scenes()
     {
         for(auto &it : m_Scenes)
             mem::free(it.value.m_Name);
@@ -54,10 +54,10 @@ namespace deep
 
     /*
     ===================
-    scene::deleteScenes
+    scene::delete_scenes
     ===================
     */
-    void scene::deleteScenes()
+    void scene::delete_scenes()
     {
         size_t length = m_ScenesToDelete.count();
         size_t i;
@@ -67,7 +67,7 @@ namespace deep
         {
             scene = m_ScenesToDelete[i];
 
-            deleteScene(scene);
+            delete_scene(scene);
         }
 
         m_ScenesToDelete.free();
@@ -93,7 +93,7 @@ namespace deep
     scene::addEntity
     ================
     */
-    entity scene::createEntity(scene_id scene)
+    /*entity scene::create_entity(scene_id scene)
     {
         hash_entry<deep::scene> *s = m_Scenes[scene];
 
@@ -103,27 +103,27 @@ namespace deep
         entity_manager *entityManager = entity_manager::get_singleton();
 
         return entityManager->create_entity(s->value.m_EntityCollection);
-    }
+    }*/
 
     /*
     =================
-    scene::enumScenes
+    scene::enum_scenes
     =================
     */
-    void scene::enumScenes(enum_callback callback)
+    void scene::enum_scenes(enum_callback callback)
     {
         for(auto &el : m_Scenes)
             callback(static_cast<scene_id>(el.key), el.value);
 
-        deleteScenes();
+        delete_scenes();
     }
 
     /*
     ==========================
-    scene::getEntityCollection
+    scene::get_entity_collection
     ==========================
     */
-    entity_collection_id scene::getEntityCollection(scene_id scn)
+    entity_collection_id scene::get_entity_collection(scene_id scn)
     {
         hash_entry<deep::scene> *s = m_Scenes[scn];
         if(s == nullptr)
@@ -134,10 +134,10 @@ namespace deep
 
     /*
     ===============
-    scene::getScene
+    scene::get_scene
     ===============
     */
-    scene *scene::getScene(scene_id scn)
+    scene *scene::get_scene(scene_id scn)
     {
         hash_entry<deep::scene> *s = m_Scenes[scn];
         if(s == nullptr)

@@ -36,7 +36,7 @@ extern "C"
 #include <DE/ecs/entity.hpp>
 #include <DE/ecs/component.hpp>
 
-#include <DE/imgui/deimgui.hpp>
+#include <DE/gui/deimgui.hpp>
 
 #include <DE/drivers/opengl/core.hpp>
 #include <DE/drivers/opengl/shader.hpp>
@@ -67,15 +67,15 @@ void event_callback(deep::window &window, deep::devent e)
         {
             if(!window.is_showing_debug_panel())
             {
-                deep::scene_id sceneID = deep::scene::getActiveSceneID();
+                deep::scene_id sceneID = deep::scene::get_active_scene_id();
                 if(sceneID == deep::badID)
                     break;
 
-                deep::scene *scene = deep::scene::getScene(sceneID);
+                deep::scene *scene = deep::scene::get_scene(sceneID);
                 if(scene == nullptr)
                     break;
 
-                deep::Camera &camera = deep::scene::getScene(deep::scene::getActiveSceneID())->getCamera();
+                deep::Camera &camera = deep::scene::get_scene(deep::scene::get_active_scene_id())->get_attached_camera();
                 float yaw   = camera.yaw();
                 float pitch = camera.pitch();
 
@@ -113,27 +113,27 @@ void event_callback(deep::window &window, deep::devent e)
 // pour mettre à jour toutes les valeurs du jeu
 void update_callback(deep::window & /* win */)
 {
-    deep::scene_id sceneID = deep::scene::getActiveSceneID();
+    deep::scene_id sceneID = deep::scene::get_active_scene_id();
     deep::entity_collection_id collectionID;
     deep::scene *scene;
 
     if(sceneID == deep::badID)
         return;
 
-    scene = deep::scene::getScene(sceneID);
+    scene = deep::scene::get_scene(sceneID);
     if(scene == nullptr)
         return;
 
-    collectionID = deep::scene::getEntityCollection(sceneID);
+    collectionID = deep::scene::get_entity_collection(sceneID);
 
     float cameraSpeed = 0.05f;
 
-    deep::Camera &camera = scene->getCamera();
+    deep::Camera &camera = scene->get_attached_camera();
     deep::fvec3 cameraPos = camera.position();
     deep::fvec3 cameraFront = camera.front();
     deep::fvec3 cameraRight = deep::fvec3::normalize(deep::fvec3::cross(cameraFront, camera.up()));
 
-    deep::entity entity = deep::entity::bad();
+    deep::entity_manager::entity entity = deep::entity_manager::entity::bad();
 
     // Augmentation de la vitesse de déplacement de la caméra.
     if(deep::key::isPressed(deep::dkey::LShift))
@@ -240,9 +240,9 @@ int main()
 
     deep::im_gui_window::init(win);
 
-    deep::scene_id sceneID = deep::scene::createScene("scn_main");
+    deep::scene_id sceneID = deep::scene::create_scene("scn_main");
 
-    deep::entity_collection_id collectionID = deep::scene::getEntityCollection(sceneID);
+    deep::entity_collection_id collectionID = deep::scene::get_entity_collection(sceneID);
 
     printf(
         DE_TERM_FG_YELLOW "====================[ " DE_TERM_FG_RED "\\OpenGL/" DE_TERM_FG_YELLOW " ]====================\n" DE_TERM_RESET
@@ -451,19 +451,25 @@ int main()
     points.topBottomRight.y = 0.0f;
 
     deep::polygon pol = deep::graphic::create_cube("grass_cube", white, white, white, white, white, white, points);
+    deep::string baseName("entity_");
+    uint64_t count = 0;
 
-    for(i = 0; i < 50; ++i)
+    for(i = 0; i < 10; ++i)
     {
-        for(j = 0; j < 50; ++j)
+        for(j = 0; j < 10; ++j)
         {
-            deep::entity entTest = entityManager->create_entity(collectionID, pol, defaultProgram, deep::fvec3(i * 5.0f, 0.0f, j * 5.0f), deep::fvec3(3.0f, 3.0f, 3.0f), mcTexture);
+            deep::string entityName = baseName;
+            entityName.append(std::to_string(count).c_str());
+            deep::entity_manager::entity entTest = entityManager->create_entity(entityName.str(), collectionID, pol, defaultProgram, deep::fvec3(i * 5.0f, 0.0f, j * 5.0f), deep::fvec3(3.0f, 3.0f, 3.0f), mcTexture);
+
+            count++;
         }
     }
 
     // Affiche la skybox à la fin pour optimiser les appelles au fragment shader = FPS++
-    deep::entity skyboxEnt = deep::graphic::create_cubemap("skybox", skyboxProgram, collectionID, deep::fvec3(0.0f, 0.0f, 0.0f), 5005.0f, 105.0f, 2005.0f, skybox, 0);
+    deep::entity_manager::entity skyboxEnt = deep::graphic::create_cubemap("skybox", skyboxProgram, collectionID, deep::fvec3(0.0f, 0.0f, 0.0f), 5005.0f, 105.0f, 2005.0f, skybox, 0);
 
-    deep::scene::setActiveScene(sceneID);
+    deep::scene::set_active_scene(sceneID);
 
     win.set_showing_debug_panel(true);
 
