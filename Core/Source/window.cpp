@@ -171,7 +171,8 @@ namespace deep
           m_TargetMSPerUpdate(targetMS),
           m_TargetFPS(targetFPS),
           m_Running(false),
-          m_ShowDebugPanel(false)
+          m_ShowDebugPanel(false),
+          m_FRB()
     { }
 
     /*
@@ -313,7 +314,11 @@ namespace deep
             ImGui::NewFrame();
 
             if(m_ShowDebugPanel)
+            {
                 im_gui_debug_menu::render(this);
+                ImGui::ShowDemoWindow();
+            }
+                
 
             // Récupère les évènements système, les entrées utilisateurs etc...
             // et exécute un callback s'il y en a un.
@@ -395,9 +400,9 @@ namespace deep
     }
 
     /*
-    ============================
+    ==============================
     window::default_input_callback
-    ============================
+    ==============================
     */
     void window::default_input_callback(window &window, devent e)
     {

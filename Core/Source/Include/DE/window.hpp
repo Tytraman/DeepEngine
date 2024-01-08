@@ -101,7 +101,7 @@ namespace deep
             uint16_t                 m_TargetFPS;
             bool                     m_Running;
             bool                     m_ShowDebugPanel;
-            GL3::framerenderbuffer m_FRB;
+            GL3::framerenderbuffer   m_FRB;
 
             void internalEventCallback(devent e);
 

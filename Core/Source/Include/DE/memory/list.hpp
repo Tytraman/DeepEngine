@@ -34,20 +34,20 @@ namespace deep
     };
 
     /*
-	==================================
-	list_iterator<Type>::list_iterator
-	==================================
-	*/
+    ==================================
+    list_iterator<Type>::list_iterator
+    ==================================
+    */
     template<typename Type>
     list_iterator<Type>::list_iterator(TypePtr ptr)
         : iiterator<Type, list_iterator<Type>>(ptr)
     { }
 
     /*
-	===============================
-	list_iterator<Type>::operator++
-	===============================
-	*/
+    ===============================
+    list_iterator<Type>::operator++
+    ===============================
+    */
     template<typename Type>
     list_iterator<Type> &list_iterator<Type>::operator++()
     {
@@ -57,10 +57,10 @@ namespace deep
     }
 
     /*
-	===============================
-	list_iterator<Type>::operator++
-	===============================
-	*/
+    ===============================
+    list_iterator<Type>::operator++
+    ===============================
+    */
     template<typename Type>
     list_iterator<Type> list_iterator<Type>::operator++(int)
     {
@@ -73,10 +73,10 @@ namespace deep
     }
 
     /*
-	===============================
-	list_iterator<Type>::operator--
-	===============================
-	*/
+    ===============================
+    list_iterator<Type>::operator--
+    ===============================
+    */
     template<typename Type>
     list_iterator<Type> &list_iterator<Type>::operator--()
     {
@@ -86,10 +86,10 @@ namespace deep
     }
 
     /*
-	===============================
-	list_iterator<Type>::operator--
-	===============================
-	*/
+    ===============================
+    list_iterator<Type>::operator--
+    ===============================
+    */
     template<typename Type>
     list_iterator<Type> list_iterator<Type>::operator--(int)
     {
@@ -102,10 +102,10 @@ namespace deep
     }
 
     /*
-	===============================
-	list_iterator<Type>::operator[]
-	===============================
-	*/
+    ===============================
+    list_iterator<Type>::operator[]
+    ===============================
+    */
     template<typename Type>
     typename list_iterator<Type>::TypeRef list_iterator<Type>::operator[](size_t index)
     {
@@ -113,10 +113,10 @@ namespace deep
     }
 
     /*
-	==============================
-	list_iterator<Type>::operator*
-	==============================
-	*/
+    ==============================
+    list_iterator<Type>::operator*
+    ==============================
+    */
     template<typename Type>
     typename list_iterator<Type>::TypeRef list_iterator<Type>::operator*()
     {
@@ -124,10 +124,10 @@ namespace deep
     }
 
     /*
-	===============================
-	list_iterator<Type>::operator==
-	===============================
-	*/
+    ===============================
+    list_iterator<Type>::operator==
+    ===============================
+    */
     template<typename Type>
     bool list_iterator<Type>::operator==(const list_iterator<Type> &other) const
     {
@@ -135,10 +135,10 @@ namespace deep
     }
 
     /*
-	===============================
-	list_iterator<Type>::operator!=
-	===============================
-	*/
+    ===============================
+    list_iterator<Type>::operator!=
+    ===============================
+    */
     template<typename Type>
     bool list_iterator<Type>::operator!=(const list_iterator<Type> &other) const
     {
@@ -169,6 +169,7 @@ namespace deep
             size_t find(const Type &toSearch) const override;
 
             bool reserve(size_t numberOfElements) override;
+            void fill_with_byte(uint8_t value);
 
             void empty() override;
             void free()  override;
@@ -192,10 +193,10 @@ namespace deep
     };
 
     /*
-	================
-	list<Type>::list
-	================
-	*/
+    ================
+    list<Type>::list
+    ================
+    */
     template<typename Type>
     list<Type>::list(uint32_t capacityStep)
         : icollection<Type, list_iterator<Type>>(),
@@ -205,10 +206,10 @@ namespace deep
     { }
 
     /*
-	=================
-	list<Type>::~list
-	=================
-	*/
+    =================
+    list<Type>::~list
+    =================
+    */
     template<typename Type>
     list<Type>::~list()
     {
@@ -226,10 +227,10 @@ namespace deep
     }
 
     /*
-	===============
-	list<Type>::add
-	===============
-	*/
+    ===============
+    list<Type>::add
+    ===============
+    */
     template<typename Type>
     bool list<Type>::add(ConstTypeRef element)
     {
@@ -245,10 +246,10 @@ namespace deep
     }
 
     /*
-	===============
-	list<Type>::add
-	===============
-	*/
+    ===============
+    list<Type>::add
+    ===============
+    */
     template<typename Type>
     bool list<Type>::add(Type &&element)
     {
@@ -264,26 +265,26 @@ namespace deep
     }
 
     /*
-	===============
-	list<Type>::add
-	===============
-	*/
+    ===============
+    list<Type>::add
+    ===============
+    */
     template<typename Type>
     bool list<Type>::add()
     {
         if(!growIfNeeded())
-			return false;
+            return false;
 
-		m_NumberOfElements++;
+        m_NumberOfElements++;
 
-		return true;
+        return true;
     }
 
     /*
-	==================
-	list<Type>::remove
-	==================
-	*/
+    ==================
+    list<Type>::remove
+    ==================
+    */
     template<typename Type>
     bool list<Type>::remove(size_t index)
     {
@@ -291,73 +292,84 @@ namespace deep
             return false;
 
         // Obtient le nombre d'éléments pour atteindre la fin de la liste.
-		size_t diff = m_NumberOfElements - index - 1;
+        size_t diff = m_NumberOfElements - index - 1;
         size_t size = sizeof(Type);
         size_t numberOfBytesToMove = diff * size;
 
-		memmove(m_Data + index, m_Data + (index + 1), numberOfBytesToMove);
+        memmove(m_Data + index, m_Data + (index + 1), numberOfBytesToMove);
 
-		m_NumberOfElements--;
+        m_NumberOfElements--;
 
         return true;
     }
 
     /*
-	================
-	list<Type>::find
-	================
-	*/
+    ================
+    list<Type>::find
+    ================
+    */
     template<typename Type>
     size_t list<Type>::find(const Type &toSearch) const
     {
         // Pointeur vers le tableau des éléments de la liste.
-		uint8_t *ptr = (uint8_t *) m_Data;
-		size_t elementSize = sizeof(Type);
-		size_t numberOfElements = m_NumberOfElements;
-		size_t index = 0;
+        uint8_t *ptr = (uint8_t *) m_Data;
+        size_t elementSize = sizeof(Type);
+        size_t numberOfElements = m_NumberOfElements;
+        size_t index = 0;
         ConstTypePtr element = &toSearch;
 
-		// Vérifie pour chaque élément de la liste si la donnée est la même que celle recherchée.
-		while(index < numberOfElements) {
-			if(memcmp(ptr, element, elementSize) == 0)
-				return index;
+        // Vérifie pour chaque élément de la liste si la donnée est la même que celle recherchée.
+        while(index < numberOfElements) {
+            if(memcmp(ptr, element, elementSize) == 0)
+                return index;
 
-			ptr += elementSize;
-			index++;
-		}
+            ptr += elementSize;
+            index++;
+        }
 
-		return list::nothing;
+        return list::nothing;
     }
 
     /*
-	===================
-	list<Type>::reserve
-	===================
-	*/
+    ===================
+    list<Type>::reserve
+    ===================
+    */
     template<typename Type>
     bool list<Type>::reserve(size_t numberOfElements)
     {
         if(numberOfElements == m_NumberOfElements)
-			return true;
+            return true;
 
-		size_t newCapacity = (numberOfElements / m_CapacityStep + 1) * m_CapacityStep;
-		mem_ptr ptr = mem::reallocNoTrack(m_Data, newCapacity * sizeof(Type));
+        size_t newCapacity = (numberOfElements / m_CapacityStep + 1) * m_CapacityStep;
+        mem_ptr ptr = mem::reallocNoTrack(m_Data, newCapacity * sizeof(Type));
 
-		if(ptr == nullptr)
-			return false;
+        if(ptr == nullptr)
+            return false;
 
-		m_Data = static_cast<TypePtr>(ptr);
-		m_Capacity = newCapacity;
+        m_Data = static_cast<TypePtr>(ptr);
+        m_Capacity = newCapacity;
         m_NumberOfElements = numberOfElements;
 
-		return true;
+        return true;
     }
 
     /*
-	=================
-	list<Type>::empty
-	=================
-	*/
+    ==========================
+    list<Type>::fill_with_byte
+    ==========================
+    */
+    template<typename Type>
+    void list<Type>::fill_with_byte(uint8_t value)
+    {
+        memset(m_Data, value, m_NumberOfElements * sizeof(Type));
+    }
+
+    /*
+    =================
+    list<Type>::empty
+    =================
+    */
     template<typename Type>
     void list<Type>::empty()
     {
@@ -367,10 +379,10 @@ namespace deep
     }
 
     /*
-	================
-	list<Type>::free
-	================
-	*/
+    ================
+    list<Type>::free
+    ================
+    */
     template<typename Type>
     void list<Type>::free()
     {
@@ -381,10 +393,10 @@ namespace deep
     }
 
     /*
-	=================
-	list<Type>::begin
-	=================
-	*/
+    =================
+    list<Type>::begin
+    =================
+    */
     template<typename Type>
     list_iterator<Type> list<Type>::begin()
     {
@@ -392,10 +404,10 @@ namespace deep
     }
 
     /*
-	===============
-	list<Type>::end
-	===============
-	*/
+    ===============
+    list<Type>::end
+    ===============
+    */
     template<typename Type>
     list_iterator<Type> list<Type>::end()
     {
@@ -403,10 +415,10 @@ namespace deep
     }
 
     /*
-	=======================
-	list<Type>::getCapacity
-	=======================
-	*/
+    =======================
+    list<Type>::getCapacity
+    =======================
+    */
     template<typename Type>
     size_t list<Type>::getCapacity() const
     {
@@ -414,10 +426,10 @@ namespace deep
     }
 
     /*
-	===========================
-	list<Type>::getCapacityStep
-	===========================
-	*/
+    ===========================
+    list<Type>::getCapacityStep
+    ===========================
+    */
     template<typename Type>
     uint32_t list<Type>::getCapacityStep() const
     {
@@ -425,10 +437,10 @@ namespace deep
     }
 
     /*
-	======================
-	list<Type>::operator[]
-	======================
-	*/
+    ======================
+    list<Type>::operator[]
+    ======================
+    */
     template<typename Type>
     typename list<Type>::TypeRef list<Type>::operator[](size_t index)
     {
@@ -436,26 +448,26 @@ namespace deep
     }
 
     /*
-	========================
-	list<Type>::growIfNeeded
-	========================
-	*/
+    ========================
+    list<Type>::growIfNeeded
+    ========================
+    */
     template<typename Type>
     bool list<Type>::growIfNeeded()
     {
         // Si le nombre d'éléments présents dans la liste est supérieur à la capacité,
-		// on augmente celle-ci du pas attribué.
-		if(m_NumberOfElements >= m_Capacity)
+        // on augmente celle-ci du pas attribué.
+        if(m_NumberOfElements >= m_Capacity)
         {
-			size_t newCapacity = m_Capacity + m_CapacityStep;
-			mem_ptr ptr = mem::reallocNoTrack(m_Data, newCapacity * sizeof(Type));
+            size_t newCapacity = m_Capacity + m_CapacityStep;
+            mem_ptr ptr = mem::reallocNoTrack(m_Data, newCapacity * sizeof(Type));
 
-			if(ptr == nullptr)
-				return false;
+            if(ptr == nullptr)
+                return false;
 
-			m_Data = (TypePtr) ptr;
-			m_Capacity = newCapacity;
-		}
+            m_Data = (TypePtr) ptr;
+            m_Capacity = newCapacity;
+        }
 
         return true;
     }

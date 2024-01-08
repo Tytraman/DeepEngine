@@ -19,6 +19,8 @@ namespace deep
         NoEnoughMemory           = 3,
         CannotLoadEngineSettings = 4,
         CannotLoadResources      = 5,
+        CannotInitCOM            = 6,
+        CannotQueryCpuInfo       = 7,
 
         Unknown                  = 255
     };

@@ -1,0 +1,17 @@
+1 {
+    name : default
+    vertex : default.vert
+    fragment : default.frag
+}
+
+2 {
+    name : skybox
+    vertex : skybox.vert
+    fragment : skybox.frag
+}
+
+3 {
+    name : post_processing
+    vertex : post_processing.vert
+    fragment : post_processing.frag
+}

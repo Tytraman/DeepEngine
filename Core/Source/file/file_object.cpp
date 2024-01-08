@@ -59,7 +59,7 @@ rread:
 
                 // Ajoute le chunk lu dans la chaîne de caractères.
                 text.append(buffer, bytesRead);
-                text.removeAll('\r');
+                text.remove_all('\r');
 
                 finder.skipWhiteChars();
 
@@ -109,7 +109,7 @@ rread:
                 {
                     char skipTo[2] = { '\n', '}' };
 
-                    elementKey = text.newSubstring(startIndex, endIndex);
+                    elementKey = text.new_substring(startIndex, endIndex);
 
                     finder.skip();
                     finder.skipWhiteChars();
@@ -120,14 +120,14 @@ rread:
 
                     endIndex = finder.position();
 
-                    string value = text.newSubstring(startIndex, endIndex);
+                    string value = text.new_substring(startIndex, endIndex);
 
                     current->items.insert(elementKey.str(), pair(elementKey, value));
                 } break;
                 // Ouverture d'un conteneur.
                 case '{':
                 {
-                    containerKey = text.newSubstring(startIndex, endIndex);
+                    containerKey = text.new_substring(startIndex, endIndex);
                     const char *str = containerKey.str();
 
                     snapshots.add(current);
@@ -247,7 +247,7 @@ rread:
             if(lastIterator == containerEndIterator)
             {
                 // Retire la clé du conteneur du chemin total.
-                size_t dotIndex = currentPath.findFromEnd('.');
+                size_t dotIndex = currentPath.find_from_end('.');
                 if(dotIndex == 0 || dotIndex == static_cast<size_t>(-1))
                     currentPath.clear();
                 else

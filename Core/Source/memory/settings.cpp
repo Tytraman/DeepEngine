@@ -58,7 +58,7 @@ namespace deep
 
         fobj.close();
 
-        auto element = fobj.searchElement("resources_directory");
+        pair<string, string> *element = fobj.searchElement("resources_directory");
         if(element == nullptr)
         {
             fprintf(stderr, "[ERROR] Engine settings: Unable to find 'resources_directory' parameter.\n");
@@ -66,6 +66,15 @@ namespace deep
         }
 
         m_ResourcesDirectory = rvalue_cast(element->value2());
+
+        element = fobj.searchElement("imgui_font_filename");
+        if(element == nullptr)
+        {
+            fprintf(stderr, "[ERROR] Engine settings: Unable to find 'imgui_font_filename' parameter.\n");
+            return false;
+        }
+
+        m_ImGuiFontFilename = rvalue_cast(element->value2());
 
         return true;
     }

@@ -23,6 +23,8 @@
 #include <DE/file/file_object.hpp>
 #include <DE/memory/settings.hpp>
 #include <DE/safe_integer.hpp>
+#include <DE/os/COM.hpp>
+#include <DE/hardware/cpu.hpp>
 
 extern "C"
 {
@@ -185,7 +187,7 @@ int main()
 {
     deep::error_status errorStatus;
 
-    switch(deep::core::init("Creation UI [" DE_VERSION "]", 0, 0, 0))
+    switch(deep::core::init("DeepEngine [" DE_VERSION "]", 0, 0, 0))
     {
         default:
             break;
@@ -201,6 +203,14 @@ int main()
         {
             fprintf(stderr, "No enough memory.\n");
         } return EXIT_FAILURE;
+        case deep::core_init_status::CannotInitCOM:
+        {
+            fprintf(stderr, "Cannot initialize COM.\n");
+        } return EXIT_FAILURE;
+        case deep::core_init_status::CannotQueryCpuInfo:
+        {
+            fprintf(stderr, "Cannot query CPU info.\n");
+        } return EXIT_FAILURE;
     }
 
     printf("pwd: %s\n", deep::core::getPwd());
@@ -208,7 +218,7 @@ int main()
     deep::window win(TARGET_MS, TARGET_FPS);
     win.set_event_callback(event_callback);
     win.set_update_callback(update_callback);
-    errorStatus = deep::window::create(win, "Creation UI [" DE_VERSION "]", deep::size(WINDOW_WIDTH, WINDOW_HEIGHT));
+    errorStatus = deep::window::create(win, "DeepEngine [" DE_VERSION "]", deep::size(WINDOW_WIDTH, WINDOW_HEIGHT));
 
     if(errorStatus != deep::error_status::NoError)
     {
@@ -222,7 +232,7 @@ int main()
     deep::GL3::texture_manager *textureManager = deep::GL3::texture_manager::get_singleton();
 
     // Charge les ressources nécessaires au jeu.
-    if(!resourcesManager->init(engineSettings->getResourcesDirectory().str()))
+    if(!resourcesManager->init(engineSettings->get_resources_directory().str()))
     {
         deep::core::shutdown();
         return 1;
@@ -460,13 +470,11 @@ int main()
     // Lance la boucle du jeu, bloquant.
     win.run();
 
-    // Détruit tous les composants internes de la fenêtre puis la fenêtre elle-même.
-    win.destroy();
-
     programManager->destroy_all_programs();
-
     resourcesManager->shutdown();
     deep::core::shutdown();
+
+    win.destroy();
 
     _CrtDumpMemoryLeaks();
 

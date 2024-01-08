@@ -1,12 +1,12 @@
 #ifndef __DEEP_ENGINE_HASH_TABLE_HPP__
 #define __DEEP_ENGINE_HASH_TABLE_HPP__
 
-#include <DE/def.hpp>
-#include <DE/types.hpp>
-#include <DE/memory/memory.hpp>
-#include <DE/string_utils.hpp>
-#include <DE/memory/list.hpp>
-#include <DE/string.hpp>
+#include "DE/def.hpp"
+#include "DE/types.hpp"
+#include "DE/memory/memory.hpp"
+#include "DE/string_utils.hpp"
+#include "DE/memory/list.hpp"
+#include "DE/string.hpp"
 
 namespace deep
 {

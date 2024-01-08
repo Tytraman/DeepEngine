@@ -60,11 +60,11 @@ namespace deep
         {
             list<pair<string, GL3::shader_manager::gl_shader_type>> *ls = static_cast<list<pair<string, GL3::shader_manager::gl_shader_type>>*>(args);
 
-            if(string_utils::endsWith(filename, ".vert"))
+            if(string_utils::ends_with(filename, ".vert"))
             {
                 ls->add(pair<string, GL3::shader_manager::gl_shader_type>(filename, GL3::shader_manager::gl_shader_type::Vertex));
             }
-            else if(string_utils::endsWith(filename, ".frag"))
+            else if(string_utils::ends_with(filename, ".frag"))
             {
                 ls->add(pair<string, GL3::shader_manager::gl_shader_type>(filename, GL3::shader_manager::gl_shader_type::Fragment));
             }
@@ -119,12 +119,16 @@ namespace deep
         m_ScreenshotsFolder = m_ResourcesFolder;
         m_ScreenshotsFolder.append("screenshots\\");
 
+        m_FontsFolder = m_ResourcesFolder;
+        m_FontsFolder.append("fonts\\");
+
         // Création des dossiers.
         CreateDirectoryA(m_ResourcesFolder.str(), NULL);
         CreateDirectoryA(m_ShadersFolder.str(), NULL);
         CreateDirectoryA(m_TexturesFolder.str(), NULL);
         CreateDirectoryA(m_SoundsFolder.str(), NULL);
         CreateDirectoryA(m_ScreenshotsFolder.str(), NULL);
+        CreateDirectoryA(m_FontsFolder.str(), NULL);
 
         string shadersConfig(m_ShadersFolder);
         shadersConfig.append("shaders.fobj");

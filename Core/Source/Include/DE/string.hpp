@@ -1,10 +1,10 @@
 #ifndef __DEEP_ENGINE_STRING_HPP__
 #define __DEEP_ENGINE_STRING_HPP__
 
-#include <DE/def.hpp>
-#include <DE/types.hpp>
-#include <DE/memory/memory.hpp>
-#include <DE/string_utils.hpp>
+#include "DE/def.hpp"
+#include "DE/types.hpp"
+#include "DE/memory/memory.hpp"
+#include "DE/string_utils.hpp"
 
 namespace deep
 {
@@ -33,26 +33,31 @@ namespace deep
             DE_API bool append(const char *str);
             DE_API bool append(uint8_t *buffer, size_t size);
 
-            DE_API size_t removeAll(char caractere);
+            DE_API size_t remove_all(char charactere);
 
-            DE_API string newSubstring(size_t start, size_t end) const;
+            DE_API string new_substring(size_t start, size_t end) const;
             DE_API bool substring(size_t start, size_t end);
 
+            DE_API bool rtrim(char toRemove);
+
             DE_API size_t find(char charactere) const;
-            DE_API size_t findFromEnd(char charactere) const;
+            DE_API size_t find_from_end(char charactere) const;
 
             DE_API static uint64_t hash(const string &str);
             DE_API uint64_t hash() const;
 
             DE_API bool equals(const char *str) const;
 
+            DE_API void set_ptr(char *ptr);
+            DE_API void set_length(size_t len);
+
             // ===== Converter ===== //
 
-            DE_API bool toBool() const;
-            DE_API uint8_t toUint8() const;
-            DE_API uint16_t toUint16() const;
-            DE_API uint32_t toUint32() const;
-            DE_API uint64_t toUint64() const;
+            DE_API bool to_bool() const;
+            DE_API uint8_t to_uint8() const;
+            DE_API uint16_t to_uint16() const;
+            DE_API uint32_t to_uint32() const;
+            DE_API uint64_t to_uint64() const;
 
             DE_API size_t length() const;
             DE_API const char *str() const;
@@ -136,32 +141,52 @@ namespace deep
 
     /*
     ===============
-    string::toUint8
+    string::to_uint8
     ===============
     */
-    inline uint8_t string::toUint8() const
+    inline uint8_t string::to_uint8() const
     {
-        return static_cast<uint8_t>(toUint64());
+        return static_cast<uint8_t>(to_uint64());
     }
 
     /*
     ================
-    string::toUint16
+    string::to_uint16
     ================
     */
-    inline uint16_t string::toUint16() const
+    inline uint16_t string::to_uint16() const
     {
-        return static_cast<uint16_t>(toUint64());
+        return static_cast<uint16_t>(to_uint64());
     }
 
     /*
     ================
-    string::toUint32
+    string::to_uint32
     ================
     */
-    inline uint32_t string::toUint32() const
+    inline uint32_t string::to_uint32() const
     {
-        return static_cast<uint32_t>(toUint64());
+        return static_cast<uint32_t>(to_uint64());
+    }
+
+    /*
+    ===============
+    string::set_ptr
+    ===============
+    */
+    inline void string::set_ptr(char *ptr)
+    {
+        m_Chars.reset(ptr);
+    }
+
+    /*
+    ==================
+    string::set_length
+    ==================
+    */
+    inline void string::set_length(size_t len)
+    {
+        m_Length = len;
     }
 
     class DE_API string_finder

@@ -43,7 +43,7 @@ namespace deep
     {
         list_wstr_fusion *fusion = (list_wstr_fusion *) args;
 
-        if(!isDirectory && string_utils::endsWith(filename, fusion->str))
+        if(!isDirectory && string_utils::ends_with(filename, fusion->str))
         {
             wchar_t *copy = string_utils::copy(filename);
             fusion->list->add(copy);

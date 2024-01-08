@@ -150,11 +150,11 @@ namespace deep
     string::append
     ==============
     */
-    size_t string::removeAll(char caractere)
+    size_t string::remove_all(char charactere)
     {
         char *ptr = m_Chars.get();
 
-        size_t len = string_utils::removeAll(&ptr, caractere);
+        size_t len = string_utils::remove_all(&ptr, charactere);
         m_Chars.assign(ptr);
         m_Length -= len;
 
@@ -163,12 +163,12 @@ namespace deep
 
     /*
     ====================
-    string::newSubstring
+    string::new_substring
     ====================
     */
-    string string::newSubstring(size_t start, size_t end) const
+    string string::new_substring(size_t start, size_t end) const
     {
-        char *str = string_utils::substring(m_Chars.get(), start, end);
+        char *str = string_utils::new_substring(m_Chars.get(), start, end);
         if(str == nullptr)
             return string("");
 
@@ -182,12 +182,30 @@ namespace deep
     */
     bool string::substring(size_t start, size_t end)
     {
-        char *str = string_utils::substring(m_Chars.get(), start, end);
+        char *str = string_utils::new_substring(m_Chars.get(), start, end);
         if(str == nullptr)
             return false;
 
         m_Length = end - start;
         m_Chars.reset(str);
+
+        return true;
+    }
+
+    /*
+    =============
+    string::rtrim
+    =============
+    */
+    bool string::rtrim(char toRemove)
+    {
+        char *text = m_Chars.get();
+
+        if(!string_utils::rtrim(&text, toRemove))
+            return false;
+
+        m_Length = string_utils::length(text);
+        m_Chars.assign(text);
 
         return true;
     }
@@ -214,10 +232,10 @@ namespace deep
 
     /*
     ===================
-    string::findFromEnd
+    string::find_from_end
     ===================
     */
-    size_t string::findFromEnd(char charactere) const
+    size_t string::find_from_end(char charactere) const
     {
         if(m_Length == 0)
             return static_cast<size_t>(-1);
@@ -260,10 +278,10 @@ namespace deep
 
     /*
     ==============
-    string::toBool
+    string::to_bool
     ==============
     */
-    bool string::toBool() const
+    bool string::to_bool() const
     {
         return
             equals("1")    ||
@@ -274,10 +292,10 @@ namespace deep
 
     /*
     ================
-    string::toUint64
+    string::to_uint64
     ================
     */
-    uint64_t string::toUint64() const
+    uint64_t string::to_uint64() const
     {
         uint64_t value = 0;
         uint64_t dec = 1;

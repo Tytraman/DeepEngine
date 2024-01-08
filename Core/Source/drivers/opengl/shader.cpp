@@ -659,12 +659,6 @@ namespace deep
         */
         void program_manager::destroy_all_programs()
         {
-            hash_table_iterator<program_item> beg = m_Programs.begin();
-            hash_table_iterator<program_item> end = m_Programs.end();
-
-            for(; beg != end; ++beg)
-                raw_destroy(beg->value.program);
-
             m_Programs.clear();
         }
 

@@ -74,6 +74,8 @@ file(GLOB CORE_HEADERS
 
     "${CORE_INCLUDE}/*.hpp" "${CORE_INCLUDE}/*.h"
     "${CORE_INCLUDE}/DE/*.hpp" "${CORE_INCLUDE}/DE/*.h"
+    "${CORE_INCLUDE}/DE/os/*.hpp" "${CORE_INCLUDE}/DE/os/*.h"
+    "${CORE_INCLUDE}/DE/hardware/*.hpp" "${CORE_INCLUDE}/DE/hardware/*.h"
     "${CORE_INCLUDE}/DE/audio/*.hpp" "${CORE_INCLUDE}/DE/audio/*.h"
     "${CORE_INCLUDE}/DE/c-wrapper/*.hpp" "${CORE_INCLUDE}/DE/c-wrapper/*.h"
     "${CORE_INCLUDE}/DE/drivers/opengl/*.hpp" "${CORE_INCLUDE}/DE/drivers/opengl/*.h"
@@ -93,6 +95,8 @@ file(GLOB CORE_SOURCES
     "${IMGUI_INCLUDE}/backends/imgui_impl_opengl3.cpp"
 
     "${CORE_SOURCE}/*.cpp" "${CORE_SOURCE}/*.c"
+    "${CORE_SOURCE}/os/*.cpp" "${CORE_SOURCE}/os/*.c"
+    "${CORE_SOURCE}/hardware/*.cpp" "${CORE_SOURCE}/hardware/*.c"
     "${CORE_SOURCE}/audio/*.cpp" "${CORE_SOURCE}/audio/*.c"
     "${CORE_SOURCE}/drivers/opengl/*.cpp" "${CORE_SOURCE}/drivers/opengl/*.c"
     "${CORE_SOURCE}/ecs/*.cpp" "${CORE_SOURCE}/ecs/*.c"

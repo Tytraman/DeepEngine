@@ -1,13 +1,15 @@
-#include <DE/core.hpp>
-#include <DE/memory/memory.hpp>
-#include <DE/c-wrapper/core.h>
-#include <DE/imgui/deimgui.hpp>
-#include <DE/ecs/scene.hpp>
-#include <DE/resources.hpp>
-#include <DE/mutex.hpp>
-#include <DE/string.hpp>
-#include <DE/window.hpp>
-#include <DE/memory/settings.hpp>
+#include "DE/core.hpp"
+#include "DE/memory/memory.hpp"
+#include "DE/c-wrapper/core.h"
+#include "DE/imgui/deimgui.hpp"
+#include "DE/ecs/scene.hpp"
+#include "DE/resources.hpp"
+#include "DE/mutex.hpp"
+#include "DE/string.hpp"
+#include "DE/window.hpp"
+#include "DE/memory/settings.hpp"
+#include "DE/os/COM.hpp"
+#include "DE/hardware/cpu.hpp"
 
 #include <SDL.h>
 
@@ -71,6 +73,24 @@ namespace deep
 
         if(SDL_Init(SDL_INIT_VIDEO) != 0)
             return core_init_status::Unknown;
+
+        COM *com = COM::get_singleton();
+        if(!com->init())
+            return core_init_status::CannotInitCOM;
+
+        
+
+        printf(DE_TERM_FG_YELLOW "====================[ " DE_TERM_FG_RED "CPU" DE_TERM_FG_YELLOW " ]====================\n" DE_TERM_RESET);
+
+        CPU *cpu = CPU::get_singleton();
+        if(!cpu->query_info())
+            return core_init_status::CannotQueryCpuInfo;
+
+        printf(
+            DE_TERM_RESET "Name: %s\n"
+            "Architecture: %s\n"
+            "Address width: %u-bit\n"
+            DE_TERM_FG_YELLOW "===============================================" DE_TERM_RESET "\n", cpu->get_name().str(), cpu->get_architecture_str(), cpu->get_address_width());
 
         printf(DE_TERM_FG_GREEN "core::init'ialisation successful" DE_TERM_RESET "\n");
 
@@ -206,6 +226,9 @@ end:
     */
     void core::shutdown()
     {
+        COM *com = COM::get_singleton();
+        com->shutdown();
+
         im_gui_window::shutdown();
         scene::shutdown();
         SDL_Quit();

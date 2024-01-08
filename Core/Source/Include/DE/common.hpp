@@ -168,14 +168,14 @@ namespace deep
     /// @param newVal   La valeur à récupérer.
     /// @return         L'ancienne valeur de \ref val.
     template<typename Type, typename K = Type>
-    Type exchange(Type &val, K &&newVal) noexcept
+    Type exchange(Type &value, K &&newValue) noexcept
     {
-        Type oldVal = static_cast<Type &&>(val);
-        val = static_cast<K &&>(newVal);
+        Type oldVal = static_cast<Type &&>(value);
+        value = static_cast<K &&>(newValue);
         return oldVal;
     }
 
-    
+    DE_API uint64_t next_bit_number(uint64_t value, uint16_t fromBitNumber);
 
 }
 

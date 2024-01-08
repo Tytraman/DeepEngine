@@ -74,11 +74,11 @@ namespace deep
     }
 
     /*
-    =======================
-    string_utils::substring
-    =======================
+    ===========================
+    string_utils::new_substring
+    ===========================
     */
-    char *string_utils::substring(const char *source, size_t start, size_t end)
+    char *string_utils::new_substring(const char *source, size_t start, size_t end)
     {
         if(start >= end)
             return nullptr;
@@ -103,11 +103,65 @@ namespace deep
     }
 
     /*
-    =====================
-    string_utils::toUpper
-    =====================
+    =======================
+    string_utils::substring
+    =======================
     */
-    int string_utils::toUpper(int value)
+    bool string_utils::substring(char **str, size_t start, size_t end)
+    {
+        if(start >= end)
+            return false;
+
+        size_t len = length(*str);
+        if(
+            start >= len ||
+            end   >  len)
+            return false;
+
+        size_t size = end - start;
+        mem_ptr ptr = mem::realloc(*str, size * sizeof(char) + sizeof(char));
+        if(ptr == nullptr)
+            return false;
+
+        *str = static_cast<char *>(ptr);
+        str[size] = '\0';
+
+        return true;
+    }
+
+    /*
+    ===================
+    string_utils::rtrim
+    ===================
+    */
+    bool string_utils::rtrim(char **str, char charactere)
+    {
+        size_t len = length(*str);
+        if(len == 0)
+            return false;
+
+        len--;
+
+        while(true)
+        {
+            if((*str)[len] != charactere)
+                break;
+
+            if(len == 0)
+                break;
+
+            len--;
+        }
+
+        return substring(str, 0, len);
+    }
+
+    /*
+    ======================
+    string_utils::to_upper
+    ======================
+    */
+    int string_utils::to_upper(int value)
     {
         if(value >= 'a' && value <= 'z')
             return value - 32;
@@ -264,10 +318,10 @@ namespace deep
 
     /*
     =======================
-    string_utils::removeAll
+    string_utils::remove_all
     =======================
     */
-    size_t string_utils::removeAll(char **str, char caractere)
+    size_t string_utils::remove_all(char **str, char caractere)
     {
         if(*str == nullptr)
             return 0;
@@ -304,10 +358,10 @@ namespace deep
 
     /*
     ======================
-    string_utils::endsWith
+    string_utils::ends_with
     ======================
     */
-    bool string_utils::endsWith(const char *toSearch, const char *end)
+    bool string_utils::ends_with(const char *toSearch, const char *end)
     {
         size_t len1 = length(toSearch);
         size_t len2 = length(end);
@@ -323,10 +377,10 @@ namespace deep
 
     /*
     ======================
-    string_utils::endsWith
+    string_utils::ends_with
     ======================
     */
-    bool string_utils::endsWith(const wchar_t *toSearch, const wchar_t *end)
+    bool string_utils::ends_with(const wchar_t *toSearch, const wchar_t *end)
     {
         size_t len1 = length(toSearch);
         size_t len2 = length(end);
@@ -342,10 +396,10 @@ namespace deep
 
     /*
     =======================
-    string_utils::lastIndex
+    string_utils::last_index
     =======================
     */
-    size_t string_utils::lastIndex(const char *str, char charactere)
+    size_t string_utils::last_index(const char *str, char charactere)
     {
         size_t num = length(str);
         if(num <= 1)
@@ -368,10 +422,10 @@ namespace deep
 
     /*
     =======================
-    string_utils::lastIndex
+    string_utils::last_index
     =======================
     */
-    size_t string_utils::lastIndex(const wchar_t *str, wchar_t charactere)
+    size_t string_utils::last_index(const wchar_t *str, wchar_t charactere)
     {
         size_t num = length(str);
         if(num <= 1)
@@ -437,10 +491,10 @@ namespace deep
 
     /*
     ========================
-    string_utils::wcharToChar
+    string_utils::wchar_to_char
     ========================
     */
-    void string_utils::wcharToChar(char *dest, const wchar_t *source)
+    void string_utils::wchar_to_char(char *dest, const wchar_t *source)
     {
         size_t len = length(source);
         size_t i;
@@ -458,5 +512,5 @@ size_t de_string_utils_copy(char *dest, size_t destSize, const char *source, siz
 }
 
 int de_string_utils_to_upper(int value) {
-    return deep::string_utils::toUpper(value);
+    return deep::string_utils::to_upper(value);
 }
