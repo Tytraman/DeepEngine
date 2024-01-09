@@ -11,6 +11,8 @@
 #include "DE/memory/settings.hpp"
 #include "DE/resources.hpp"
 #include "DE/drivers/opengl/vao.hpp"
+#include "DE/drivers/opengl/shader.hpp"
+#include "DE/drivers/opengl/texture.hpp"
 
 #include <unordered_map>
 #include <string>
@@ -24,7 +26,8 @@ namespace deep
 
     struct vao_selection
     {
-        GL3::vao_manager::vao *currentVao;
+        GL3::vao_manager::vao_item *currentVao;
+        GL3::gl_id currentVaoID;
         pair<size_t, size_t> selection;
 
         vao_selection();
@@ -32,6 +35,22 @@ namespace deep
 
     vao_selection::vao_selection()
         : currentVao(nullptr),
+          currentVaoID(0),
+          selection(0, static_cast<size_t>(-1))
+    { }
+
+    struct shader_selection
+    {
+        GL3::program_manager::program_item *currentProgram;
+        GL3::gl_id currentProgramID;
+        pair<size_t, size_t> selection;
+
+        shader_selection();
+    };
+
+    shader_selection::shader_selection()
+        : currentProgram(nullptr),
+          currentProgramID(0),
           selection(0, static_cast<size_t>(-1))
     { }
 
@@ -130,7 +149,7 @@ namespace deep
         }
     }
 
-    void __vaos_enum_callback(GL3::gl_id /*vaoID*/, GL3::vao_manager::vao *_vao, mem_ptr args)
+    void __vaos_enum_callback(GL3::gl_id vaoID, GL3::vao_manager::vao_item *_vao, mem_ptr args)
     {
         vao_selection *sel = (vao_selection *) args;
 
@@ -138,6 +157,23 @@ namespace deep
         {
             sel->selection.value2() = sel->selection.value1();
             sel->currentVao = _vao;
+            sel->currentVaoID = vaoID;
+        }
+
+        sel->selection.value1()++;
+    }
+
+    void __programs_enum_callback(GL3::gl_id programID, GL3::program_manager::program_item *program, mem_ptr args)
+    {
+        shader_selection *sel = (shader_selection *) args;
+
+        const char *name = program->name.str();
+
+        if(ImGui::Selectable((name != nullptr ? name : ""), sel->selection.value1() == sel->selection.value2()))
+        {
+            sel->selection.value2() = sel->selection.value1();
+            sel->currentProgram = program;
+            sel->currentProgramID = programID;
         }
 
         sel->selection.value1()++;
@@ -271,7 +307,8 @@ namespace deep
                             static bool addDrawableComponent = false;
                             static bool addTransformationComponent = false;
 
-                            static vao_selection sel;
+                            static vao_selection vaoSel;
+                            static shader_selection shaderSel;
 
                             // Menu de sélection des composants à ajouter.
 
@@ -279,12 +316,22 @@ namespace deep
                             {
                                 ImGui::Checkbox("Attacher le composant", &addDrawableComponent);
 
-                                if(ImGui::BeginCombo("VAO", sel.currentVao != nullptr ? sel.currentVao->name.str() : ""))
+                                if(ImGui::BeginCombo("VAO", vaoSel.currentVao != nullptr ? vaoSel.currentVao->name.str() : ""))
                                 {
                                     GL3::vao_manager *vaoManager = GL3::vao_manager::get_singleton();
-                                    sel.selection.value1() = 0;
+                                    vaoSel.selection.value1() = 0;
 
-                                    vaoManager->enum_vaos(__vaos_enum_callback, &sel);
+                                    vaoManager->enum_vaos(__vaos_enum_callback, &vaoSel);
+
+                                    ImGui::EndCombo();
+                                }
+
+                                if(ImGui::BeginCombo("Shader", shaderSel.currentProgram != nullptr ? shaderSel.currentProgram->name.str() : ""))
+                                {
+                                    GL3::program_manager *programManager = GL3::program_manager::get_singleton();
+                                    shaderSel.selection.value1() = 0;
+
+                                    programManager->enum_programs(__programs_enum_callback, &shaderSel);
 
                                     ImGui::EndCombo();
                                 }
@@ -327,17 +374,25 @@ namespace deep
 
                                 if(addDrawableComponent)
                                 {
-                                    // TODO: ajouter le composant.
+                                    if(vaoSel.currentVao == nullptr || shaderSel.currentProgram == nullptr)
+                                        goto cancel_component;
+
+                                    GL3::texture_manager *textureManager = GL3::texture_manager::get_singleton();
+
+                                    component_id id = componentManager->create_drawable_component(shaderSel.currentProgramID, vaoSel.currentVao->attachedVbo, vaoSel.currentVaoID, textureManager->get_white_texture());
+
+                                    entityManager->attach_component(ent.get_entity_id(), ent.get_collection_id(), id);
                                 }
 
                                 if(addTransformationComponent)
                                 {
-                                    component_id id = componentManager->createTransformationComponent(fvec3(x, y, z), fvec3(sx, sy, sz), rotation);
+                                    component_id id = componentManager->create_transformation_component(fvec3(x, y, z), fvec3(sx, sy, sz), rotation);
 
                                     entityManager->attach_component(ent.get_entity_id(), ent.get_collection_id(), id);
                                 }
 
                                 nameBuffer[0] = '\0';
+cancel_component: ;
                             }
                         }
 

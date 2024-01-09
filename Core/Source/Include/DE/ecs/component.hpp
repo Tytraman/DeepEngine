@@ -31,9 +31,7 @@ namespace deep
 
     constexpr component_type DrawableComponentType = (1 << 0);
 
-    /// @struct drawable_component
-    /// @brief	Composant indiquant qu'une entité peut dessiner une forme.
-    struct DE_API drawable_component
+    struct drawable_component
     {
         GL3::gl_id vbo;
         GL3::gl_id vao;
@@ -42,8 +40,8 @@ namespace deep
         GL3::gl_id program;
         drawable_render_callback renderCallback;
 
-        static void classicRenderCallback(GL3::gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, Camera *camera);
-        static void skyboxRenderCallback(GL3::gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, Camera *camera);
+        DE_API static void classic_render_callback(GL3::gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, Camera *camera);
+        DE_API static void skybox_render_callback(GL3::gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, Camera *camera);
         
         private:
             drawable_component(GL3::gl_id program, GL3::gl_id vbo, GL3::gl_id vao, GL3::gl_id texture = 0, uint8_t textureUnit = 0);
@@ -53,23 +51,21 @@ namespace deep
 
     constexpr component_type TransformationComponentType = (1 << 1);
 
-    /// @struct transformation_component
-    /// @brief	Composant indiquant qu'une entité possède une transformation.
-    struct DE_API transformation_component
+    struct transformation_component
     {
         
         public:
-            fvec3 getTranslation() const;
-            fvec3 getScaling() const;
-            float getRotationX() const;
-            float getRotationY() const;
-            float getRotationZ() const;
+            DE_API fvec3 get_translation() const;
+            DE_API fvec3 get_scaling() const;
+            DE_API float get_rotation_X() const;
+            DE_API float get_rotation_Y() const;
+            DE_API float get_rotation_Z() const;
 
-            void setTranslation(const fvec3 &translation);
-            void setScaling(const fvec3 &scaling);
-            void setRotationX(float rotation);
-            void setRotationY(float rotation);
-            void setRotationZ(float rotation);
+            DE_API void set_translation(const fvec3 &translation);
+            DE_API void set_scaling(const fvec3 &scaling);
+            DE_API void set_rotation_X(float rotation);
+            DE_API void set_rotation_Y(float rotation);
+            DE_API void set_rotation_Z(float rotation);
 
         private:
             fvec3 m_Translation;
@@ -85,12 +81,12 @@ namespace deep
     };
 
     constexpr component_type VelocityComponentType = (1 << 3);
-    struct DE_API velocity_component
+    struct velocity_component
     {
 
         public:
-            fvec3 getVelocity() const;
-            void setVelocity(const fvec3 &vel);
+            DE_API fvec3 get_velocity() const;
+            DE_API void set_velocity(const fvec3 &vel);
 
         private:
             fvec3 m_Velocity;
@@ -105,7 +101,7 @@ namespace deep
     /// @struct collider_component
     /// @brief  Composant décrivant qu'une entité possède une boîte de collision de type AABB.
     /// @remark En utilisant l'AABB, il n'est pas conseillé de tourner les objets car la boîte de collision est rectangulaire.
-    struct DE_API collider_component
+    struct collider_component
     {
 
         public:
@@ -119,7 +115,7 @@ namespace deep
 
     constexpr component_type AccelerationComponentType = (1 << 4);
 
-    struct DE_API acceleration_component
+    struct acceleration_component
     {
 
         public:
@@ -133,9 +129,7 @@ namespace deep
 
     constexpr component_type HealthComponentType = (1 << 5);
 
-    /// @struct health_component
-    /// @brief	Composant indiquant qu'une entité possède une quantité de points de vie.
-    struct DE_API health_component
+    struct health_component
     {
 
         public:
@@ -149,49 +143,44 @@ namespace deep
             friend component_manager;
     };
 
-    /// @class component_manager
-    /// @brief Permet la gestion de composants.
     class component_manager
     {
 
         public:
             DE_API static component_manager *get_singleton();
 
-            /// @brief           Récupère le type du composant spécifié.
-            /// @param component L'ID du composant auquel récupérer le type.
-            /// @return          Le type du composant.
-            DE_API component_type getType(component_id component);
+            DE_API component_type get_type(component_id component);
 
-            DE_API component_id createDrawableComponent(GL3::gl_id program, GL3::gl_id vbo, GL3::gl_id vao, GL3::gl_id texture = 0, uint8_t textureUnit = 0);
-            DE_API component_id createDrawableComponent(const char *progName, const char *vboName, const char *vaoName, const char *textName = nullptr, uint8_t textureUnit = 0);
+            DE_API component_id create_drawable_component(GL3::gl_id program, GL3::gl_id vbo, GL3::gl_id vao, GL3::gl_id texture = 0, uint8_t textureUnit = 0);
+            DE_API component_id create_drawable_component(const char *progName, const char *vboName, const char *vaoName, const char *textName = nullptr, uint8_t textureUnit = 0);
 
-            DE_API drawable_component *getDrawableComponent(component_id component);
-            DE_API void deleteDrawableComponent(component_id id);
+            DE_API drawable_component *get_drawable_component(component_id component);
+            DE_API void delete_drawable_component(component_id id);
 
-            DE_API component_id createTransformationComponent(const fvec3 &translation, const fvec3 &scaling = fvec3(1.0f, 1.0f, 1.0f), float rotation = 0.0f);
-            DE_API transformation_component *getTransformationComponent(component_id component);
-            DE_API void deleteTransformationComponent(component_id id);
+            DE_API component_id create_transformation_component(const fvec3 &translation, const fvec3 &scaling = fvec3(1.0f, 1.0f, 1.0f), float rotation = 0.0f);
+            DE_API transformation_component *get_transformation_component(component_id component);
+            DE_API void delete_transformation_component(component_id id);
 
-            DE_API component_id createColliderComponent();
-            DE_API collider_component *getColliderComponent(component_id component);
-            DE_API void deleteColliderComponent(component_id id);
+            DE_API component_id create_collider_component();
+            DE_API collider_component *get_collider_component(component_id component);
+            DE_API void delete_collider_component(component_id id);
 
-            DE_API component_id createVelocityComponent();
-            DE_API velocity_component *getVelocityComponent(component_id component);
-            DE_API void deleteVelocityComponent(component_id id);
+            DE_API component_id create_velocity_component();
+            DE_API velocity_component *get_velocity_component(component_id component);
+            DE_API void delete_velocity_component(component_id id);
 
-            DE_API component_id createAccelerationComponent(const fvec2 &acceleration);
-            DE_API acceleration_component *getAccelerationComponent(component_id component);
-            DE_API void deleteAccelerationComponent(component_id component);
+            DE_API component_id create_acceleration_component(const fvec2 &acceleration);
+            DE_API acceleration_component *get_acceleration_component(component_id component);
+            DE_API void delete_acceleration_component(component_id component);
             
-            DE_API component_id createHealthComponent(uint32_t pv, uint32_t max);
-            DE_API health_component *getHealthComponent(component_id component);
-            DE_API void deleteHealthComponent(component_id id);
+            DE_API component_id create_health_component(uint32_t pv, uint32_t max);
+            DE_API health_component *get_health_component(component_id component);
+            DE_API void delete_health_component(component_id id);
 
         private:
             component_manager();
 
-            component_id m_ComponentCount;                  ///< Comptabilise le nombre total de composants créés.
+            component_id m_ComponentCount;
             hash_table<component_type> m_ComponentsType;
             hash_table<drawable_component> m_DrawableComponents;
             hash_table<transformation_component> m_TransformationComponents;
@@ -206,126 +195,126 @@ namespace deep
     };
 
     /*
-    ======================================
-    component_manager::getDrawableComponent
-    ======================================
+    =========================================
+    component_manager::get_drawable_component
+    =========================================
     */
-    inline drawable_component *component_manager::getDrawableComponent(component_id component)
+    inline drawable_component *component_manager::get_drawable_component(component_id component)
     {
         return &m_DrawableComponents[component]->value;
     }
 
     /*
-    ============================================
-    component_manager::getTransformationComponent
-    ============================================
+    ===============================================
+    component_manager::get_transformation_component
+    ===============================================
     */
-    inline transformation_component *component_manager::getTransformationComponent(component_id component)
+    inline transformation_component *component_manager::get_transformation_component(component_id component)
     {
         return &m_TransformationComponents[component]->value;
     }
 
     /*
-    ======================================
-    component_manager::getVelocityComponent
-    ======================================
+    =========================================
+    component_manager::get_velocity_component
+    =========================================
     */
-    inline velocity_component *component_manager::getVelocityComponent(component_id component)
+    inline velocity_component *component_manager::get_velocity_component(component_id component)
     {
         return &m_VelocityComponents[component]->value;
     }
 
     /*
-    ======================================
-    component_manager::getColliderComponent
-    ======================================
+    =========================================
+    component_manager::get_collider_component
+    =========================================
     */
-    inline collider_component *component_manager::getColliderComponent(component_id component)
+    inline collider_component *component_manager::get_collider_component(component_id component)
     {
         return &m_ColliderComponents[component]->value;
     }
 
     /*
-    ==========================================
-    component_manager::getAccelerationComponent
-    ==========================================
+    =============================================
+    component_manager::get_acceleration_component
+    =============================================
     */
-    inline acceleration_component *component_manager::getAccelerationComponent(component_id component)
+    inline acceleration_component *component_manager::get_acceleration_component(component_id component)
     {
         return &m_AccelerationComponents[component]->value;
     }
 
     /*
-    ====================================
-    component_manager::getHealthComponent
-    ====================================
+    =======================================
+    component_manager::get_health_component
+    =======================================
     */
-    inline health_component *component_manager::getHealthComponent(component_id component)
+    inline health_component *component_manager::get_health_component(component_id component)
     {
         return &m_HealthComponents[component]->value;
     }
 
     /*
-    =========================================
-    component_manager::deleteDrawableComponent
-    =========================================
+    ============================================
+    component_manager::delete_drawable_component
+    ============================================
     */
-    inline void component_manager::deleteDrawableComponent(component_id component)
+    inline void component_manager::delete_drawable_component(component_id component)
     {
         m_DrawableComponents.remove(component);
         m_ComponentsType.remove(component);
     }
 
     /*
-    ===============================================
-    component_manager::deleteTransformationComponent
-    ===============================================
+    ==================================================
+    component_manager::delete_transformation_component
+    ==================================================
     */
-    inline void component_manager::deleteTransformationComponent(component_id component)
+    inline void component_manager::delete_transformation_component(component_id component)
     {
         m_TransformationComponents.remove(component);
         m_ComponentsType.remove(component);
     }
 
     /*
-    =========================================
-    component_manager::deleteVelocityComponent
-    =========================================
+    ============================================
+    component_manager::delete_velocity_component
+    ============================================
     */
-    inline void component_manager::deleteVelocityComponent(component_id component)
+    inline void component_manager::delete_velocity_component(component_id component)
     {
         m_VelocityComponents.remove(component);
         m_ComponentsType.remove(component);
     }
 
     /*
-    =========================================
-    component_manager::deleteColliderComponent
-    =========================================
+    ============================================
+    component_manager::delete_collider_component
+    ============================================
     */
-    inline void component_manager::deleteColliderComponent(component_id component)
+    inline void component_manager::delete_collider_component(component_id component)
     {
         m_ColliderComponents.remove(component);
         m_ComponentsType.remove(component);
     }
 
     /*
-    =============================================
-    component_manager::deleteAccelerationComponent
-    =============================================
+    ================================================
+    component_manager::delete_acceleration_component
+    ================================================
     */
-    inline void component_manager::deleteAccelerationComponent(component_id component)
+    inline void component_manager::delete_acceleration_component(component_id component)
     {
         m_AccelerationComponents.remove(component);
         m_ComponentsType.remove(component);
     }
 
     /*
-    =======================================
-    component_manager::deleteHealthComponent
-    =======================================
+    ==========================================
+    component_manager::delete_health_component
+    ==========================================
     */
-    inline void component_manager::deleteHealthComponent(component_id id)
+    inline void component_manager::delete_health_component(component_id id)
     {
         m_HealthComponents.remove(id);
         m_ComponentsType.remove(id);
@@ -336,115 +325,111 @@ namespace deep
     
 
     /*
-    =======================================
-    transformation_component::getTranslation
-    =======================================
+    ========================================
+    transformation_component::get_translation
+    ========================================
     */
-    inline fvec3 transformation_component::getTranslation() const
+    inline fvec3 transformation_component::get_translation() const
     {
         return m_Translation;
     }
 
     /*
-    ===================================
-    transformation_component::getScaling
-    ===================================
+    ====================================
+    transformation_component::get_scaling
+    ====================================
     */
-    inline fvec3 transformation_component::getScaling() const
+    inline fvec3 transformation_component::get_scaling() const
     {
         return m_Scaling;
     }
 
     /*
-    =====================================
-    transformation_component::getRotationX
-    =====================================
+    ======================================
+    transformation_component::get_rotation_X
+    ======================================
     */
-    inline float transformation_component::getRotationX() const
+    inline float transformation_component::get_rotation_X() const
     {
         return m_RotationX;
     }
 
     /*
-    =====================================
-    transformation_component::getRotationY
-    =====================================
+    ======================================
+    transformation_component::get_rotation_Y
+    ======================================
     */
-    inline float transformation_component::getRotationY() const
+    inline float transformation_component::get_rotation_Y() const
     {
         return m_RotationY;
     }
 
     /*
-    =====================================
-    transformation_component::getRotationZ
-    =====================================
+    ======================================
+    transformation_component::get_rotation_Z
+    ======================================
     */
-    inline float transformation_component::getRotationZ() const
+    inline float transformation_component::get_rotation_Z() const
     {
         return m_RotationZ;
     }
 
     /*
-    =======================================
-    transformation_component::setTranslation
-    =======================================
+    ========================================
+    transformation_component::set_translation
+    ========================================
     */
-    inline void transformation_component::setTranslation(const fvec3 &translation)
+    inline void transformation_component::set_translation(const fvec3 &translation)
     {
         m_Translation = translation;
     }
 
     /*
-    ===================================
-    transformation_component::setScaling
-    ===================================
+    ====================================
+    transformation_component::set_scaling
+    ====================================
     */
-    inline void transformation_component::setScaling(const fvec3 &scaling)
+    inline void transformation_component::set_scaling(const fvec3 &scaling)
     {
         m_Scaling = scaling;
     }
 
     /*
-    =====================================
-    transformation_component::setRotationX
-    =====================================
+    ======================================
+    transformation_component::set_rotation_X
+    ======================================
     */
-    inline void transformation_component::setRotationX(float rotation)
+    inline void transformation_component::set_rotation_X(float rotation)
     {
         m_RotationX = rotation;
     }
 
     /*
-    =====================================
-    transformation_component::setRotationY
-    =====================================
+    ======================================
+    transformation_component::set_rotation_Y
+    ======================================
     */
-    inline void transformation_component::setRotationY(float rotation)
+    inline void transformation_component::set_rotation_Y(float rotation)
     {
         m_RotationY = rotation;
     }
 
     /*
-    =====================================
-    transformation_component::setRotationZ
-    =====================================
+    ======================================
+    transformation_component::set_rotation_Z
+    ======================================
     */
-    inline void transformation_component::setRotationZ(float rotation)
+    inline void transformation_component::set_rotation_Z(float rotation)
     {
         m_RotationZ = rotation;
     }
 
-    
-
-    
-
-    inline fvec3 velocity_component::getVelocity() const
+    inline fvec3 velocity_component::get_velocity() const
     {
         return m_Velocity;
     }
 
-    inline void velocity_component::setVelocity(const fvec3 &vel)
+    inline void velocity_component::set_velocity(const fvec3 &vel)
     {
         m_Velocity = vel;
     }

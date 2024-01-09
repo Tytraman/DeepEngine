@@ -8,13 +8,13 @@ namespace deep
 
         /*
         =====================
-        vao_manager::vao::vao
+        vao_manager::vao_item::vao_item
         =====================
         */
-        vao_manager::vao::vao(const char *_name, GLuint vao, gl_id vbo)
+        vao_manager::vao_item::vao_item(const char *_name, GLuint vao, gl_id vbo)
             : name(_name),
               glVao(vao),
-              glAttachedVbo(vbo)
+              attachedVbo(vbo)
         { }
 
         /*
@@ -50,7 +50,7 @@ namespace deep
 
             DE_GL_CALL(glGenVertexArrays(1, &glVao));
 
-            hash_entry<vao> &el = m_VAOs.insert(name, vao(name, glVao, static_cast<gl_id>(0)));
+            hash_entry<vao_item> &el = m_VAOs.insert(name, vao_item(name, glVao, static_cast<gl_id>(0)));
 
             return el.key;
         }
@@ -74,7 +74,7 @@ namespace deep
         */
         bool vao_manager::bind(gl_id _vao)
         {
-            hash_entry<vao> *el = m_VAOs[_vao];
+            hash_entry<vao_item> *el = m_VAOs[_vao];
             if(el == nullptr)
                 return false;
 
@@ -92,7 +92,7 @@ namespace deep
         */
         bool vao_manager::bind(const char *name)
         {
-            hash_entry<vao> *el = m_VAOs[name];
+            hash_entry<vao_item> *el = m_VAOs[name];
             if(el == nullptr)
                 return false;
 
@@ -110,11 +110,11 @@ namespace deep
         */
         bool vao_manager::attach_vbo(gl_id _vao, gl_id vbo)
         {
-            hash_entry<vao> *el = m_VAOs[_vao];
+            hash_entry<vao_item> *el = m_VAOs[_vao];
             if(el == nullptr)
                 return false;
 
-            el->value.glAttachedVbo = vbo;
+            el->value.attachedVbo = vbo;
 
             return true;
         }
@@ -126,11 +126,11 @@ namespace deep
         */
         gl_id vao_manager::get_attached_vbo(gl_id _vao)
         {
-            hash_entry<vao> *el = m_VAOs[_vao];
+            hash_entry<vao_item> *el = m_VAOs[_vao];
             if(el == nullptr)
                 return false;
 
-            return el->value.glAttachedVbo;
+            return el->value.attachedVbo;
         }
 
         /*
@@ -161,7 +161,7 @@ namespace deep
         */
         bool vao_manager::destroy(gl_id _vao)
         {
-            hash_entry<vao> *el = m_VAOs[_vao];
+            hash_entry<vao_item> *el = m_VAOs[_vao];
             if(el == nullptr)
                 return false;
 
@@ -178,7 +178,7 @@ namespace deep
         */
         bool vao_manager::destroy(const char *name)
         {
-            hash_entry<vao> *el = m_VAOs[name];
+            hash_entry<vao_item> *el = m_VAOs[name];
             if(el == nullptr)
                 return false;
 

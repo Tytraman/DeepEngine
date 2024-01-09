@@ -17,16 +17,16 @@ namespace deep
         {
 
             public:
-                struct vao
+                struct vao_item
                 {
                     string name;
                     GLuint glVao;
-                    gl_id glAttachedVbo;
+                    gl_id attachedVbo;
 
-                    DE_API vao(const char *name, GLuint vao, gl_id vbo);
+                    DE_API vao_item(const char *name, GLuint vao, gl_id vbo);
                 };
 
-                using enum_callback = void (*)(gl_id vaoID, vao *_vao, mem_ptr args);
+                using enum_callback = void (*)(gl_id vaoID, vao_item *_vao, mem_ptr args);
 
             public:
                 DE_API static vao_manager *get_singleton();
@@ -56,7 +56,7 @@ namespace deep
 
                 GLuint m_CurrentlyBound;
                 gl_id m_CurrentID;
-                hash_table<vao> m_VAOs;
+                hash_table<vao_item> m_VAOs;
 
             public:
                  vao_manager(const vao_manager &) = delete;

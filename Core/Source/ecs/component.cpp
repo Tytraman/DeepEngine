@@ -22,11 +22,11 @@ namespace deep
     }
 
     /*
-    =========================================
-    drawable_component::classicRenderCallback
-    =========================================
+    ===========================================
+    drawable_component::classic_render_callback
+    ===========================================
     */
-    void drawable_component::classicRenderCallback(GL3::gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, Camera *camera)
+    void drawable_component::classic_render_callback(GL3::gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, Camera *camera)
     {
         GL3::gl_id program = drawable->program;
         GL3::gl_id vao = drawable->vao;
@@ -51,11 +51,11 @@ namespace deep
             textureManager->bind(texture, textureUnit);
 
         programManager->set_uniform("myTex", 0);
-        programManager->set_uniform("mTrs", transformation->getTranslation());
-        programManager->set_uniform("mRotX", transformation->getRotationX());
-        programManager->set_uniform("mRotY", transformation->getRotationY());
-        programManager->set_uniform("mRotZ", transformation->getRotationZ());
-        programManager->set_uniform("mScl", transformation->getScaling());
+        programManager->set_uniform("mTrs", transformation->get_translation());
+        programManager->set_uniform("mRotX", transformation->get_rotation_X());
+        programManager->set_uniform("mRotY", transformation->get_rotation_Y());
+        programManager->set_uniform("mRotZ", transformation->get_rotation_Z());
+        programManager->set_uniform("mScl", transformation->get_scaling());
         programManager->set_uniform("view", camera->lookAt());
         programManager->set_uniform("proj", fmat4x4::perspective(fmat4x4(), 45.0f, (float) window->get_width() / (float) window->get_height(), 0.1f, 1000.0f));
 
@@ -65,11 +65,11 @@ namespace deep
     }
 
     /*
-    ========================================
-    drawable_component::skyboxRenderCallback
-    ========================================
+    ==========================================
+    drawable_component::skybox_render_callback
+    ==========================================
     */
-    void drawable_component::skyboxRenderCallback(GL3::gl_renderer &renderer, drawable_component *drawable, transformation_component *, window *window, Camera *camera)
+    void drawable_component::skybox_render_callback(GL3::gl_renderer &renderer, drawable_component *drawable, transformation_component *, window *window, Camera *camera)
     {
         GL3::program_manager *programManager = GL3::program_manager::get_singleton();
         GL3::vbo_manager *vboManager = GL3::vbo_manager::get_singleton();
@@ -128,11 +128,11 @@ namespace deep
     }
 
     /*
-    ==========================
-    component_manager::getType
-    ==========================
+    ===========================
+    component_manager::get_type
+    ===========================
     */
-    component_type component_manager::getType(component_id component)
+    component_type component_manager::get_type(component_id component)
     {
         const auto hs = m_ComponentsType[component];
         if(hs == nullptr)
@@ -156,11 +156,11 @@ namespace deep
     { }
 
     /*
-    ==========================================
-    component_manager::createDrawableComponent
-    ==========================================
+    ============================================
+    component_manager::create_drawable_component
+    ============================================
     */
-    component_id component_manager::createDrawableComponent(GL3::gl_id program, GL3::gl_id vbo, GL3::gl_id vao, GL3::gl_id texture, uint8_t textureUnit)
+    component_id component_manager::create_drawable_component(GL3::gl_id program, GL3::gl_id vbo, GL3::gl_id vao, GL3::gl_id texture, uint8_t textureUnit)
     {
         component_id id = m_ComponentCount;
         drawable_component drawable(program, vbo, vao, texture, textureUnit);
@@ -175,11 +175,11 @@ namespace deep
     }
 
     /*
-    ==========================================
-    component_manager::createDrawableComponent
-    ==========================================
+    ============================================
+    component_manager::create_drawable_component
+    ============================================
     */
-    component_id component_manager::createDrawableComponent(const char *progName, const char *vboName, const char *vaoName, const char *textName, uint8_t textureUnit)
+    component_id component_manager::create_drawable_component(const char *progName, const char *vboName, const char *vaoName, const char *textName, uint8_t textureUnit)
     {
         GL3::program_manager *programManager = GL3::program_manager::get_singleton();
 
@@ -193,7 +193,7 @@ namespace deep
         if(textName != nullptr)
             texture = hash(textName);
 
-        return createDrawableComponent(prog, vbo, vao, texture, textureUnit);
+        return create_drawable_component(prog, vbo, vao, texture, textureUnit);
     }
 
     /*
@@ -211,10 +211,10 @@ namespace deep
 
     /*
     ================================================
-    component_manager::createTransformationComponent
+    component_manager::create_transformation_component
     ================================================
     */
-    component_id component_manager::createTransformationComponent(const fvec3 &translation, const fvec3 &scaling, float rotation)
+    component_id component_manager::create_transformation_component(const fvec3 &translation, const fvec3 &scaling, float rotation)
     {
         component_id id = m_ComponentCount;
         transformation_component transformation(translation, scaling, rotation);
@@ -239,10 +239,10 @@ namespace deep
 
     /*
     =========================================
-    component_manager::createVelocityComponent
+    component_manager::create_velocity_component
     =========================================
     */
-    component_id component_manager::createVelocityComponent()
+    component_id component_manager::create_velocity_component()
     {
         component_id id = m_ComponentCount;
         velocity_component velocity;
@@ -267,10 +267,10 @@ namespace deep
 
     /*
     =========================================
-    component_manager::createColliderComponent
+    component_manager::create_collider_component
     =========================================
     */
-    component_id component_manager::createColliderComponent()
+    component_id component_manager::create_collider_component()
     {
         component_id id = m_ComponentCount;
         collider_component collider;
@@ -295,10 +295,10 @@ namespace deep
 
     /*
     =============================================
-    component_manager::createAccelerationComponent
+    component_manager::create_acceleration_component
     =============================================
     */
-    component_id component_manager::createAccelerationComponent(const fvec2 &acceleration)
+    component_id component_manager::create_acceleration_component(const fvec2 &acceleration)
     {
         component_id id = m_ComponentCount;
         acceleration_component acc(acceleration);
@@ -332,10 +332,10 @@ namespace deep
 
     /*
     =======================================
-    component_manager::createHealthComponent
+    component_manager::create_health_component
     =======================================
     */
-    component_id component_manager::createHealthComponent(uint32_t pv, uint32_t max)
+    component_id component_manager::create_health_component(uint32_t pv, uint32_t max)
     {
         component_id id = m_ComponentCount;
         health_component health(pv, max);

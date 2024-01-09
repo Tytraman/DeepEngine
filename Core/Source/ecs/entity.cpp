@@ -146,13 +146,13 @@ namespace deep
 
         component_manager *componentManager = component_manager::get_singleton();
 
-        component_id drawableComponentID       = componentManager->createDrawableComponent(program, pol.vbo(), pol.vao());
-        component_id transformationComponentID = componentManager->createTransformationComponent(position, size, 0.0f);
+        component_id drawableComponentID       = componentManager->create_drawable_component(program, pol.vbo(), pol.vao());
+        component_id transformationComponentID = componentManager->create_transformation_component(position, size, 0.0f);
 
-        drawable_component *drawableComponent = componentManager->getDrawableComponent(drawableComponentID);
+        drawable_component *drawableComponent = componentManager->get_drawable_component(drawableComponentID);
         drawableComponent->texture = texture;
         drawableComponent->textureUnit = textureUnit;
-        drawableComponent->renderCallback = drawable_component::classicRenderCallback;
+        drawableComponent->renderCallback = drawable_component::classic_render_callback;
 
         entity_manager::attach_component(name, ent.m_CollectionID, drawableComponentID);
         entity_manager::attach_component(name, ent.m_CollectionID, transformationComponentID);
@@ -254,7 +254,7 @@ namespace deep
 
         component_manager *componentManager = component_manager::get_singleton();
 
-        component_type type = componentManager->getType(component);
+        component_type type = componentManager->get_type(component);
 
         if((item.componentsType & type) == type)
             return false;
@@ -296,7 +296,7 @@ namespace deep
         {
             component = *it;
 
-            t = componentManager->getType(component);
+            t = componentManager->get_type(component);
             if(t == type)
                 return component;
         }

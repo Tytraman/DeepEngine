@@ -160,19 +160,19 @@ namespace deep
             entity = entities[i];
 
             component_id velCpnID = entityManager->get_component_id(collectionID, entity, VelocityComponentType);
-            velocity_component *velCpn = componentManager->getVelocityComponent(velCpnID);
+            velocity_component *velCpn = componentManager->get_velocity_component(velCpnID);
 
             if(velCpn == nullptr)
                 continue;
 
             component_id accCpnID = entityManager->get_component_id(collectionID, entity, AccelerationComponentType);
-            acceleration_component *accCpn = componentManager->getAccelerationComponent(accCpnID);
+            acceleration_component *accCpn = componentManager->get_acceleration_component(accCpnID);
 
             if(accCpn == nullptr)
                 continue;
 
             // Applique l'accélération à la vélocité.
-            velCpn->setVelocity(velCpn->getVelocity() + accCpn->acceleration);
+            velCpn->set_velocity(velCpn->get_velocity() + accCpn->acceleration);
         }
     }
 
@@ -209,29 +209,29 @@ namespace deep
 
             component_id transformationComponentID = entityManager->get_component_id(collectionID, entity, TransformationComponentType);
 
-            transformation_component *transformationComponent = componentManager->getTransformationComponent(transformationComponentID);
+            transformation_component *transformationComponent = componentManager->get_transformation_component(transformationComponentID);
 
             if(transformationComponent == nullptr)
                 continue;
 
             component_id velocityComponentID = entityManager->get_component_id(collectionID, entity, VelocityComponentType);
 
-            velocity_component *velocityComponent = componentManager->getVelocityComponent(velocityComponentID);
+            velocity_component *velocityComponent = componentManager->get_velocity_component(velocityComponentID);
 
             if(velocityComponent == nullptr)
                 continue;
 
             // Applique la vélocité sur la transformation.
-            fvec3 translation = transformationComponent->getTranslation();
-            fvec3 velocity = velocityComponent->getVelocity();
+            fvec3 translation = transformationComponent->get_translation();
+            fvec3 velocity = velocityComponent->get_velocity();
             translation += velocity;
-            transformationComponent->setTranslation(translation);
+            transformationComponent->set_translation(translation);
 
             // Si l'entité possède une collision, on met à jour sa position aussi.
             component_id colliderComponentID = entityManager->get_component_id(collectionID, entity, ColliderComponentType);
             if(colliderComponentID != badID)
             {
-                collider_component *colliderComponent = componentManager->getColliderComponent(colliderComponentID);
+                collider_component *colliderComponent = componentManager->get_collider_component(colliderComponentID);
                 colliderComponent->contour.pos += velocity;
             }
         }
@@ -287,7 +287,7 @@ namespace deep
 
             component_id colliderComponentID1 = entityManager->get_component_id(collectionID, entity1, ColliderComponentType);
 
-            collider_component *colliderComponent1 = componentManager->getColliderComponent(colliderComponentID1);
+            collider_component *colliderComponent1 = componentManager->get_collider_component(colliderComponentID1);
 
             const fvec2 &col1 = colliderComponent1->contour.pos;
             const float &w1   = colliderComponent1->contour.w;
@@ -303,7 +303,7 @@ namespace deep
                 entity2 = entities[j];
 
                 component_id colliderComponentID2 = entityManager->get_component_id(collectionID, entity2, ColliderComponentType);
-                collider_component *colliderComponent2 = componentManager->getColliderComponent(colliderComponentID2);
+                collider_component *colliderComponent2 = componentManager->get_collider_component(colliderComponentID2);
 
                 if(colliderComponent2 == nullptr)
                     continue;
@@ -413,8 +413,8 @@ namespace deep
                 drawableComponentID       = entityManager->get_component_id(*begin, collection, DrawableComponentType);
                 transformationComponentID = entityManager->get_component_id(*begin, collection, TransformationComponentType);
 
-                drawable_component *drawableComponent = componentManager->getDrawableComponent(drawableComponentID);
-                transformation_component *transformationComponent = componentManager->getTransformationComponent(transformationComponentID);
+                drawable_component *drawableComponent = componentManager->get_drawable_component(drawableComponentID);
+                transformation_component *transformationComponent = componentManager->get_transformation_component(transformationComponentID);
 
                 // La façon dont un drawable est rendu peut être différente selon leur type, donc on utilise une fonction de callback.
                 if(drawableComponent->renderCallback != nullptr)

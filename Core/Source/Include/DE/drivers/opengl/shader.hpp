@@ -63,14 +63,17 @@ namespace deep
             public:
                 struct program_item
                 {
+                    string name;
                     GLuint program;
                     hash_table<pair<int, float>> fUniforms;
                     hash_table<pair<int, int>> iUniforms;
                     hash_table<pair<int, fvec3>> fv3Uniforms;
                     hash_table<pair<int, fmat4x4>> fm4Uniforms;
 
-                    DE_API program_item(GLuint program);
+                    DE_API program_item(const char *name, GLuint program);
                 };
+
+                using enum_callback = void (*)(gl_id programID, program_item *program, mem_ptr args);
 
             public:
                 DE_API static program_manager *get_singleton();
@@ -110,6 +113,8 @@ namespace deep
 
                 DE_API bool exists(gl_id program);
                 DE_API bool exists(const char *name);
+
+                DE_API void enum_programs(enum_callback callback, mem_ptr args);
 
                 DE_API hash_entry<program_item> *get(gl_id program);
                 DE_API hash_entry<program_item> *get(const char *name);

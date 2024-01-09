@@ -83,13 +83,13 @@ namespace deep
         GL3::vao_manager *vaoManager = GL3::vao_manager::get_singleton();
         GL3::texture_manager *textureManager = GL3::texture_manager::get_singleton();
 
-        component_id drawableComponentID       = componentManager->createDrawableComponent(program, vboManager->create(name), vaoManager->create(name));
-        component_id transformationComponentID = componentManager->createTransformationComponent(position, fvec3(width, height, 1.0f), 0.0f);
+        component_id drawableComponentID       = componentManager->create_drawable_component(program, vboManager->create(name), vaoManager->create(name));
+        component_id transformationComponentID = componentManager->create_transformation_component(position, fvec3(width, height, 1.0f), 0.0f);
 
-        drawable_component *drawableComponent = componentManager->getDrawableComponent(drawableComponentID);
+        drawable_component *drawableComponent = componentManager->get_drawable_component(drawableComponentID);
         drawableComponent->texture = textureManager->get_white_texture();
         drawableComponent->textureUnit = 0;
-        drawableComponent->renderCallback = drawable_component::classicRenderCallback;
+        drawableComponent->renderCallback = drawable_component::classic_render_callback;
 
         float vPos[] =
         {
@@ -120,9 +120,9 @@ namespace deep
 
         if(collidable)
         {
-            component_id colliderComponentID = componentManager->createColliderComponent();
+            component_id colliderComponentID = componentManager->create_collider_component();
 
-            collider_component *colliderComponent = componentManager->getColliderComponent(colliderComponentID);
+            collider_component *colliderComponent = componentManager->get_collider_component(colliderComponentID);
             colliderComponent->contour.pos.x = position.x - width / 2;
             colliderComponent->contour.pos.y = position.y - height / 2;
             colliderComponent->contour.w = width;
@@ -156,11 +156,11 @@ namespace deep
         GL3::vbo_manager *vboManager = GL3::vbo_manager::get_singleton();
         GL3::vao_manager *vaoManager = GL3::vao_manager::get_singleton();
 
-        component_id drawableComponentID       = componentManager->createDrawableComponent(program, vboManager->create(name), vaoManager->create(name), texture, textureUnit);
-        component_id transformationComponentID = componentManager->createTransformationComponent(position, fvec3(width, height, 1.0f), 0.0f);
+        component_id drawableComponentID       = componentManager->create_drawable_component(program, vboManager->create(name), vaoManager->create(name), texture, textureUnit);
+        component_id transformationComponentID = componentManager->create_transformation_component(position, fvec3(width, height, 1.0f), 0.0f);
 
-        drawable_component *drawableComponent = componentManager->getDrawableComponent(drawableComponentID);
-        drawableComponent->renderCallback = drawable_component::classicRenderCallback;
+        drawable_component *drawableComponent = componentManager->get_drawable_component(drawableComponentID);
+        drawableComponent->renderCallback = drawable_component::classic_render_callback;
 
         float vPos[] =
         {
@@ -192,9 +192,9 @@ namespace deep
 
         if(collidable)
         {
-            component_id colliderComponentID = componentManager->createColliderComponent();
+            component_id colliderComponentID = componentManager->create_collider_component();
 
-            collider_component *colliderComponent = componentManager->getColliderComponent(colliderComponentID);
+            collider_component *colliderComponent = componentManager->get_collider_component(colliderComponentID);
             colliderComponent->contour.pos.x = position.x - width / 2;
             colliderComponent->contour.pos.y = position.y - height / 2;
             colliderComponent->contour.w = width;
@@ -232,13 +232,13 @@ namespace deep
         GL3::vao_manager *vaoManager = GL3::vao_manager::get_singleton();
         GL3::texture_manager *textureManager = GL3::texture_manager::get_singleton();
 
-        component_id drawableComponentID       = componentManager->createDrawableComponent(program, vboManager->create(name), vaoManager->create(name));
-        component_id transformationComponentID = componentManager->createTransformationComponent(position, fvec3(width, height, length), 0.0f);
+        component_id drawableComponentID       = componentManager->create_drawable_component(program, vboManager->create(name), vaoManager->create(name));
+        component_id transformationComponentID = componentManager->create_transformation_component(position, fvec3(width, height, length), 0.0f);
 
-        drawable_component *drawableComponent = componentManager->getDrawableComponent(drawableComponentID);
+        drawable_component *drawableComponent = componentManager->get_drawable_component(drawableComponentID);
         drawableComponent->texture = textureManager->get_white_texture();
         drawableComponent->textureUnit = 0;
-        drawableComponent->renderCallback = drawable_component::classicRenderCallback;
+        drawableComponent->renderCallback = drawable_component::classic_render_callback;
 
         float vPos[] = {
 
@@ -323,9 +323,9 @@ namespace deep
 
         if(collidable)
         {
-            component_id colliderComponentID = componentManager->createColliderComponent();
+            component_id colliderComponentID = componentManager->create_collider_component();
 
-            collider_component *colliderComponent = componentManager->getColliderComponent(colliderComponentID);
+            collider_component *colliderComponent = componentManager->get_collider_component(colliderComponentID);
             colliderComponent->contour.pos.x = position.x - width / 2;
             colliderComponent->contour.pos.y = position.y - height / 2;
             colliderComponent->contour.w = width;
@@ -364,11 +364,11 @@ namespace deep
         GL3::vbo_manager *vboManager = GL3::vbo_manager::get_singleton();
         GL3::vao_manager *vaoManager = GL3::vao_manager::get_singleton();
 
-        component_id drawableComponentID       = componentManager->createDrawableComponent(program, vboManager->create(name), vaoManager->create(name), texture, textureUnit);
-        component_id transformationComponentID = componentManager->createTransformationComponent(position, fvec3(width, height, length), 0.0f);
+        component_id drawableComponentID       = componentManager->create_drawable_component(program, vboManager->create(name), vaoManager->create(name), texture, textureUnit);
+        component_id transformationComponentID = componentManager->create_transformation_component(position, fvec3(width, height, length), 0.0f);
 
-        drawable_component *drawableComponent = componentManager->getDrawableComponent(drawableComponentID);
-        drawableComponent->renderCallback = drawable_component::classicRenderCallback;
+        drawable_component *drawableComponent = componentManager->get_drawable_component(drawableComponentID);
+        drawableComponent->renderCallback = drawable_component::classic_render_callback;
 
         float vPos[] =
         {
@@ -454,9 +454,9 @@ namespace deep
 
         if(collidable)
         {
-            component_id colliderComponentID = componentManager->createColliderComponent();
+            component_id colliderComponentID = componentManager->create_collider_component();
 
-            collider_component *colliderComponent = componentManager->getColliderComponent(colliderComponentID);
+            collider_component *colliderComponent = componentManager->get_collider_component(colliderComponentID);
             colliderComponent->contour.pos.x = position.x - width / 2;
             colliderComponent->contour.pos.y = position.y - height / 2;
             colliderComponent->contour.w = width;
@@ -582,11 +582,11 @@ namespace deep
         GL3::vbo_manager *vboManager = GL3::vbo_manager::get_singleton();
         GL3::vao_manager *vaoManager = GL3::vao_manager::get_singleton();
 
-        component_id drawableComponentID       = componentManager->createDrawableComponent(program, vboManager->create(name), vaoManager->create(name), texture, textureUnit);
-        component_id transformationComponentID = componentManager->createTransformationComponent(position, fvec3(width, height, length), 0.0f);
+        component_id drawableComponentID       = componentManager->create_drawable_component(program, vboManager->create(name), vaoManager->create(name), texture, textureUnit);
+        component_id transformationComponentID = componentManager->create_transformation_component(position, fvec3(width, height, length), 0.0f);
 
-        drawable_component *drawableComponent = componentManager->getDrawableComponent(drawableComponentID);
-        drawableComponent->renderCallback = drawable_component::skyboxRenderCallback;
+        drawable_component *drawableComponent = componentManager->get_drawable_component(drawableComponentID);
+        drawableComponent->renderCallback = drawable_component::skybox_render_callback;
 
         float vPos[] =
         {
@@ -659,9 +659,9 @@ namespace deep
 
         if(collidable)
         {
-            component_id colliderComponentID = componentManager->createColliderComponent();
+            component_id colliderComponentID = componentManager->create_collider_component();
 
-            collider_component *colliderComponent = componentManager->getColliderComponent(colliderComponentID);
+            collider_component *colliderComponent = componentManager->get_collider_component(colliderComponentID);
             colliderComponent->contour.pos.x = position.x - width / 2;
             colliderComponent->contour.pos.y = position.y - height / 2;
             colliderComponent->contour.w = width;

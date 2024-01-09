@@ -194,8 +194,9 @@ namespace deep
         program_item::program_item
         ==========================
         */
-        program_manager::program_item::program_item(GLuint _program)
-            : program(_program)
+        program_manager::program_item::program_item(const char *_name, GLuint _program)
+            : name(_name),
+              program(_program)
         { }
 
         /*
@@ -230,7 +231,7 @@ namespace deep
         {
             GLuint program = DE_GL_CALLV(glCreateProgram());
 
-            auto &el = m_Programs.insert(name, program);
+            auto &el = m_Programs.insert(name, program_item(name, program));
 
             return el.key;
         }
@@ -660,6 +661,23 @@ namespace deep
         void program_manager::destroy_all_programs()
         {
             m_Programs.clear();
+        }
+
+        /*
+        ==============================
+        program_manager::enum_programs
+        ==============================
+        */
+        void program_manager::enum_programs(enum_callback callback, mem_ptr args)
+        {
+            if(callback == nullptr)
+                return;
+
+            hash_table_iterator begin = m_Programs.begin();
+            hash_table_iterator end = m_Programs.end();
+
+            for(; begin != end; ++begin)
+                callback(begin->key, &begin->value, args);
         }
 
     }
