@@ -7,6 +7,17 @@ namespace deep
     {
 
         /*
+        =====================
+        vao_manager::vao::vao
+        =====================
+        */
+        vao_manager::vao::vao(const char *_name, GLuint vao, gl_id vbo)
+            : name(_name),
+              glVao(vao),
+              glAttachedVbo(vbo)
+        { }
+
+        /*
         ==========================
         vao_manager::get_singleton
         ==========================
@@ -35,11 +46,11 @@ namespace deep
         */
         gl_id vao_manager::create(const char *name)
         {
-            GLuint vao;
+            GLuint glVao;
 
-            DE_GL_CALL(glGenVertexArrays(1, &vao));
+            DE_GL_CALL(glGenVertexArrays(1, &glVao));
 
-            auto &el = m_VAOs.insert(name, vao);
+            hash_entry<vao> &el = m_VAOs.insert(name, vao(name, glVao, static_cast<gl_id>(0)));
 
             return el.key;
         }
@@ -61,13 +72,13 @@ namespace deep
         vao_manager::bind
         =================
         */
-        bool vao_manager::bind(gl_id vao)
+        bool vao_manager::bind(gl_id _vao)
         {
-            auto el = m_VAOs[vao];
+            hash_entry<vao> *el = m_VAOs[_vao];
             if(el == nullptr)
                 return false;
 
-            raw_bind(el->value);
+            raw_bind(el->value.glVao);
 
             m_CurrentID = el->key;
 
@@ -81,11 +92,11 @@ namespace deep
         */
         bool vao_manager::bind(const char *name)
         {
-            auto el = m_VAOs[name];
+            hash_entry<vao> *el = m_VAOs[name];
             if(el == nullptr)
                 return false;
 
-            raw_bind(el->value);
+            raw_bind(el->value.glVao);
 
             m_CurrentID = el->key;
 
@@ -93,9 +104,39 @@ namespace deep
         }
 
         /*
-        ========================
+        =======================
+        vao_manager::attach_vbo
+        =======================
+        */
+        bool vao_manager::attach_vbo(gl_id _vao, gl_id vbo)
+        {
+            hash_entry<vao> *el = m_VAOs[_vao];
+            if(el == nullptr)
+                return false;
+
+            el->value.glAttachedVbo = vbo;
+
+            return true;
+        }
+
+        /*
+        =============================
+        vao_manager::get_attached_vbo
+        =============================
+        */
+        gl_id vao_manager::get_attached_vbo(gl_id _vao)
+        {
+            hash_entry<vao> *el = m_VAOs[_vao];
+            if(el == nullptr)
+                return false;
+
+            return el->value.glAttachedVbo;
+        }
+
+        /*
+        =========================
         vao_manager::bind_default
-        ========================
+        =========================
         */
         void vao_manager::bind_default()
         {
@@ -104,9 +145,9 @@ namespace deep
         }
 
         /*
-        =======================
+        ========================
         vao_manager::raw_destroy
-        =======================
+        ========================
         */
         void vao_manager::raw_destroy(GLuint vao)
         {
@@ -118,13 +159,13 @@ namespace deep
         vao_manager::destroy
         ====================
         */
-        bool vao_manager::destroy(gl_id vao)
+        bool vao_manager::destroy(gl_id _vao)
         {
-            auto el = m_VAOs[vao];
+            hash_entry<vao> *el = m_VAOs[_vao];
             if(el == nullptr)
                 return false;
 
-            raw_destroy(el->value);
+            raw_destroy(el->value.glVao);
             m_VAOs.remove(el->key);
 
             return true;
@@ -137,14 +178,31 @@ namespace deep
         */
         bool vao_manager::destroy(const char *name)
         {
-            auto el = m_VAOs[name];
+            hash_entry<vao> *el = m_VAOs[name];
             if(el == nullptr)
                 return false;
 
-            raw_destroy(el->value);
+            raw_destroy(el->value.glVao);
             m_VAOs.remove(el->key);
 
             return true;
+        }
+
+        /*
+        ======================
+        vao_manager::enum_vaos
+        ======================
+        */
+        void vao_manager::enum_vaos(enum_callback callback, mem_ptr args)
+        {
+            if(callback == nullptr)
+                return;
+
+            hash_table_iterator begin = m_VAOs.begin();
+            hash_table_iterator end = m_VAOs.end();
+
+            for(; begin != end; ++begin)
+                callback(begin->key, &begin->value, args);
         }
 
     }

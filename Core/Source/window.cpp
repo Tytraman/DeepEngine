@@ -383,9 +383,9 @@ namespace deep
     }
 
     /*
-    =================
+    ==================
     window::poll_event
-    =================
+    ==================
     */
     devent window::poll_event() const
     {
@@ -437,9 +437,9 @@ namespace deep
     }
 
     /*
-    ===============
+    ================
     window::get_size
-    ===============
+    ================
     */
     size window::get_size() const
     {
@@ -449,9 +449,9 @@ namespace deep
     }
 
     /*
-    ================
+    =================
     window::get_width
-    ================
+    =================
     */
     uint32_t window::get_width() const
     {
@@ -461,9 +461,9 @@ namespace deep
     }
 
     /*
-    =================
+    ==================
     window::get_height
-    =================
+    ==================
     */
     uint32_t window::get_height() const
     {
@@ -472,16 +472,31 @@ namespace deep
         return h;
     }
 
+    /*
+    =================
+    window::get_title
+    =================
+    */
     const char *window::get_title() const
     {
         return SDL_GetWindowTitle(m_Window);
     }
 
+    /*
+    =================
+    window::set_title
+    =================
+    */
     void window::set_title(const char *title) const
     {
         SDL_SetWindowTitle(m_Window, title);
     }
 
+    /*
+    ===========================
+    window::set_cursor_position
+    ===========================
+    */
     void window::set_cursor_position(int x, int y)
     {
         SDL_WarpMouseInWindow(m_Window, x, y);

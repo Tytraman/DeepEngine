@@ -1,13 +1,16 @@
 #include "DE/gui/deimgui.hpp"
 #include "DE/memory/memory.hpp"
 #include "DE/memory/list.hpp"
+#include "DE/memory/pair.hpp"
 #include "DE/string_utils.hpp"
 #include "DE/vec.hpp"
 #include "DE/window.hpp"
 #include "DE/ecs/scene.hpp"
+#include "DE/ecs/component.hpp"
 #include "DE/hardware/cpu.hpp"
 #include "DE/memory/settings.hpp"
 #include "DE/resources.hpp"
+#include "DE/drivers/opengl/vao.hpp"
 
 #include <unordered_map>
 #include <string>
@@ -18,6 +21,19 @@
 
 namespace deep
 {
+
+    struct vao_selection
+    {
+        GL3::vao_manager::vao *currentVao;
+        pair<size_t, size_t> selection;
+
+        vao_selection();
+    };
+
+    vao_selection::vao_selection()
+        : currentVao(nullptr),
+          selection(0, static_cast<size_t>(-1))
+    { }
 
     bool im_gui_window::m_Initialized = false;
 
@@ -112,6 +128,19 @@ namespace deep
         if(ImGui::Button(std::string("Supprimer##" + std::to_string(ent.get_entity_id())).c_str())) {
             entityManager->must_be_deleted(ent.get_entity_id(), ent.get_collection_id());
         }
+    }
+
+    void __vaos_enum_callback(GL3::gl_id /*vaoID*/, GL3::vao_manager::vao *_vao, mem_ptr args)
+    {
+        vao_selection *sel = (vao_selection *) args;
+
+        if(ImGui::Selectable(_vao->name.str(), sel->selection.value1() == sel->selection.value2()))
+        {
+            sel->selection.value2() = sel->selection.value1();
+            sel->currentVao = _vao;
+        }
+
+        sel->selection.value1()++;
     }
 
     /*
@@ -229,25 +258,87 @@ namespace deep
                         ImGui::PopFont();
                         ImGui::Separator();
 
-                        ImGui::AlignTextToFramePadding();
+                        ImGui::Spacing();
 
                         // Menu pour ajouter une entité.
                         if(ImGui::CollapsingHeader("Ajouter une entité"))
                         {
                             static char nameBuffer[128] = "";
+                            static float x = 0.0f, y = 0.0f, z = 0.0f;
+                            static float sx = 1.0f, sy = 1.0f, sz = 1.0f;
+                            static float rotation = 0.0f;
 
+                            static bool addDrawableComponent = false;
+                            static bool addTransformationComponent = false;
+
+                            static vao_selection sel;
+
+                            // Menu de sélection des composants à ajouter.
+
+                            if(ImGui::TreeNode("drawable_component"))
+                            {
+                                ImGui::Checkbox("Attacher le composant", &addDrawableComponent);
+
+                                if(ImGui::BeginCombo("VAO", sel.currentVao != nullptr ? sel.currentVao->name.str() : ""))
+                                {
+                                    GL3::vao_manager *vaoManager = GL3::vao_manager::get_singleton();
+                                    sel.selection.value1() = 0;
+
+                                    vaoManager->enum_vaos(__vaos_enum_callback, &sel);
+
+                                    ImGui::EndCombo();
+                                }
+
+                                ImGui::TreePop();
+                            }
+
+                            if(ImGui::TreeNode("transformation_component"))
+                            {
+                                ImGui::Checkbox("Attacher le composant", &addTransformationComponent);
+
+                                ImGui::DragScalar("X", ImGuiDataType_Float, &x);
+                                ImGui::DragScalar("Y", ImGuiDataType_Float, &y);
+                                ImGui::DragScalar("Z", ImGuiDataType_Float, &z);
+
+                                ImGui::Spacing();
+                                ImGui::Spacing();
+
+                                ImGui::DragScalar("Taille X", ImGuiDataType_Float, &sx);
+                                ImGui::DragScalar("Taille Y", ImGuiDataType_Float, &sy);
+                                ImGui::DragScalar("Taille Z", ImGuiDataType_Float, &sz);
+
+                                ImGui::Spacing();
+                                ImGui::Spacing();
+
+                                ImGui::DragScalar("Rotation", ImGuiDataType_Float, &rotation);
+
+                                ImGui::TreePop();
+                            }
+
+                            ImGui::Spacing();
+
+                            ImGui::AlignTextToFramePadding();
                             ImGui::Text("Nom:"); ImGui::SameLine(); ImGui::InputText("##", nameBuffer, sizeof(nameBuffer)); ImGui::SameLine();
                             if(ImGui::Button("Créer"))
                             {
-                                entityManager->create_entity(nameBuffer, scene::get_entity_collection(scene::get_active_scene_id()));
-                            }
-                        }
+                                component_manager *componentManager = component_manager::get_singleton();
 
-                        // Affiche le nombre d'entités de la scène.
-                        ImGui::Text(std::string("Nombre d'entités: " + std::to_string(entityManager->get_number_of_entities(collection))).c_str()); ImGui::SameLine();
-                        if(ImGui::Button("Tout supprimer"))
-                        {
-                            entityManager->destroy_all_entities(collection);
+                                entity_manager::entity ent = entityManager->create_entity(nameBuffer, scene::get_entity_collection(scene::get_active_scene_id()));
+
+                                if(addDrawableComponent)
+                                {
+                                    // TODO: ajouter le composant.
+                                }
+
+                                if(addTransformationComponent)
+                                {
+                                    component_id id = componentManager->createTransformationComponent(fvec3(x, y, z), fvec3(sx, sy, sz), rotation);
+
+                                    entityManager->attach_component(ent.get_entity_id(), ent.get_collection_id(), id);
+                                }
+
+                                nameBuffer[0] = '\0';
+                            }
                         }
 
                         ImGui::Spacing();
@@ -255,6 +346,15 @@ namespace deep
                         // Affiche toutes les entités de la scène.
                         if(ImGui::CollapsingHeader("Liste des entités de la scène"))
                         {
+                            // Affiche le nombre d'entités de la scène.
+                            ImGui::Text(std::string("Nombre d'entités: " + std::to_string(entityManager->get_number_of_entities(collection))).c_str()); ImGui::SameLine();
+                            if(ImGui::Button("Tout supprimer"))
+                            {
+                                entityManager->destroy_all_entities(collection);
+                            }
+
+                            ImGui::Spacing();
+
                             entityManager->enum_entities(collection, entities_enum_callback);
                         }
                     } break;

@@ -3,6 +3,7 @@
 
 #include "DE/def.hpp"
 #include "DE/types.hpp"
+#include "DE/string.hpp"
 #include "DE/memory/hash_table.hpp"
 #include "DE/drivers/opengl/def.hpp"
 
@@ -16,6 +17,18 @@ namespace deep
         {
 
             public:
+                struct vao
+                {
+                    string name;
+                    GLuint glVao;
+                    gl_id glAttachedVbo;
+
+                    DE_API vao(const char *name, GLuint vao, gl_id vbo);
+                };
+
+                using enum_callback = void (*)(gl_id vaoID, vao *_vao, mem_ptr args);
+
+            public:
                 DE_API static vao_manager *get_singleton();
 
                 DE_API gl_id create(const char *name);
@@ -24,11 +37,16 @@ namespace deep
                 DE_API bool bind(gl_id vao);
                 DE_API bool bind(const char *name);
 
+                DE_API bool attach_vbo(gl_id vao, gl_id vbo);
+                DE_API gl_id get_attached_vbo(gl_id vao);
+
                 DE_API void bind_default();
 
                 DE_API void raw_destroy(GLuint vao);
                 DE_API bool destroy(gl_id vao);
                 DE_API bool destroy(const char *name);
+
+                DE_API void enum_vaos(enum_callback callback, mem_ptr args);
 
                 DE_API GLuint currently_bound();
                 DE_API gl_id current_id();
@@ -38,7 +56,7 @@ namespace deep
 
                 GLuint m_CurrentlyBound;
                 gl_id m_CurrentID;
-                hash_table<GLuint> m_VAOs;
+                hash_table<vao> m_VAOs;
 
             public:
                  vao_manager(const vao_manager &) = delete;
@@ -68,6 +86,5 @@ namespace deep
     }
 
 }
-
 
 #endif

@@ -92,9 +92,9 @@ namespace deep
     }
 
     /*
-    =============================
+    ==============================
     system_manager::executeSystems
-    =============================
+    ==============================
     */
     void system_manager::executeSystems()
     {
@@ -177,9 +177,9 @@ namespace deep
     }
 
     /*
-    =============================
+    ==============================
     system_manager::velocitySystem
-    =============================
+    ==============================
     */
     void system_manager::velocitySystem()
     {
@@ -238,9 +238,9 @@ namespace deep
     }
 
     /*
-    =============================
+    ==============================
     system_manager::colliderSystem
-    =============================
+    ==============================
     */
     void system_manager::colliderSystem()
     {
@@ -423,7 +423,7 @@ namespace deep
 
             // Remet le compteur à 0 sans libérer la mémoire afin d'économiser des performances au détriment de la mémoire.
             // Solution temporaire avant d'en trouver une meilleure.
-            entities.empty();
+            entities.set_count(0);
         }
 
         // Toute cette partie là permet de faire du post-processing.

@@ -177,18 +177,19 @@ namespace deep
             list_iterator<Type> begin() override;
             list_iterator<Type> end()   override;
 
-            size_t   getCapacity()         const;
-            uint32_t getCapacityStep()     const;
+            size_t   get_capacity()         const;
+            uint32_t get_capacity_step()     const;
             TypeRef operator[](size_t index);
 
-            void setCapacityStep(size_t size);
+            void set_count(size_t count);
+            void set_capacity_step(size_t size);
 
         protected:
             Type     *m_Data;
             size_t    m_Capacity;
             uint32_t  m_CapacityStep;
 
-            bool growIfNeeded();
+            bool grow_if_needed();
 
     };
 
@@ -235,7 +236,7 @@ namespace deep
     bool list<Type>::add(ConstTypeRef element)
     {
         // Augmente la taille du buffer si nécessaire.
-        if(!growIfNeeded())
+        if(!grow_if_needed())
             return false;
 
         // Déplace ou copie l'élément dans la case mémoire.
@@ -254,7 +255,7 @@ namespace deep
     bool list<Type>::add(Type &&element)
     {
         // Augmente la taille du buffer si nécessaire.
-        if(!growIfNeeded())
+        if(!grow_if_needed())
             return false;
 
         // Déplace ou copie l'élément dans la case mémoire.
@@ -272,7 +273,7 @@ namespace deep
     template<typename Type>
     bool list<Type>::add()
     {
-        if(!growIfNeeded())
+        if(!grow_if_needed())
             return false;
 
         m_NumberOfElements++;
@@ -416,22 +417,22 @@ namespace deep
 
     /*
     =======================
-    list<Type>::getCapacity
+    list<Type>::get_capacity
     =======================
     */
     template<typename Type>
-    size_t list<Type>::getCapacity() const
+    size_t list<Type>::get_capacity() const
     {
         return m_Capacity;
     }
 
     /*
     ===========================
-    list<Type>::getCapacityStep
+    list<Type>::get_capacity_step
     ===========================
     */
     template<typename Type>
-    uint32_t list<Type>::getCapacityStep() const
+    uint32_t list<Type>::get_capacity_step() const
     {
         return m_Capacity;
     }
@@ -449,11 +450,11 @@ namespace deep
 
     /*
     ========================
-    list<Type>::growIfNeeded
+    list<Type>::grow_if_needed
     ========================
     */
     template<typename Type>
-    bool list<Type>::growIfNeeded()
+    bool list<Type>::grow_if_needed()
     {
         // Si le nombre d'éléments présents dans la liste est supérieur à la capacité,
         // on augmente celle-ci du pas attribué.
@@ -473,7 +474,13 @@ namespace deep
     }
 
     template<typename Type>
-    inline void list<Type>::setCapacityStep(size_t size)
+    inline void list<Type>::set_count(size_t count)
+    {
+        m_NumberOfElements = count;
+    }
+
+    template<typename Type>
+    inline void list<Type>::set_capacity_step(size_t size)
     {
         m_CapacityStep = size;
     }

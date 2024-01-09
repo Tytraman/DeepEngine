@@ -105,6 +105,7 @@ namespace deep
 
         vboManager->bind(drawableComponent->vbo);
         vaoManager->bind(drawableComponent->vao);
+        vaoManager->attach_vbo(drawableComponent->vao, drawableComponent->vbo);
 
         vboManager->transmit_data(chunk);
         vboManager->set_vertices_number(6);
@@ -176,6 +177,7 @@ namespace deep
         
         vboManager->bind(drawableComponent->vbo);
         vaoManager->bind(drawableComponent->vao);
+        vaoManager->attach_vbo(drawableComponent->vao, drawableComponent->vbo);
 
         vboManager->transmit_data(chunk);
         vboManager->set_vertices_number(6);
@@ -304,6 +306,7 @@ namespace deep
 
         vboManager->bind(drawableComponent->vbo);
         vaoManager->bind(drawableComponent->vao);
+        vaoManager->attach_vbo(drawableComponent->vao, drawableComponent->vbo);
 
         vboManager->transmit_data(chunk);
         vboManager->set_vertices_number(36);
@@ -335,9 +338,9 @@ namespace deep
     }
 
     /*
-    =================================
+    ====================================
     graphic::create_3D_rectangle_texture
-    =================================
+    ====================================
     */
     entity_manager::entity graphic::create_3D_rectangle_texture(
         const char *name,
@@ -434,6 +437,7 @@ namespace deep
 
         vboManager->bind(drawableComponent->vbo);
         vaoManager->bind(drawableComponent->vao);
+        vaoManager->attach_vbo(drawableComponent->vao, drawableComponent->vbo);
 
         vboManager->transmit_data(chunk);
         vboManager->set_vertices_number(36);
@@ -547,6 +551,7 @@ namespace deep
 
         vboManager->bind(pol.vbo());
         vaoManager->bind(pol.vao());
+        vaoManager->attach_vbo(pol.vao(), pol.vbo());
 
         vboManager->transmit_data(chunk);
         vboManager->set_vertices_number(36);
@@ -639,6 +644,7 @@ namespace deep
 
         vboManager->bind(drawableComponent->vbo);
         vaoManager->bind(drawableComponent->vao);
+        vaoManager->attach_vbo(drawableComponent->vao, drawableComponent->vbo);
 
         vboManager->transmit_data(chunk);
         vboManager->set_vertices_number(36);
