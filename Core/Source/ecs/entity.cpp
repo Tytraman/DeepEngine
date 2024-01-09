@@ -224,18 +224,26 @@ namespace deep
     }
 
     /*
-    =============================
+    ===============================
     entity_manager::delete_entities
-    =============================
+    ===============================
     */
     void entity_manager::delete_entities()
     {
-        for(auto &el : m_EntitiesToDelete)
-        {
-            for(auto &le : el.value)
-                destroy_entity(static_cast<entity_collection_id>(el.key), le);
+        hash_table_iterator begin = m_EntitiesToDelete.begin();
+        hash_table_iterator end = m_EntitiesToDelete.end();
 
-            el.value.free();
+        
+
+        for(; begin != end; ++begin)
+        {
+            list_iterator<entity_id> lBegin = begin->value.begin();
+            list_iterator<entity_id> lEnd = begin->value.end();
+
+            for(; lBegin != lEnd; ++lBegin)
+                destroy_entity(*lBegin, begin->key);
+
+            begin->value.free();
         }
     }
 
@@ -302,6 +310,24 @@ namespace deep
         }
 
         return badID;
+    }
+
+    /*
+    ===================================
+    entity_manager::get_component_types
+    ===================================
+    */
+    component_type entity_manager::get_component_types(uint64_t keyName, entity_collection_id collectionID)
+    {
+        hash_entry<hash_table<entity_item>> *hs = m_Collections[collectionID];
+        if(hs == nullptr)
+            return 0;
+
+        hash_entry<entity_item> *h = hs->value[keyName];
+        if(h == nullptr)
+            return 0;
+
+        return h->value.componentsType;
     }
 
     /*

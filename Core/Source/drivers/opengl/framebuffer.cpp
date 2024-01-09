@@ -58,9 +58,9 @@ namespace deep
         }
 
         /*
-        ============================
+        =============================
         framebuffer_manager::raw_bind
-        ============================
+        =============================
         */
         void framebuffer_manager::raw_bind(GLuint fbo)
         {
@@ -123,9 +123,9 @@ namespace deep
         }
 
         /*
-        ================================
+        =================================
         framebuffer_manager::bind_default
-        ================================
+        =================================
         */
         void framebuffer_manager::bind_default()
         {
@@ -135,9 +135,9 @@ namespace deep
         }
 
         /*
-        ===============================
+        ================================
         framebuffer_manager::raw_destroy
-        ===============================
+        ================================
         */
         void framebuffer_manager::raw_destroy(GLuint fbo)
         {
@@ -188,13 +188,13 @@ namespace deep
         }
 
         /*
-        ==================================
+        ===================================
         framebuffer_manager::attach_texture
-        ==================================
+        ===================================
         */
         bool framebuffer_manager::attach_texture(GL3::gl_id texture)
         {
-            hash_entry<GLuint> *el = GL3::texture_manager::get_singleton()->get(texture);
+            hash_entry<texture_manager::texture_item> *el = GL3::texture_manager::get_singleton()->get(texture);
             if(el == nullptr)
                 return false;
 
@@ -203,34 +203,34 @@ namespace deep
                 return false;
 
             // Attache la texture au framebuffer.
-            DE_GL_CALL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, el->value, 0));
+            DE_GL_CALL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, el->value.glTexture, 0));
             al->value.texture = texture;
 
             return true;
         }
 
         /*
-        ==================================
+        ===================================
         framebuffer_manager::attach_texture
-        ==================================
+        ===================================
         */
         bool framebuffer_manager::attach_texture(const char *name)
         {
-            hash_entry<GLuint> *el = GL3::texture_manager::get_singleton()->get(name);
+            hash_entry<texture_manager::texture_item> *el = GL3::texture_manager::get_singleton()->get(name);
             if(el == nullptr)
                 return false;
 
             // Attache la texture au framebuffer.
-            DE_GL_CALL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, el->value, 0));
-            m_Framebuffers[m_CurrentID]->value.texture = el->value;
+            DE_GL_CALL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, el->value.glTexture, 0));
+            m_Framebuffers[m_CurrentID]->value.texture = el->value.glTexture;
 
             return true;
         }
 
         /*
-        =======================================
+        ========================================
         framebuffer_manager::attach_renderbuffer
-        =======================================
+        ========================================
         */
         bool framebuffer_manager::attach_renderbuffer(gl_id fbo, gl_id rbo)
         {
@@ -251,9 +251,9 @@ namespace deep
         }
 
         /*
-        =======================================
+        ========================================
         framebuffer_manager::attach_renderbuffer
-        =======================================
+        ========================================
         */
         bool framebuffer_manager::attach_renderbuffer(const char *fboName, const char *rboName)
         {
@@ -274,9 +274,9 @@ namespace deep
         }
 
         /*
-        =======================================
+        ==========================================
         framebuffer_manager::save_texture_as_image
-        =======================================
+        ==========================================
         */
         bool framebuffer_manager::save_texture_as_image(int width, int height, const char *filedest)
         {

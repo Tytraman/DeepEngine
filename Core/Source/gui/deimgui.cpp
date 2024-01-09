@@ -54,6 +54,21 @@ namespace deep
           selection(0, static_cast<size_t>(-1))
     { }
 
+    struct texture_selection
+    {
+        GL3::texture_manager::texture_item *currentTexture;
+        GL3::gl_id currentTextureID;
+        pair<size_t, size_t> selection;
+
+        texture_selection();
+    };
+
+    texture_selection::texture_selection()
+        : currentTexture(nullptr),
+          currentTextureID(0),
+          selection(0, static_cast<size_t>(-1))
+    { }
+
     bool im_gui_window::m_Initialized = false;
 
     static std::unordered_map<const window *, im_gui_debug_panel_options> m_DebugPanelOptions;
@@ -143,9 +158,49 @@ namespace deep
         std::string text("[" + std::string(ent.get_name().str()) + "]");
 
         ImGui::AlignTextToFramePadding();
-        ImGui::Text(text.c_str()); ImGui::SameLine();
-        if(ImGui::Button(std::string("Supprimer##" + std::to_string(ent.get_entity_id())).c_str())) {
+
+        bool attribMenuOpened = ImGui::TreeNode(text.c_str());
+
+        ImGui::SameLine();
+
+        string buttonText("Supprimer");
+        ImVec2 textSize = ImGui::CalcTextSize(buttonText.str());
+        textSize.y *= 1.5f;
+        textSize.x *= 1.15f;
+
+        buttonText.append("##");
+        buttonText.append(std::to_string(ent.get_entity_id()).c_str());
+
+        ImGui::SetCursorPosX(ImGui::GetCursorPosX() + ImGui::GetColumnWidth() - textSize.x - ImGui::GetScrollX() - 2 * ImGui::GetStyle().ItemSpacing.x);
+        if(ImGui::Button(buttonText.str(), textSize))
+        {
             entityManager->must_be_deleted(ent.get_entity_id(), ent.get_collection_id());
+        }
+
+        if(attribMenuOpened)
+        {
+            string entityID("ID: ");
+            entityID.append(std::to_string(ent.get_entity_id()).c_str());
+
+            component_type componentTypes = entityManager->get_component_types(ent.get_entity_id(), ent.get_collection_id());
+
+            ImGui::Text(entityID.str());
+            ImGui::Text("Liste des composants attachés:");
+
+            if((componentTypes & DrawableComponentType) > 0)
+                ImGui::BulletText("drawable_component");
+            if((componentTypes & TransformationComponentType) > 0)
+                ImGui::BulletText("transformation_component");
+            if((componentTypes & VelocityComponentType) > 0)
+                ImGui::BulletText("velocity_component");
+            if((componentTypes & ColliderComponentType) > 0)
+                ImGui::BulletText("collider_component");
+            if((componentTypes & AccelerationComponentType) > 0)
+                ImGui::BulletText("acceleration_component");
+            if((componentTypes & HealthComponentType) > 0)
+                ImGui::BulletText("health_component");
+
+            ImGui::TreePop();
         }
     }
 
@@ -174,6 +229,22 @@ namespace deep
             sel->selection.value2() = sel->selection.value1();
             sel->currentProgram = program;
             sel->currentProgramID = programID;
+        }
+
+        sel->selection.value1()++;
+    }
+
+    void __textures_enum_callback(GL3::gl_id textureID, GL3::texture_manager::texture_item *texture, mem_ptr args)
+    {
+        texture_selection *sel = (texture_selection *) args;
+
+        const char *name = texture->name.str();
+
+        if(ImGui::Selectable((name != nullptr ? name : ""), sel->selection.value1() == sel->selection.value2()))
+        {
+            sel->selection.value2() = sel->selection.value1();
+            sel->currentTexture = texture;
+            sel->currentTextureID = textureID;
         }
 
         sel->selection.value1()++;
@@ -309,8 +380,7 @@ namespace deep
 
                             static vao_selection vaoSel;
                             static shader_selection shaderSel;
-
-                            // Menu de sélection des composants à ajouter.
+                            static texture_selection textureSel;
 
                             if(ImGui::TreeNode("drawable_component"))
                             {
@@ -322,6 +392,16 @@ namespace deep
                                     vaoSel.selection.value1() = 0;
 
                                     vaoManager->enum_vaos(__vaos_enum_callback, &vaoSel);
+
+                                    ImGui::EndCombo();
+                                }
+
+                                if(ImGui::BeginCombo("Texture", textureSel.currentTexture != nullptr ? textureSel.currentTexture->name.str() : ""))
+                                {
+                                    GL3::texture_manager *textureManager = GL3::texture_manager::get_singleton();
+                                    textureSel.selection.value1() = 0;
+
+                                    textureManager->enum_textures(__textures_enum_callback, &textureSel);
 
                                     ImGui::EndCombo();
                                 }
@@ -377,9 +457,10 @@ namespace deep
                                     if(vaoSel.currentVao == nullptr || shaderSel.currentProgram == nullptr)
                                         goto cancel_component;
 
-                                    GL3::texture_manager *textureManager = GL3::texture_manager::get_singleton();
+                                    component_id id = componentManager->create_drawable_component(shaderSel.currentProgramID, vaoSel.currentVao->attachedVbo, vaoSel.currentVaoID, textureSel.currentTextureID);
 
-                                    component_id id = componentManager->create_drawable_component(shaderSel.currentProgramID, vaoSel.currentVao->attachedVbo, vaoSel.currentVaoID, textureManager->get_white_texture());
+                                    drawable_component *drawableComponent = componentManager->get_drawable_component(id);
+                                    drawableComponent->renderCallback = drawable_component::classic_render_callback;
 
                                     entityManager->attach_component(ent.get_entity_id(), ent.get_collection_id(), id);
                                 }
@@ -401,9 +482,19 @@ cancel_component: ;
                         // Affiche toutes les entités de la scène.
                         if(ImGui::CollapsingHeader("Liste des entités de la scène"))
                         {
+                            const char *textButton = "Tout supprimer";
+
+                            ImGui::AlignTextToFramePadding();
+
+                            ImVec2 textSize = ImGui::CalcTextSize(textButton);
+                            textSize.y *= 1.5f;
+                            textSize.x *= 1.2f;
+
                             // Affiche le nombre d'entités de la scène.
                             ImGui::Text(std::string("Nombre d'entités: " + std::to_string(entityManager->get_number_of_entities(collection))).c_str()); ImGui::SameLine();
-                            if(ImGui::Button("Tout supprimer"))
+                            
+                            ImGui::SetCursorPosX(ImGui::GetCursorPosX() + ImGui::GetColumnWidth() - textSize.x - ImGui::GetScrollX() - 2 * ImGui::GetStyle().ItemSpacing.x);
+                            if(ImGui::Button(textButton, textSize))
                             {
                                 entityManager->destroy_all_entities(collection);
                             }

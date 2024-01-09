@@ -3,6 +3,7 @@
 
 #include "DE/def.hpp"
 #include "DE/types.hpp"
+#include "DE/string.hpp"
 #include "DE/memory/memory.hpp"
 #include "DE/memory/hash_table.hpp"
 #include "DE/image/image.hpp"
@@ -40,6 +41,16 @@ namespace deep
                     fvec2 texturePos;
                 };
 
+                struct texture_item
+                {
+                    string name;
+                    GLuint glTexture;
+
+                    DE_API texture_item(const char *name, GLuint texture);
+                };
+
+                using enum_callback = void (*)(gl_id textureID, texture_item *texture, mem_ptr args);
+
             public:
                 DE_API static texture_manager *get_singleton();
 
@@ -75,8 +86,10 @@ namespace deep
                 DE_API gl_id get_white_texture();
                 DE_API void set_white_texture(gl_id texture);
 
-                DE_API hash_entry<GLuint> *get(gl_id texture);
-                DE_API hash_entry<GLuint> *get(const char *name);
+                DE_API void enum_textures(enum_callback callback, mem_ptr args);
+
+                DE_API hash_entry<texture_item> *get(gl_id texture);
+                DE_API hash_entry<texture_item> *get(const char *name);
 
                 DE_API GLuint currently_bound();
                 DE_API gl_id current_id();
@@ -93,7 +106,7 @@ namespace deep
                 gl_id m_CurrentCubemapsID;
                 uint8_t m_CurrentUnit;
 
-                hash_table<GLuint> m_Textures;
+                hash_table<texture_item> m_Textures;
 
             public:
                 texture_manager(const texture_manager &) = delete;
@@ -106,7 +119,7 @@ namespace deep
         texture_manager::get
         ====================
         */
-        inline hash_entry<GLuint> *texture_manager::get(gl_id texture)
+        inline hash_entry<texture_manager::texture_item> *texture_manager::get(gl_id texture)
         {
             return m_Textures[texture];
         }
@@ -116,7 +129,7 @@ namespace deep
         texture_manager::get
         ====================
         */
-        inline hash_entry<GLuint> *texture_manager::get(const char *name)
+        inline hash_entry<texture_manager::texture_item> *texture_manager::get(const char *name)
         {
             return m_Textures[name];
         }

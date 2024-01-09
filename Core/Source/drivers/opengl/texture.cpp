@@ -8,6 +8,16 @@ namespace deep
     {
 
         /*
+        ===========================================
+        texture_manager::texture_item::texture_item
+        ===========================================
+        */
+        texture_manager::texture_item::texture_item(const char *_name, GLuint texture)
+            : name(_name),
+              glTexture(texture)
+        { }
+
+        /*
         ================================
         texture_manager::texture_manager
         ================================
@@ -43,7 +53,7 @@ namespace deep
 
             DE_GL_CALL(glGenTextures(1, &texture));
 
-            hash_entry<GLuint> &el = m_Textures.insert(name, texture);
+            hash_entry<texture_item> &el = m_Textures.insert(name, texture_item(name, texture));
 
             return el.key;
         }
@@ -69,11 +79,11 @@ namespace deep
         */
         bool texture_manager::bind(gl_id texture, uint8_t unit)
         {
-            hash_entry<GLuint> *el = m_Textures[texture];
+            hash_entry<texture_item> *el = m_Textures[texture];
             if(el == nullptr)
                 return false;
 
-            raw_bind(el->value, unit);
+            raw_bind(el->value.glTexture, unit);
 
             m_CurrentID = el->key;
 
@@ -87,11 +97,11 @@ namespace deep
         */
         bool texture_manager::bind(const char *name, uint8_t unit)
         {
-            hash_entry<GLuint> *el = m_Textures[name];
+            hash_entry<texture_item> *el = m_Textures[name];
             if(el == nullptr)
                 return false;
 
-            raw_bind(el->value, unit);
+            raw_bind(el->value.glTexture, unit);
 
             m_CurrentID = el->key;
 
@@ -117,11 +127,11 @@ namespace deep
         */
         bool texture_manager::bind_cubemaps(gl_id texture)
         {
-            hash_entry<GLuint> *el = m_Textures[texture];
+            hash_entry<texture_item> *el = m_Textures[texture];
             if(el == nullptr)
                 return false;
 
-            raw_bind_cubemaps(el->value);
+            raw_bind_cubemaps(el->value.glTexture);
 
             m_CurrentCubemapsID = el->key;
 
@@ -135,11 +145,11 @@ namespace deep
         */
         bool texture_manager::bind_cubemaps(const char *name)
         {
-            hash_entry<GLuint> *el = m_Textures[name];
+            hash_entry<texture_item> *el = m_Textures[name];
             if(el == nullptr)
                 return false;
 
-            raw_bind_cubemaps(el->value);
+            raw_bind_cubemaps(el->value.glTexture);
 
             m_CurrentCubemapsID = el->key;
 
@@ -163,11 +173,11 @@ namespace deep
         */
         bool texture_manager::destroy(gl_id texture)
         {
-            hash_entry<GLuint> *el = m_Textures[texture];
+            hash_entry<texture_item> *el = m_Textures[texture];
             if(el == nullptr)
                 return false;
 
-            raw_destroy(el->value);
+            raw_destroy(el->value.glTexture);
             m_Textures.remove(el->key);
 
             return true;
@@ -180,11 +190,11 @@ namespace deep
         */
         bool texture_manager::destroy(const char *name)
         {
-            hash_entry<GLuint> *el = m_Textures[name];
+            hash_entry<texture_item> *el = m_Textures[name];
             if(el == nullptr)
                 return false;
 
-            raw_destroy(el->value);
+            raw_destroy(el->value.glTexture);
             m_Textures.remove(el->key);
 
             return true;
@@ -295,7 +305,6 @@ namespace deep
             {
                 default:
                     return;
-                // TODO: case BGR
                 case image_color_space::RGB:
                 {
                     internalFormat = GL_RGB8;
@@ -358,6 +367,23 @@ namespace deep
             DE_GL_CALL(glTexImage2D(GL_TEXTURE_CUBE_MAP_NEGATIVE_Y, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, bottom));
             // Dessus
             DE_GL_CALL(glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_Y, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, top));
+        }
+
+        /*
+        ==============================
+        texture_manager::enum_textures
+        ==============================
+        */
+        void texture_manager::enum_textures(enum_callback callback, mem_ptr args)
+        {
+            if(callback == nullptr)
+                return;
+
+            hash_table_iterator begin = m_Textures.begin();
+            hash_table_iterator end = m_Textures.end();
+
+            for(; begin != end; ++begin)
+                callback(begin->key, &begin->value, args);
         }
 
     }

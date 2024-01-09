@@ -99,6 +99,8 @@ namespace deep
             DE_API component_id get_component_id(uint64_t keyName, entity_collection_id collectionID, component_type type);
             DE_API component_id get_component_id(const char *entityName, entity_collection_id collection, component_type componentType);
 
+            DE_API component_type get_component_types(uint64_t keyName, entity_collection_id collectionID);
+
         private:
             entity_manager();
 
