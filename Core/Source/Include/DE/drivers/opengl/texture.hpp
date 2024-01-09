@@ -35,6 +35,12 @@ namespace deep
                     Linear  = GL_LINEAR
                 };
 
+                enum class gl_texture_type : GLenum
+                {
+                    texture_2D      = GL_TEXTURE_2D,
+                    texture_cubemap = GL_TEXTURE_CUBE_MAP
+                };
+
                 struct texture_2D_mapping_point
                 {
                     fvec2 screenPos;
@@ -45,8 +51,9 @@ namespace deep
                 {
                     string name;
                     GLuint glTexture;
+                    gl_texture_type type;
 
-                    DE_API texture_item(const char *name, GLuint texture);
+                    DE_API texture_item(const char *name, GLuint texture, gl_texture_type type);
                 };
 
                 using enum_callback = void (*)(gl_id textureID, texture_item *texture, mem_ptr args);
@@ -54,15 +61,11 @@ namespace deep
             public:
                 DE_API static texture_manager *get_singleton();
 
-                DE_API gl_id create_2D(const char *name);
+                DE_API gl_id create_2D(const char *name, gl_texture_type type = gl_texture_type::texture_2D);
 
-                DE_API void raw_bind(GLuint texture, uint8_t unit);
-                DE_API bool bind(gl_id texture, uint8_t unit);
-                DE_API bool bind(const char *name, uint8_t unit);
-
-                DE_API void raw_bind_cubemaps(GLuint texture);
-                DE_API bool bind_cubemaps(gl_id texture);
-                DE_API bool bind_cubemaps(const char *name);
+                DE_API void raw_bind(GLuint texture, uint8_t unit, gl_texture_type type);
+                DE_API bool bind(gl_id texture, uint8_t unit = 0);
+                DE_API bool bind(const char *name, uint8_t unit = 0);
 
                 DE_API void raw_destroy(GLuint texture);
                 DE_API bool destroy(gl_id texture);
@@ -113,6 +116,16 @@ namespace deep
                 texture_manager(texture_manager &&) = delete;
 
         };
+
+        /*
+        =====================
+        texture_manager::bind
+        =====================
+        */
+        inline bool texture_manager::bind(const char *name, uint8_t unit)
+        {
+            return bind(m_Textures.getHashFunction()(name), unit);
+        }
 
         /*
         ====================

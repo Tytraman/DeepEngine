@@ -12,9 +12,10 @@ namespace deep
         texture_manager::texture_item::texture_item
         ===========================================
         */
-        texture_manager::texture_item::texture_item(const char *_name, GLuint texture)
+        texture_manager::texture_item::texture_item(const char *_name, GLuint texture, gl_texture_type _type)
             : name(_name),
-              glTexture(texture)
+              glTexture(texture),
+              type(_type)
         { }
 
         /*
@@ -47,13 +48,13 @@ namespace deep
         texture_manager::create_2D
         ==========================
         */
-        gl_id texture_manager::create_2D(const char *name)
+        gl_id texture_manager::create_2D(const char *name, gl_texture_type type)
         {
             GLuint texture;
 
             DE_GL_CALL(glGenTextures(1, &texture));
 
-            hash_entry<texture_item> &el = m_Textures.insert(name, texture_item(name, texture));
+            hash_entry<texture_item> &el = m_Textures.insert(name, texture_item(name, texture, type));
 
             return el.key;
         }
@@ -63,10 +64,10 @@ namespace deep
         texture_manager::raw_bind
         =========================
         */
-        void texture_manager::raw_bind(GLuint texture, uint8_t unit)
+        void texture_manager::raw_bind(GLuint texture, uint8_t unit, gl_texture_type type)
         {
             DE_GL_CALL(glActiveTexture(GL_TEXTURE0 + unit));
-            DE_GL_CALL(glBindTexture(GL_TEXTURE_2D, texture));
+            DE_GL_CALL(glBindTexture(static_cast<GLenum>(type), texture));
 
             m_CurrentlyBound = texture;
             m_CurrentUnit = unit;
@@ -83,75 +84,9 @@ namespace deep
             if(el == nullptr)
                 return false;
 
-            raw_bind(el->value.glTexture, unit);
+            raw_bind(el->value.glTexture, unit, el->value.type);
 
             m_CurrentID = el->key;
-
-            return true;
-        }
-
-        /*
-        =====================
-        texture_manager::bind
-        =====================
-        */
-        bool texture_manager::bind(const char *name, uint8_t unit)
-        {
-            hash_entry<texture_item> *el = m_Textures[name];
-            if(el == nullptr)
-                return false;
-
-            raw_bind(el->value.glTexture, unit);
-
-            m_CurrentID = el->key;
-
-            return true;
-        }
-
-        /*
-        ==================================
-        texture_manager::raw_bind_cubemaps
-        ==================================
-        */
-        void texture_manager::raw_bind_cubemaps(GLuint texture)
-        {
-            DE_GL_CALL(glBindTexture(GL_TEXTURE_CUBE_MAP, texture));
-
-            m_CurrentlyBound = texture;
-        }
-
-        /*
-        ==============================
-        texture_manager::bind_cubemaps
-        ==============================
-        */
-        bool texture_manager::bind_cubemaps(gl_id texture)
-        {
-            hash_entry<texture_item> *el = m_Textures[texture];
-            if(el == nullptr)
-                return false;
-
-            raw_bind_cubemaps(el->value.glTexture);
-
-            m_CurrentCubemapsID = el->key;
-
-            return true;
-        }
-
-        /*
-        ==============================
-        texture_manager::bind_cubemaps
-        ==============================
-        */
-        bool texture_manager::bind_cubemaps(const char *name)
-        {
-            hash_entry<texture_item> *el = m_Textures[name];
-            if(el == nullptr)
-                return false;
-
-            raw_bind_cubemaps(el->value.glTexture);
-
-            m_CurrentCubemapsID = el->key;
 
             return true;
         }

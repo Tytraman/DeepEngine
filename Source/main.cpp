@@ -320,8 +320,8 @@ int main()
     deep::bmp skyboxTop;
     skyboxTop.create_from_file("..\\resources\\textures\\skybox_top.bmp");
 
-    deep::GL3::gl_id skybox = textureManager->create_2D("skybox");
-    textureManager->bind_cubemaps(skybox);
+    deep::GL3::gl_id skybox = textureManager->create_2D("skybox", deep::GL3::texture_manager::gl_texture_type::texture_cubemap);
+    textureManager->bind(skybox);
     textureManager->set_texture_wrapping_s_cubemaps(deep::GL3::texture_manager::gl_texture_wrap::ClampToEdge);
     textureManager->set_texture_wrapping_t_cubemaps(deep::GL3::texture_manager::gl_texture_wrap::ClampToEdge);
     textureManager->set_texture_wrapping_r_cubemaps(deep::GL3::texture_manager::gl_texture_wrap::ClampToEdge);
@@ -454,9 +454,9 @@ int main()
     deep::string baseName("entity_");
     uint64_t count = 0;
 
-    for(i = 0; i < 10; ++i)
+    for(i = 0; i < 50; ++i)
     {
-        for(j = 0; j < 10; ++j)
+        for(j = 0; j < 50; ++j)
         {
             deep::string entityName = baseName;
             entityName.append(std::to_string(count).c_str());

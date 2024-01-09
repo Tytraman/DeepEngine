@@ -82,7 +82,7 @@ namespace deep
         programManager->use(drawable->program);
         vaoManager->bind(drawable->vao);
 
-        textureManager->bind_cubemaps(drawable->texture);
+        textureManager->bind(drawable->texture);
         fmat4x4 view = camera->lookAt();
         view[static_cast<uint8_t>(fmat4x4_index::w1)] = 0.0f;
         view[static_cast<uint8_t>(fmat4x4_index::w2)] = 0.0f;
