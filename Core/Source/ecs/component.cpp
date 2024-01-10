@@ -26,7 +26,7 @@ namespace deep
     drawable_component::classic_render_callback
     ===========================================
     */
-    void drawable_component::classic_render_callback(GL3::gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, Camera *camera)
+    void drawable_component::classic_render_callback(GL3::gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, camera *camera)
     {
         GL3::gl_id program = drawable->program;
         GL3::gl_id vao = drawable->vao;
@@ -56,7 +56,7 @@ namespace deep
         programManager->set_uniform("mRotY", transformation->get_rotation_Y());
         programManager->set_uniform("mRotZ", transformation->get_rotation_Z());
         programManager->set_uniform("mScl", transformation->get_scaling());
-        programManager->set_uniform("view", camera->lookAt());
+        programManager->set_uniform("view", camera->get_look_at());
         programManager->set_uniform("proj", fmat4x4::perspective(fmat4x4(), 45.0f, (float) window->get_width() / (float) window->get_height(), 0.1f, 1000.0f));
 
         programManager->send_uniforms();
@@ -69,7 +69,7 @@ namespace deep
     drawable_component::skybox_render_callback
     ==========================================
     */
-    void drawable_component::skybox_render_callback(GL3::gl_renderer &renderer, drawable_component *drawable, transformation_component *, window *window, Camera *camera)
+    void drawable_component::skybox_render_callback(GL3::gl_renderer &renderer, drawable_component *drawable, transformation_component *, window *window, camera *camera)
     {
         GL3::program_manager *programManager = GL3::program_manager::get_singleton();
         GL3::vbo_manager *vboManager = GL3::vbo_manager::get_singleton();
@@ -83,7 +83,7 @@ namespace deep
         vaoManager->bind(drawable->vao);
 
         textureManager->bind(drawable->texture);
-        fmat4x4 view = camera->lookAt();
+        fmat4x4 view = camera->get_look_at();
         view[static_cast<uint8_t>(fmat4x4_index::w1)] = 0.0f;
         view[static_cast<uint8_t>(fmat4x4_index::w2)] = 0.0f;
         view[static_cast<uint8_t>(fmat4x4_index::w3)] = 0.0f;

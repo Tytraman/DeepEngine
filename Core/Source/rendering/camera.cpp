@@ -7,25 +7,25 @@ namespace deep {
 
 	/*
 	==============
-	Camera::Camera
+	camera::camera
 	==============
 	*/
-	Camera::Camera(const fvec3 &position, const fvec3 &front, const fvec3 &baseUp)
+	camera::camera(const fvec3 &position, const fvec3 &front, const fvec3 &baseUp)
 		: m_Position(position),
 		  m_Front(front),
 		  m_BaseUp(baseUp),
 		  m_Yaw(-90.0f),
 		  m_Pitch(0.0f)
 	{
-		updateAngleOfView();
+		update_angle_of_view();
 	}
 
 	/*
 	==============
-	Camera::update
+	camera::update
 	==============
 	*/
-	void Camera::updateAngleOfView()
+	void camera::update_angle_of_view()
 	{
 		fvec3 front;
 
@@ -45,10 +45,10 @@ namespace deep {
 
 	/*
 	==============
-	Camera::lookAt
+	camera::get_look_at
 	==============
 	*/
-	fmat4x4 Camera::lookAt() const
+	fmat4x4 camera::get_look_at() const
 	{
 		fvec3 direction = fvec3::normalize(m_Position - (m_Position + m_Front));
 		fvec3 right     = fvec3::normalize(fvec3::cross(m_Front, m_BaseUp));
@@ -61,7 +61,7 @@ namespace deep {
 		};
 	}
 
-	void Camera::moveRight(float value)
+	void camera::move_right(float value)
 	{
 		fvec3 right = fvec3::normalize(fvec3::cross(m_Front, m_BaseUp));
 
@@ -71,7 +71,7 @@ namespace deep {
 		m_Position += right * value;
 	}
 
-	void Camera::moveLeft(float value)
+	void camera::move_left(float value)
 	{
 		fvec3 right = fvec3::normalize(fvec3::cross(m_Front, m_BaseUp));
 
@@ -81,7 +81,7 @@ namespace deep {
 		m_Position -= right * value;
 	}
 
-	void Camera::moveForward(float value)
+	void camera::move_forward(float value)
 	{
 		fvec3 front = m_Front;
 
@@ -94,7 +94,7 @@ namespace deep {
 		m_Position += front * value;
 	}
 
-	void Camera::moveBackward(float value)
+	void camera::move_backward(float value)
 	{
 		fvec3 front = m_Front;
 
@@ -107,12 +107,12 @@ namespace deep {
 		m_Position -= front * value;
 	}
 
-	void Camera::moveUp(float value)
+	void camera::move_up(float value)
 	{
 		m_Position += m_BaseUp * value;
 	}
 
-	void Camera::moveDown(float value)
+	void camera::move_down(float value)
 	{
 		m_Position -= m_BaseUp * value;
 	}

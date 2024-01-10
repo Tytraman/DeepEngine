@@ -61,7 +61,7 @@ namespace deep
             DE_API collider_in_callback get_collider_callback() const;
             DE_API collider_out_callback get_collider_out_callback() const;
 
-            DE_API Camera &get_attached_camera();
+            DE_API camera &get_attached_camera();
 
             DE_API const char *get_name() const;
 
@@ -80,7 +80,7 @@ namespace deep
             collider_out_callback m_ColliderOutCallback;    ///< Callback lorsqu'une collision n'est plus détectée entre 2 entités.
 
             entity_collection_id m_EntityCollection;        ///< ID du gestionnaire d'entités de la scène.
-            Camera m_Camera;
+            camera m_Camera;
             char *m_Name;                                   ///< Nom de la scène.
 
     };
@@ -146,7 +146,7 @@ namespace deep
         return m_ColliderOutCallback;
     }
 
-    inline Camera &scene::get_attached_camera()
+    inline camera &scene::get_attached_camera()
     {
         return m_Camera;
     }

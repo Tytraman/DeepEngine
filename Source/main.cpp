@@ -75,9 +75,9 @@ void event_callback(deep::window &window, deep::devent e)
                 if(scene == nullptr)
                     break;
 
-                deep::Camera &camera = deep::scene::get_scene(deep::scene::get_active_scene_id())->get_attached_camera();
-                float yaw   = camera.yaw();
-                float pitch = camera.pitch();
+                deep::camera &camera = deep::scene::get_scene(deep::scene::get_active_scene_id())->get_attached_camera();
+                float yaw   = camera.get_yaw();
+                float pitch = camera.get_pitch();
 
                 float sensitivity = 0.1f;
 
@@ -95,12 +95,12 @@ void event_callback(deep::window &window, deep::devent e)
                 if(pitch < -89.0f)
                     pitch = -89.0f;
 
-                camera.setYaw(yaw);
-                camera.setPitch(pitch);
+                camera.set_yaw(yaw);
+                camera.set_pitch(pitch);
 
                 window.set_cursor_position(window.get_width() / 2, window.get_height() / 2);
 
-                camera.updateAngleOfView();
+                camera.update_angle_of_view();
             }
         };
     }
@@ -128,10 +128,10 @@ void update_callback(deep::window & /* win */)
 
     float cameraSpeed = 0.05f;
 
-    deep::Camera &camera = scene->get_attached_camera();
-    deep::fvec3 cameraPos = camera.position();
-    deep::fvec3 cameraFront = camera.front();
-    deep::fvec3 cameraRight = deep::fvec3::normalize(deep::fvec3::cross(cameraFront, camera.up()));
+    deep::camera &camera = scene->get_attached_camera();
+    deep::fvec3 cameraPos = camera.get_position();
+    deep::fvec3 cameraFront = camera.get_front();
+    deep::fvec3 cameraRight = deep::fvec3::normalize(deep::fvec3::cross(cameraFront, camera.get_up()));
 
     deep::entity_manager::entity entity = deep::entity_manager::entity::bad();
 
@@ -144,40 +144,40 @@ void update_callback(deep::window & /* win */)
     // Déplacer la caméra vers l'avant.
     if(deep::key::isPressed(deep::dkey::Z))
     {
-        camera.moveForward(cameraSpeed);
+        camera.move_forward(cameraSpeed);
     }
 
     // Déplacer la caméra vers la gauche.
     if(deep::key::isPressed(deep::dkey::Q))
     {
-        camera.moveLeft(cameraSpeed);
+        camera.move_left(cameraSpeed);
     }
 
     // Déplacer la caméra vers la droite.
     if(deep::key::isPressed(deep::dkey::D))
     {
-        camera.moveRight(cameraSpeed);
+        camera.move_right(cameraSpeed);
     }
 
     // Déplacer la caméra vers l'arrière.
     if(deep::key::isPressed(deep::dkey::S))
     {
-        camera.moveBackward(cameraSpeed);
+        camera.move_backward(cameraSpeed);
     }
 
     // Fait monter la caméra.
     if(deep::key::isPressed(deep::dkey::Space))
     {
-        camera.moveUp(cameraSpeed);
+        camera.move_up(cameraSpeed);
     }
 
     // Fait descendre la caméra.
     if(deep::key::isPressed(deep::dkey::LCtrl))
     {
-        camera.moveDown(cameraSpeed);
+        camera.move_down(cameraSpeed);
     }
 
-    camera.updateAngleOfView();
+    camera.update_angle_of_view();
 }
 
 #include <iostream>

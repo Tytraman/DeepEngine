@@ -24,10 +24,10 @@ namespace deep
 
     class system_manager;
     class window;
-    class Camera;
+    class camera;
     class gl_renderer;
 
-    using drawable_render_callback = void (*)(GL3::gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, Camera *camera);
+    using drawable_render_callback = void (*)(GL3::gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, camera *camera);
 
     constexpr component_type DrawableComponentType = (1 << 0);
 
@@ -40,8 +40,8 @@ namespace deep
         GL3::gl_id program;
         drawable_render_callback renderCallback;
 
-        DE_API static void classic_render_callback(GL3::gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, Camera *camera);
-        DE_API static void skybox_render_callback(GL3::gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, Camera *camera);
+        DE_API static void classic_render_callback(GL3::gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, camera *camera);
+        DE_API static void skybox_render_callback(GL3::gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, camera *camera);
         
         private:
             drawable_component(GL3::gl_id program, GL3::gl_id vbo, GL3::gl_id vao, GL3::gl_id texture = 0, uint8_t textureUnit = 0);

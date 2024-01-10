@@ -390,7 +390,7 @@ namespace deep
         {
             scene *scene = scene::get_scene(sceneID);
 
-            Camera &cam = scene->get_attached_camera();
+            camera &cam = scene->get_attached_camera();
 
             static list<entity_id> entities;
             entity_collection_id collection = scene::get_entity_collection(sceneID);

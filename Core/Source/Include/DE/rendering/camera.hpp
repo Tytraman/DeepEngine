@@ -1,58 +1,60 @@
 #ifndef __DEEP_ENGINE_CAMERA_HPP__
 #define __DEEP_ENGINE_CAMERA_HPP__
 
-#include <DE/def.hpp>
-#include <DE/types.hpp>
-#include <DE/vec.hpp>
+#include "DE/def.hpp"
+#include "DE/types.hpp"
+#include "DE/vec.hpp"
 
-namespace deep {
+namespace deep
+{
 
 	/// @brief Les caméras sont ce qui donnent l'effet de voir le monde selon une position.
-	class DE_API Camera {
+	class DE_API camera
+	{
 
 		public:
-			Camera(const fvec3 &position, const fvec3 &front, const fvec3 &baseUp = fvec3(0.0f, 1.0f, 0.0f));
+			camera(const fvec3 &position, const fvec3 &front, const fvec3 &baseUp = fvec3(0.0f, 1.0f, 0.0f));
 
 			/// @brief Met à jour l'angle de vision après avoir modifié le 'yaw' et le 'pitch' de la caméra.
-			void updateAngleOfView();
+			void update_angle_of_view();
 
 			/// @brief  Récupère la position relative au monde de la caméra.
 			/// @return La position relative au monde de la caméra.
-			fvec3 position() const;
+			fvec3 get_position() const;
 
 			/// @brief  Récupère le vecteur qui pointe vers le haut.
 			/// @return Le vecteur qui pointe vers le haut.
-			fvec3 baseUp() const;
+			fvec3 get_base_up() const;
 
 			/// @brief  Récupère le vecteur qui pointe vers l'avant de la caméra.
 			/// @return Le vecteur qui pointe vers l'avant de la caméra.
-			fvec3 front() const;
+			fvec3 get_front() const;
 
 			/// @brief  Récupère le vecteur qui pointe vers le haut de la caméra en prenant en compte l'angle de vision.
 			/// @return Le vecteur qui pointe vers le haut de la caméra.
-			fvec3 up() const;
+			fvec3 get_up() const;
 
 			/// @brief  Récupère l'angle de vision horizontale de la caméra.
 			/// @return L'angle de vision horizontale en degrées de la caméra.
-			float yaw() const;
+			float get_yaw() const;
 
 			/// @brief  Récupère l'angle de vision horizontale de la caméra.
 			/// @return L'angle de vision horizontale en degrées de la caméra.
-			float pitch() const;
+			float get_pitch() const;
 
-			void setYaw(float value);
-			void setPitch(float value);
+			void set_yaw(float value);
+			void set_pitch(float value);
 
-			void setPosition(const fvec3 &pos);
+			void set_position(const fvec3 &pos);
 
-			void moveRight(float value);
-			void moveLeft(float value);
-			void moveForward(float value);
-			void moveBackward(float value);
-			void moveUp(float value);
-			void moveDown(float value);
+			void move_right(float value);
+			void move_left(float value);
+			void move_forward(float value);
+			void move_backward(float value);
+			void move_up(float value);
+			void move_down(float value);
 
-			fmat4x4 lookAt() const;
+			fmat4x4 get_look_at() const;
 
 		private:
 			fvec3 m_Position;    ///< Position de la caméra.
@@ -66,91 +68,91 @@ namespace deep {
 	};
 
 	/*
-	================
-	Camera::position
-	================
+	====================
+	camera::get_position
+	====================
 	*/
-	inline fvec3 Camera::position() const
+	inline fvec3 camera::get_position() const
 	{
 		return m_Position;
 	}
 	
 	/*
-	==============
-	Camera::baseUp
-	==============
+	===================
+	camera::get_base_up
+	===================
 	*/
-	inline fvec3 Camera::baseUp() const
+	inline fvec3 camera::get_base_up() const
 	{
 		return m_BaseUp;
 	}
 			
 	/*
-	=============
-	Camera::front
-	=============
+	=================
+	camera::get_front
+	=================
 	*/
-	inline fvec3 Camera::front() const
+	inline fvec3 camera::get_front() const
 	{
 		return m_Front;
 	}
 			
 	/*
-	==========
-	Camera::up
-	==========
+	==============
+	camera::get_up
+	==============
 	*/
-	inline fvec3 Camera::up() const
+	inline fvec3 camera::get_up() const
 	{
 		return m_Up;
 	}
 
 	/*
-	===========
-	Camera::yaw
-	===========
+	===============
+	camera::get_yaw
+	===============
 	*/
-	inline float Camera::yaw() const
+	inline float camera::get_yaw() const
 	{
 		return m_Yaw;
 	}
 
 	/*
-	=============
-	Camera::pitch
-	=============
+	=================
+	camera::get_pitch
+	=================
 	*/
-	inline float Camera::pitch() const
+	inline float camera::get_pitch() const
 	{
 		return m_Pitch;
 	}
 
 	/*
-	==============
-	Camera::setYaw
-	==============
+	===============
+	camera::set_yaw
+	===============
 	*/
-	inline void Camera::setYaw(float value)
+	inline void camera::set_yaw(float value)
 	{
 		m_Yaw = value;
 	}
 
 	/*
-	================
-	Camera::setPitch
-	================
+	=================
+	camera::set_pitch
+	=================
 	*/
-	inline void Camera::setPitch(float value)
+	inline void camera::set_pitch(float value)
 	{
 		m_Pitch = value;
 	}
 
 	/*
-	===================
-	Camera::setPosition
-	===================
+	====================
+	camera::set_position
+	====================
 	*/
-	inline void Camera::setPosition(const fvec3 &pos)
+	inline void camera::set_position(const fvec3 &pos)
 	{
 		m_Position = pos;
 	}

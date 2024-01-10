@@ -650,16 +650,36 @@ cancel_component: ;
             0
         );
 
-        string frames("UPS: ");
-        frames.append(std::to_string(window->get_UPS()).c_str());
-        frames.append(" FPS: ");
-        frames.append(std::to_string(window->get_FPS()).c_str());
+        
 
         ImGui::SetNextWindowPos(windowPos);
         ImGui::SetNextWindowSize(windowSize);
         if(ImGui::Begin("##", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize))
         {
+            string frames("UPS: ");
+            frames.append(std::to_string(window->get_UPS()).c_str());
+            frames.append(" FPS: ");
+            frames.append(std::to_string(window->get_FPS()).c_str());
+
+            scene *currentScene = scene::get_scene(scene::get_active_scene_id());
+            camera &camera = currentScene->get_attached_camera();
+
+            fvec3 camPos = camera.get_position();
+
+            string positionX("X: ");
+            positionX.append(std::to_string(camPos.x).c_str());
+
+            string positionY("Y: ");
+            positionY.append(std::to_string(camPos.y).c_str());
+
+            string positionZ("Z: ");
+            positionZ.append(std::to_string(camPos.z).c_str());
+
             ImGui::Text(frames.str());
+            ImGui::Separator();
+            ImGui::Text(positionX.str());
+            ImGui::Text(positionY.str());
+            ImGui::Text(positionZ.str());
 
             ImGui::End();
         }
