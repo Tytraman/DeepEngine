@@ -170,6 +170,8 @@ namespace deep
           m_UpdateCallback(nullptr),
           m_TargetMSPerUpdate(targetMS),
           m_TargetFPS(targetFPS),
+          m_FPS(0),
+          m_UPS(0),
           m_Running(false),
           m_ShowDebugPanel(false),
           m_FRB()
@@ -313,10 +315,12 @@ namespace deep
             ImGui_ImplSDL2_NewFrame();
             ImGui::NewFrame();
 
+            im_gui_debug_menu::render_info(this);
+
             if(m_ShowDebugPanel)
             {
                 im_gui_debug_menu::render(this);
-                ImGui::ShowDemoWindow();
+                //ImGui::ShowDemoWindow();
             }
                 
 
@@ -372,8 +376,8 @@ namespace deep
 
             if(elapsed >= 1000)
             {
-                // TODO: Retirer au moment de la release.
-                set_title((title + " | UPS: " + std::to_string(updates) + " | FPS: " + std::to_string(cn)).c_str());
+                m_FPS = cn;
+                m_UPS = updates;
 
                 cn = 0;
                 updates = 0;

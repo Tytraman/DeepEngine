@@ -454,9 +454,9 @@ int main()
     deep::string baseName("entity_");
     uint64_t count = 0;
 
-    for(i = 0; i < 50; ++i)
+    for(i = 0; i < 10; ++i)
     {
-        for(j = 0; j < 50; ++j)
+        for(j = 0; j < 10; ++j)
         {
             deep::string entityName = baseName;
             entityName.append(std::to_string(count).c_str());

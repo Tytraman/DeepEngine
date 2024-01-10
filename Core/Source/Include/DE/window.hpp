@@ -80,6 +80,8 @@ namespace deep
             DE_API size get_size() const;
             DE_API uint32_t get_width() const;
             DE_API uint32_t get_height() const;
+            DE_API uint32_t get_FPS() const;
+            DE_API uint32_t get_UPS() const;
             DE_API const char *get_title() const;
             DE_API GL3::gl_renderer &get_renderer();
             DE_API bool is_showing_debug_panel() const;
@@ -99,6 +101,8 @@ namespace deep
             GL3::gl_renderer         m_Renderer;
             uint16_t                 m_TargetMSPerUpdate;
             uint16_t                 m_TargetFPS;
+            uint32_t                 m_FPS;
+            uint32_t                 m_UPS;
             bool                     m_Running;
             bool                     m_ShowDebugPanel;
             GL3::framerenderbuffer   m_FRB;
@@ -203,9 +207,9 @@ namespace deep
     }
 
     /*
-    ===========================
+    ==============================
     window::is_showing_debug_panel
-    ===========================
+    ==============================
     */
     inline bool window::is_showing_debug_panel() const
     {
@@ -213,9 +217,9 @@ namespace deep
     }
 
     /*
-    ========================
+    ==========================
     window::set_event_callback
-    ========================
+    ==========================
     */
     inline void window::set_event_callback(event_callback callback)
     {
@@ -223,9 +227,9 @@ namespace deep
     }
 
     /*
-    =========================
+    ===========================
     window::set_update_callback
-    =========================
+    ===========================
     */
     inline void window::set_update_callback(update_callback callback)
     {
@@ -233,16 +237,36 @@ namespace deep
     }
 
     /*
-    ============================
+    ===============================
     window::set_showing_debug_panel
-    ============================
+    ===============================
     */
     inline void window::set_showing_debug_panel(bool value)
     {
         if(value)
-            im_gui_debug_menu::addWindow(this);
+            im_gui_debug_menu::add_window(this);
         else
-            im_gui_debug_menu::removeWindow(this);
+            im_gui_debug_menu::remove_window(this);
+    }
+
+    /*
+    ===============
+    window::get_FPS
+    ===============
+    */
+    inline uint32_t window::get_FPS() const
+    {
+        return m_FPS;
+    }
+
+    /*
+    ===============
+    window::get_UPS
+    ===============
+    */
+    inline uint32_t window::get_UPS() const
+    {
+        return m_UPS;
     }
 
 }

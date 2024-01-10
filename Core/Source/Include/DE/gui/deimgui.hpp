@@ -44,8 +44,9 @@ namespace deep
 
         public:
             DE_API static void render(const window *window);
-            DE_API static void addWindow(const window *window);
-            DE_API static void removeWindow(const window *window);
+            DE_API static void render_info(const window *window);
+            DE_API static void add_window(const window *window);
+            DE_API static void remove_window(const window *window);
 
         public:
             im_gui_debug_menu() = delete;

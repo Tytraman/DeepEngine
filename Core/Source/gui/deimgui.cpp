@@ -636,21 +636,53 @@ cancel_component: ;
     }
 
     /*
-    =========================
-    im_gui_debug_menu::addWindow
-    =========================
+    ==============================
+    im_gui_debug_menu::render_info
+    ==============================
     */
-    void im_gui_debug_menu::addWindow(const window *window)
+    void im_gui_debug_menu::render_info(const window *window)
+    {
+        ImGui::PushFont(g_NormalFont);
+
+        ImVec2 windowSize(180, 120);
+        ImVec2 windowPos(
+            window->get_width() - windowSize.x,
+            0
+        );
+
+        string frames("UPS: ");
+        frames.append(std::to_string(window->get_UPS()).c_str());
+        frames.append(" FPS: ");
+        frames.append(std::to_string(window->get_FPS()).c_str());
+
+        ImGui::SetNextWindowPos(windowPos);
+        ImGui::SetNextWindowSize(windowSize);
+        if(ImGui::Begin("##", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize))
+        {
+            ImGui::Text(frames.str());
+
+            ImGui::End();
+        }
+
+        ImGui::PopFont();
+    }
+
+    /*
+    =============================
+    im_gui_debug_menu::add_window
+    =============================
+    */
+    void im_gui_debug_menu::add_window(const window *window)
     {
         m_DebugPanelOptions.emplace(window, im_gui_debug_panel_options());
     }
 
     /*
-    ============================
-    im_gui_debug_menu::removeWindow
-    ============================
+    ================================
+    im_gui_debug_menu::remove_window
+    ================================
     */
-    void im_gui_debug_menu::removeWindow(const window *window)
+    void im_gui_debug_menu::remove_window(const window *window)
     {
         m_DebugPanelOptions.erase(window);
     }
