@@ -231,7 +231,7 @@ namespace deep
         {
             GLuint program = DE_GL_CALLV(glCreateProgram());
 
-            auto &el = m_Programs.insert(name, program_item(name, program));
+            hash_entry<program_item> &el = m_Programs.insert(name, program_item(name, program));
 
             return el.key;
         }
@@ -253,13 +253,13 @@ namespace deep
         */
         bool program_manager::attach_shader(gl_id program, gl_id shader)
         {
-            auto prog = m_Programs[program];
+            hash_entry<program_item> *prog = m_Programs[program];
             if(prog == nullptr)
                 return false;
 
             shader_manager *shaderManager = shader_manager::get_singleton();
 
-            auto shad = shaderManager->m_Shaders[shader];
+            hash_entry<GLuint> *shad = shaderManager->m_Shaders[shader];
             if(shad == nullptr)
                 return false;
 
@@ -275,13 +275,13 @@ namespace deep
         */
         bool program_manager::attach_shader(const char *progName, const char *shadName)
         {
-            auto prog = m_Programs[progName];
+            hash_entry<program_item> *prog = m_Programs[progName];
             if(prog == nullptr)
                 return false;
 
             shader_manager *shaderManager = shader_manager::get_singleton();
 
-            auto shad = shaderManager->m_Shaders[shadName];
+            hash_entry<GLuint> *shad = shaderManager->m_Shaders[shadName];
             if(shad == nullptr)
                 return false;
 
@@ -297,13 +297,13 @@ namespace deep
         */
         bool program_manager::attach_shader(const char *progName, gl_id shader)
         {
-            auto prog = m_Programs[progName];
+            hash_entry<program_item> *prog = m_Programs[progName];
             if(prog == nullptr)
                 return false;
 
             shader_manager *shaderManager = shader_manager::get_singleton();
 
-            auto shad = shaderManager->m_Shaders[shader];
+            hash_entry<GLuint> *shad = shaderManager->m_Shaders[shader];
             if(shad == nullptr)
                 return false;
 
@@ -319,13 +319,13 @@ namespace deep
         */
         bool program_manager::attach_shader(gl_id program, const char *shadName)
         {
-            auto prog = m_Programs[program];
+            hash_entry<program_item> *prog = m_Programs[program];
             if(prog == nullptr)
                 return false;
 
             shader_manager *shaderManager = shader_manager::get_singleton();
 
-            auto shad = shaderManager->m_Shaders[shadName];
+            hash_entry<GLuint> *shad = shaderManager->m_Shaders[shadName];
             if(shad == nullptr)
                 return false;
 
@@ -341,7 +341,7 @@ namespace deep
         */
         bool program_manager::add_uniform(const char *uniformName, int location, float value)
         {
-            auto prog = m_Programs[m_CurrentID];
+            hash_entry<program_item> *prog = m_Programs[m_CurrentID];
             if(prog == nullptr)
                 return false;
 
@@ -357,7 +357,7 @@ namespace deep
         */
         bool program_manager::add_uniform(const char *uniformName, int location, int value)
         {
-            auto prog = m_Programs[m_CurrentID];
+            hash_entry<program_item> *prog = m_Programs[m_CurrentID];
             if(prog == nullptr)
                 return false;
 
@@ -373,7 +373,7 @@ namespace deep
         */
         bool program_manager::add_uniform(const char *uniformName, int location, const fvec3 &value)
         {
-            auto prog = m_Programs[m_CurrentID];
+            hash_entry<program_item> *prog = m_Programs[m_CurrentID];
             if(prog == nullptr)
                 return false;
 
@@ -389,7 +389,7 @@ namespace deep
         */
         bool program_manager::add_uniform(const char *uniformName, int location, const fmat4x4 &value)
         {
-            auto prog = m_Programs[m_CurrentID];
+            hash_entry<program_item> *prog = m_Programs[m_CurrentID];
             if(prog == nullptr)
                 return false;
 
@@ -405,11 +405,11 @@ namespace deep
         */
         bool program_manager::set_uniform(const char *uniformName, float value)
         {
-            auto prog = m_Programs[m_CurrentID];
+            hash_entry<program_item> *prog = m_Programs[m_CurrentID];
             if(prog == nullptr)
                 return false;
 
-            auto uni = prog->value.fUniforms[uniformName];
+            hash_entry<pair<int, float>> *uni = prog->value.fUniforms[uniformName];
             if(uni == nullptr)
                 return false;
 
@@ -425,11 +425,11 @@ namespace deep
         */
         bool program_manager::set_uniform(const char *uniformName, int value)
         {
-            auto prog = m_Programs[m_CurrentID];
+            hash_entry<program_item> *prog = m_Programs[m_CurrentID];
             if(prog == nullptr)
                 return false;
 
-            auto uni = prog->value.iUniforms[uniformName];
+            hash_entry<pair<int, int>> *uni = prog->value.iUniforms[uniformName];
             if(uni == nullptr)
                 return false;
 
@@ -445,11 +445,11 @@ namespace deep
         */
         bool program_manager::set_uniform(const char *uniformName, const fvec3 &value)
         {
-            auto prog = m_Programs[m_CurrentID];
+            hash_entry<program_item> *prog = m_Programs[m_CurrentID];
             if(prog == nullptr)
                 return false;
 
-            auto uni = prog->value.fv3Uniforms[uniformName];
+            hash_entry<pair<int, fvec3>> *uni = prog->value.fv3Uniforms[uniformName];
             if(uni == nullptr)
                 return false;
 
@@ -465,11 +465,11 @@ namespace deep
         */
         bool program_manager::set_uniform(const char *uniformName, const fmat4x4 &value)
         {
-            auto prog = m_Programs[m_CurrentID];
+            hash_entry<program_item> *prog = m_Programs[m_CurrentID];
             if(prog == nullptr)
                 return false;
 
-            auto uni = prog->value.fm4Uniforms[uniformName];
+            hash_entry<pair<int, fmat4x4>> *uni = prog->value.fm4Uniforms[uniformName];
             if(uni == nullptr)
                 return false;
 
@@ -509,7 +509,7 @@ namespace deep
         */
         bool program_manager::link(gl_id program)
         {
-            auto el = m_Programs[program];
+            hash_entry<program_item> *el = m_Programs[program];
             if(el == nullptr)
                 return false;
 
@@ -523,7 +523,7 @@ namespace deep
         */
         bool program_manager::link(const char *name)
         {
-            auto el = m_Programs[name];
+            hash_entry<program_item> *el = m_Programs[name];
             if(el == nullptr)
                 return false;
 
@@ -548,7 +548,7 @@ namespace deep
         */
         bool program_manager::use(gl_id program)
         {
-            auto el = m_Programs[program];
+            hash_entry<program_item> *el = m_Programs[program];
             if(el == nullptr)
                 return false;
 
@@ -565,7 +565,7 @@ namespace deep
         */
         bool program_manager::use(const char *name)
         {
-            auto el = m_Programs[name];
+            hash_entry<program_item> *el = m_Programs[name];
             if(el == nullptr)
                 return false;
 
@@ -592,7 +592,7 @@ namespace deep
         */
         bool program_manager::destroy(gl_id program)
         {
-            auto el = m_Programs[program];
+            hash_entry<program_item> *el = m_Programs[program];
             if(el == nullptr)
                 return false;
 
@@ -609,7 +609,7 @@ namespace deep
         */
         bool program_manager::destroy(const char *name)
         {
-            auto el = m_Programs[name];
+            hash_entry<program_item> *el = m_Programs[name];
             if(el == nullptr)
                 return false;
 
@@ -626,7 +626,7 @@ namespace deep
         */
         bool program_manager::send_uniforms()
         {
-            auto prog = m_Programs[m_CurrentID];
+            hash_entry<program_item> *prog = m_Programs[m_CurrentID];
             if(prog == nullptr)
                 return false;
 

@@ -69,6 +69,25 @@ namespace deep
           selection(0, static_cast<size_t>(-1))
     { }
 
+    struct edit_vao
+    {
+        GL3::gl_id vboID;
+        GL3::gl_id vaoID;
+
+        edit_vao();
+    };
+
+    edit_vao::edit_vao()
+        : vboID(0),
+          vaoID(0)
+    { }
+
+    struct edit_texture
+    {
+        GL3::gl_id textureID;
+        GL3::texture_manager::texture_item *item;
+    };
+
     bool im_gui_window::m_Initialized = false;
 
     static std::unordered_map<const window *, im_gui_debug_panel_options> m_DebugPanelOptions;
@@ -151,7 +170,39 @@ namespace deep
         }
     }
 
-    void entities_enum_callback(entity_manager::entity &ent)
+    void __edit_vao_enum_callback(GL3::gl_id vaoID, GL3::vao_manager::vao_item *vao, mem_ptr args)
+    {
+        edit_vao *edit = (edit_vao *) args;
+
+        if(ImGui::Selectable(vao->name.str(), edit->vaoID == vaoID))
+        {
+            edit->vaoID = vaoID;
+            edit->vboID = vao->attachedVbo;
+        }
+    }
+
+    void __edit_texture_enum_callback(GL3::gl_id textureID, GL3::texture_manager::texture_item *texture, mem_ptr args)
+    {
+        edit_texture *edit = (edit_texture *) args;
+
+        if(ImGui::Selectable(texture->name.str(), edit->textureID == textureID))
+        {
+            edit->textureID = textureID;
+            edit->item = texture;
+        }
+    }
+
+    void __edit_program_enum_callback(GL3::gl_id programID, GL3::program_manager::program_item *program, mem_ptr args)
+    {
+        GL3::gl_id *id = (GL3::gl_id *) args;
+
+        if(ImGui::Selectable(program->name.str(), *id == programID))
+        {
+            *id = programID;
+        }
+    }
+
+    void __entities_enum_callback(entity_manager::entity &ent)
     {
         entity_manager *entityManager = entity_manager::get_singleton();
 
@@ -184,13 +235,116 @@ namespace deep
 
             component_type componentTypes = entityManager->get_component_types(ent.get_entity_id(), ent.get_collection_id());
 
+            component_manager *componentManager = component_manager::get_singleton();
+            GL3::program_manager *programManager = GL3::program_manager::get_singleton();
+            GL3::vao_manager *vaoManager = GL3::vao_manager::get_singleton();
+            GL3::texture_manager *textureManager = GL3::texture_manager::get_singleton();
+
             ImGui::Text(entityID.str());
             ImGui::Text("Liste des composants attachés:");
 
             if((componentTypes & DrawableComponentType) > 0)
-                ImGui::BulletText("drawable_component");
+            {
+                if(ImGui::TreeNode("drawable_component"))
+                {
+                    component_id id = entityManager->get_component_id(ent.get_entity_id(), ent.get_collection_id(), DrawableComponentType);
+                    drawable_component *drawable = componentManager->get_drawable_component(id);
+
+                    if(drawable != nullptr)
+                    {
+                        GL3::program_manager::program_item *program = programManager->get(drawable->program);
+                        GL3::vao_manager::vao_item *vao = vaoManager->get(drawable->vao);
+                        GL3::texture_manager::texture_item *texture = textureManager->get(drawable->texture);
+
+                        if(ImGui::BeginCombo("VAO", vao != nullptr ? vao->name.str() : ""))
+                        {
+                            edit_vao edit;
+                            edit.vboID = drawable->vbo;
+                            edit.vaoID = drawable->vao;
+
+                            vaoManager->enum_vaos(__edit_vao_enum_callback, &edit);
+
+                            drawable->vbo = edit.vboID;
+                            drawable->vao = edit.vaoID;
+
+                            ImGui::EndCombo();
+                        }
+
+                        if(ImGui::BeginCombo("Texture", texture != nullptr ? texture->name.str() : ""))
+                        {
+                            edit_texture edit;
+                            edit.textureID = drawable->texture;
+
+                            if(texture != nullptr)
+                                edit.item = texture;
+                            else
+                                edit.item = nullptr;
+
+                            textureManager->enum_textures(__edit_texture_enum_callback, &edit);
+
+                            drawable->texture = edit.textureID;
+
+                            ImGui::EndCombo();
+                        }
+
+                        if(ImGui::BeginCombo("Shader", program != nullptr ? program->name.str() : ""))
+                        {
+                            programManager->enum_programs(__edit_program_enum_callback, &drawable->program);
+
+                            ImGui::EndCombo();
+                        }
+                    }
+
+                    ImGui::TreePop();
+                }
+            }
+                
             if((componentTypes & TransformationComponentType) > 0)
-                ImGui::BulletText("transformation_component");
+            {
+                if(ImGui::TreeNode("transformation_component"))
+                {
+                    component_id id = entityManager->get_component_id(ent.get_entity_id(), ent.get_collection_id(), TransformationComponentType);
+                    transformation_component *transformation = componentManager->get_transformation_component(id);
+
+                    if(transformation != nullptr)
+                    {
+                        fvec3 translation = transformation->get_translation();
+                        fvec3 scaling = transformation->get_scaling();
+                        float rotationX = transformation->get_rotation_X();
+                        float rotationY = transformation->get_rotation_Y();
+                        float rotationZ = transformation->get_rotation_Z();
+
+                        ImGui::DragScalar("X", ImGuiDataType_Float, &translation.x, 0.01f);
+                        ImGui::DragScalar("Y", ImGuiDataType_Float, &translation.y, 0.01f);
+                        ImGui::DragScalar("Z", ImGuiDataType_Float, &translation.z, 0.01f);
+
+                        ImGui::Spacing();
+                        ImGui::Spacing();
+
+                        ImGui::DragScalar("Taille X", ImGuiDataType_Float, &scaling.x, 0.01f);
+                        ImGui::DragScalar("Taille Y", ImGuiDataType_Float, &scaling.y, 0.01f);
+                        ImGui::DragScalar("Taille Z", ImGuiDataType_Float, &scaling.z, 0.01f);
+
+                        ImGui::Spacing();
+                        ImGui::Spacing();
+
+                        ImGui::DragScalar("Rotation X", ImGuiDataType_Float, &rotationX, 0.01f);
+                        ImGui::DragScalar("Rotation Y", ImGuiDataType_Float, &rotationY, 0.01f);
+                        ImGui::DragScalar("Rotation Z", ImGuiDataType_Float, &rotationZ, 0.01f);
+
+                        ImGui::Spacing();
+                        ImGui::Spacing();
+
+                        transformation->set_translation(translation);
+                        transformation->set_scaling(scaling);
+                        transformation->set_rotation_X(rotationX);
+                        transformation->set_rotation_Y(rotationY);
+                        transformation->set_rotation_Z(rotationZ);
+                    }
+
+                    ImGui::TreePop();
+                }
+            }
             if((componentTypes & VelocityComponentType) > 0)
                 ImGui::BulletText("velocity_component");
             if((componentTypes & ColliderComponentType) > 0)
@@ -501,7 +655,7 @@ cancel_component: ;
 
                             ImGui::Spacing();
 
-                            entityManager->enum_entities(collection, entities_enum_callback);
+                            entityManager->enum_entities(collection, __entities_enum_callback);
                         }
                     } break;
                     case ImGuiDebugMenuCPUView:

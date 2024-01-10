@@ -454,13 +454,15 @@ int main()
     deep::string baseName("entity_");
     uint64_t count = 0;
 
+    float cubeSize = 3.0f;
+
     for(i = 0; i < 10; ++i)
     {
         for(j = 0; j < 10; ++j)
         {
             deep::string entityName = baseName;
             entityName.append(std::to_string(count).c_str());
-            deep::entity_manager::entity entTest = entityManager->create_entity(entityName.str(), collectionID, pol, defaultProgram, deep::fvec3(i * 5.0f, 0.0f, j * 5.0f), deep::fvec3(3.0f, 3.0f, 3.0f), mcTexture);
+            deep::entity_manager::entity entTest = entityManager->create_entity(entityName.str(), collectionID, pol, defaultProgram, deep::fvec3(i * cubeSize, 0.0f, j * cubeSize), deep::fvec3(cubeSize, cubeSize, cubeSize), mcTexture);
 
             count++;
         }

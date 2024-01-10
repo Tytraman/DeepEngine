@@ -75,6 +75,7 @@
 - [ ] Pouvoir gérer les entités présentes dans une scène.
 	- [x] Afficher les entités présentes dans une scène. ✅ 2024-01-01
 	- [x] Pouvoir supprimer des entités. ✅ 2024-01-01
+	- [x] Pouvoir ajouter des entités. ✅ 2024-01-10
 	- [ ] Afficher les informations concernant l'entité sélectionnée.
 	- [ ] **Outliner** l'entité sélectionnée.
 

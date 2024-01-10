@@ -194,7 +194,7 @@ namespace deep
         */
         bool framebuffer_manager::attach_texture(GL3::gl_id texture)
         {
-            hash_entry<texture_manager::texture_item> *el = GL3::texture_manager::get_singleton()->get(texture);
+            texture_manager::texture_item *el = GL3::texture_manager::get_singleton()->get(texture);
             if(el == nullptr)
                 return false;
 
@@ -203,7 +203,7 @@ namespace deep
                 return false;
 
             // Attache la texture au framebuffer.
-            DE_GL_CALL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, el->value.glTexture, 0));
+            DE_GL_CALL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, el->glTexture, 0));
             al->value.texture = texture;
 
             return true;
@@ -216,13 +216,13 @@ namespace deep
         */
         bool framebuffer_manager::attach_texture(const char *name)
         {
-            hash_entry<texture_manager::texture_item> *el = GL3::texture_manager::get_singleton()->get(name);
+            texture_manager::texture_item *el = GL3::texture_manager::get_singleton()->get(name);
             if(el == nullptr)
                 return false;
 
             // Attache la texture au framebuffer.
-            DE_GL_CALL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, el->value.glTexture, 0));
-            m_Framebuffers[m_CurrentID]->value.texture = el->value.glTexture;
+            DE_GL_CALL(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, el->glTexture, 0));
+            m_Framebuffers[m_CurrentID]->value.texture = el->glTexture;
 
             return true;
         }

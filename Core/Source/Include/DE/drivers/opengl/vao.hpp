@@ -48,6 +48,8 @@ namespace deep
 
                 DE_API void enum_vaos(enum_callback callback, mem_ptr args);
 
+                DE_API vao_item *get(uint64_t keyName);
+
                 DE_API GLuint currently_bound();
                 DE_API gl_id current_id();
 
@@ -62,6 +64,20 @@ namespace deep
                  vao_manager(const vao_manager &) = delete;
                  vao_manager(vao_manager &&) = delete;
         };
+
+        /*
+        ================
+        vao_manager::get
+        ================
+        */
+        inline vao_manager::vao_item *vao_manager::get(uint64_t keyName)
+        {
+            hash_entry<vao_item> *hs = m_VAOs[keyName];
+            if(hs == nullptr)
+                return nullptr;
+
+            return &hs->value;
+        }
 
         /*
         ============================

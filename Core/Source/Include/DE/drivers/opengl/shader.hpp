@@ -116,8 +116,8 @@ namespace deep
 
                 DE_API void enum_programs(enum_callback callback, mem_ptr args);
 
-                DE_API hash_entry<program_item> *get(gl_id program);
-                DE_API hash_entry<program_item> *get(const char *name);
+                DE_API program_item *get(gl_id program);
+                DE_API program_item *get(const char *name);
 
                 DE_API GLuint currently_bound();
                 DE_API gl_id current_id();
@@ -162,9 +162,13 @@ namespace deep
         program_manager::get
         ====================
         */
-        inline hash_entry<program_manager::program_item> *program_manager::get(gl_id program)
+        inline program_manager::program_item *program_manager::get(gl_id program)
         {
-            return m_Programs[program];
+            hash_entry<program_item> *hs = m_Programs[program];
+            if(hs == nullptr)
+                return nullptr;
+
+            return &hs->value;
         }
 
         /*
@@ -172,9 +176,9 @@ namespace deep
         program_manager::get
         ====================
         */
-        inline hash_entry<program_manager::program_item> *program_manager::get(const char *name)
+        inline program_manager::program_item *program_manager::get(const char *name)
         {
-            return m_Programs[name];
+            return get(m_Programs.getHashFunction()(name));
         }
 
         /*

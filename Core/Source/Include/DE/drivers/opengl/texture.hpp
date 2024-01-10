@@ -91,8 +91,8 @@ namespace deep
 
                 DE_API void enum_textures(enum_callback callback, mem_ptr args);
 
-                DE_API hash_entry<texture_item> *get(gl_id texture);
-                DE_API hash_entry<texture_item> *get(const char *name);
+                DE_API texture_item *get(gl_id texture);
+                DE_API texture_item *get(const char *name);
 
                 DE_API GLuint currently_bound();
                 DE_API gl_id current_id();
@@ -132,9 +132,13 @@ namespace deep
         texture_manager::get
         ====================
         */
-        inline hash_entry<texture_manager::texture_item> *texture_manager::get(gl_id texture)
+        inline texture_manager::texture_item *texture_manager::get(gl_id texture)
         {
-            return m_Textures[texture];
+            hash_entry<texture_item> *hs = m_Textures[texture];
+            if(hs == nullptr)
+                return nullptr;
+
+            return &hs->value;
         }
 
         /*
@@ -142,9 +146,9 @@ namespace deep
         texture_manager::get
         ====================
         */
-        inline hash_entry<texture_manager::texture_item> *texture_manager::get(const char *name)
+        inline texture_manager::texture_item *texture_manager::get(const char *name)
         {
-            return m_Textures[name];
+            return get(m_Textures.getHashFunction()(name));
         }
 
         /*

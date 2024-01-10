@@ -27,11 +27,11 @@ namespace deep
         {
             program_manager *programManager = program_manager::get_singleton();
 
-            hash_entry<program_manager::program_item> *el = programManager->get(program);
+            program_manager::program_item *el = programManager->get(program);
             if(el == nullptr)
                 return -1;
 
-            return raw_find(el->value.program, name);
+            return raw_find(el->program, name);
         }
 
         /*
@@ -43,11 +43,11 @@ namespace deep
         {
             program_manager *programManager = program_manager::get_singleton();
 
-            hash_entry<program_manager::program_item> *el = programManager->get(progName);
+            program_manager::program_item *el = programManager->get(progName);
             if(el == nullptr)
                 return -1;
 
-            return raw_find(el->value.program, name);
+            return raw_find(el->program, name);
         }
 
         /*
