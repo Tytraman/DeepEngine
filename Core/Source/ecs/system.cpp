@@ -402,6 +402,56 @@ namespace deep
             component_id transformationComponentID;
 
             component_manager *componentManager = component_manager::get_singleton();
+            drawable_component *drawableComponent;
+            transformation_component *transformationComponent;
+
+            size_t numberOfEntities = entities.count();
+            if(numberOfEntities > 1)
+            {
+                size_t i, j;
+                component_id nextDrawableComponentID;
+                component_id nextTransformationComponentID;
+                drawable_component *nextDrawableComponent;
+                transformation_component *nextTransformationComponent;
+                entity_id tempID;
+
+                fvec3 position, nextPosition;
+                fvec3 toPosition, toNextPosition;
+
+                fvec3 camPosition = cam.get_position();
+
+                // Trie les entités pour afficher en premier les plus lointaines.
+                for(i = 0; i < numberOfEntities - 1; ++i)
+                {
+                    for(j = 1; j < numberOfEntities; ++j)
+                    {
+                        drawableComponentID       = entityManager->get_component_id(entities[i], collection, DrawableComponentType);
+                        transformationComponentID = entityManager->get_component_id(entities[i], collection, TransformationComponentType);
+
+                        drawableComponent       = componentManager->get_drawable_component(drawableComponentID);
+                        transformationComponent = componentManager->get_transformation_component(transformationComponentID);
+
+                        nextDrawableComponentID       = entityManager->get_component_id(entities[j], collection, DrawableComponentType);
+                        nextTransformationComponentID = entityManager->get_component_id(entities[j], collection, TransformationComponentType);
+
+                        nextDrawableComponent       = componentManager->get_drawable_component(nextDrawableComponentID);
+                        nextTransformationComponent = componentManager->get_transformation_component(nextTransformationComponentID);
+
+                        position = transformationComponent->get_translation();
+                        nextPosition = nextTransformationComponent->get_translation();
+
+                        toPosition = position - camPosition;
+                        toNextPosition = nextPosition - camPosition;
+
+                        if(fvec3::magn(toNextPosition) > fvec3::magn(toPosition))
+                        {
+                            tempID = entities[i];
+                            entities[i] = entities[j];
+                            entities[j] = tempID;
+                        }
+                    }
+                }
+            }
 
             list_iterator<entity_id> begin = entities.begin();
             list_iterator<entity_id> end = entities.end();
@@ -413,8 +463,8 @@ namespace deep
                 drawableComponentID       = entityManager->get_component_id(*begin, collection, DrawableComponentType);
                 transformationComponentID = entityManager->get_component_id(*begin, collection, TransformationComponentType);
 
-                drawable_component *drawableComponent = componentManager->get_drawable_component(drawableComponentID);
-                transformation_component *transformationComponent = componentManager->get_transformation_component(transformationComponentID);
+                drawableComponent       = componentManager->get_drawable_component(drawableComponentID);
+                transformationComponent = componentManager->get_transformation_component(transformationComponentID);
 
                 // La façon dont un drawable est rendu peut être différente selon leur type, donc on utilise une fonction de callback.
                 if(drawableComponent->renderCallback != nullptr)
