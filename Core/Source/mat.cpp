@@ -34,10 +34,10 @@ namespace deep {
 			float x4, float y4, float z4, float w4
 	)
 	{
-		data[toUType(fmat4x4_index::x1)] = x1; data[toUType(fmat4x4_index::y1)] = y1; data[toUType(fmat4x4_index::z1)] = z1; data[toUType(fmat4x4_index::w1)] = w1;
-		data[toUType(fmat4x4_index::x2)] = x2; data[toUType(fmat4x4_index::y2)] = y2; data[toUType(fmat4x4_index::z2)] = z2; data[toUType(fmat4x4_index::w2)] = w2;
-		data[toUType(fmat4x4_index::x3)] = x3; data[toUType(fmat4x4_index::y3)] = y3; data[toUType(fmat4x4_index::z3)] = z3; data[toUType(fmat4x4_index::w3)] = w3;
-		data[toUType(fmat4x4_index::x4)] = x4; data[toUType(fmat4x4_index::y4)] = y4; data[toUType(fmat4x4_index::z4)] = z4; data[toUType(fmat4x4_index::w4)] = w4;
+		data[to_utype(fmat4x4_index::x1)] = x1; data[to_utype(fmat4x4_index::y1)] = y1; data[to_utype(fmat4x4_index::z1)] = z1; data[to_utype(fmat4x4_index::w1)] = w1;
+		data[to_utype(fmat4x4_index::x2)] = x2; data[to_utype(fmat4x4_index::y2)] = y2; data[to_utype(fmat4x4_index::z2)] = z2; data[to_utype(fmat4x4_index::w2)] = w2;
+		data[to_utype(fmat4x4_index::x3)] = x3; data[to_utype(fmat4x4_index::y3)] = y3; data[to_utype(fmat4x4_index::z3)] = z3; data[to_utype(fmat4x4_index::w3)] = w3;
+		data[to_utype(fmat4x4_index::x4)] = x4; data[to_utype(fmat4x4_index::y4)] = y4; data[to_utype(fmat4x4_index::z4)] = z4; data[to_utype(fmat4x4_index::w4)] = w4;
 	}
 
 }

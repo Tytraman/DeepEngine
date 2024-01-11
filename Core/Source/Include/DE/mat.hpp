@@ -111,165 +111,165 @@ namespace deep
 		return
         {
 			(
-                mat1[toUType(fmat4x4_index::x1)] * 
-                mat2[toUType(fmat4x4_index::x1)] + 
-                mat1[toUType(fmat4x4_index::y1)] * 
-                mat2[toUType(fmat4x4_index::x2)] + 
-                mat1[toUType(fmat4x4_index::z1)] * 
-                mat2[toUType(fmat4x4_index::x3)] + 
-                mat1[toUType(fmat4x4_index::w1)] * 
-                mat2[toUType(fmat4x4_index::x4)]
+                mat1[to_utype(fmat4x4_index::x1)] * 
+                mat2[to_utype(fmat4x4_index::x1)] + 
+                mat1[to_utype(fmat4x4_index::y1)] * 
+                mat2[to_utype(fmat4x4_index::x2)] + 
+                mat1[to_utype(fmat4x4_index::z1)] * 
+                mat2[to_utype(fmat4x4_index::x3)] + 
+                mat1[to_utype(fmat4x4_index::w1)] * 
+                mat2[to_utype(fmat4x4_index::x4)]
             ),
             (
-                mat1[toUType(fmat4x4_index::x1)] * 
-                mat2[toUType(fmat4x4_index::y1)] + 
-                mat1[toUType(fmat4x4_index::y1)] * 
-                mat2[toUType(fmat4x4_index::y2)] + 
-                mat1[toUType(fmat4x4_index::z1)] * 
-                mat2[toUType(fmat4x4_index::y3)] + 
-                mat1[toUType(fmat4x4_index::w1)] * 
-                mat2[toUType(fmat4x4_index::y4)]
+                mat1[to_utype(fmat4x4_index::x1)] * 
+                mat2[to_utype(fmat4x4_index::y1)] + 
+                mat1[to_utype(fmat4x4_index::y1)] * 
+                mat2[to_utype(fmat4x4_index::y2)] + 
+                mat1[to_utype(fmat4x4_index::z1)] * 
+                mat2[to_utype(fmat4x4_index::y3)] + 
+                mat1[to_utype(fmat4x4_index::w1)] * 
+                mat2[to_utype(fmat4x4_index::y4)]
             ), 
             (
-                mat1[toUType(fmat4x4_index::x1)] * 
-                mat2[toUType(fmat4x4_index::z1)] + 
-                mat1[toUType(fmat4x4_index::y1)] * 
-                mat2[toUType(fmat4x4_index::z2)] + 
-                mat1[toUType(fmat4x4_index::z1)] * 
-                mat2[toUType(fmat4x4_index::z3)] + 
-                mat1[toUType(fmat4x4_index::w1)] * 
-                mat2[toUType(fmat4x4_index::z4)]
+                mat1[to_utype(fmat4x4_index::x1)] * 
+                mat2[to_utype(fmat4x4_index::z1)] + 
+                mat1[to_utype(fmat4x4_index::y1)] * 
+                mat2[to_utype(fmat4x4_index::z2)] + 
+                mat1[to_utype(fmat4x4_index::z1)] * 
+                mat2[to_utype(fmat4x4_index::z3)] + 
+                mat1[to_utype(fmat4x4_index::w1)] * 
+                mat2[to_utype(fmat4x4_index::z4)]
             ), 
             (
-                mat1[toUType(fmat4x4_index::x1)] * 
-                mat2[toUType(fmat4x4_index::w1)] + 
-                mat1[toUType(fmat4x4_index::y1)] * 
-                mat2[toUType(fmat4x4_index::w2)] + 
-                mat1[toUType(fmat4x4_index::z1)] * 
-                mat2[toUType(fmat4x4_index::w3)] + 
-                mat1[toUType(fmat4x4_index::w1)] * 
-                mat2[toUType(fmat4x4_index::w4)]
+                mat1[to_utype(fmat4x4_index::x1)] * 
+                mat2[to_utype(fmat4x4_index::w1)] + 
+                mat1[to_utype(fmat4x4_index::y1)] * 
+                mat2[to_utype(fmat4x4_index::w2)] + 
+                mat1[to_utype(fmat4x4_index::z1)] * 
+                mat2[to_utype(fmat4x4_index::w3)] + 
+                mat1[to_utype(fmat4x4_index::w1)] * 
+                mat2[to_utype(fmat4x4_index::w4)]
             ),
 
             (
-                mat1[toUType(fmat4x4_index::x2)] * 
-                mat2[toUType(fmat4x4_index::x1)] + 
-                mat1[toUType(fmat4x4_index::y2)] * 
-                mat2[toUType(fmat4x4_index::x2)] + 
-                mat1[toUType(fmat4x4_index::z2)] * 
-                mat2[toUType(fmat4x4_index::x3)] + 
-                mat1[toUType(fmat4x4_index::w2)] * 
-                mat2[toUType(fmat4x4_index::x4)]
+                mat1[to_utype(fmat4x4_index::x2)] * 
+                mat2[to_utype(fmat4x4_index::x1)] + 
+                mat1[to_utype(fmat4x4_index::y2)] * 
+                mat2[to_utype(fmat4x4_index::x2)] + 
+                mat1[to_utype(fmat4x4_index::z2)] * 
+                mat2[to_utype(fmat4x4_index::x3)] + 
+                mat1[to_utype(fmat4x4_index::w2)] * 
+                mat2[to_utype(fmat4x4_index::x4)]
             ), 
             (
-                mat1[toUType(fmat4x4_index::x2)] * 
-                mat2[toUType(fmat4x4_index::y1)] + 
-                mat1[toUType(fmat4x4_index::y2)] * 
-                mat2[toUType(fmat4x4_index::y2)] + 
-                mat1[toUType(fmat4x4_index::z2)] * 
-                mat2[toUType(fmat4x4_index::y3)] + 
-                mat1[toUType(fmat4x4_index::w2)] * 
-                mat2[toUType(fmat4x4_index::y4)]
+                mat1[to_utype(fmat4x4_index::x2)] * 
+                mat2[to_utype(fmat4x4_index::y1)] + 
+                mat1[to_utype(fmat4x4_index::y2)] * 
+                mat2[to_utype(fmat4x4_index::y2)] + 
+                mat1[to_utype(fmat4x4_index::z2)] * 
+                mat2[to_utype(fmat4x4_index::y3)] + 
+                mat1[to_utype(fmat4x4_index::w2)] * 
+                mat2[to_utype(fmat4x4_index::y4)]
             ), 
             (
-                mat1[toUType(fmat4x4_index::x2)] * 
-                mat2[toUType(fmat4x4_index::z1)] + 
-                mat1[toUType(fmat4x4_index::y2)] * 
-                mat2[toUType(fmat4x4_index::z2)] + 
-                mat1[toUType(fmat4x4_index::z2)] * 
-                mat2[toUType(fmat4x4_index::z3)] + 
-                mat1[toUType(fmat4x4_index::w2)] * 
-                mat2[toUType(fmat4x4_index::z4)]
+                mat1[to_utype(fmat4x4_index::x2)] * 
+                mat2[to_utype(fmat4x4_index::z1)] + 
+                mat1[to_utype(fmat4x4_index::y2)] * 
+                mat2[to_utype(fmat4x4_index::z2)] + 
+                mat1[to_utype(fmat4x4_index::z2)] * 
+                mat2[to_utype(fmat4x4_index::z3)] + 
+                mat1[to_utype(fmat4x4_index::w2)] * 
+                mat2[to_utype(fmat4x4_index::z4)]
             ), 
             (
-                mat1[toUType(fmat4x4_index::x2)] * 
-                mat2[toUType(fmat4x4_index::w1)] + 
-                mat1[toUType(fmat4x4_index::y2)] * 
-                mat2[toUType(fmat4x4_index::w2)] + 
-                mat1[toUType(fmat4x4_index::z2)] * 
-                mat2[toUType(fmat4x4_index::w3)] + 
-                mat1[toUType(fmat4x4_index::w2)] * 
-                mat2[toUType(fmat4x4_index::w4)]
+                mat1[to_utype(fmat4x4_index::x2)] * 
+                mat2[to_utype(fmat4x4_index::w1)] + 
+                mat1[to_utype(fmat4x4_index::y2)] * 
+                mat2[to_utype(fmat4x4_index::w2)] + 
+                mat1[to_utype(fmat4x4_index::z2)] * 
+                mat2[to_utype(fmat4x4_index::w3)] + 
+                mat1[to_utype(fmat4x4_index::w2)] * 
+                mat2[to_utype(fmat4x4_index::w4)]
             ),
 			(
-                mat1[toUType(fmat4x4_index::x3)] * 
-                mat2[toUType(fmat4x4_index::x1)] + 
-                mat1[toUType(fmat4x4_index::y3)] * 
-                mat2[toUType(fmat4x4_index::x2)] + 
-                mat1[toUType(fmat4x4_index::z3)] * 
-                mat2[toUType(fmat4x4_index::x3)] + 
-                mat1[toUType(fmat4x4_index::w3)] * 
-                mat2[toUType(fmat4x4_index::x4)]
+                mat1[to_utype(fmat4x4_index::x3)] * 
+                mat2[to_utype(fmat4x4_index::x1)] + 
+                mat1[to_utype(fmat4x4_index::y3)] * 
+                mat2[to_utype(fmat4x4_index::x2)] + 
+                mat1[to_utype(fmat4x4_index::z3)] * 
+                mat2[to_utype(fmat4x4_index::x3)] + 
+                mat1[to_utype(fmat4x4_index::w3)] * 
+                mat2[to_utype(fmat4x4_index::x4)]
             ), 
             (
-                mat1[toUType(fmat4x4_index::x3)] * 
-                mat2[toUType(fmat4x4_index::y1)] + 
-                mat1[toUType(fmat4x4_index::y3)] * 
-                mat2[toUType(fmat4x4_index::y2)] + 
-                mat1[toUType(fmat4x4_index::z3)] * 
-                mat2[toUType(fmat4x4_index::y3)] + 
-                mat1[toUType(fmat4x4_index::w3)] * 
-                mat2[toUType(fmat4x4_index::y4)]
+                mat1[to_utype(fmat4x4_index::x3)] * 
+                mat2[to_utype(fmat4x4_index::y1)] + 
+                mat1[to_utype(fmat4x4_index::y3)] * 
+                mat2[to_utype(fmat4x4_index::y2)] + 
+                mat1[to_utype(fmat4x4_index::z3)] * 
+                mat2[to_utype(fmat4x4_index::y3)] + 
+                mat1[to_utype(fmat4x4_index::w3)] * 
+                mat2[to_utype(fmat4x4_index::y4)]
             ), 
             (
-                mat1[toUType(fmat4x4_index::x3)] * 
-                mat2[toUType(fmat4x4_index::z1)] + 
-                mat1[toUType(fmat4x4_index::y3)] * 
-                mat2[toUType(fmat4x4_index::z2)] + 
-                mat1[toUType(fmat4x4_index::z3)] * 
-                mat2[toUType(fmat4x4_index::z3)] + 
-                mat1[toUType(fmat4x4_index::w3)] * 
-                mat2[toUType(fmat4x4_index::z4)]
+                mat1[to_utype(fmat4x4_index::x3)] * 
+                mat2[to_utype(fmat4x4_index::z1)] + 
+                mat1[to_utype(fmat4x4_index::y3)] * 
+                mat2[to_utype(fmat4x4_index::z2)] + 
+                mat1[to_utype(fmat4x4_index::z3)] * 
+                mat2[to_utype(fmat4x4_index::z3)] + 
+                mat1[to_utype(fmat4x4_index::w3)] * 
+                mat2[to_utype(fmat4x4_index::z4)]
             ), 
             (
-                mat1[toUType(fmat4x4_index::x3)] * 
-                mat2[toUType(fmat4x4_index::w1)] + 
-                mat1[toUType(fmat4x4_index::y3)] * 
-                mat2[toUType(fmat4x4_index::w2)] + 
-                mat1[toUType(fmat4x4_index::z3)] * 
-                mat2[toUType(fmat4x4_index::w3)] + 
-                mat1[toUType(fmat4x4_index::w3)] * 
-                mat2[toUType(fmat4x4_index::w4)]
+                mat1[to_utype(fmat4x4_index::x3)] * 
+                mat2[to_utype(fmat4x4_index::w1)] + 
+                mat1[to_utype(fmat4x4_index::y3)] * 
+                mat2[to_utype(fmat4x4_index::w2)] + 
+                mat1[to_utype(fmat4x4_index::z3)] * 
+                mat2[to_utype(fmat4x4_index::w3)] + 
+                mat1[to_utype(fmat4x4_index::w3)] * 
+                mat2[to_utype(fmat4x4_index::w4)]
             ),
 			(
-                mat1[toUType(fmat4x4_index::x4)] * 
-                mat2[toUType(fmat4x4_index::x1)] + 
-                mat1[toUType(fmat4x4_index::y4)] * 
-                mat2[toUType(fmat4x4_index::x2)] + 
-                mat1[toUType(fmat4x4_index::z4)] * 
-                mat2[toUType(fmat4x4_index::x3)] + 
-                mat1[toUType(fmat4x4_index::w4)] * 
-                mat2[toUType(fmat4x4_index::x4)]
+                mat1[to_utype(fmat4x4_index::x4)] * 
+                mat2[to_utype(fmat4x4_index::x1)] + 
+                mat1[to_utype(fmat4x4_index::y4)] * 
+                mat2[to_utype(fmat4x4_index::x2)] + 
+                mat1[to_utype(fmat4x4_index::z4)] * 
+                mat2[to_utype(fmat4x4_index::x3)] + 
+                mat1[to_utype(fmat4x4_index::w4)] * 
+                mat2[to_utype(fmat4x4_index::x4)]
             ), 
             (
-                mat1[toUType(fmat4x4_index::x4)] * 
-                mat2[toUType(fmat4x4_index::y1)] + 
-                mat1[toUType(fmat4x4_index::y4)] * 
-                mat2[toUType(fmat4x4_index::y2)] + 
-                mat1[toUType(fmat4x4_index::z4)] * 
-                mat2[toUType(fmat4x4_index::y3)] + 
-                mat1[toUType(fmat4x4_index::w4)] * 
-                mat2[toUType(fmat4x4_index::y4)]
+                mat1[to_utype(fmat4x4_index::x4)] * 
+                mat2[to_utype(fmat4x4_index::y1)] + 
+                mat1[to_utype(fmat4x4_index::y4)] * 
+                mat2[to_utype(fmat4x4_index::y2)] + 
+                mat1[to_utype(fmat4x4_index::z4)] * 
+                mat2[to_utype(fmat4x4_index::y3)] + 
+                mat1[to_utype(fmat4x4_index::w4)] * 
+                mat2[to_utype(fmat4x4_index::y4)]
             ),
             (
-                mat1[toUType(fmat4x4_index::x4)] * 
-                mat2[toUType(fmat4x4_index::z1)] + 
-                mat1[toUType(fmat4x4_index::y4)] * 
-                mat2[toUType(fmat4x4_index::z2)] + 
-                mat1[toUType(fmat4x4_index::z4)] * 
-                mat2[toUType(fmat4x4_index::z3)] + 
-                mat1[toUType(fmat4x4_index::w4)] * 
-                mat2[toUType(fmat4x4_index::z4)]
+                mat1[to_utype(fmat4x4_index::x4)] * 
+                mat2[to_utype(fmat4x4_index::z1)] + 
+                mat1[to_utype(fmat4x4_index::y4)] * 
+                mat2[to_utype(fmat4x4_index::z2)] + 
+                mat1[to_utype(fmat4x4_index::z4)] * 
+                mat2[to_utype(fmat4x4_index::z3)] + 
+                mat1[to_utype(fmat4x4_index::w4)] * 
+                mat2[to_utype(fmat4x4_index::z4)]
             ), 
             (
-                mat1[toUType(fmat4x4_index::x4)] *
-                mat2[toUType(fmat4x4_index::w1)] + 
-                mat1[toUType(fmat4x4_index::y4)] * 
-                mat2[toUType(fmat4x4_index::w2)] + 
-                mat1[toUType(fmat4x4_index::z4)] * 
-                mat2[toUType(fmat4x4_index::w3)] + 
-                mat1[toUType(fmat4x4_index::w4)] * 
-                mat2[toUType(fmat4x4_index::w4)]
+                mat1[to_utype(fmat4x4_index::x4)] *
+                mat2[to_utype(fmat4x4_index::w1)] + 
+                mat1[to_utype(fmat4x4_index::y4)] * 
+                mat2[to_utype(fmat4x4_index::w2)] + 
+                mat1[to_utype(fmat4x4_index::z4)] * 
+                mat2[to_utype(fmat4x4_index::w3)] + 
+                mat1[to_utype(fmat4x4_index::w4)] * 
+                mat2[to_utype(fmat4x4_index::w4)]
             )
 		};
 	}
@@ -414,8 +414,8 @@ namespace deep
 
 		return
         {
-			mat[toUType(fmat4x4_index::x1)] / (aspectRatio * tanHalfFovy), 0.0f,                                   0.0f,                 0.0f,
-			0.0f,                                                 mat[toUType(fmat4x4_index::y2)] / tanHalfFovy,   0.0f,                 0.0f,
+			mat[to_utype(fmat4x4_index::x1)] / (aspectRatio * tanHalfFovy), 0.0f,                                   0.0f,                 0.0f,
+			0.0f,                                                 mat[to_utype(fmat4x4_index::y2)] / tanHalfFovy,   0.0f,                 0.0f,
 			0.0f,                                                 0.0f,                                 -(zfar + znear) / zr, -(2.0f * zfar * znear) / zr,
 			0.0f,                                                 0.0f,                                   -1.0f,                0.0f
 		};
@@ -490,33 +490,33 @@ namespace deep
 	{
 		return
         {
-			(mat1[toUType(fmat3x3_index::x1)] * mat2[toUType(fmat3x3_index::x1)]) + 
-            (mat1[toUType(fmat3x3_index::y1)] * mat2[toUType(fmat3x3_index::x2)]) + 
-            (mat1[toUType(fmat3x3_index::z1)] * mat2[toUType(fmat3x3_index::x3)]), 
-            (mat1[toUType(fmat3x3_index::x1)] * mat2[toUType(fmat3x3_index::y1)]) + 
-            (mat1[toUType(fmat3x3_index::y1)] * mat2[toUType(fmat3x3_index::y2)]) + 
-            (mat1[toUType(fmat3x3_index::z1)] * mat2[toUType(fmat3x3_index::y3)]), 
-            (mat1[toUType(fmat3x3_index::x1)] * mat2[toUType(fmat3x3_index::z1)]) + 
-            (mat1[toUType(fmat3x3_index::y1)] * mat2[toUType(fmat3x3_index::z2)]) + 
-            (mat1[toUType(fmat3x3_index::z1)] * mat2[toUType(fmat3x3_index::z3)]),
-			(mat1[toUType(fmat3x3_index::x2)] * mat2[toUType(fmat3x3_index::x1)]) + 
-            (mat1[toUType(fmat3x3_index::y2)] * mat2[toUType(fmat3x3_index::x2)]) + 
-            (mat1[toUType(fmat3x3_index::z2)] * mat2[toUType(fmat3x3_index::x3)]), 
-            (mat1[toUType(fmat3x3_index::x2)] * mat2[toUType(fmat3x3_index::y1)]) + 
-            (mat1[toUType(fmat3x3_index::y2)] * mat2[toUType(fmat3x3_index::y2)]) + 
-            (mat1[toUType(fmat3x3_index::z2)] * mat2[toUType(fmat3x3_index::y3)]), 
-            (mat1[toUType(fmat3x3_index::x2)] * mat2[toUType(fmat3x3_index::z1)]) + 
-            (mat1[toUType(fmat3x3_index::y2)] * mat2[toUType(fmat3x3_index::z2)]) + 
-            (mat1[toUType(fmat3x3_index::z2)] * mat2[toUType(fmat3x3_index::z3)]),
-			(mat1[toUType(fmat3x3_index::x3)] * mat2[toUType(fmat3x3_index::x1)]) + 
-            (mat1[toUType(fmat3x3_index::y3)] * mat2[toUType(fmat3x3_index::x2)]) + 
-            (mat1[toUType(fmat3x3_index::z3)] * mat2[toUType(fmat3x3_index::x3)]), 
-            (mat1[toUType(fmat3x3_index::x3)] * mat2[toUType(fmat3x3_index::y1)]) + 
-            (mat1[toUType(fmat3x3_index::y3)] * mat2[toUType(fmat3x3_index::y2)]) + 
-            (mat1[toUType(fmat3x3_index::z3)] * mat2[toUType(fmat3x3_index::y3)]), 
-            (mat1[toUType(fmat3x3_index::x3)] * mat2[toUType(fmat3x3_index::z1)]) + 
-            (mat1[toUType(fmat3x3_index::y3)] * mat2[toUType(fmat3x3_index::z2)]) + 
-            (mat1[toUType(fmat3x3_index::z3)] * mat2[toUType(fmat3x3_index::z3)])
+			(mat1[to_utype(fmat3x3_index::x1)] * mat2[to_utype(fmat3x3_index::x1)]) + 
+            (mat1[to_utype(fmat3x3_index::y1)] * mat2[to_utype(fmat3x3_index::x2)]) + 
+            (mat1[to_utype(fmat3x3_index::z1)] * mat2[to_utype(fmat3x3_index::x3)]), 
+            (mat1[to_utype(fmat3x3_index::x1)] * mat2[to_utype(fmat3x3_index::y1)]) + 
+            (mat1[to_utype(fmat3x3_index::y1)] * mat2[to_utype(fmat3x3_index::y2)]) + 
+            (mat1[to_utype(fmat3x3_index::z1)] * mat2[to_utype(fmat3x3_index::y3)]), 
+            (mat1[to_utype(fmat3x3_index::x1)] * mat2[to_utype(fmat3x3_index::z1)]) + 
+            (mat1[to_utype(fmat3x3_index::y1)] * mat2[to_utype(fmat3x3_index::z2)]) + 
+            (mat1[to_utype(fmat3x3_index::z1)] * mat2[to_utype(fmat3x3_index::z3)]),
+			(mat1[to_utype(fmat3x3_index::x2)] * mat2[to_utype(fmat3x3_index::x1)]) + 
+            (mat1[to_utype(fmat3x3_index::y2)] * mat2[to_utype(fmat3x3_index::x2)]) + 
+            (mat1[to_utype(fmat3x3_index::z2)] * mat2[to_utype(fmat3x3_index::x3)]), 
+            (mat1[to_utype(fmat3x3_index::x2)] * mat2[to_utype(fmat3x3_index::y1)]) + 
+            (mat1[to_utype(fmat3x3_index::y2)] * mat2[to_utype(fmat3x3_index::y2)]) + 
+            (mat1[to_utype(fmat3x3_index::z2)] * mat2[to_utype(fmat3x3_index::y3)]), 
+            (mat1[to_utype(fmat3x3_index::x2)] * mat2[to_utype(fmat3x3_index::z1)]) + 
+            (mat1[to_utype(fmat3x3_index::y2)] * mat2[to_utype(fmat3x3_index::z2)]) + 
+            (mat1[to_utype(fmat3x3_index::z2)] * mat2[to_utype(fmat3x3_index::z3)]),
+			(mat1[to_utype(fmat3x3_index::x3)] * mat2[to_utype(fmat3x3_index::x1)]) + 
+            (mat1[to_utype(fmat3x3_index::y3)] * mat2[to_utype(fmat3x3_index::x2)]) + 
+            (mat1[to_utype(fmat3x3_index::z3)] * mat2[to_utype(fmat3x3_index::x3)]), 
+            (mat1[to_utype(fmat3x3_index::x3)] * mat2[to_utype(fmat3x3_index::y1)]) + 
+            (mat1[to_utype(fmat3x3_index::y3)] * mat2[to_utype(fmat3x3_index::y2)]) + 
+            (mat1[to_utype(fmat3x3_index::z3)] * mat2[to_utype(fmat3x3_index::y3)]), 
+            (mat1[to_utype(fmat3x3_index::x3)] * mat2[to_utype(fmat3x3_index::z1)]) + 
+            (mat1[to_utype(fmat3x3_index::y3)] * mat2[to_utype(fmat3x3_index::z2)]) + 
+            (mat1[to_utype(fmat3x3_index::z3)] * mat2[to_utype(fmat3x3_index::z3)])
 		};
 	}
 

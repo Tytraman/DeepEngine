@@ -23,7 +23,7 @@ namespace deep
     system_manager::system_item
     ===========================
     */
-    system_manager::system_item::system_item(system_function _function, component_type _componentTypesToInclude, component_type _componentTypesToExclude)
+    system_manager::system_item::system_item(system_function _function, component_manager::component_type _componentTypesToInclude, component_manager::component_type _componentTypesToExclude)
         : function(_function), componentTypesToInclude(_componentTypesToInclude), componentTypesToExclude(_componentTypesToExclude)
     { }
 
@@ -53,7 +53,7 @@ namespace deep
     system_manager::createSystem
     ============================
     */
-    system_id system_manager::createSystem(system_function function, component_type componentTypesToInclude, component_type componentTypesToExclude)
+    system_id system_manager::createSystem(system_function function, component_manager::component_type componentTypesToInclude, component_manager::component_type componentTypesToExclude)
     {
         system_id id = m_NextID;
 
@@ -84,7 +84,7 @@ namespace deep
         entity_collection_id collection = scene::get_entity_collection(scene);
 
         list<entity_id> entities;
-        entityManager->query(collection, s->value.componentTypesToInclude, s->value.componentTypesToExclude, entities);
+        entityManager->query(collection, to_utype(s->value.componentTypesToInclude), to_utype(s->value.componentTypesToExclude), entities);
 
         s->value.function(entities);
 
@@ -121,7 +121,7 @@ namespace deep
             hash_entry<system_item> *s = m_Functions[system];
             if(s != nullptr)
             {
-                entityManager->query(collection, s->value.componentTypesToInclude, s->value.componentTypesToExclude, entities);
+                entityManager->query(collection, to_utype(s->value.componentTypesToInclude), to_utype(s->value.componentTypesToExclude), entities);
                 s->value.function(entities);
                 entities.free();
             }
@@ -148,7 +148,7 @@ namespace deep
         entity_collection_id collectionID = scene::get_entity_collection(sceneID);
 
         // Query toutes les entités possédant une vélocité et une accélération.
-        entityManager->query(collectionID, VelocityComponentType | AccelerationComponentType, 0, entities);
+        entityManager->query(collectionID, to_utype(component_manager::component_type::velocity) | to_utype(component_manager::component_type::acceleration), 0, entities);
 
         size_t length = entities.count();
         size_t i;
@@ -159,13 +159,13 @@ namespace deep
         {
             entity = entities[i];
 
-            component_id velCpnID = entityManager->get_component_id(collectionID, entity, VelocityComponentType);
+            component_id velCpnID = entityManager->get_component_id(collectionID, entity, component_manager::component_type::velocity);
             velocity_component *velCpn = componentManager->get_velocity_component(velCpnID);
 
             if(velCpn == nullptr)
                 continue;
 
-            component_id accCpnID = entityManager->get_component_id(collectionID, entity, AccelerationComponentType);
+            component_id accCpnID = entityManager->get_component_id(collectionID, entity, component_manager::component_type::acceleration);
             acceleration_component *accCpn = componentManager->get_acceleration_component(accCpnID);
 
             if(accCpn == nullptr)
@@ -196,7 +196,7 @@ namespace deep
         entity_collection_id collectionID = scene::get_entity_collection(sceneID);
 
         // Query toutes les entités possédant une vélocité et une transformation.
-        entityManager->query(collectionID, TransformationComponentType | VelocityComponentType, 0, entities);
+        entityManager->query(collectionID, to_utype(component_manager::component_type::transformation) | to_utype(component_manager::component_type::velocity), 0, entities);
 
         size_t length = entities.count();
         size_t i;
@@ -207,14 +207,14 @@ namespace deep
         {
             entity = entities[i];
 
-            component_id transformationComponentID = entityManager->get_component_id(collectionID, entity, TransformationComponentType);
+            component_id transformationComponentID = entityManager->get_component_id(collectionID, entity, component_manager::component_type::transformation);
 
             transformation_component *transformationComponent = componentManager->get_transformation_component(transformationComponentID);
 
             if(transformationComponent == nullptr)
                 continue;
 
-            component_id velocityComponentID = entityManager->get_component_id(collectionID, entity, VelocityComponentType);
+            component_id velocityComponentID = entityManager->get_component_id(collectionID, entity, component_manager::component_type::velocity);
 
             velocity_component *velocityComponent = componentManager->get_velocity_component(velocityComponentID);
 
@@ -228,7 +228,7 @@ namespace deep
             transformationComponent->set_translation(translation);
 
             // Si l'entité possède une collision, on met à jour sa position aussi.
-            component_id colliderComponentID = entityManager->get_component_id(collectionID, entity, ColliderComponentType);
+            component_id colliderComponentID = entityManager->get_component_id(collectionID, entity, component_manager::component_type::collider);
             if(colliderComponentID != badID)
             {
                 collider_component *colliderComponent = componentManager->get_collider_component(colliderComponentID);
@@ -270,7 +270,7 @@ namespace deep
         entity_collection_id collectionID = scene::get_entity_collection(sceneID);
 
         // Query toutes les entités possédant une boîte de collision.
-        entityManager->query(collectionID, ColliderComponentType, 0, entities);
+        entityManager->query(collectionID, to_utype(component_manager::component_type::collider), 0, entities);
 
         size_t length = entities.count();
         size_t i, j;
@@ -285,7 +285,7 @@ namespace deep
         {
             entity1 = entities[i];
 
-            component_id colliderComponentID1 = entityManager->get_component_id(collectionID, entity1, ColliderComponentType);
+            component_id colliderComponentID1 = entityManager->get_component_id(collectionID, entity1, component_manager::component_type::collider);
 
             collider_component *colliderComponent1 = componentManager->get_collider_component(colliderComponentID1);
 
@@ -302,7 +302,7 @@ namespace deep
             {
                 entity2 = entities[j];
 
-                component_id colliderComponentID2 = entityManager->get_component_id(collectionID, entity2, ColliderComponentType);
+                component_id colliderComponentID2 = entityManager->get_component_id(collectionID, entity2, component_manager::component_type::collider);
                 collider_component *colliderComponent2 = componentManager->get_collider_component(colliderComponentID2);
 
                 if(colliderComponent2 == nullptr)
@@ -396,7 +396,7 @@ namespace deep
             entity_collection_id collection = scene::get_entity_collection(sceneID);
 
             // Récupère toutes les entités dessinables et ayant une transformation.
-            entityManager->query(collection, DrawableComponentType | TransformationComponentType, 0, entities);
+            entityManager->query(collection, to_utype(component_manager::component_type::drawable) | to_utype(component_manager::component_type::transformation), 0, entities);
 
             component_id drawableComponentID;
             component_id transformationComponentID;
@@ -425,14 +425,14 @@ namespace deep
                 {
                     for(j = 1; j < numberOfEntities; ++j)
                     {
-                        drawableComponentID       = entityManager->get_component_id(entities[i], collection, DrawableComponentType);
-                        transformationComponentID = entityManager->get_component_id(entities[i], collection, TransformationComponentType);
+                        drawableComponentID       = entityManager->get_component_id(entities[i], collection, component_manager::component_type::drawable);
+                        transformationComponentID = entityManager->get_component_id(entities[i], collection, component_manager::component_type::transformation);
 
                         drawableComponent       = componentManager->get_drawable_component(drawableComponentID);
                         transformationComponent = componentManager->get_transformation_component(transformationComponentID);
 
-                        nextDrawableComponentID       = entityManager->get_component_id(entities[j], collection, DrawableComponentType);
-                        nextTransformationComponentID = entityManager->get_component_id(entities[j], collection, TransformationComponentType);
+                        nextDrawableComponentID       = entityManager->get_component_id(entities[j], collection, component_manager::component_type::drawable);
+                        nextTransformationComponentID = entityManager->get_component_id(entities[j], collection, component_manager::component_type::transformation);
 
                         nextDrawableComponent       = componentManager->get_drawable_component(nextDrawableComponentID);
                         nextTransformationComponent = componentManager->get_transformation_component(nextTransformationComponentID);
@@ -460,8 +460,8 @@ namespace deep
             for(; begin != end; ++begin)
             {
                 // Récupère les composants de l'entité.
-                drawableComponentID       = entityManager->get_component_id(*begin, collection, DrawableComponentType);
-                transformationComponentID = entityManager->get_component_id(*begin, collection, TransformationComponentType);
+                drawableComponentID       = entityManager->get_component_id(*begin, collection, component_manager::component_type::drawable);
+                transformationComponentID = entityManager->get_component_id(*begin, collection, component_manager::component_type::transformation);
 
                 drawableComponent       = componentManager->get_drawable_component(drawableComponentID);
                 transformationComponent = componentManager->get_transformation_component(transformationComponentID);

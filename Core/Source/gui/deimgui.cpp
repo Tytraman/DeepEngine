@@ -233,7 +233,7 @@ namespace deep
             string entityID("ID: ");
             entityID.append(std::to_string(ent.get_entity_id()).c_str());
 
-            component_type componentTypes = entityManager->get_component_types(ent.get_entity_id(), ent.get_collection_id());
+            component_manager::component_type componentTypes = entityManager->get_component_types(ent.get_entity_id(), ent.get_collection_id());
 
             component_manager *componentManager = component_manager::get_singleton();
             GL3::program_manager *programManager = GL3::program_manager::get_singleton();
@@ -243,11 +243,11 @@ namespace deep
             ImGui::Text(entityID.str());
             ImGui::Text("Liste des composants attachés:");
 
-            if((componentTypes & DrawableComponentType) > 0)
+            if((to_utype(componentTypes) & to_utype(component_manager::component_type::drawable)) > 0)
             {
                 if(ImGui::TreeNode("drawable_component"))
                 {
-                    component_id id = entityManager->get_component_id(ent.get_entity_id(), ent.get_collection_id(), DrawableComponentType);
+                    component_id id = entityManager->get_component_id(ent.get_entity_id(), ent.get_collection_id(), component_manager::component_type::drawable);
                     drawable_component *drawable = componentManager->get_drawable_component(id);
 
                     if(drawable != nullptr)
@@ -299,11 +299,11 @@ namespace deep
                 }
             }
                 
-            if((componentTypes & TransformationComponentType) > 0)
+            if((to_utype(componentTypes) & to_utype(component_manager::component_type::transformation)) > 0)
             {
                 if(ImGui::TreeNode("transformation_component"))
                 {
-                    component_id id = entityManager->get_component_id(ent.get_entity_id(), ent.get_collection_id(), TransformationComponentType);
+                    component_id id = entityManager->get_component_id(ent.get_entity_id(), ent.get_collection_id(), component_manager::component_type::transformation);
                     transformation_component *transformation = componentManager->get_transformation_component(id);
 
                     if(transformation != nullptr)
@@ -345,13 +345,14 @@ namespace deep
                     ImGui::TreePop();
                 }
             }
-            if((componentTypes & VelocityComponentType) > 0)
+
+            if((to_utype(componentTypes) & to_utype(component_manager::component_type::velocity)) > 0)
                 ImGui::BulletText("velocity_component");
-            if((componentTypes & ColliderComponentType) > 0)
+            if((to_utype(componentTypes) & to_utype(component_manager::component_type::collider)) > 0)
                 ImGui::BulletText("collider_component");
-            if((componentTypes & AccelerationComponentType) > 0)
+            if((to_utype(componentTypes) & to_utype(component_manager::component_type::acceleration)) > 0)
                 ImGui::BulletText("acceleration_component");
-            if((componentTypes & HealthComponentType) > 0)
+            if((to_utype(componentTypes) & to_utype(component_manager::component_type::health)) > 0)
                 ImGui::BulletText("health_component");
 
             ImGui::TreePop();

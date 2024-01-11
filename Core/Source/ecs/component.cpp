@@ -132,11 +132,11 @@ namespace deep
     component_manager::get_type
     ===========================
     */
-    component_type component_manager::get_type(component_id component)
+    component_manager::component_type component_manager::get_type(component_id component)
     {
         const auto hs = m_ComponentsType[component];
         if(hs == nullptr)
-            return 0;
+            return component_manager::component_type::none;
 
         return hs->value;
     }
@@ -164,7 +164,7 @@ namespace deep
     {
         component_id id = m_ComponentCount;
         drawable_component drawable(program, vbo, vao, texture, textureUnit);
-        component_type type = DrawableComponentType;
+        component_type type = component_manager::component_type::drawable;
 
         m_DrawableComponents.insert(id, drawable);
         m_ComponentsType.insert(id, type);
@@ -218,7 +218,7 @@ namespace deep
     {
         component_id id = m_ComponentCount;
         transformation_component transformation(translation, scaling, rotation);
-        component_type type = TransformationComponentType;
+        component_type type = component_manager::component_type::transformation;
 
         m_TransformationComponents.insert(id, transformation);
         m_ComponentsType.insert(id, type);
@@ -246,7 +246,7 @@ namespace deep
     {
         component_id id = m_ComponentCount;
         velocity_component velocity;
-        component_type type = VelocityComponentType;
+        component_type type = component_manager::component_type::velocity;
 
         m_VelocityComponents.insert(id, velocity);
         m_ComponentsType.insert(id, type);
@@ -274,7 +274,7 @@ namespace deep
     {
         component_id id = m_ComponentCount;
         collider_component collider;
-        component_type type = ColliderComponentType;
+        component_type type = component_manager::component_type::collider;
 
         m_ColliderComponents.insert(id, collider);
         m_ComponentsType.insert(id, type);
@@ -302,7 +302,7 @@ namespace deep
     {
         component_id id = m_ComponentCount;
         acceleration_component acc(acceleration);
-        component_type type = AccelerationComponentType;
+        component_type type = component_manager::component_type::acceleration;
 
         m_AccelerationComponents.insert(id, acc);
         m_ComponentsType.insert(id, type);
@@ -339,7 +339,7 @@ namespace deep
     {
         component_id id = m_ComponentCount;
         health_component health(pv, max);
-        component_type type = HealthComponentType;
+        component_type type = component_manager::component_type::health;
 
         m_HealthComponents.insert(id, health);
         m_ComponentsType.insert(id, type);

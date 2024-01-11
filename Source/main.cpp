@@ -334,6 +334,8 @@ int main()
     deep::GL3::gl_id defaultProgram = hash("default");
     deep::GL3::gl_id skyboxProgram  = hash("skybox");
     deep::GL3::gl_id postProcessProgram = hash("post_processing");
+    deep::GL3::gl_id lightedObjectProgram = hash("lighted_object");
+    deep::GL3::gl_id lightSourceObjectProgram = hash("light_source_object");
 
     programManager->use(defaultProgram);
 
@@ -383,6 +385,74 @@ int main()
     if(skyboxCube != -1)
         programManager->add_uniform("skybox", skyboxCube, 0);
 
+    programManager->use(lightedObjectProgram);
+    
+    mTrs = deep::GL3::uniform_manager::find(defaultProgram, "mTrs");
+    if(mTrs != -1)
+        programManager->add_uniform("mTrs", mTrs, deep::fvec3(0.0f));
+
+    mRotX = deep::GL3::uniform_manager::find(defaultProgram, "mRotX");
+    if(mRotX != -1)
+        programManager->add_uniform("mRotX", mRotX, 0.0f);
+
+    mRotY = deep::GL3::uniform_manager::find(defaultProgram, "mRotY");
+    if(mRotY != -1)
+        programManager->add_uniform("mRotY", mRotY, 0.0f);
+
+    mRotZ = deep::GL3::uniform_manager::find(defaultProgram, "mRotZ");
+    if(mRotZ != -1)
+        programManager->add_uniform("mRotZ", mRotZ, 0.0f);
+
+    mScl = deep::GL3::uniform_manager::find(defaultProgram, "mScl");
+    if(mScl != -1)
+        programManager->add_uniform("mScl", mScl, deep::fvec3(0.0f));
+
+    view = deep::GL3::uniform_manager::find(defaultProgram, "view");
+    if(view != -1)
+        programManager->add_uniform("view", view, deep::fmat4x4(0.0f));
+
+    proj = deep::GL3::uniform_manager::find(defaultProgram, "proj");
+    if(proj != -1)
+        programManager->add_uniform("proj", proj, deep::fmat4x4(0.0f));
+
+    int objectColorLoc = deep::GL3::uniform_manager::find(lightedObjectProgram, "deObjectColor");
+    if(objectColorLoc != -1)
+        programManager->add_uniform("deObjectColor", objectColorLoc, deep::fvec3(1.0f, 0.5f, 0.31f));
+
+    int lightColorLoc = deep::GL3::uniform_manager::find(lightedObjectProgram, "deLightColor");
+    if(lightColorLoc != -1)
+        programManager->add_uniform("deLightColor", lightColorLoc, deep::fvec3(1.0f, 0.0f, 0.0f));
+
+    programManager->use(lightSourceObjectProgram);
+
+    mTrs = deep::GL3::uniform_manager::find(defaultProgram, "mTrs");
+    if(mTrs != -1)
+        programManager->add_uniform("mTrs", mTrs, deep::fvec3(0.0f));
+
+    mRotX = deep::GL3::uniform_manager::find(defaultProgram, "mRotX");
+    if(mRotX != -1)
+        programManager->add_uniform("mRotX", mRotX, 0.0f);
+
+    mRotY = deep::GL3::uniform_manager::find(defaultProgram, "mRotY");
+    if(mRotY != -1)
+        programManager->add_uniform("mRotY", mRotY, 0.0f);
+
+    mRotZ = deep::GL3::uniform_manager::find(defaultProgram, "mRotZ");
+    if(mRotZ != -1)
+        programManager->add_uniform("mRotZ", mRotZ, 0.0f);
+
+    mScl = deep::GL3::uniform_manager::find(defaultProgram, "mScl");
+    if(mScl != -1)
+        programManager->add_uniform("mScl", mScl, deep::fvec3(0.0f));
+
+    view = deep::GL3::uniform_manager::find(defaultProgram, "view");
+    if(view != -1)
+        programManager->add_uniform("view", view, deep::fmat4x4(0.0f));
+
+    proj = deep::GL3::uniform_manager::find(defaultProgram, "proj");
+    if(proj != -1)
+        programManager->add_uniform("proj", proj, deep::fmat4x4(0.0f));
+
     programManager->use(postProcessProgram);
 
     int postScreenTexture = deep::GL3::uniform_manager::find(postProcessProgram, "screenTexture");
@@ -390,35 +460,6 @@ int main()
         programManager->add_uniform("screenTexture", postScreenTexture, 0);
 
     deep::colora white(255, 255, 255, 255);
-
-    size_t i, j;
-
-    /*for(i = 0; i < 50; ++i)
-    {
-        for(j = 0; j < 50; ++j)
-        {
-            de::string name = "3d_rect_";
-            name.append(std::to_string(i + j).c_str());
-
-            de::entity ent = de::graphic::create_3D_rectangle_texture(
-                name.str(),
-                defaultProgram,
-                collectionID,
-                de::fvec3(i, 0.0f, j),
-                1.0f,
-                1.0f,
-                1.0f,
-                white,
-                white,
-                white,
-                white,
-                white,
-                white,
-                mcGrassSide,
-                0
-            );
-        }
-    }*/
 
     deep::entity_manager *entityManager = deep::entity_manager::get_singleton();
 
@@ -450,11 +491,16 @@ int main()
     points.topBottomRight.x = 1.0f;
     points.topBottomRight.y = 0.0f;
 
+    
+    
+
+    /*
+    
     deep::polygon pol = deep::graphic::create_cube("grass_cube", white, white, white, white, white, white, points);
     deep::string baseName("entity_");
-    uint64_t count = 0;
-
     float cubeSize = 3.0f;
+    size_t i, j;
+    uint64_t count = 0;
 
     for(i = 0; i < 10; ++i)
     {
@@ -466,10 +512,16 @@ int main()
 
             count++;
         }
-    }
+    }*/
+
+    deep::polygon lightedCube = deep::graphic::create_cube("lighted_cube");
+    deep::polygon lightSourceCube = deep::graphic::create_cube("light_source_cube");
+
+    entityManager->create_entity("lighted_entity", collectionID, lightedCube, lightedObjectProgram, deep::fvec3(0.0f, 10.0f, 0.0f), deep::fvec3(5.0f, 5.0f, 5.0f));
+    entityManager->create_entity("light_source_entity", collectionID, lightSourceCube, lightSourceObjectProgram, deep::fvec3(-1.5f, 18.0f, 0.0f), deep::fvec3(1.0f, 1.0f, 1.0f));
 
     // Affiche la skybox à la fin pour optimiser les appelles au fragment shader = FPS++
-    deep::entity_manager::entity skyboxEnt = deep::graphic::create_cubemap("skybox", skyboxProgram, collectionID, deep::fvec3(0.0f, 0.0f, 0.0f), 5005.0f, 105.0f, 2005.0f, skybox, 0);
+    //deep::entity_manager::entity skyboxEnt = deep::graphic::create_cubemap("skybox", skyboxProgram, collectionID, deep::fvec3(0.0f, 0.0f, 0.0f), 5005.0f, 105.0f, 2005.0f, skybox, 0);
 
     deep::scene::set_active_scene(sceneID);
 

@@ -15,3 +15,15 @@
     vertex : post_processing.vert
     fragment : post_processing.frag
 }
+
+4 {
+    name : lighted_object
+    vertex : lighted_object.vert
+    fragment : lighted_object.frag
+}
+
+5 {
+    name : light_source_object
+    vertex : lighted_object.vert
+    fragment : light_source_object.frag
+}

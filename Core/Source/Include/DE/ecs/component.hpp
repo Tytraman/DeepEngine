@@ -21,6 +21,7 @@ namespace deep
     struct collider_component;
     struct acceleration_component;
     struct health_component;
+    struct material_component;
 
     class system_manager;
     class window;
@@ -28,8 +29,6 @@ namespace deep
     class gl_renderer;
 
     using drawable_render_callback = void (*)(GL3::gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, camera *camera);
-
-    constexpr component_type DrawableComponentType = (1 << 0);
 
     struct drawable_component
     {
@@ -48,8 +47,6 @@ namespace deep
 
             friend component_manager;
     };
-
-    constexpr component_type TransformationComponentType = (1 << 1);
 
     struct transformation_component
     {
@@ -80,7 +77,6 @@ namespace deep
             friend system_manager;
     };
 
-    constexpr component_type VelocityComponentType = (1 << 3);
     struct velocity_component
     {
 
@@ -95,8 +91,6 @@ namespace deep
 
             friend component_manager;
     };
-
-    constexpr component_type ColliderComponentType = (1 << 2);
 
     /// @struct collider_component
     /// @brief  Composant décrivant qu'une entité possède une boîte de collision de type AABB.
@@ -113,8 +107,6 @@ namespace deep
             friend component_manager;
     };
 
-    constexpr component_type AccelerationComponentType = (1 << 4);
-
     struct acceleration_component
     {
 
@@ -126,8 +118,6 @@ namespace deep
 
             friend component_manager;
     };
-
-    constexpr component_type HealthComponentType = (1 << 5);
 
     struct health_component
     {
@@ -145,6 +135,19 @@ namespace deep
 
     class component_manager
     {
+
+        public:
+            enum class component_type : uint32_t
+            {
+                none           = 0,
+                drawable       = (1 << 0),
+                transformation = (1 << 1),
+                collider       = (1 << 2),
+                velocity       = (1 << 3),
+                acceleration   = (1 << 4),
+                health         = (1 << 5)
+            };
+            
 
         public:
             DE_API static component_manager *get_singleton();
@@ -319,10 +322,6 @@ namespace deep
         m_HealthComponents.remove(id);
         m_ComponentsType.remove(id);
     }
-
-    
-
-    
 
     /*
     ========================================

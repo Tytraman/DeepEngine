@@ -4,11 +4,11 @@
     "type": "split",
     "children": [
       {
-        "id": "2b3dfa455617690d",
+        "id": "099d6a61a3999798",
         "type": "tabs",
         "children": [
           {
-            "id": "63341748eb9c0bac",
+            "id": "4ecb7d3eaf11af18",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -18,8 +18,21 @@
                 "source": false
               }
             }
+          },
+          {
+            "id": "5b7c1695a088c39b",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "OpenGL/Lumières.md",
+                "mode": "source",
+                "source": false
+              }
+            }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -93,7 +106,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "DeepEngine/TODO list.md",
+                "file": "OpenGL/Lumières.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +123,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "DeepEngine/TODO list.md",
+                "file": "OpenGL/Lumières.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +146,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "DeepEngine/TODO list.md"
+                "file": "OpenGL/Lumières.md"
               }
             }
           }
@@ -154,14 +167,28 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "63341748eb9c0bac",
+  "active": "5b7c1695a088c39b",
   "lastOpenFiles": [
-    "C++/Parallélisme.md",
+    "DeepEngine/Materials.md",
+    "Analyses/Godot/Materials.md",
+    "OpenGL/Lumières.md",
+    "OpenGL/Normal.md",
     "DeepEngine/TODO list.md",
+    "Analyses/Godot/RefCounted.md",
+    "res/img/lighting_diffuse_3.png",
+    "res/img/lighting_diffuse_2.png",
+    "res/img/lighting_diffuse_1.png",
+    "res/img/phong_reflection_model.png",
+    "res/img/normal_mapping.png",
+    "res/img",
+    "res",
+    "Pasted image 20240111102737.png",
+    "Pasted image 20240111102654.png",
+    "OpenGL",
+    "C++/Parallélisme.md",
     "DeepEngine",
     "C++/Smart pointers.md",
     "C++/Alignement des données.md",
-    "Analyses/Godot/RefCounted.md",
     "Analyses/Godot",
     "Analyses",
     "C++",

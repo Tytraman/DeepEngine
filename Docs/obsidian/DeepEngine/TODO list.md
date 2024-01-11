@@ -9,10 +9,14 @@
 - [ ] **Séparer** chaque concept et chaque notion dans des classes biens spécifiques.
 	- Arrêter de vouloir tout mettre dans une seule et unique classe.
 - [ ] Faire une classe `image` dans laquelle se trouve un tableau de pixels et les informations concernant le format.
+- [ ] Les `struct` ne doivent plus être utilisées comme des classes.
+	- Arrêter d'utiliser `private`, `public` et de déclarer des méthodes.
 
 # Mémoire
 - [ ] Gestion des données par `queue`.
 - [x] Gestion des données par `stack`. ✅ 2024-01-01
+- [ ] Stocker les données et les informations des VBOs.
+- [ ] Stocker les données et les informations des textures.
 
 ## OpenGL
 - [x] Stocker les emplacements d'uniformes pour éviter de les chercher à chaque utilisation. ✅ 2024-01-01
@@ -31,6 +35,7 @@
 - [ ] Implémenter le `outlining`.
 - [ ] Ajouter le fait de pouvoir recharger un `shader` dynamiquement.
 	- Si la compilation du shader échoue, garder l'ancien `shader` actif.
+- [ ] Se renseigner sur l'étape **specular** de la lumière [[Lumières#Specular]].
 ## Rendu
 - [ ] Ajouter le rendu de textes.
 - [ ] Ajouter le rendu de segments allant d'un point **A** à un point **B**.
@@ -76,6 +81,6 @@
 	- [x] Afficher les entités présentes dans une scène. ✅ 2024-01-01
 	- [x] Pouvoir supprimer des entités. ✅ 2024-01-01
 	- [x] Pouvoir ajouter des entités. ✅ 2024-01-10
-	- [ ] Afficher les informations concernant l'entité sélectionnée.
+	- [x] Afficher les informations concernant l'entité sélectionnée. ✅ 2024-01-11
 	- [ ] **Outliner** l'entité sélectionnée.
 

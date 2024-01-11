@@ -146,7 +146,7 @@ namespace deep
 
 
     template<typename Enum>
-    inline constexpr underlying_type<Enum> toUType(Enum e)
+    inline constexpr underlying_type<Enum> to_utype(Enum e)
     {
         return static_cast<underlying_type<Enum>>(e);
     }

@@ -4,6 +4,7 @@
 #include "DE/def.hpp"
 #include "DE/types.hpp"
 #include "DE/ecs/ecs.hpp"
+#include "DE/ecs/component.hpp"
 #include "DE/memory/list.hpp"
 #include "DE/memory/hash_table.hpp"
 #include "DE/drivers/opengl/texture.hpp"
@@ -51,7 +52,7 @@ namespace deep
             {
                 entity ent;
                 list<component_id> components;      ///< Contient tous les composants que l'entité possède.
-                component_type componentsType;      ///< Masque des types de composants attribués à l'entité.
+                component_manager::component_type componentsType;      ///< Masque des types de composants attribués à l'entité.
 
                 DE_API entity_item(const entity &ent);
             };
@@ -94,12 +95,12 @@ namespace deep
             /// @param componentTypesToInclude	Masque des types de composants que les entités doivent posséder afin d'être incluses.
             /// @param componentTypesToExclude	Masque des types de composants que les entités ne doivent pas avoir pour être incluses.
             /// @param dest						Pointeur vers la liste qui stockera les entités répondant aux conditions.
-            DE_API void query(entity_collection_id collection, component_type componentTypesToInclude, component_type componentTypesToExclude, list<entity_id> &dest);
+            DE_API void query(entity_collection_id collection, underlying_type<component_manager::component_type> componentTypesToInclude, underlying_type<component_manager::component_type> componentTypesToExclude, list<entity_id> &dest);
 
-            DE_API component_id get_component_id(uint64_t keyName, entity_collection_id collectionID, component_type type);
-            DE_API component_id get_component_id(const char *entityName, entity_collection_id collection, component_type componentType);
+            DE_API component_id get_component_id(uint64_t keyName, entity_collection_id collectionID, component_manager::component_type type);
+            DE_API component_id get_component_id(const char *entityName, entity_collection_id collection, component_manager::component_type componentType);
 
-            DE_API component_type get_component_types(uint64_t keyName, entity_collection_id collectionID);
+            DE_API component_manager::component_type get_component_types(uint64_t keyName, entity_collection_id collectionID);
 
         private:
             entity_manager();
@@ -151,7 +152,7 @@ namespace deep
     entity_manager::get_component_id
     ================================
     */
-    inline component_id entity_manager::get_component_id(const char *entityName, entity_collection_id collection, component_type componentType)
+    inline component_id entity_manager::get_component_id(const char *entityName, entity_collection_id collection, component_manager::component_type componentType)
     {
         return get_component_id(m_Collections.getHashFunction()(entityName), collection, componentType);
     }

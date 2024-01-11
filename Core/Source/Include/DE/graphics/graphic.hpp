@@ -1,12 +1,12 @@
 #ifndef __DEEP_ENGINE_GRAPHIC_HPP__
 #define __DEEP_ENGINE_GRAPHIC_HPP__
 
-#include <DE/def.hpp>
-#include <DE/types.hpp>
-#include <DE/ecs/scene.hpp>
-#include <DE/color.hpp>
-#include <DE/vec.hpp>
-#include <DE/graphics/shape.hpp>
+#include "DE/def.hpp"
+#include "DE/types.hpp"
+#include "DE/ecs/scene.hpp"
+#include "DE/color.hpp"
+#include "DE/vec.hpp"
+#include "DE/graphics/shape.hpp"
 
 namespace deep
 {
@@ -128,6 +128,8 @@ namespace deep
                 const colora &color6,
                 const cube_texture_points &texturePoints = cube_texture_points()
             );
+
+            DE_API static polygon create_cube(const char *name);
 
             DE_API static entity_manager::entity create_cubemap(
                 const char *name,

@@ -5,6 +5,7 @@
 #include "DE/types.hpp"
 #include "DE/memory/list.hpp"
 #include "DE/ecs/ecs.hpp"
+#include "DE/ecs/component.hpp"
 #include "DE/renderer.hpp"
 #include "DE/drivers/opengl/framerenderbuffer.hpp"
 #include "DE/drivers/opengl/renderer.hpp"
@@ -18,11 +19,11 @@ namespace deep
         public:
             struct system_item
             {
-                system_function function;					///< Fonction que le système doit exécuter.
-                component_type componentTypesToInclude;		///< Masque indiquant les types de composants à inclure dans le query.
-                component_type componentTypesToExclude;		///< Masque indiquant les types de composants à ne pas inclure dans le query.
+                system_function function;
+                component_manager::component_type componentTypesToInclude;
+                component_manager::component_type componentTypesToExclude;
 
-                DE_API system_item(system_function function, component_type componentTypesToInclude = 0, component_type componentTypesToExclude = 0);
+                DE_API system_item(system_function function, component_manager::component_type componentTypesToInclude = component_manager::component_type::none, component_manager::component_type componentTypesToExclude = component_manager::component_type::none);
             };
 
         public:
@@ -31,7 +32,7 @@ namespace deep
             /// @brief			Crée un système.
             /// @param function	La fonction que le système devra exécuter.
             /// @return			L'ID du système nouvellement créé.
-            DE_API system_id createSystem(system_function function, component_type componentTypesToInclude = 0, component_type componentTypesToExclude = 0);
+            DE_API system_id createSystem(system_function function, component_manager::component_type componentTypesToInclude = component_manager::component_type::none, component_manager::component_type componentTypesToExclude = component_manager::component_type::none);
 
             /// @brief			Exécute un système spécifique.
             /// @param system	L'ID du système à exécuter.

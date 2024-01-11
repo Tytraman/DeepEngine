@@ -565,6 +565,92 @@ namespace deep
         return pol;
     }
 
+    polygon graphic::create_cube(const char *name)
+    {
+        GL3::vbo_manager *vboManager = GL3::vbo_manager::get_singleton();
+        GL3::vao_manager *vaoManager = GL3::vao_manager::get_singleton();
+
+        float vPos[] =
+        {
+
+            // Face avant
+            -0.5f, -0.5f, -0.5f, // 1.0f, 1.0f,  // Bas gauche
+             0.5f,  0.5f, -0.5f, // 0.0f, 0.0f,  // Haut droite
+             0.5f, -0.5f, -0.5f, // 0.0f, 1.0f,  // Bas droite
+             
+            -0.5f, -0.5f, -0.5f, // 1.0f, 1.0f,  // Bas gauche
+            -0.5f,  0.5f, -0.5f, // 1.0f, 0.0f,  // Haut gauche
+             0.5f,  0.5f, -0.5f, // 0.0f, 0.0f,  // Haut droite
+            
+
+            // Face arrière
+             0.5f, -0.5f,  0.5f, // 1.0f, 1.0f,  // Bas gauche
+            -0.5f,  0.5f,  0.5f, // 0.0f, 0.0f,  // Haut droite
+            -0.5f, -0.5f,  0.5f, // 0.0f, 1.0f,  // Bas droite
+
+             0.5f, -0.5f,  0.5f, // 1.0f, 1.0f,  // Bas gauche
+             0.5f,  0.5f,  0.5f, // 1.0f, 0.0f,  // Haut gauche
+            -0.5f,  0.5f,  0.5f, // 0.0f, 0.0f,  // Haut droite
+            
+
+            // Face droite
+            -0.5f,  0.5f,  0.5f, // 1.0f, 0.0f,  // Haut gauche
+            -0.5f,  0.5f, -0.5f, // 0.0f, 0.0f,  // Haut droite
+            -0.5f, -0.5f, -0.5f, // 0.0f, 1.0f,  // Bas droite
+
+            -0.5f, -0.5f, -0.5f, // 0.0f, 1.0f,  // Bas droite
+            -0.5f, -0.5f,  0.5f, // 1.0f, 1.0f,  // Bas gauche
+            -0.5f,  0.5f,  0.5f, // 1.0f, 0.0f,  // Haut gauche
+
+
+            // Face gauche
+             0.5f,  0.5f,  0.5f, // 0.0f, 0.0f,  // Haut droite
+             0.5f, -0.5f, -0.5f, // 1.0f, 1.0f,  // Bas gauche
+             0.5f,  0.5f, -0.5f, // 1.0f, 0.0f,  // Haut gauche
+
+             0.5f, -0.5f, -0.5f, // 1.0f, 1.0f,  // Bas gauche
+             0.5f,  0.5f,  0.5f, // 0.0f, 0.0f,  // Haut droite
+             0.5f, -0.5f,  0.5f, // 0.0f, 1.0f,  // Bas droite
+
+
+            // Face bas
+             0.5f, -0.5f,  0.5f, // 1.0f, 0.0f,  // Haut droite
+            -0.5f, -0.5f, -0.5f, // 0.0f, 1.0f,  // Bas gauche
+             0.5f, -0.5f, -0.5f, // 1.0f, 1.0f,  // Bas droite
+
+            -0.5f, -0.5f, -0.5f, // 0.0f, 1.0f,  // Bas gauche
+             0.5f, -0.5f,  0.5f, // 1.0f, 0.0f,  // Haut droite
+            -0.5f, -0.5f,  0.5f, // 0.0f, 0.0f,  // Top gauche
+            
+
+            // Face haut
+            -0.5f,  0.5f, -0.5f, // 1.0f, 1.0f,  // Bas gauche
+             0.5f,  0.5f,  0.5f, // 0.0f, 0.0f,  // Haut droite
+             0.5f,  0.5f, -0.5f, // 0.0f, 1.0f,  // Bas droite
+
+             0.5f,  0.5f,  0.5f, // 0.0f, 0.0f,  // Haut droite
+            -0.5f,  0.5f, -0.5f, // 1.0f, 1.0f,  // Bas gauche
+            -0.5f,  0.5f,  0.5f // 1.0f, 0.0f   // Haut gauche
+            
+        };
+
+        polygon pol(vboManager->create(name), vaoManager->create(name));
+        memory_chunk chunk(vPos, sizeof(vPos));
+
+        vboManager->bind(pol.vbo());
+        vaoManager->bind(pol.vao());
+        vaoManager->attach_vbo(pol.vao(), pol.vbo());
+
+        vboManager->transmit_data(chunk);
+        vboManager->set_vertices_number(36);
+
+        vboManager->add_attribute(0, GL3::gl_attrib_components_number::x3, GL3::gl_type::Float, 3 * sizeof(float), 0);
+
+        vaoManager->bind_default();
+
+        return pol;
+    }
+
     entity_manager::entity graphic::create_cubemap(
         const char *name,
         GL3::gl_id program,

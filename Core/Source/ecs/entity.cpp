@@ -13,7 +13,7 @@ namespace deep
     */
     entity_manager::entity_item::entity_item(const entity &_ent)
         : ent(_ent),
-          componentsType(0)
+          componentsType(component_manager::component_type::none)
     { }
 
     /*
@@ -262,13 +262,13 @@ namespace deep
 
         component_manager *componentManager = component_manager::get_singleton();
 
-        component_type type = componentManager->get_type(component);
+        component_manager::component_type type = componentManager->get_type(component);
 
-        if((item.componentsType & type) == type)
+        if((to_utype(item.componentsType) & to_utype(type)) == to_utype(type))
             return false;
 
         item.components.add(component);
-        item.componentsType |= type;
+        item.componentsType = static_cast<component_manager::component_type>(to_utype(item.componentsType) | to_utype(type));
 
         return true;
     }
@@ -278,7 +278,7 @@ namespace deep
     entity_manager::get_component_id
     ================================
     */
-    component_id entity_manager::get_component_id(uint64_t keyName, entity_collection_id collectionID, component_type type)
+    component_id entity_manager::get_component_id(uint64_t keyName, entity_collection_id collectionID, component_manager::component_type type)
     {
         hash_entry<hash_table<entity_item>> *hs = m_Collections[collectionID];
         if(hs == nullptr)
@@ -292,7 +292,7 @@ namespace deep
 
         entity_item &item = ent->value;
         
-        component_type t;
+        component_manager::component_type t;
 
         list_iterator<entity_id> it = item.components.begin();
         list_iterator<entity_id> end = item.components.end();
@@ -317,15 +317,15 @@ namespace deep
     entity_manager::get_component_types
     ===================================
     */
-    component_type entity_manager::get_component_types(uint64_t keyName, entity_collection_id collectionID)
+    component_manager::component_type entity_manager::get_component_types(uint64_t keyName, entity_collection_id collectionID)
     {
         hash_entry<hash_table<entity_item>> *hs = m_Collections[collectionID];
         if(hs == nullptr)
-            return 0;
+            return component_manager::component_type::none;
 
         hash_entry<entity_item> *h = hs->value[keyName];
         if(h == nullptr)
-            return 0;
+            return component_manager::component_type::none;
 
         return h->value.componentsType;
     }
@@ -335,7 +335,7 @@ namespace deep
     entity_manager::query
     =====================
     */
-    void entity_manager::query(entity_collection_id collection, component_type componentTypesToInclude, component_type componentTypesToExclude, list<entity_id> &dest)
+    void entity_manager::query(entity_collection_id collection, underlying_type<component_manager::component_type> componentTypesToInclude, underlying_type<component_manager::component_type> componentTypesToExclude, list<entity_id> &dest)
     {
         hash_entry<hash_table<entity_item>> *hs = m_Collections[collection];
         if(hs == nullptr)
@@ -347,7 +347,7 @@ namespace deep
         for(; begin != end; ++begin)
         {
             entity_item &item = begin->value;
-            if((item.componentsType & componentTypesToInclude) == componentTypesToInclude && (item.componentsType & componentTypesToExclude) == 0)
+            if((to_utype(item.componentsType) & componentTypesToInclude) == componentTypesToInclude && (to_utype(item.componentsType) & componentTypesToExclude) == 0)
                 dest.add(item.ent.get_entity_id());
         }
     }

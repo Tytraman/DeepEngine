@@ -16,7 +16,6 @@ namespace deep
 	using entity_collection_id = de_id;
 
 	using component_id         = de_id;                    ///< Identificateur de composant.
-	using component_type       = uint32_t;                 ///< Type associé à un composant.
 
 	using system_function      = void (*)(list<entity_id> &query);  ///< Pointeur vers une fonction qu'un système doit exécuter.
 	using system_id            = de_id;                             ///< ID représentant un système.
