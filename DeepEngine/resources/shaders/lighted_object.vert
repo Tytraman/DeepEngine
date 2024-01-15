@@ -85,7 +85,11 @@ void main()
 		 model = scale(model, mScl);
 
 	gl_Position = proj * view * model * vec4(inPosition, 1.0f);
-	normal = normalize(inNormal);
-	color = inColor;
+
+	// !!!
+	// Opération coûteuse, il est préférable de la pré-calculer sur le CPU et de l'envoyer par uniforme.
+	normal = normalize(mat3(transpose(inverse(model))) * inNormal);
+
+	color = inColor;									// Transmet la couleur du vertice au fragment shader.
 	fragPos = vec3(model * vec4(inPosition, 1.0));
 }

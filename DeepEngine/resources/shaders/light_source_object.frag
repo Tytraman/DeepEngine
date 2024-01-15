@@ -1,9 +1,11 @@
 #version 330 core
 #pragma debug(on)
 
+in vec4 color;
+
 out vec4 FragColor;
 
 void main()
 {
-    FragColor = vec4(1.0);
+    FragColor = color;
 }

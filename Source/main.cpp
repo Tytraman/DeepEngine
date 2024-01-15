@@ -321,8 +321,8 @@ int main()
     skyboxTop.create_from_file("..\\resources\\textures\\skybox_top.bmp");
 
     deep::vec4<float> black(0.0f, 0.0f, 0.0f, 1.0);
-    deep::vec4<float> white(1.0f, 1.0f, 1.0f, 1.0);
-    deep::vec4<float> red(1.0f, 0.0f, 0.0f, 1.0f);
+    deep::vec4<float> lightCubeColor(91.0f / 255.0f, 16.0f / 255.0f, 239.0f / 255.0f, 1.0);
+    deep::vec4<float> lightedCubeColor(1.0f, 1.0f, 1.0f, 1.0f);
 
     deep::GL3::gl_id skybox = textureManager->create_2D("skybox", deep::GL3::texture_manager::gl_texture_type::texture_cubemap);
     textureManager->bind(skybox);
@@ -425,13 +425,15 @@ int main()
 
     int objectColorLoc = deep::GL3::uniform_manager::find(lightedObjectProgram, "deAmbient");
     if(objectColorLoc != -1)
-        programManager->add_uniform("deAmbient", objectColorLoc, deep::vec4<float>(1.31f, 0.75f, 0.06f, 1.0f));
+        programManager->add_uniform("deAmbient", objectColorLoc, deep::vec4<float>(0.25f, 0.25f, 0.25f, 1.0f));
 
     objectColorLoc = deep::GL3::uniform_manager::find(lightedObjectProgram, "deLightPos");
     if(objectColorLoc != -1)
         programManager->add_uniform("deLightPos", objectColorLoc, lightSourcePos);
 
-
+    objectColorLoc = deep::GL3::uniform_manager::find(lightedObjectProgram, "deLightColor");
+    if(objectColorLoc != -1)
+        programManager->add_uniform("deLightColor", objectColorLoc, lightCubeColor);
 
     // ===========================================
 
@@ -525,8 +527,8 @@ int main()
         }
     }*/
 
-    deep::polygon lightedCube = deep::graphic::create_cube("lighted_cube", red, red, red, red, red, red);
-    deep::polygon lightSourceCube = deep::graphic::create_cube("light_source_cube", white, white, white, white, white, white);
+    deep::polygon lightedCube = deep::graphic::create_cube("lighted_cube", lightedCubeColor, lightedCubeColor, lightedCubeColor, lightedCubeColor, lightedCubeColor, lightedCubeColor);
+    deep::polygon lightSourceCube = deep::graphic::create_cube("light_source_cube", lightCubeColor, lightCubeColor, lightCubeColor, lightCubeColor, lightCubeColor, lightCubeColor);
 
     entityManager->create_entity("lighted_entity", collectionID, lightedCube, lightedObjectProgram, deep::fvec3(0.0f, 0.0f, -5.0f), deep::fvec3(3.0f, 3.0f, 3.0f));
     entityManager->create_entity("light_source_entity", collectionID, lightSourceCube, lightSourceObjectProgram, lightSourcePos, deep::fvec3(1.0f, 1.0f, 1.0f));

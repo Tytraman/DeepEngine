@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "DeepEngine/TODO list.md",
+                "file": "OpenGL/Lumières.md",
                 "mode": "source",
                 "source": false
               }
@@ -105,7 +105,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "DeepEngine/TODO list.md",
+                "file": "OpenGL/Lumières.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -122,7 +122,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "DeepEngine/TODO list.md",
+                "file": "OpenGL/Lumières.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -145,7 +145,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "DeepEngine/TODO list.md"
+                "file": "OpenGL/Lumières.md"
               }
             }
           }
@@ -168,8 +168,10 @@
   },
   "active": "4ecb7d3eaf11af18",
   "lastOpenFiles": [
-    "OpenGL/Lumières.md",
+    "Maths/dot product.md",
     "DeepEngine/TODO list.md",
+    "Maths",
+    "OpenGL/Lumières.md",
     "res/img/phong_reflection_model_example_2.png",
     "DeepEngine/Materials.md",
     "Analyses/Godot/Materials.md",

@@ -23,6 +23,16 @@ Cette étape affecte la **luminance** appliquée à la surface selon l'angle de 
 ![[lighting_diffuse_3.png|800]]
 *Quand l'angle entre la source et la surface est négatif, alors aucune diffusion n'est appliquée. La surface n'est donc affectée que par la lumière d'ambiance.*
 
+Pour calculer la *diffuse*, il nous faut connaître :
+- Le **vecteur normal** de la surface sur laquelle appliquer la lumière.
+- La **direction** de la lumière vers le **vecteur normal**.
+- La couleur de la surface.
+- La couleur de la lumière.
+- La couleur d'ambiance.
+
+Il est important d'appliquer la matrice de transformation au vecteur normal, **cependant**, c'est une matrice spéciale qui peut se calculer de la manière suivante :
+`normal = mat3(transpose(inverse(model))) * inNormal`
+
 ### Specular
 
 Cette étape permet de refléter la lumière sur l'objet. Le niveau de reflection dépend d'à quel point la surface à un effet 'miroir', représenter par ce qu'on appelle `shininess`.
