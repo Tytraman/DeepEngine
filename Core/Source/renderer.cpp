@@ -60,7 +60,7 @@ namespace deep {
     renderer::drawPixel
     ===================
     */
-    void renderer::drawPixel(const vec2 &pos) const
+    void renderer::drawPixel(const ivec2 &pos) const
     {
         SDL_RenderDrawPoint(m_Renderer, pos.x, pos.y);
     }

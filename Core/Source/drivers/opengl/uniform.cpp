@@ -95,6 +95,16 @@ namespace deep
         uniform_manager::send
         =====================
         */
+        void uniform_manager::send(int location, const vec4<float> &vec)
+        {
+            DE_GL_CALL(glUniform4f(location, vec.x, vec.y, vec.z, vec.w));
+        }
+
+        /*
+        =====================
+        uniform_manager::send
+        =====================
+        */
         void uniform_manager::send(int location, fmat3x3 &mat)
         {
             DE_GL_CALL(glUniformMatrix3fv(location, 1, GL_TRUE, mat.ptr()));

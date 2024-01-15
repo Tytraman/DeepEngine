@@ -52,7 +52,7 @@ namespace deep
 	fvec2::operator+
 	================
 	*/
-	inline fvec2 fvec2::operator+(const vec2 &vec) const
+	inline fvec2 fvec2::operator+(const ivec2 &vec) const
 	{
 		return add(*this, vec);
 	}
@@ -239,7 +239,7 @@ namespace deep
 	fvec2::add
 	==========
 	*/
-	inline fvec2 fvec2::add(const fvec2 &vec1, const vec2 &vec2)
+	inline fvec2 fvec2::add(const fvec2 &vec1, const ivec2 &vec2)
 	{
 		return {
 			vec1.x + vec2.x,

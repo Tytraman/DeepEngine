@@ -6,7 +6,7 @@
 ## Phong Reflection Model
 
 ![[phong_reflection_model.png]]
-
+![[phong_reflection_model_example_2.png]]
 ### Ambient
 C'est la lumière d'ambiance, cela peut être la lumière naturelle comme celle du soleil ou bien une lumière artificielle qui impacte toute la scène.
 Lorsqu'une surface n'est éclairée par aucune source de lumière, elle ne sera affectée que par la lumière d'ambiance.
@@ -25,4 +25,4 @@ Cette étape affecte la **luminance** appliquée à la surface selon l'angle de 
 
 ### Specular
 
-
+Cette étape permet de refléter la lumière sur l'objet. Le niveau de reflection dépend d'à quel point la surface à un effet 'miroir', représenter par ce qu'on appelle `shininess`.

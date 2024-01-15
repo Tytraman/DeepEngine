@@ -31,8 +31,7 @@
               }
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -106,7 +105,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "OpenGL/Lumières.md",
+                "file": "DeepEngine/TODO list.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -123,7 +122,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "OpenGL/Lumières.md",
+                "file": "DeepEngine/TODO list.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -146,7 +145,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "OpenGL/Lumières.md"
+                "file": "DeepEngine/TODO list.md"
               }
             }
           }
@@ -167,13 +166,14 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "5b7c1695a088c39b",
+  "active": "4ecb7d3eaf11af18",
   "lastOpenFiles": [
+    "OpenGL/Lumières.md",
+    "DeepEngine/TODO list.md",
+    "res/img/phong_reflection_model_example_2.png",
     "DeepEngine/Materials.md",
     "Analyses/Godot/Materials.md",
-    "OpenGL/Lumières.md",
     "OpenGL/Normal.md",
-    "DeepEngine/TODO list.md",
     "Analyses/Godot/RefCounted.md",
     "res/img/lighting_diffuse_3.png",
     "res/img/lighting_diffuse_2.png",

@@ -15,7 +15,7 @@ namespace deep
 
 	class window;
 
-	class DE_API drawable
+	class drawable
     {
 
 		friend window;
@@ -30,19 +30,19 @@ namespace deep
 
 		public:
 			//=== Méthodes virtuelles pures ===// 
-			virtual void draw(const fmat2x2 &baseVectors) = 0;
+			DE_API virtual void draw(const fmat2x2 &baseVectors) = 0;
 
-			virtual void scale(float scale1, float scale2) = 0;
-			virtual void translate(float x, float y) = 0;
-			virtual void rotate(float degrees) = 0;
+			DE_API virtual void scale(float scale1, float scale2) = 0;
+			DE_API virtual void translate(float x, float y) = 0;
+			DE_API virtual void rotate(float degrees) = 0;
 			
-			virtual uint32_t getType() const = 0;
-			fvec2 getPos() const;
-			bool isVisible() const;
+			DE_API virtual uint32_t getType() const = 0;
+			DE_API fvec2 getPos() const;
+			DE_API bool isVisible() const;
 
-			virtual void setPos(const fvec2 &pos);
-			void setVisible(bool value);
-			void setVectorsVisible(bool value);
+			DE_API virtual void setPos(const fvec2 &pos);
+			DE_API void setVisible(bool value);
+			DE_API void setVectorsVisible(bool value);
 
         public:
             drawable() = delete;
@@ -99,7 +99,8 @@ namespace deep
 		m_DrawVectors = value;
 	}
 
-	class DE_API ColoredDrawable : public drawable {
+	class ColoredDrawable : public drawable
+	{
 
 		protected:
 			colora m_Color;

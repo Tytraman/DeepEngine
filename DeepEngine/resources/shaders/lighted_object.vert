@@ -1,7 +1,13 @@
 #version 330 core
 #pragma debug(on)
 
-layout (location = 0) in vec3 dePos;
+layout (location = 0) in vec3 inPosition;
+layout (location = 1) in vec3 inNormal;
+layout (location = 2) in vec4 inColor;
+
+out vec3 normal;
+out vec4 color;
+out vec3 fragPos;
 
 uniform vec3  mTrs;
 uniform float mRotX;
@@ -78,5 +84,8 @@ void main()
 		 model = rotateZ(model, mRotZ);
 		 model = scale(model, mScl);
 
-	gl_Position = proj * view * model * vec4(dePos, 1.0f);
+	gl_Position = proj * view * model * vec4(inPosition, 1.0f);
+	normal = normalize(inNormal);
+	color = inColor;
+	fragPos = vec3(model * vec4(inPosition, 1.0));
 }

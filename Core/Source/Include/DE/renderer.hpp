@@ -40,7 +40,7 @@ namespace deep
             
             /// @brief		Dessine un pixel aux coordonnées indiquées avec la couleur définie.
             /// @param pos	Position du pixel.
-            void drawPixel(const vec2 &pos) const;
+            void drawPixel(const ivec2 &pos) const;
 
             /// @brief		Dessine un pixel aux coordonnées indiquées avec la couleur définie.
             /// @param pos	Position du pixel.

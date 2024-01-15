@@ -17,21 +17,18 @@ namespace deep
 	struct fmat3x3;
 	struct fmat4x4;
 
-	namespace Vec2Direction
+	enum class vec2_direction : uint8_t
     {
-		enum e : uint8_t
-        {
-			Up,
-			Left,
-			Down,
-			Right,
-			None
-		};
-	}
+		Up,
+		Left,
+		Down,
+		Right,
+		None
+	};
 
-	/// @struct vec2
+	/// @struct ivec2
 	/// @brief  Vecteur à 2 dimensions avec des composantes de type \c int32_t.
-	struct DE_API vec2
+	struct ivec2
     {
 		int32_t x;    ///< Composante X du vecteur.
 		int32_t y;    ///< Composante Y du vecteur.
@@ -39,87 +36,88 @@ namespace deep
 		/// @brief   Constructeur de vecteurs à 2 dimensions de type \c int32_t.
 		/// @param x Valeur de la composante X.
 		/// @param y Valeur de la composante Y.
-		vec2(int32_t x = 0, int32_t y = 0);
+		DE_API ivec2(int32_t x = 0, int32_t y = 0);
 
 		/// @brief          Trace le vecteur à partir de l'origine.
 		/// @param renderer Le renderer qui s'occupe de dessiner la ligne.
-		void draw(renderer &renderer) const;
+		DE_API void draw(renderer &renderer) const;
 	};
 
 	/*
-	==========
-	vec2::vec2
-	==========
+	============
+	ivec2::ivec2
+	============
 	*/
-	inline vec2::vec2(int32_t _x, int32_t _y)
+	inline ivec2::ivec2(int32_t _x, int32_t _y)
 		: x(_x), y(_y)
 	{ }
 
 	/// @struct fvec2
 	/// @brief	Vecteur à 2 dimensions avec des composantes de type flottant.
-	struct DE_API fvec2 {
+	struct fvec2
+	{
 		float x;    ///< Composante X du vecteur.
 		float y;    ///< Composante Y du vecteur.
 
 		/// @brief   Constructeur de vecteurs à 2 dimensions de type flottant.
 		/// @param x Valeur de la composante X.
 		/// @param y Valeur de la composante Y.
-		fvec2(float x = 0.0f, float y = 0.0f);
+		DE_API fvec2(float x = 0.0f, float y = 0.0f);
 
 		/// @brief          Trace le vecteur à partir de l'origine.
 		/// @param renderer Le renderer qui s'occupe de dessiner la ligne.
-		void draw(renderer &renderer) const;
+		DE_API void draw(renderer &renderer) const;
 
 		/// @brief     Surcharge qui retourne le résultat de cette fonction : \ref add(const fvec2 &v1, const fvec2 &v2).
 		/// @param vec Le vecteur à additionner avec le vecteur courant.
 		/// @return    Le vecteur résultant du calcul d'addition entre 2 vecteurs.
-		fvec2 operator+(const fvec2 &vec) const;
+		DE_API fvec2 operator+(const fvec2 &vec) const;
 
-		/// @brief     Surcharge qui retourne le résultat de cette fonction : \ref add(const fvec2 &v1, const vec2 &v2).
+		/// @brief     Surcharge qui retourne le résultat de cette fonction : \ref add(const fvec2 &v1, const ivec2 &v2).
 		/// @param vec Le vecteur à additionner avec le vecteur courant.
 		/// @return    Le vecteur résultant du calcul d'addition entre 2 vecteurs.
-		fvec2 operator+(const vec2 &vec) const;
+		DE_API fvec2 operator+(const ivec2 &vec) const;
 
 		/// @brief            Surcharge qui retourne le résultat de cette fonction : \ref add(const fvec2 &v, float valueToAdd).
 		/// @param valueToAdd La valeur à ajouter au vecteur courant.
 		/// @return           Le vecteur résultant du calcul d'addition entre un vecteur et une valeur constante.
-		fvec2 operator+(float valueToAdd) const;
+		DE_API fvec2 operator+(float valueToAdd) const;
 
 		/// @brief   Surcharge qui retourne le résultat de cette fonction : \ref sub(const fvec2 &v1, const fvec2 &v2).
 		/// @param v Le vecteur à soustraire du vecteur courant.
 		/// @return  Le vecteur résultant du calcul de soustraction entre 2 vecteurs.
-		fvec2 operator-(const fvec2 &v) const;
+		DE_API fvec2 operator-(const fvec2 &v) const;
 
 		/// @brief            Surcharge qui retourne le résultat de cette fonction : \ref sub(const fvec2 &v, float valueToSub).
 		/// @param valueToSub La valeur à retirer du vecteur courant.
 		/// @return           Le vecteur résultant du calcul de soustraction entre un vecteur et une valeur constante.
-		fvec2 operator-(float valueToSub) const;
+		DE_API fvec2 operator-(float valueToSub) const;
 
 		/// @brief        Surcharge qui retourne le résultat de cette fonction : \ref scale(const fvec2 &v, float scalar).
 		/// @param scalar La valeur scalaire à multiplier au vecteur courant.
 		/// @return       Le vecteur résultant de la multiplication scalaire entre un vecteur et une constante.
-		fvec2 operator*(float scalar) const;
+		DE_API fvec2 operator*(float scalar) const;
 
 		/// @brief     Surcharge qui retourne le résultat de cette fonction : \ref mul(const fvec2 &v, const fmat2x2 &mat).
 		/// @param mat La matrice à multiplier au vecteur courant.
 		/// @return    Le vecteur résultant de la multiplication entre un vecteur et une matrice.
-		fvec2 operator*(const fmat2x2 &mat) const;
+		DE_API fvec2 operator*(const fmat2x2 &mat) const;
 
 		/// @brief       Surcharge qui effectue cette fonction : \ref sub(const fvec2 &v, float valueToSub) sur le vecteur courant.
 		/// @param value La valeur à retirer du vecteur courant.
-		void operator-=(float value);
+		DE_API void operator-=(float value);
 
-		/// @brief   Surcharge qui effectue cette fonction \ref add(const fvec2 &v1, const vec2 &v2) sur le vecteur courant.
+		/// @brief   Surcharge qui effectue cette fonction \ref add(const fvec2 &v1, const ivec2 &v2) sur le vecteur courant.
 		/// @param v Le vecteur à ajouter au vecteur courant.
-		void operator+=(const fvec2 &v);
+		DE_API void operator+=(const fvec2 &v);
 
 		/// @brief       Surcharge qui effectue cette fonction : \ref add(const fvec2 &v, float valueToAdd) sur le vecteur courant.
 		/// @param value La valeur à ajouter au vecteur courant.
-		void operator+=(float value);
+		DE_API void operator+=(float value);
 
 		/// @brief        Surcharge qui effectue cette fonction : \ref scale(const fvec2 &v, float scalar) sur le vecteur courant.
 		/// @param scalar Le scalaire à multiplier sur le vecteur courant.
-		void operator*=(float scalar);
+		DE_API void operator*=(float scalar);
 
 		/// @brief    Additionne 2 vecteurs entre eux et retourne le résultat.
 		/// @param v1 Vecteur 1.
@@ -128,18 +126,18 @@ namespace deep
 		///           <img src="vec2_addition.png" align="left">
 		///           <div style="clear: both"></div>
 		/// @return   Le vecteur résultant de ce calcul.
-		static fvec2 add(const fvec2 &v1, const fvec2 &v2);
+		DE_API static fvec2 add(const fvec2 &v1, const fvec2 &v2);
 
 		/// @brief    Additionne 2 vecteurs entre eux et retourne le résultat.
 		/// @param v1 Vecteur 1.
 		/// @param v2 Vecteur 2.
 		/// @remark   Voir \ref add(const fvec2 &v1, const fvec2 &v2).
 		/// @return   Le vecteur résultant de ce calcul.
-		static fvec2 add(const fvec2 &v1, const vec2 &v2);
+		DE_API static fvec2 add(const fvec2 &v1, const ivec2 &v2);
 
-		fvec2 operator+(const fvec3 &v);
-		void operator+=(const fvec3 &v);
-		static fvec2 add(const fvec2 &v1, const fvec3 &v2);
+		DE_API fvec2 operator+(const fvec3 &v);
+		DE_API void operator+=(const fvec3 &v);
+		DE_API static fvec2 add(const fvec2 &v1, const fvec3 &v2);
 
 		/// @brief            Additionne un vecteur avec une constante et retourne le résultat.
 		/// @param vec        Vecteur.
@@ -148,7 +146,7 @@ namespace deep
 		///                   <img src="vec2_addition_const.png" align="left">
 		///                   <div style="clear: both"></div>
 		/// @return           Le vecteur résultant de ce calcul.
-		static fvec2 add(const fvec2 &v, float valueToAdd);
+		DE_API static fvec2 add(const fvec2 &v, float valueToAdd);
 
 		/// @brief    Retourne le résultat de la soustraction d'un vecteur par un autre.
 		/// @param v1 Vecteur 1.
@@ -157,7 +155,7 @@ namespace deep
 		///           <img src="vec2_substraction.png" align="left">
 		///           <div style="clear: both"></div>
 		/// @return   Le vecteur résultant de ce calcul.
-		static fvec2 sub(const fvec2 &v1, const fvec2 &v2);
+		DE_API static fvec2 sub(const fvec2 &v1, const fvec2 &v2);
 
 		/// @brief            Retourne le résultat de la soustraction d'un vecteur par une constante.
 		/// @param v          Vecteur.
@@ -166,7 +164,7 @@ namespace deep
 		///                   <img src="vec2_substraction_const.png" align="left">
 		///                   <div style="clear: both"></div>
 		/// @return           Le vecteur résultant de ce calcul.
-		static fvec2 sub(const fvec2 &v, float valueToSub);
+		DE_API static fvec2 sub(const fvec2 &v, float valueToSub);
 
 		/// @brief        Retourne la multiplication scalaire entre un vecteur et une constante.
 		/// @param v      Vecteur.
@@ -176,7 +174,7 @@ namespace deep
 		///               <div style="clear: both"></div>
 		///               Cela permet d'agrandir / réduire la longueur d'un vecteur et / ou de changer sa direction.
 		/// @return       Le vecteur résultant de ce calcul.
-		static fvec2 scale(const fvec2 &v, float scalar);
+		DE_API static fvec2 scale(const fvec2 &v, float scalar);
 
 		/// @brief    Retourne le résultat du produit scalaire entre 2 vecteurs.
 		/// @param v1 Vecteur 1.
@@ -194,7 +192,7 @@ namespace deep
 		///           </div>
 		///           <div style="clear: both"></div>
 		/// @return   Le résultat du calcul.
-		static float dot(const fvec2 &v1, const fvec2 &v2);
+		DE_API static float dot(const fvec2 &v1, const fvec2 &v2);
 
 		/// @brief   Retourne la magnitude <i>(la longueur)</i> d'un vecteur.
 		/// @param v Vecteur.
@@ -202,9 +200,9 @@ namespace deep
 		///          <img src="vec2_magn.png" align="left">
 		///          <div style="clear:both"></div>
 		/// @return  La magnitude du vecteur.
-		static float magn(const fvec2 &v);
+		DE_API static float magn(const fvec2 &v);
 
-		static fvec2 norm(const fvec2 &v);
+		DE_API static fvec2 norm(const fvec2 &v);
 
 		/// @brief    Retourne l'angle en degrés entre 2 vecteurs.
 		/// @param v1 Vecteur 1.
@@ -213,7 +211,7 @@ namespace deep
 		///           <img src="vec2_angle.png" align="left">
 		///           <div style="clear:both"></div>
 		/// @return   L'angle en degrés entre ces 2 vecteurs.
-		static float angle(const fvec2 &v1, const fvec2 &v2);
+		DE_API static float angle(const fvec2 &v1, const fvec2 &v2);
 
 		/// @brief     Retourne le résultat de la multiplication entre un vecteur et une matrice.
 		/// @param v   Vecteur.
@@ -222,31 +220,32 @@ namespace deep
 		///            <img src="vec2_mat_multiplication.png" align="left">
 		///            <div style="clear:both"></div>
 		/// @return    Le vecteur résultant de ce calcul.
-		static fvec2 mul(const fvec2 &v, const fmat2x2 &mat);
+		DE_API static fvec2 mul(const fvec2 &v, const fmat2x2 &mat);
 
 		/// @brief   Retourne le vecteur avec une direction opposé à celui passé en paramètre.
 		/// @param v Le vecteur à inverser.
 		/// @return  Le vecteur inversé.
-		static fvec2 inv(const fvec2 &v);
+		DE_API static fvec2 inv(const fvec2 &v);
 
 		/// @brief    Fait une interpolation linéaire entre 2 vecteurs pour récupérer la composante X à une valeur Y.
 		/// @param v1 Vecteur 1.
 		/// @param v2 Vecteur 2.
 		/// @param y  La valeur Y à laquelle interpoler X.
 		/// @return   La valeur d'interpolation X entre ces 2 vecteurs.
-		static fvec2 interpolateX(const fvec2 &v1, const fvec2 &v2, float y);
+		DE_API static fvec2 interpolateX(const fvec2 &v1, const fvec2 &v2, float y);
 
 		/// @brief    Fait une interpolation linéaire entre 2 vecteurs pour récupérer la composante Y à une valeur X.
 		/// @param v1 Vecteur 1.
 		/// @param v2 Vecteur 2.
 		/// @param x  La valeur X à laquelle interpoler Y.
 		/// @return   La valeur d'interpolation Y entre ces 2 vecteurs.
-		static fvec2 interpolateY(const fvec2 &v1, const fvec2 &v2, float x);
+		DE_API static fvec2 interpolateY(const fvec2 &v1, const fvec2 &v2, float x);
 	};
 
 	/// @struct fvec3
 	/// @brief	Vecteur à 3 dimensions avec des composantes de type flottant.
-	struct DE_API fvec3 {
+	struct fvec3
+	{
 		float x;    ///< Composante X du vecteur.
 		float y;    ///< Composante Y du vecteur.
 		float z;    ///< Composante Z du vecteur.
@@ -255,47 +254,47 @@ namespace deep
 		/// @param x Valeur de la composante X.
 		/// @param y Valeur de la composante Y.
 		/// @param z Valeur de la composante Z.
-		fvec3(float x = 0.0f, float y = 0.0f, float z = 1.0f);
+		DE_API fvec3(float x = 0.0f, float y = 0.0f, float z = 1.0f);
 
 		/// @brief   Surcharge qui retourne le résultat de cette fonction : \ref add(const fvec3 &v1, const fvec3 &v2).
 		/// @param v Le vecteur à additionner avec le vecteur courant.
 		/// @return  Le vecteur résultant du calcul d'addition entre 2 vecteurs.
-		fvec3 operator+(const fvec3 &v) const;
+		DE_API fvec3 operator+(const fvec3 &v) const;
 
 		/// @brief            Surcharge qui retourne le résultat de cette fonction : \ref add(const fvec3 &v, float valueToAdd).
 		/// @param valueToAdd La valeur à ajouter au vecteur courant.
 		/// @return           Le vecteur résultant du calcul d'addition entre un vecteur et une valeur constante.
-		fvec3 operator+(float valueToAdd) const;
+		DE_API fvec3 operator+(float valueToAdd) const;
 
-		void operator+=(const fvec3 &v);
+		DE_API void operator+=(const fvec3 &v);
 
-		void operator+=(float value);
+		DE_API void operator+=(float value);
 
 		/// @brief   Surcharge qui retourne le résultat de cette fonction : \ref sub(const fvec3 &v1, const fvec3 &v2).
 		/// @param v Le vecteur à soustraire du vecteur courant.
 		/// @return  Le vecteur résultant du calcul de soustraction entre 2 vecteurs.
-		fvec3 operator-(const fvec3 &v) const;
+		DE_API fvec3 operator-(const fvec3 &v) const;
 
 		/// @brief            Surcharge qui retourne le résultat de cette fonction : \ref sub(const fvec3 &v, float valueToSub).
 		/// @param valueToSub La valeur à retirer du vecteur courant.
 		/// @return           Le vecteur résultant du calcul de soustraction entre un vecteur et une valeur constante.
-		fvec3 operator-(float valueToSub) const;
+		DE_API fvec3 operator-(float valueToSub) const;
 
-		void operator-=(const fvec3 &v);
+		DE_API void operator-=(const fvec3 &v);
 
 		/// @brief        Surcharge qui retourne le résultat de cette fonction : \ref scale(const fvec3 &v, float scalar).
 		/// @param scalar La valeur scalaire à multiplier au vecteur courant.
 		/// @return       Le vecteur résultant de la multiplication scalaire entre un vecteur et une constante.
-		fvec3 operator*(float scalar) const;
+		DE_API fvec3 operator*(float scalar) const;
 
 		/// @brief     Surcharge qui retourne le résultat de cette fonction : \ref mul(const fvec3 &v, const fmat3x3 &mat).
 		/// @param mat La matrice à multiplier au vecteur courant.
 		/// @return    Le vecteur résultant de la multiplication entre un vecteur et une matrice.
-		fvec3 operator*(const fmat3x3 &mat) const;
+		DE_API fvec3 operator*(const fmat3x3 &mat) const;
 
 		/// @brief        Surcharge qui effectue cette fonction : \ref scale(const fvec3 &v, float scalar) sur le vecteur courant.
 		/// @param scalar Le scalaire à multiplier sur le vecteur courant.
-		void operator*=(float scalar);
+		DE_API void operator*=(float scalar);
 
 		/// @brief    Retourne le résultat de l'addition entre 2 vecteurs.
 		/// @param v1 Vecteur 1.
@@ -304,7 +303,7 @@ namespace deep
 		///           <img src="vec3_addition.png" align="left">
 		///           <div style="clear:both"></div>
 		/// @return   Le vecteur résultant de ce calcul.
-		static fvec3 add(const fvec3 &v1, const fvec3 &v2);
+		DE_API static fvec3 add(const fvec3 &v1, const fvec3 &v2);
 
 		/// @brief            Retourne le résultat de l'addition entre un vecteur et une constante.
 		/// @param v          Vecteur.
@@ -313,10 +312,10 @@ namespace deep
 		///                   <img src="vec3_addition_const.png" align="left">
 		///                   <div style="clear:both"></div>
 		/// @return           Le vecteur résultant de ce calcul.
-		static fvec3 add(const fvec3 &v, float valueToAdd);
+		DE_API static fvec3 add(const fvec3 &v, float valueToAdd);
 
-		fvec3 operator+(const fvec2 &v);
-		static fvec3 add(const fvec3 &v1, const fvec2 &v2);
+		DE_API fvec3 operator+(const fvec2 &v);
+		DE_API static fvec3 add(const fvec3 &v1, const fvec2 &v2);
 
 		/// @brief    Retourne le résultat de la soustraction d'un vecteur par un autre.
 		/// @param v1 Vecteur 1.
@@ -325,7 +324,7 @@ namespace deep
 		///           <img src="vec3_substraction.png" align="left">
 		///           <div style="clear:both"></div>
 		/// @return   Le vecteur résultant de ce calcul.
-		static fvec3 sub(const fvec3 &v1, const fvec3 &v2);
+		DE_API static fvec3 sub(const fvec3 &v1, const fvec3 &v2);
 
 		/// @brief            Retourne le résultat de la soustraction entre un vecteur et une constante.
 		/// @param v          Vecteur.
@@ -334,7 +333,7 @@ namespace deep
 		///                   <img src="vec3_substraction_const.png" align="left">
 		///                   <div style="clear:both"></div>
 		/// @return           Le vecteur résultant de ce calcul.
-		static fvec3 sub(const fvec3 &v, float valueToSub);
+		DE_API static fvec3 sub(const fvec3 &v, float valueToSub);
 
 		/// @brief        Retourne la multiplication scalaire entre un vecteur et une constante.
 		/// @param v      Vecteur.
@@ -344,7 +343,7 @@ namespace deep
 		///               <div style="clear:both"></div>
 		///               Cela permet d'agrandir / réduire la longueur d'un vecteur et / ou de changer sa direction.
 		/// @return       Le vecteur résultant de ce calcul.
-		static fvec3 scale(const fvec3 &v, float scalar);
+		DE_API static fvec3 scale(const fvec3 &v, float scalar);
 
 		/// @brief    Retourne le résultat du produit scalaire entre 2 vecteurs.
 		/// @param v1 Vecteur 1.
@@ -362,7 +361,7 @@ namespace deep
 		///           </div>
 		///           <div style="clear: both"></div>
 		/// @return   Le résultat du calcul.
-		static float dot(const fvec3 &v1, const fvec3 &v2);
+		DE_API static float dot(const fvec3 &v1, const fvec3 &v2);
 
 		/// @brief   Retourne la magnitude <i>(la longueur)</i> d'un vecteur.
 		/// @param v Vecteur.
@@ -370,7 +369,7 @@ namespace deep
 		///          <img src="vec3_magn.png" align="left">
 		///          <div style="clear:both"></div>
 		/// @return  La magnitude du vecteur.
-		static float magn(const fvec3 &v);
+		DE_API static float magn(const fvec3 &v);
 
 		/// @brief    Retourne l'angle en degrés entre 2 vecteurs.
 		/// @param v1 Vecteur 1.
@@ -379,7 +378,7 @@ namespace deep
 		///           <img src="vec2_angle.png" align="left">
 		///           <div style="clear:both"></div>
 		/// @return   L'angle en degrés entre ces 2 vecteurs.
-		static float angle(const fvec3 &v1, const fvec3 &v2);
+		DE_API static float angle(const fvec3 &v1, const fvec3 &v2);
 
 		/// @brief     Retourne le résultat de la multiplication entre un vecteur et une matrice.
 		/// @param v   Vecteur.
@@ -388,18 +387,37 @@ namespace deep
 		///            <img src="vec3_mat_multiplication.png" align="left">
 		///            <div style="clear:both"></div>
 		/// @return    Le vecteur résultant de ce calcul.
-		static fvec3 mul(const fvec3 &v, const fmat3x3 &mat);
+		DE_API static fvec3 mul(const fvec3 &v, const fmat3x3 &mat);
 
 		/// @brief   Retourne le vecteur avec une direction opposé à celui passé en paramètre.
 		/// @param v Le vecteur à inverser.
 		/// @return  Le vecteur inversé.
-		static fvec3 inv(const fvec3 &v);
+		DE_API static fvec3 inv(const fvec3 &v);
 
-		static fvec3 normalize(const fvec3 &v);
+		DE_API static fvec3 normalize(const fvec3 &v);
 
-		static fvec3 cross(const fvec3 &v1, const fvec3 &v2);
+		DE_API static fvec3 cross(const fvec3 &v1, const fvec3 &v2);
 
 	};
+
+	template<typename Type>
+	struct vec4
+	{
+		Type x;
+		Type y;
+		Type z;
+		Type w;
+
+		vec4(const Type &x, const Type &y, const Type &z, const Type &w);
+	};
+
+	template<typename Type>
+	vec4<Type>::vec4(const Type &_x, const Type &_y, const Type &_z, const Type &_w)
+		: x(_x),
+		  y(_y),
+		  z(_z),
+		  w(_w)
+	{ }
 
 }
 

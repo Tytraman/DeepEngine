@@ -8,7 +8,8 @@
 namespace deep
 {
 
-	struct DE_API vertex {
+	struct vertex
+	{
 		fvec2 pos;
 		colora color;
 	};

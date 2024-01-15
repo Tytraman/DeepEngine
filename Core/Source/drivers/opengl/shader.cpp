@@ -398,6 +398,17 @@ namespace deep
             return true;
         }
 
+        bool program_manager::add_uniform(const char *uniformName, int location, const vec4<float> &value)
+        {
+            hash_entry<program_item> *prog = m_Programs[m_CurrentID];
+            if(prog == nullptr)
+                return false;
+
+            prog->value.fv4Uniforms.insert(uniformName, pair(location, value));
+
+            return true;
+        }
+
         /*
         ============================
         program_manager::set_uniform
@@ -470,6 +481,26 @@ namespace deep
                 return false;
 
             hash_entry<pair<int, fmat4x4>> *uni = prog->value.fm4Uniforms[uniformName];
+            if(uni == nullptr)
+                return false;
+
+            uni->value.value2() = value;
+
+            return true;
+        }
+
+        /*
+        ============================
+        program_manager::set_uniform
+        ============================
+        */
+        bool program_manager::set_uniform(const char *uniformName, const vec4<float> &value)
+        {
+            hash_entry<program_item> *prog = m_Programs[m_CurrentID];
+            if(prog == nullptr)
+                return false;
+
+            hash_entry<pair<int, vec4<float>>> *uni = prog->value.fv4Uniforms[uniformName];
             if(uni == nullptr)
                 return false;
 
@@ -649,6 +680,11 @@ namespace deep
             hash_table_iterator<pair<int, fmat4x4>> fm4UniEnd = prog->value.fm4Uniforms.end();
             for(; fm4UniBeg != fm4UniEnd; ++fm4UniBeg)
                 uniform_manager::send(fm4UniBeg->value.value1(), fm4UniBeg->value.value2());
+
+            hash_table_iterator<pair<int, vec4<float>>> fv4UniBeg = prog->value.fv4Uniforms.begin();
+            hash_table_iterator<pair<int, vec4<float>>> fv4UniEnd = prog->value.fv4Uniforms.end();
+            for(; fv4UniBeg != fv4UniEnd; ++fv4UniBeg)
+                uniform_manager::send(fv4UniBeg->value.value1(), fv4UniBeg->value.value2());
 
             return true;
         }

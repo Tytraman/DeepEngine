@@ -126,10 +126,18 @@ namespace deep
                 const colora &color4,
                 const colora &color5,
                 const colora &color6,
-                const cube_texture_points &texturePoints = cube_texture_points()
+                const cube_texture_points &texturePoints
             );
 
-            DE_API static polygon create_cube(const char *name);
+            DE_API static polygon create_cube(
+                const char *name,
+                const vec4<float> &color1,
+                const vec4<float> &color2,
+                const vec4<float> &color3,
+                const vec4<float> &color4,
+                const vec4<float> &color5,
+                const vec4<float> &color6
+            );
 
             DE_API static entity_manager::entity create_cubemap(
                 const char *name,

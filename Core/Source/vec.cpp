@@ -3,10 +3,10 @@
 
 /*
 ==========
-vec2::draw
+ivec2::draw
 ==========
 */
-void deep::vec2::draw(renderer &renderer) const
+void deep::ivec2::draw(renderer &renderer) const
 {
 	renderer.drawLine(0, 0, x, y);
 }

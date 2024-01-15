@@ -281,7 +281,7 @@ int main()
         return EXIT_FAILURE;
     }
 
-    if(!mcGrass.add(mcDirt, deep::vec2(0, mcGrass.get_height())))
+    if(!mcGrass.add(mcDirt, deep::ivec2(0, mcGrass.get_height())))
     {
         fprintf(stderr, "Unable to add bmp image.\n");
         return EXIT_FAILURE;
@@ -319,6 +319,10 @@ int main()
 
     deep::bmp skyboxTop;
     skyboxTop.create_from_file("..\\resources\\textures\\skybox_top.bmp");
+
+    deep::vec4<float> black(0.0f, 0.0f, 0.0f, 1.0);
+    deep::vec4<float> white(1.0f, 1.0f, 1.0f, 1.0);
+    deep::vec4<float> red(1.0f, 0.0f, 0.0f, 1.0f);
 
     deep::GL3::gl_id skybox = textureManager->create_2D("skybox", deep::GL3::texture_manager::gl_texture_type::texture_cubemap);
     textureManager->bind(skybox);
@@ -385,6 +389,10 @@ int main()
     if(skyboxCube != -1)
         programManager->add_uniform("skybox", skyboxCube, 0);
 
+    // ===== LIGHTED OBJECT ===== //
+
+    deep::fvec3 lightSourcePos = deep::fvec3(-1.5f, 4.0f, -1.0f);
+
     programManager->use(lightedObjectProgram);
     
     mTrs = deep::GL3::uniform_manager::find(defaultProgram, "mTrs");
@@ -415,13 +423,18 @@ int main()
     if(proj != -1)
         programManager->add_uniform("proj", proj, deep::fmat4x4(0.0f));
 
-    int objectColorLoc = deep::GL3::uniform_manager::find(lightedObjectProgram, "deObjectColor");
+    int objectColorLoc = deep::GL3::uniform_manager::find(lightedObjectProgram, "deAmbient");
     if(objectColorLoc != -1)
-        programManager->add_uniform("deObjectColor", objectColorLoc, deep::fvec3(1.0f, 0.5f, 0.31f));
+        programManager->add_uniform("deAmbient", objectColorLoc, deep::vec4<float>(1.31f, 0.75f, 0.06f, 1.0f));
 
-    int lightColorLoc = deep::GL3::uniform_manager::find(lightedObjectProgram, "deLightColor");
-    if(lightColorLoc != -1)
-        programManager->add_uniform("deLightColor", lightColorLoc, deep::fvec3(1.0f, 0.0f, 0.0f));
+    objectColorLoc = deep::GL3::uniform_manager::find(lightedObjectProgram, "deLightPos");
+    if(objectColorLoc != -1)
+        programManager->add_uniform("deLightPos", objectColorLoc, lightSourcePos);
+
+
+
+    // ===========================================
+
 
     programManager->use(lightSourceObjectProgram);
 
@@ -458,8 +471,6 @@ int main()
     int postScreenTexture = deep::GL3::uniform_manager::find(postProcessProgram, "screenTexture");
     if(postScreenTexture != -1)
         programManager->add_uniform("screenTexture", postScreenTexture, 0);
-
-    deep::colora white(255, 255, 255, 255);
 
     deep::entity_manager *entityManager = deep::entity_manager::get_singleton();
 
@@ -514,11 +525,11 @@ int main()
         }
     }*/
 
-    deep::polygon lightedCube = deep::graphic::create_cube("lighted_cube");
-    deep::polygon lightSourceCube = deep::graphic::create_cube("light_source_cube");
+    deep::polygon lightedCube = deep::graphic::create_cube("lighted_cube", red, red, red, red, red, red);
+    deep::polygon lightSourceCube = deep::graphic::create_cube("light_source_cube", white, white, white, white, white, white);
 
-    entityManager->create_entity("lighted_entity", collectionID, lightedCube, lightedObjectProgram, deep::fvec3(0.0f, 10.0f, 0.0f), deep::fvec3(5.0f, 5.0f, 5.0f));
-    entityManager->create_entity("light_source_entity", collectionID, lightSourceCube, lightSourceObjectProgram, deep::fvec3(-1.5f, 18.0f, 0.0f), deep::fvec3(1.0f, 1.0f, 1.0f));
+    entityManager->create_entity("lighted_entity", collectionID, lightedCube, lightedObjectProgram, deep::fvec3(0.0f, 0.0f, -5.0f), deep::fvec3(3.0f, 3.0f, 3.0f));
+    entityManager->create_entity("light_source_entity", collectionID, lightSourceCube, lightSourceObjectProgram, lightSourcePos, deep::fvec3(1.0f, 1.0f, 1.0f));
 
     // Affiche la skybox à la fin pour optimiser les appelles au fragment shader = FPS++
     //deep::entity_manager::entity skyboxEnt = deep::graphic::create_cubemap("skybox", skyboxProgram, collectionID, deep::fvec3(0.0f, 0.0f, 0.0f), 5005.0f, 105.0f, 2005.0f, skybox, 0);
