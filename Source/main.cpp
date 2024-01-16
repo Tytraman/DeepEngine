@@ -321,8 +321,8 @@ int main()
     skyboxTop.create_from_file("..\\resources\\textures\\skybox_top.bmp");
 
     deep::vec4<float> black(0.0f, 0.0f, 0.0f, 1.0);
-    deep::vec4<float> lightCubeColor(91.0f / 255.0f, 16.0f / 255.0f, 239.0f / 255.0f, 1.0);
-    deep::vec4<float> lightedCubeColor(1.0f, 1.0f, 1.0f, 1.0f);
+    deep::vec4<float> lightCubeColor(1.0f, 1.0f, 1.0f, 1.0);
+    deep::vec4<float> lightedCubeColor(1.0f, 0.5f, 0.31f, 1.0f);
 
     deep::GL3::gl_id skybox = textureManager->create_2D("skybox", deep::GL3::texture_manager::gl_texture_type::texture_cubemap);
     textureManager->bind(skybox);
@@ -391,7 +391,7 @@ int main()
 
     // ===== LIGHTED OBJECT ===== //
 
-    deep::fvec3 lightSourcePos = deep::fvec3(-1.5f, 4.0f, -1.0f);
+    deep::fvec3 lightSourcePos = deep::fvec3(-3.5f, 4.0f, -1.0f);
 
     programManager->use(lightedObjectProgram);
     
@@ -425,7 +425,7 @@ int main()
 
     int objectColorLoc = deep::GL3::uniform_manager::find(lightedObjectProgram, "deAmbient");
     if(objectColorLoc != -1)
-        programManager->add_uniform("deAmbient", objectColorLoc, deep::vec4<float>(0.25f, 0.25f, 0.25f, 1.0f));
+        programManager->add_uniform("deAmbient", objectColorLoc, lightedCubeColor);
 
     objectColorLoc = deep::GL3::uniform_manager::find(lightedObjectProgram, "deLightPos");
     if(objectColorLoc != -1)
@@ -434,6 +434,10 @@ int main()
     objectColorLoc = deep::GL3::uniform_manager::find(lightedObjectProgram, "deLightColor");
     if(objectColorLoc != -1)
         programManager->add_uniform("deLightColor", objectColorLoc, lightCubeColor);
+
+    objectColorLoc = deep::GL3::uniform_manager::find(lightedObjectProgram, "deViewPos");
+    if(objectColorLoc != -1)
+        programManager->add_uniform("deViewPos", objectColorLoc, deep::fvec3());
 
     // ===========================================
 

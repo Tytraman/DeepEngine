@@ -36,3 +36,8 @@ Il est important d'appliquer la matrice de transformation au vecteur normal, **c
 ### Specular
 
 Cette étape permet de refléter la lumière sur l'objet. Le niveau de reflection dépend d'à quel point la surface à un effet 'miroir', représenter par ce qu'on appelle `shininess`.
+
+Le paramètre `shininess` a cet impact visuel :
+![[basic_lighting_specular_shininess.png]]
+Moins la valeur est haute et plus la lumière se diffuse sur l'objet.
+

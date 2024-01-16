@@ -11,16 +11,26 @@ uniform vec4 deAmbient;     // Lumière d'ambiance.
 uniform vec3 deLightPos;    // Position de la source lumineuse.
 uniform vec4 deLightColor;  // Couleur de la source lumineuse.
 
+uniform vec3 deViewPos;     // Position de la caméra.
+
 void main()
 {
+    const float specularStrength = 0.5;
+
     vec3 lightDir = normalize(deLightPos - fragPos);    // Récupère le vecteur unitaire (longueur = 1) de la direction entre la source et le fragment.
     
     float diff = max(0.0, dot(normal, lightDir));       // Calcule la luminance selon l'angle entre la direction de la lumière vers la normale et la direction de la normale.
     vec4 diffuse = diff * deLightColor;                 // Intensité de la couleur de diffusion.
 
+    vec3 viewDir = normalize(deViewPos - fragPos);
+    vec3 reflectDir = reflect(-lightDir, normal);
+
+    float spec = pow(max(0.0, dot(viewDir, reflectDir)), 32);
+    vec4 specular = specularStrength * spec * deLightColor;
+
     // Lorsqu'aucune diffusion n'est appliquée, la lumière d'ambiance est tout de même visible,
     // donc pour garder cette effet de luminance il faut ajouter à la lumière d'ambiance la lumière de diffusion.
-    vec4 result = (deAmbient + diffuse) * color;
+    vec4 result = (deAmbient + diffuse + specular) * color;
 
     FragColor = result;
 }
