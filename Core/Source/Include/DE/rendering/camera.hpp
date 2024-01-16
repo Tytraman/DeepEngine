@@ -13,26 +13,26 @@ namespace deep
 	{
 
 		public:
-			DE_API camera(const fvec3 &position, const fvec3 &front, const fvec3 &baseUp = fvec3(0.0f, 1.0f, 0.0f));
+			DE_API camera(const vec3<float> &position, const vec3<float> &front, const vec3<float> &baseUp = vec3<float>(0.0f, 1.0f, 0.0f));
 
 			/// @brief Met à jour l'angle de vision après avoir modifié le 'yaw' et le 'pitch' de la caméra.
 			DE_API void update_angle_of_view();
 
 			/// @brief  Récupère la position relative au monde de la caméra.
 			/// @return La position relative au monde de la caméra.
-			DE_API fvec3 get_position() const;
+			DE_API vec3<float> get_position() const;
 
 			/// @brief  Récupère le vecteur qui pointe vers le haut.
 			/// @return Le vecteur qui pointe vers le haut.
-			DE_API fvec3 get_base_up() const;
+			DE_API vec3<float> get_base_up() const;
 
 			/// @brief  Récupère le vecteur qui pointe vers l'avant de la caméra.
 			/// @return Le vecteur qui pointe vers l'avant de la caméra.
-			DE_API fvec3 get_front() const;
+			DE_API vec3<float> get_front() const;
 
 			/// @brief  Récupère le vecteur qui pointe vers le haut de la caméra en prenant en compte l'angle de vision.
 			/// @return Le vecteur qui pointe vers le haut de la caméra.
-			DE_API fvec3 get_up() const;
+			DE_API vec3<float> get_up() const;
 
 			/// @brief  Récupère l'angle de vision horizontale de la caméra.
 			/// @return L'angle de vision horizontale en degrées de la caméra.
@@ -45,7 +45,7 @@ namespace deep
 			DE_API void set_yaw(float value);
 			DE_API void set_pitch(float value);
 
-			DE_API void set_position(const fvec3 &pos);
+			DE_API void set_position(const vec3<float> &pos);
 
 			DE_API void move_right(float value);
 			DE_API void move_left(float value);
@@ -57,10 +57,10 @@ namespace deep
 			DE_API fmat4x4 get_look_at() const;
 
 		private:
-			fvec3 m_Position;    ///< Position de la caméra.
-			fvec3 m_BaseUp;      ///< Vecteur qui pointe vers le haut sans jamais changer.
-			fvec3 m_Front;       ///< Correspond à l'axe Z de la caméra.
-			fvec3 m_Up;          ///< Correspond à l'axe Y de la caméra.
+			vec3<float> m_Position;    ///< Position de la caméra.
+			vec3<float> m_BaseUp;      ///< Vecteur qui pointe vers le haut sans jamais changer.
+			vec3<float> m_Front;       ///< Correspond à l'axe Z de la caméra.
+			vec3<float> m_Up;          ///< Correspond à l'axe Y de la caméra.
 
 			float m_Yaw;         ///< Angle de vision horizontale.
 			float m_Pitch;       ///< Angle de vision verticale.
@@ -72,7 +72,7 @@ namespace deep
 	camera::get_position
 	====================
 	*/
-	inline fvec3 camera::get_position() const
+	inline vec3<float> camera::get_position() const
 	{
 		return m_Position;
 	}
@@ -82,7 +82,7 @@ namespace deep
 	camera::get_base_up
 	===================
 	*/
-	inline fvec3 camera::get_base_up() const
+	inline vec3<float> camera::get_base_up() const
 	{
 		return m_BaseUp;
 	}
@@ -92,7 +92,7 @@ namespace deep
 	camera::get_front
 	=================
 	*/
-	inline fvec3 camera::get_front() const
+	inline vec3<float> camera::get_front() const
 	{
 		return m_Front;
 	}
@@ -102,7 +102,7 @@ namespace deep
 	camera::get_up
 	==============
 	*/
-	inline fvec3 camera::get_up() const
+	inline vec3<float> camera::get_up() const
 	{
 		return m_Up;
 	}
@@ -152,7 +152,7 @@ namespace deep
 	camera::set_position
 	====================
 	*/
-	inline void camera::set_position(const fvec3 &pos)
+	inline void camera::set_position(const vec3<float> &pos)
 	{
 		m_Position = pos;
 	}

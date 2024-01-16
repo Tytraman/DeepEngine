@@ -135,8 +135,8 @@ namespace deep
         entity_collection_id collection,
         const polygon &pol,
         GL3::gl_id program,
-        const fvec3 &position,
-        const fvec3 &size,
+        const vec3<float> &position,
+        const vec3<float> &size,
         GL3::gl_id texture,
         uint8_t textureUnit)
     {

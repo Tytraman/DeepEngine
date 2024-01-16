@@ -81,7 +81,7 @@ namespace deep
     scene::scene(const char *name)
         : m_ColliderCallback(nullptr),
           m_ColliderOutCallback(nullptr),
-          m_Camera(fvec3(0.5f, 0.5f, 0.0f), fvec3(0.0f, 0.0f, -1.0f)),
+          m_Camera(vec3<float>(0.5f, 0.5f, 0.0f), vec3<float>(0.0f, 0.0f, -1.0f)),
           m_Name(string_utils::copy(name))
     {
         entity_manager *entityManager = entity_manager::get_singleton();

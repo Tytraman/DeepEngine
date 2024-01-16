@@ -401,6 +401,150 @@ namespace deep
 	};
 
 	template<typename Type>
+	struct vec3
+	{
+		Type x;
+		Type y;
+		Type z;
+
+		vec3(const Type &x = Type(), const Type &y = Type(), const Type &z = Type());
+
+		vec3<Type> operator-(const vec3<Type> &vec) const;
+		vec3<Type> &operator-=(const vec3<Type> &vec);
+		vec3<Type> operator+(const vec3<Type> &vec) const;
+		vec3<Type> &operator+=(const vec3<Type> &vec);
+		vec3<Type> operator*(const Type &value) const;
+		vec3<Type> &operator*=(const Type &value);
+
+		static vec3<Type> sub(const vec3<Type> &vec1, const vec3<Type> &vec2);
+		static vec3<Type> add(const vec3<Type> &vec1, const vec3<Type> &vec2);
+		static vec3<Type> mul(const vec3<Type> &vec, const Type &value);
+
+		static float magn(const vec3<Type> &vec);
+		static vec3<Type> normalize(const vec3<Type> &vec);
+		static vec3<Type> cross(const vec3<Type> &vec1, const vec3<Type> &vec2);
+		static float dot(const vec3<Type> &vec1, const vec3<Type> &vec2);
+	};
+
+	template<typename Type>
+	vec3<Type>::vec3(const Type &_x, const Type &_y, const Type &_z)
+		: x(_x),
+		  y(_y),
+		  z(_z)
+	{ }
+
+	template<typename Type>
+	vec3<Type> vec3<Type>::operator-(const vec3<Type> &vec) const
+	{
+		return sub(*this, vec);
+	}
+
+	template<typename Type>
+	vec3<Type> &vec3<Type>::operator-=(const vec3<Type> &vec)
+	{
+		*this = sub(*this, vec);
+
+		return *this;
+	}
+
+	template<typename Type>
+	vec3<Type> vec3<Type>::operator+(const vec3<Type> &vec) const
+	{
+		return add(*this, vec);
+	}
+
+	template<typename Type>
+	vec3<Type> &vec3<Type>::operator+=(const vec3<Type> &vec)
+	{
+		*this = add(*this, vec);
+
+		return *this;
+	}
+
+	template<typename Type>
+	vec3<Type> vec3<Type>::operator*(const Type &value) const
+	{
+		return mul(*this, value);
+	}
+
+	template<typename Type>
+	vec3<Type> &vec3<Type>::operator*=(const Type &value)
+	{
+		*this = mul(*this, value);
+
+		return *this;
+	}	
+
+	template<typename Type>
+	vec3<Type> vec3<Type>::sub(const vec3<Type> &vec1, const vec3<Type> &vec2)
+	{
+		return
+		{
+			vec1.x - vec2.x,
+			vec1.y - vec2.y,
+			vec1.z - vec2.z
+		};
+	}
+
+	template<typename Type>
+	vec3<Type> vec3<Type>::add(const vec3<Type> &vec1, const vec3<Type> &vec2)
+	{
+		return
+		{
+			vec1.x + vec2.x,
+			vec1.y + vec2.y,
+			vec1.z + vec2.z
+		};
+	}
+
+	template<typename Type>
+	vec3<Type> vec3<Type>::mul(const vec3<Type> &vec, const Type &value)
+	{
+		return
+		{
+			vec.x * value,
+			vec.y * value,
+			vec.z * value
+		};
+	}
+
+	template<typename Type>
+	float vec3<Type>::magn(const vec3<Type> &vec)
+	{
+		return sqrtf(vec.x * vec.x + vec.y * vec.y + vec.z * vec.z);
+	}
+
+	template<typename Type>
+	vec3<Type> vec3<Type>::normalize(const vec3<Type> &vec)
+	{
+		float length = magn(vec);
+
+		return
+		{
+			vec.x / length,
+			vec.y / length,
+			vec.z / length
+		};
+	}
+
+	template<typename Type>
+	vec3<Type> vec3<Type>::cross(const vec3<Type> &vec1, const vec3<Type> &vec2)
+	{
+		return
+		{
+			vec1.y * vec2.z - vec1.z * vec2.y,
+			vec1.z * vec2.x - vec1.x * vec2.z,
+			vec1.x * vec2.y - vec1.y * vec2.x
+		};
+	}
+
+	template<typename Type>
+	float vec3<Type>::dot(const vec3<Type> &vec1, const vec3<Type> &vec2)
+	{
+		return vec1.x * vec2.x + vec1.y * vec2.y + vec1.z * vec2.z;
+	}
+
+	template<typename Type>
 	struct vec4
 	{
 		Type x;
@@ -408,7 +552,11 @@ namespace deep
 		Type z;
 		Type w;
 
-		vec4(const Type &x, const Type &y, const Type &z, const Type &w);
+		vec4(const Type &x = Type(), const Type &y = Type(), const Type &z = Type(), const Type &w = Type());
+
+		vec3<Type> xyz() const;
+		vec3<Type> rgb() const;
+		vec3<Type> bgr() const;
 	};
 
 	template<typename Type>
@@ -418,6 +566,39 @@ namespace deep
 		  z(_z),
 		  w(_w)
 	{ }
+
+	template<typename Type>
+	vec3<Type> vec4<Type>::xyz() const
+	{
+		return
+		{
+			x,
+			y,
+			z
+		}
+	}
+	
+	template<typename Type>
+	vec3<Type> vec4<Type>::rgb() const
+	{
+		return
+		{
+			x,
+			y,
+			z
+		};
+	}
+
+	template<typename Type>
+	vec3<Type> vec4<Type>::bgr() const
+	{
+		return
+		{
+			z,
+			y,
+			x
+		};
+	}
 
 }
 

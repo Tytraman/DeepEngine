@@ -308,8 +308,8 @@ namespace deep
 
                     if(transformation != nullptr)
                     {
-                        fvec3 translation = transformation->get_translation();
-                        fvec3 scaling = transformation->get_scaling();
+                        vec3<float> translation = transformation->get_translation();
+                        vec3<float> scaling = transformation->get_scaling();
                         float rotationX = transformation->get_rotation_X();
                         float rotationY = transformation->get_rotation_Y();
                         float rotationZ = transformation->get_rotation_Z();
@@ -622,7 +622,7 @@ namespace deep
 
                                 if(addTransformationComponent)
                                 {
-                                    component_id id = componentManager->create_transformation_component(fvec3(x, y, z), fvec3(sx, sy, sz), rotation);
+                                    component_id id = componentManager->create_transformation_component(vec3<float>(x, y, z), vec3<float>(sx, sy, sz), rotation);
 
                                     entityManager->attach_component(ent.get_entity_id(), ent.get_collection_id(), id);
                                 }
@@ -819,7 +819,7 @@ cancel_component: ;
             scene *currentScene = scene::get_scene(scene::get_active_scene_id());
             camera &camera = currentScene->get_attached_camera();
 
-            fvec3 camPos = camera.get_position();
+            vec3<float> camPos = camera.get_position();
 
             string positionX("X: ");
             positionX.append(std::to_string(camPos.x).c_str());

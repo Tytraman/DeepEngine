@@ -371,22 +371,6 @@ namespace deep
         program_manager::add_uniform
         ============================
         */
-        bool program_manager::add_uniform(const char *uniformName, int location, const fvec3 &value)
-        {
-            hash_entry<program_item> *prog = m_Programs[m_CurrentID];
-            if(prog == nullptr)
-                return false;
-
-            prog->value.fv3Uniforms.insert(uniformName, pair(location, value));
-
-            return true;
-        }
-
-        /*
-        ============================
-        program_manager::add_uniform
-        ============================
-        */
         bool program_manager::add_uniform(const char *uniformName, int location, const fmat4x4 &value)
         {
             hash_entry<program_item> *prog = m_Programs[m_CurrentID];
@@ -394,6 +378,17 @@ namespace deep
                 return false;
 
             prog->value.fm4Uniforms.insert(uniformName, pair(location, value));
+
+            return true;
+        }
+
+        bool program_manager::add_uniform(const char *uniformName, int location, const vec3<float> &value)
+        {
+            hash_entry<program_item> *prog = m_Programs[m_CurrentID];
+            if(prog == nullptr)
+                return false;
+
+            prog->value.fv3Uniforms.insert(uniformName, pair(location, value));
 
             return true;
         }
@@ -454,13 +449,13 @@ namespace deep
         program_manager::set_uniform
         ============================
         */
-        bool program_manager::set_uniform(const char *uniformName, const fvec3 &value)
+        bool program_manager::set_uniform(const char *uniformName, const vec3<float> &value)
         {
             hash_entry<program_item> *prog = m_Programs[m_CurrentID];
             if(prog == nullptr)
                 return false;
 
-            hash_entry<pair<int, fvec3>> *uni = prog->value.fv3Uniforms[uniformName];
+            hash_entry<pair<int, vec3<float>>> *uni = prog->value.fv3Uniforms[uniformName];
             if(uni == nullptr)
                 return false;
 
@@ -671,8 +666,8 @@ namespace deep
             for(; iUniBeg != iUniEnd; ++iUniBeg)
                 uniform_manager::send(iUniBeg->value.value1(), iUniBeg->value.value2());
 
-            hash_table_iterator<pair<int, fvec3>> fv3UniBeg = prog->value.fv3Uniforms.begin();
-            hash_table_iterator<pair<int, fvec3>> fv3UniEnd = prog->value.fv3Uniforms.end();
+            hash_table_iterator<pair<int, vec3<float>>> fv3UniBeg = prog->value.fv3Uniforms.begin();
+            hash_table_iterator<pair<int, vec3<float>>> fv3UniEnd = prog->value.fv3Uniforms.end();
             for(; fv3UniBeg != fv3UniEnd; ++fv3UniBeg)
                 uniform_manager::send(fv3UniBeg->value.value1(), fv3UniBeg->value.value2());
 

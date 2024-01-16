@@ -52,26 +52,26 @@ namespace deep
     {
         
         public:
-            DE_API fvec3 get_translation() const;
-            DE_API fvec3 get_scaling() const;
+            DE_API vec3<float> get_translation() const;
+            DE_API vec3<float> get_scaling() const;
             DE_API float get_rotation_X() const;
             DE_API float get_rotation_Y() const;
             DE_API float get_rotation_Z() const;
 
-            DE_API void set_translation(const fvec3 &translation);
-            DE_API void set_scaling(const fvec3 &scaling);
+            DE_API void set_translation(const vec3<float> &translation);
+            DE_API void set_scaling(const vec3<float> &scaling);
             DE_API void set_rotation_X(float rotation);
             DE_API void set_rotation_Y(float rotation);
             DE_API void set_rotation_Z(float rotation);
 
         private:
-            fvec3 m_Translation;
-            fvec3 m_Scaling;
+            vec3<float> m_Translation;
+            vec3<float> m_Scaling;
             float m_RotationX;
             float m_RotationY;
             float m_RotationZ;
 
-            transformation_component(const fvec3 &translation, const fvec3 &scaling, float rotationX = 0.0f, float rotationY = 0.0f, float rotationZ = 0.0f);
+            transformation_component(const vec3<float> &translation, const vec3<float> &scaling, float rotationX = 0.0f, float rotationY = 0.0f, float rotationZ = 0.0f);
 
             friend component_manager;
             friend system_manager;
@@ -81,11 +81,11 @@ namespace deep
     {
 
         public:
-            DE_API fvec3 get_velocity() const;
-            DE_API void set_velocity(const fvec3 &vel);
+            DE_API vec3<float> get_velocity() const;
+            DE_API void set_velocity(const vec3<float> &vel);
 
         private:
-            fvec3 m_Velocity;
+            vec3<float> m_Velocity;
 
             velocity_component();
 
@@ -111,10 +111,10 @@ namespace deep
     {
 
         public:
-            fvec2 acceleration;
+            vec3<float> acceleration;
 
         private:
-            acceleration_component(const fvec2 &acceleration);
+            acceleration_component(const vec3<float> &acceleration);
 
             friend component_manager;
     };
@@ -160,7 +160,7 @@ namespace deep
             DE_API drawable_component *get_drawable_component(component_id component);
             DE_API void delete_drawable_component(component_id id);
 
-            DE_API component_id create_transformation_component(const fvec3 &translation, const fvec3 &scaling = fvec3(1.0f, 1.0f, 1.0f), float rotation = 0.0f);
+            DE_API component_id create_transformation_component(const vec3<float> &translation, const vec3<float> &scaling = vec3<float>(1.0f, 1.0f, 1.0f), float rotation = 0.0f);
             DE_API transformation_component *get_transformation_component(component_id component);
             DE_API void delete_transformation_component(component_id id);
 
@@ -172,7 +172,7 @@ namespace deep
             DE_API velocity_component *get_velocity_component(component_id component);
             DE_API void delete_velocity_component(component_id id);
 
-            DE_API component_id create_acceleration_component(const fvec2 &acceleration);
+            DE_API component_id create_acceleration_component(const vec3<float> &acceleration);
             DE_API acceleration_component *get_acceleration_component(component_id component);
             DE_API void delete_acceleration_component(component_id component);
             
@@ -328,7 +328,7 @@ namespace deep
     transformation_component::get_translation
     ========================================
     */
-    inline fvec3 transformation_component::get_translation() const
+    inline vec3<float> transformation_component::get_translation() const
     {
         return m_Translation;
     }
@@ -338,7 +338,7 @@ namespace deep
     transformation_component::get_scaling
     ====================================
     */
-    inline fvec3 transformation_component::get_scaling() const
+    inline vec3<float> transformation_component::get_scaling() const
     {
         return m_Scaling;
     }
@@ -364,9 +364,9 @@ namespace deep
     }
 
     /*
-    ======================================
+    ========================================
     transformation_component::get_rotation_Z
-    ======================================
+    ========================================
     */
     inline float transformation_component::get_rotation_Z() const
     {
@@ -374,29 +374,29 @@ namespace deep
     }
 
     /*
-    ========================================
+    =========================================
     transformation_component::set_translation
-    ========================================
+    =========================================
     */
-    inline void transformation_component::set_translation(const fvec3 &translation)
+    inline void transformation_component::set_translation(const vec3<float> &translation)
     {
         m_Translation = translation;
     }
 
     /*
-    ====================================
+    =====================================
     transformation_component::set_scaling
-    ====================================
+    =====================================
     */
-    inline void transformation_component::set_scaling(const fvec3 &scaling)
+    inline void transformation_component::set_scaling(const vec3<float> &scaling)
     {
         m_Scaling = scaling;
     }
 
     /*
-    ======================================
+    ========================================
     transformation_component::set_rotation_X
-    ======================================
+    ========================================
     */
     inline void transformation_component::set_rotation_X(float rotation)
     {
@@ -404,9 +404,9 @@ namespace deep
     }
 
     /*
-    ======================================
+    ========================================
     transformation_component::set_rotation_Y
-    ======================================
+    ========================================
     */
     inline void transformation_component::set_rotation_Y(float rotation)
     {
@@ -414,21 +414,21 @@ namespace deep
     }
 
     /*
-    ======================================
+    ========================================
     transformation_component::set_rotation_Z
-    ======================================
+    ========================================
     */
     inline void transformation_component::set_rotation_Z(float rotation)
     {
         m_RotationZ = rotation;
     }
 
-    inline fvec3 velocity_component::get_velocity() const
+    inline vec3<float> velocity_component::get_velocity() const
     {
         return m_Velocity;
     }
 
-    inline void velocity_component::set_velocity(const fvec3 &vel)
+    inline void velocity_component::set_velocity(const vec3<float> &vel)
     {
         m_Velocity = vel;
     }

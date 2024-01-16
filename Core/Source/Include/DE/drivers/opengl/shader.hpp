@@ -67,7 +67,7 @@ namespace deep
                     GLuint program;
                     hash_table<pair<int, float>> fUniforms;
                     hash_table<pair<int, int>> iUniforms;
-                    hash_table<pair<int, fvec3>> fv3Uniforms;
+                    hash_table<pair<int, vec3<float>>> fv3Uniforms;
                     hash_table<pair<int, vec4<float>>> fv4Uniforms;
                     hash_table<pair<int, fmat4x4>> fm4Uniforms;
 
@@ -89,15 +89,16 @@ namespace deep
 
                 DE_API bool add_uniform(const char *uniformName, int location, float value);
                 DE_API bool add_uniform(const char *uniformName, int location, int value);
-                DE_API bool add_uniform(const char *uniformName, int location, const fvec3 &value);
                 DE_API bool add_uniform(const char *uniformName, int location, const fmat4x4 &value);
+                DE_API bool add_uniform(const char *uniformName, int location, const vec3<float> &value);
                 DE_API bool add_uniform(const char *uniformName, int location, const vec4<float> &value);
 
                 DE_API bool set_uniform(const char *uniformName, float value);
                 DE_API bool set_uniform(const char *uniformName, int value);
-                DE_API bool set_uniform(const char *uniformName, const fvec3 &value);
-                DE_API bool set_uniform(const char *uniformName, const fmat4x4 &value);
+                DE_API bool set_uniform(const char *uniformName, const vec3<float> &value);
                 DE_API bool set_uniform(const char *uniformName, const vec4<float> &value);
+                DE_API bool set_uniform(const char *uniformName, const fmat4x4 &value);
+                
 
                 DE_API bool raw_link(GLuint program);
                 DE_API bool link(gl_id program);

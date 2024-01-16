@@ -71,7 +71,7 @@ namespace deep
         const char *name,
         GL3::gl_id program,
         entity_collection_id collectionID,
-        const fvec3 &position,
+        const vec3<float> &position,
         float width,
         float height,
         const colora &color,
@@ -84,7 +84,7 @@ namespace deep
         GL3::texture_manager *textureManager = GL3::texture_manager::get_singleton();
 
         component_id drawableComponentID       = componentManager->create_drawable_component(program, vboManager->create(name), vaoManager->create(name));
-        component_id transformationComponentID = componentManager->create_transformation_component(position, fvec3(width, height, 1.0f), 0.0f);
+        component_id transformationComponentID = componentManager->create_transformation_component(position, vec3<float>(width, height, 1.0f), 0.0f);
 
         drawable_component *drawableComponent = componentManager->get_drawable_component(drawableComponentID);
         drawableComponent->texture = textureManager->get_white_texture();
@@ -143,7 +143,7 @@ namespace deep
         const char *name,
         GL3::gl_id program,
         entity_collection_id collectionID,
-        const fvec3 &position,
+        const vec3<float> &position,
         float width,
         float height,
         const colora &color,
@@ -157,7 +157,7 @@ namespace deep
         GL3::vao_manager *vaoManager = GL3::vao_manager::get_singleton();
 
         component_id drawableComponentID       = componentManager->create_drawable_component(program, vboManager->create(name), vaoManager->create(name), texture, textureUnit);
-        component_id transformationComponentID = componentManager->create_transformation_component(position, fvec3(width, height, 1.0f), 0.0f);
+        component_id transformationComponentID = componentManager->create_transformation_component(position, vec3<float>(width, height, 1.0f), 0.0f);
 
         drawable_component *drawableComponent = componentManager->get_drawable_component(drawableComponentID);
         drawableComponent->renderCallback = drawable_component::classic_render_callback;
@@ -215,7 +215,7 @@ namespace deep
         const char *name,
         GL3::gl_id program,
         entity_collection_id collectionID,
-        const fvec3 &position,
+        const vec3<float> &position,
         float width,
         float height,
         float length,
@@ -233,7 +233,7 @@ namespace deep
         GL3::texture_manager *textureManager = GL3::texture_manager::get_singleton();
 
         component_id drawableComponentID       = componentManager->create_drawable_component(program, vboManager->create(name), vaoManager->create(name));
-        component_id transformationComponentID = componentManager->create_transformation_component(position, fvec3(width, height, length), 0.0f);
+        component_id transformationComponentID = componentManager->create_transformation_component(position, vec3<float>(width, height, length), 0.0f);
 
         drawable_component *drawableComponent = componentManager->get_drawable_component(drawableComponentID);
         drawableComponent->texture = textureManager->get_white_texture();
@@ -346,7 +346,7 @@ namespace deep
         const char *name,
         GL3::gl_id program,
         entity_collection_id collectionID,
-        const fvec3 &position,
+        const vec3<float> &position,
         float width,
         float height,
         float length,
@@ -365,7 +365,7 @@ namespace deep
         GL3::vao_manager *vaoManager = GL3::vao_manager::get_singleton();
 
         component_id drawableComponentID       = componentManager->create_drawable_component(program, vboManager->create(name), vaoManager->create(name), texture, textureUnit);
-        component_id transformationComponentID = componentManager->create_transformation_component(position, fvec3(width, height, length), 0.0f);
+        component_id transformationComponentID = componentManager->create_transformation_component(position, vec3<float>(width, height, length), 0.0f);
 
         drawable_component *drawableComponent = componentManager->get_drawable_component(drawableComponentID);
         drawableComponent->renderCallback = drawable_component::classic_render_callback;
@@ -665,7 +665,7 @@ namespace deep
         const char *name,
         GL3::gl_id program,
         entity_collection_id collectionID,
-        const fvec3 &position,
+        const vec3<float> &position,
         float width,
         float height,
         float length,
@@ -679,7 +679,7 @@ namespace deep
         GL3::vao_manager *vaoManager = GL3::vao_manager::get_singleton();
 
         component_id drawableComponentID       = componentManager->create_drawable_component(program, vboManager->create(name), vaoManager->create(name), texture, textureUnit);
-        component_id transformationComponentID = componentManager->create_transformation_component(position, fvec3(width, height, length), 0.0f);
+        component_id transformationComponentID = componentManager->create_transformation_component(position, vec3<float>(width, height, length), 0.0f);
 
         drawable_component *drawableComponent = componentManager->get_drawable_component(drawableComponentID);
         drawableComponent->renderCallback = drawable_component::skybox_render_callback;

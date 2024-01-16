@@ -222,8 +222,8 @@ namespace deep
                 continue;
 
             // Applique la vélocité sur la transformation.
-            fvec3 translation = transformationComponent->get_translation();
-            fvec3 velocity = velocityComponent->get_velocity();
+            vec3<float> translation = transformationComponent->get_translation();
+            vec3<float> velocity = velocityComponent->get_velocity();
             translation += velocity;
             transformationComponent->set_translation(translation);
 
@@ -231,8 +231,8 @@ namespace deep
             component_id colliderComponentID = entityManager->get_component_id(collectionID, entity, component_manager::component_type::collider);
             if(colliderComponentID != badID)
             {
-                collider_component *colliderComponent = componentManager->get_collider_component(colliderComponentID);
-                colliderComponent->contour.pos += velocity;
+                //collider_component *colliderComponent = componentManager->get_collider_component(colliderComponentID);
+                //colliderComponent->contour.pos += velocity;
             }
         }
     }
@@ -415,10 +415,10 @@ namespace deep
                 transformation_component *nextTransformationComponent;
                 entity_id tempID;
 
-                fvec3 position, nextPosition;
-                fvec3 toPosition, toNextPosition;
+                vec3<float> position, nextPosition;
+                vec3<float> toPosition, toNextPosition;
 
-                fvec3 camPosition = cam.get_position();
+                vec3<float> camPosition = cam.get_position();
 
                 // Trie les entités pour afficher en premier les plus lointaines.
                 for(i = 0; i < numberOfEntities - 1; ++i)
@@ -443,7 +443,7 @@ namespace deep
                         toPosition = position - camPosition;
                         toNextPosition = nextPosition - camPosition;
 
-                        if(fvec3::magn(toNextPosition) > fvec3::magn(toPosition))
+                        if(vec3<float>::magn(toNextPosition) > vec3<float>::magn(toPosition))
                         {
                             tempID = entities[i];
                             entities[i] = entities[j];

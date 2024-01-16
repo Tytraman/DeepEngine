@@ -202,7 +202,7 @@ namespace deep
     transformation_component::transformation_component
     ==================================================
     */
-    transformation_component::transformation_component(const fvec3 &translation, const fvec3 &scaling, float rotationX, float rotationY, float rotationZ)
+    transformation_component::transformation_component(const vec3<float> &translation, const vec3<float> &scaling, float rotationX, float rotationY, float rotationZ)
         : m_Translation(translation),
           m_Scaling(scaling),
           m_RotationX(rotationX),
@@ -215,7 +215,7 @@ namespace deep
     component_manager::create_transformation_component
     ================================================
     */
-    component_id component_manager::create_transformation_component(const fvec3 &translation, const fvec3 &scaling, float rotation)
+    component_id component_manager::create_transformation_component(const vec3<float> &translation, const vec3<float> &scaling, float rotation)
     {
         component_id id = m_ComponentCount;
         transformation_component transformation(translation, scaling, rotation);
@@ -290,7 +290,7 @@ namespace deep
     acceleration_component::acceleration_component
     ============================================
     */
-    acceleration_component::acceleration_component(const fvec2 &_acceleration)
+    acceleration_component::acceleration_component(const vec3<float> &_acceleration)
         : acceleration(_acceleration)
     { }
 
@@ -299,7 +299,7 @@ namespace deep
     component_manager::create_acceleration_component
     =============================================
     */
-    component_id component_manager::create_acceleration_component(const fvec2 &acceleration)
+    component_id component_manager::create_acceleration_component(const vec3<float> &acceleration)
     {
         component_id id = m_ComponentCount;
         acceleration_component acc(acceleration);
