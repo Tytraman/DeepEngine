@@ -1,5 +1,5 @@
-#ifndef __DEEP_ENGINE_GRAPHIC_HPP__
-#define __DEEP_ENGINE_GRAPHIC_HPP__
+#ifndef __DEEP_ENGINE_MATERIAL_HPP__
+#define __DEEP_ENGINE_MATERIAL_HPP__
 
 #include "DE/def.hpp"
 #include "DE/types.hpp"
@@ -7,66 +7,36 @@
 #include "DE/memory/hash_table.hpp"
 #include "DE/string.hpp"
 
+#include "DE/drivers/opengl/shader.hpp"
+
 namespace deep
 {
 
-    class material_manager
+    class imaterial
     {
 
         public:
-            struct material_item
-            {
-                string name;
-                fvec3 ambient;
-                fvec3 diffuse;
-                fvec3 specular;
-                float shininess;
-
-                DE_API material_item(const char *name, const fvec3 &ambient, const fvec3 &diffuse, const fvec3 &specular, float shininess);
-            };
-
-        public:
-            DE_API static material_manager *get_singleton();
-
-            DE_API de_id create(const char *name, const fvec3 &ambient, const fvec3 &diffuse, const fvec3 &specular, float shininess);
-
-            DE_API material_item *get(de_id materialID);
-
-        private:
-            material_manager();
-
-            hash_table<material_item> m_Materials;
-
-        public:
-            material_manager(const material_manager &) = delete;
-            material_manager(material_manager &&) = delete;
+            DE_API virtual bool send_data() = 0;
 
     };
 
-    /*
-    ========================
-    material_manager::create
-    ========================
-    */
-    inline de_id material_manager::create(const char *name, const fvec3 &ambient, const fvec3 &diffuse, const fvec3 &specular, float shininess)
+    class color_material : public imaterial
     {
-        hash_entry<material_item> &h = m_Materials.insert(name, material_item(name, ambient, diffuse, specular, shininess));
-        return h.key;
-    }
 
-    /*
-    =====================
-    material_manager::get
-    =====================
-    */
-    inline material_manager::material_item *material_manager::get(de_id materialID)
-    {
-        hash_entry<material_item> *hs = m_Materials[materialID];
-        if(hs == nullptr)
-            return nullptr;
+        public:
+            DE_API color_material(GL3::gl_id program, const vec3<float> &ambient, const vec3<float> &diffuse, const vec3<float> &specular, float shininess);
 
-        return &hs->value;
-    }
+            DE_API bool send_data() override;
+
+        private:
+            vec3<float> m_Ambient;
+            vec3<float> m_Diffuse;
+            vec3<float> m_Specular;
+            float       m_Shininess;
+
+            GL3::gl_id m_Program;
+
+    };
 
 }
 

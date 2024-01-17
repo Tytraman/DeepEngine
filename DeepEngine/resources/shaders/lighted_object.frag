@@ -40,7 +40,7 @@ void main()
     float spec = pow(max(0.0, dot(viewDir, reflectDir)), deMaterial.shininess);
 
     vec3 ambient = deLight.ambient * deMaterial.ambient;
-    vec3 diffuse = deLight.diffuse * (diff * deMaterial.diffuse);      // Intensité de la couleur de diffusion.
+    vec3 diffuse = deLight.diffuse * diff * deMaterial.diffuse;      // Intensité de la couleur de diffusion.
     vec3 specular = deLight.specular * (spec * deMaterial.specular);
 
     // Lorsqu'aucune diffusion n'est appliquée, la lumière d'ambiance est tout de même visible,

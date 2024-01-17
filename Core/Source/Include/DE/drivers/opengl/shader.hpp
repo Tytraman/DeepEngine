@@ -87,17 +87,66 @@ namespace deep
                 DE_API bool attach_shader(const char *progName, gl_id shader);
                 DE_API bool attach_shader(gl_id program, const char *shadName);
 
+                /// @brief Ajoute une entrée d'uniforme dans la liste interne liée au programme actuellement attaché.
+                /// @param uniformName Le nom de l'uniforme à ajouter.
+                /// @param location La localisation de l'uniforme dans le programme du shader.
+                /// @param value La valeur à attribuer.
+                /// @return \c true en cas de succès, \c dans le cas inverse.
                 DE_API bool add_uniform(const char *uniformName, int location, float value);
+                /// @brief Ajoute une entrée d'uniforme dans la liste interne liée au programme actuellement attaché.
+                /// @param uniformName Le nom de l'uniforme à ajouter.
+                /// @param location La localisation de l'uniforme dans le programme du shader.
+                /// @param value La valeur à attribuer.
+                /// @return \c true en cas de succès, \c dans le cas inverse.
                 DE_API bool add_uniform(const char *uniformName, int location, int value);
+                /// @brief Ajoute une entrée d'uniforme dans la liste interne liée au programme actuellement attaché.
+                /// @param uniformName Le nom de l'uniforme à ajouter.
+                /// @param location La localisation de l'uniforme dans le programme du shader.
+                /// @param value La valeur à attribuer.
+                /// @return \c true en cas de succès, \c dans le cas inverse.
                 DE_API bool add_uniform(const char *uniformName, int location, const fmat4x4 &value);
+                /// @brief Ajoute une entrée d'uniforme dans la liste interne liée au programme actuellement attaché.
+                /// @param uniformName Le nom de l'uniforme à ajouter.
+                /// @param location La localisation de l'uniforme dans le programme du shader.
+                /// @param value La valeur à attribuer.
+                /// @return \c true en cas de succès, \c dans le cas inverse.
                 DE_API bool add_uniform(const char *uniformName, int location, const vec3<float> &value);
+                /// @brief Ajoute une entrée d'uniforme dans la liste interne liée au programme actuellement attaché.
+                /// @param uniformName Le nom de l'uniforme à ajouter.
+                /// @param location La localisation de l'uniforme dans le programme du shader.
+                /// @param value La valeur à attribuer.
+                /// @return \c true en cas de succès, \c dans le cas inverse.
                 DE_API bool add_uniform(const char *uniformName, int location, const vec4<float> &value);
 
+
+                /// @brief Modifie la valeur attribuée à un uniforme lié au programme actuellement attaché.
+                /// @param uniformName Le nom de l'uniforme à modifier.
+                /// @param value La valeur à attribuer.
+                /// @return \c true en cas de succès, \c false dans le cas inverse.
                 DE_API bool set_uniform(const char *uniformName, float value);
+                /// @brief Modifie la valeur attribuée à un uniforme lié au programme actuellement attaché.
+                /// @param uniformName Le nom de l'uniforme à modifier.
+                /// @param value La valeur à attribuer.
+                /// @return \c true en cas de succès, \c false dans le cas inverse.
                 DE_API bool set_uniform(const char *uniformName, int value);
+                /// @brief Modifie la valeur attribuée à un uniforme lié au programme actuellement attaché.
+                /// @param uniformName Le nom de l'uniforme à modifier.
+                /// @param value La valeur à attribuer.
+                /// @return \c true en cas de succès, \c false dans le cas inverse.
                 DE_API bool set_uniform(const char *uniformName, const vec3<float> &value);
+                /// @brief Modifie la valeur attribuée à un uniforme lié au programme actuellement attaché.
+                /// @param uniformName Le nom de l'uniforme à modifier.
+                /// @param value La valeur à attribuer.
+                /// @return \c true en cas de succès, \c false dans le cas inverse.
                 DE_API bool set_uniform(const char *uniformName, const vec4<float> &value);
+                /// @brief Modifie la valeur attribuée à un uniforme lié au programme actuellement attaché.
+                /// @param uniformName Le nom de l'uniforme à modifier.
+                /// @param value La valeur à attribuer.
+                /// @return \c true en cas de succès, \c false dans le cas inverse.
                 DE_API bool set_uniform(const char *uniformName, const fmat4x4 &value);
+
+                DE_API bool set_uniform(gl_id program, const char *uniformName, float value);
+                DE_API bool set_uniform(gl_id program, const char *uniformName, const vec3<float> &value);
                 
 
                 DE_API bool raw_link(GLuint program);
@@ -112,6 +161,8 @@ namespace deep
                 DE_API bool destroy(gl_id program);
                 DE_API bool destroy(const char *name);
 
+                /// @brief Envoie les valeurs de tous les uniformes liés au programme actuellement attaché.
+                /// @return \c true en cas de succès, \c false dans le cas inverse.
                 DE_API bool send_uniforms();
                 DE_API void destroy_all_programs();
 

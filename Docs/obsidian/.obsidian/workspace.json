@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "OpenGL/Lumières.md",
+                "file": "C++/Paterne de conception.md",
                 "mode": "source",
                 "source": false
               }
@@ -105,7 +105,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "OpenGL/Lumières.md",
+                "file": "C++/Paterne de conception.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -122,7 +122,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "OpenGL/Lumières.md",
+                "file": "C++/Paterne de conception.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -145,11 +145,12 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "OpenGL/Lumières.md"
+                "file": "C++/Paterne de conception.md"
               }
             }
           }
-        ]
+        ],
+        "currentTab": 4
       }
     ],
     "direction": "horizontal",
@@ -166,18 +167,22 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "bb2f43f72b8547d4",
+  "active": "d41b1b510a6fb05e",
   "lastOpenFiles": [
-    "res/img/basic_lighting_specular_shininess.png",
-    "Maths/dot product.md",
-    "DeepEngine/TODO list.md",
-    "Maths",
-    "OpenGL/Lumières.md",
-    "res/img/phong_reflection_model_example_2.png",
-    "DeepEngine/Materials.md",
+    "Analyses/Godot/RefCounted.md",
     "Analyses/Godot/Materials.md",
     "OpenGL/Normal.md",
-    "Analyses/Godot/RefCounted.md",
+    "OpenGL/Lumières.md",
+    "Maths/dot product.md",
+    "C++/Smart pointers.md",
+    "C++/Paterne de conception.md",
+    "C++/Parallélisme.md",
+    "C++/Alignement des données.md",
+    "res/img/basic_lighting_specular_shininess.png",
+    "DeepEngine/TODO list.md",
+    "Maths",
+    "res/img/phong_reflection_model_example_2.png",
+    "DeepEngine/Materials.md",
     "res/img/lighting_diffuse_3.png",
     "res/img/lighting_diffuse_2.png",
     "res/img/lighting_diffuse_1.png",
@@ -188,10 +193,7 @@
     "Pasted image 20240111102737.png",
     "Pasted image 20240111102654.png",
     "OpenGL",
-    "C++/Parallélisme.md",
     "DeepEngine",
-    "C++/Smart pointers.md",
-    "C++/Alignement des données.md",
     "Analyses/Godot",
     "Analyses",
     "C++",

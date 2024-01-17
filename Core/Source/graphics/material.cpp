@@ -1,39 +1,40 @@
 #include "DE/graphics/material.hpp"
+#include "DE/drivers/opengl/uniform.hpp"
 
 namespace deep
 {
 
     /*
-    ==============================================
-    material_manager::material_item::material_item
-    ==============================================
+    ==============================
+    color_material::color_material
+    ==============================
     */
-    material_manager::material_item::material_item(const char *_name, const fvec3 &_ambient, const fvec3 &_diffuse, const fvec3 &_specular, float _shininess)
-        : name(_name),
-          ambient(_ambient),
-          diffuse(_diffuse),
-          specular(_specular),
-          shininess(_shininess)
-    { }
-    
-    /*
-    ==================================
-    material_manager::material_manager
-    ==================================
-    */
-    material_manager::material_manager()
+    color_material::color_material(GL3::gl_id program, const vec3<float> &ambient, const vec3<float> &diffuse, const vec3<float> &specular, float shininess)
+        : m_Ambient(ambient),
+          m_Diffuse(diffuse),
+          m_Specular(specular),
+          m_Shininess(shininess),
+          m_Program(program)
     { }
 
     /*
-    ===============================
-    material_manager::get_singleton
-    ===============================
+    =========================
+    color_material::send_data
+    =========================
     */
-    material_manager *material_manager::get_singleton()
+    bool color_material::send_data()
     {
-        static material_manager singleton;
+        GL3::program_manager *programManager = GL3::program_manager::get_singleton();
 
-        return &singleton;
+        if(programManager->current_id() != m_Program)
+            programManager->use(m_Program);
+
+        programManager->set_uniform("deMaterial.ambient", m_Ambient);
+        programManager->set_uniform("deMaterial.diffuse", m_Diffuse);
+        programManager->set_uniform("deMaterial.specular", m_Specular);
+        programManager->set_uniform("deMaterial.shininess", m_Shininess);
+
+        return programManager->send_uniforms();
     }
 
 }

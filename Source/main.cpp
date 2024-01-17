@@ -555,9 +555,14 @@ int main()
 
     deep::polygon lightedCube = deep::graphic::create_cube("lighted_cube", lightedCubeColor, lightedCubeColor, lightedCubeColor, lightedCubeColor, lightedCubeColor, lightedCubeColor);
     deep::polygon lightSourceCube = deep::graphic::create_cube("light_source_cube", lightCubeColor, lightCubeColor, lightCubeColor, lightCubeColor, lightCubeColor, lightCubeColor);
+    deep::polygon testLightedCube = deep::graphic::create_cube("test_lightes_cube", lightedCubeColor, lightedCubeColor, lightedCubeColor, lightedCubeColor, lightedCubeColor, lightedCubeColor);
+
 
     entityManager->create_entity("lighted_entity", collectionID, lightedCube, lightedObjectProgram, deep::vec3<float>(0.0f, 0.0f, -5.0f), deep::vec3<float>(3.0f, 3.0f, 3.0f));
     entityManager->create_entity("light_source_entity", collectionID, lightSourceCube, lightSourceObjectProgram, lightSourcePos, deep::vec3<float>(1.0f, 1.0f, 1.0f));
+    entityManager->create_entity("test_lighted_entity", collectionID, testLightedCube, lightedObjectProgram, deep::vec3<float>(0.0f, 6.0f, -5.0f), deep::vec3<float>(3.0f, 3.0f, 3.0f));
+
+    //== deep::component_id testDrawableComponentID 
 
     // Affiche la skybox à la fin pour optimiser les appelles au fragment shader = FPS++
     //deep::entity_manager::entity skyboxEnt = deep::graphic::create_cubemap("skybox", skyboxProgram, collectionID, deep::fvec3(0.0f, 0.0f, 0.0f), 5005.0f, 105.0f, 2005.0f, skybox, 0);

@@ -505,6 +505,46 @@ namespace deep
         }
 
         /*
+        ============================
+        program_manager::set_uniform
+        ============================
+        */
+        bool program_manager::set_uniform(gl_id program, const char *uniformName, float value)
+        {
+            hash_entry<program_item> *prog = m_Programs[program];
+            if(prog == nullptr)
+                return false;
+
+            hash_entry<pair<int, float>> *uni = prog->value.fUniforms[uniformName];
+            if(uni == nullptr)
+                return false;
+
+            uni->value.value2() = value;
+
+            return true;
+        }
+
+        /*
+        ============================
+        program_manager::set_uniform
+        ============================
+        */
+        bool program_manager::set_uniform(gl_id program, const char *uniformName, const vec3<float> &value)
+        {
+            hash_entry<program_item> *prog = m_Programs[program];
+            if(prog == nullptr)
+                return false;
+
+            hash_entry<pair<int, vec3<float>>> *uni = prog->value.fv3Uniforms[uniformName];
+            if(uni == nullptr)
+                return false;
+
+            uni->value.value2() = value;
+
+            return true;
+        }
+
+        /*
         =========================
         program_manager::raw_link
         =========================

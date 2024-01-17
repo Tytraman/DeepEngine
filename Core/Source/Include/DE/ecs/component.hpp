@@ -8,6 +8,7 @@
 #include "DE/memory/list.hpp"
 #include "DE/graphics/vertex.hpp"
 #include "DE/graphics/shape.hpp"
+#include "DE/graphics/material.hpp"
 #include "DE/memory/hash_table.hpp"
 #include "DE/drivers/opengl/renderer.hpp"
 
@@ -38,6 +39,7 @@ namespace deep
         uint8_t textureUnit;
         GL3::gl_id program;
         drawable_render_callback renderCallback;
+        imaterial *material;
 
         DE_API static void classic_render_callback(GL3::gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, camera *camera);
         DE_API static void skybox_render_callback(GL3::gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, camera *camera);

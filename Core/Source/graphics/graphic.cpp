@@ -581,7 +581,7 @@ namespace deep
         float vPos[] =
         {
 
-            // Face avant
+            // Face avant         // Normales
             -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, static_cast<float>(color1.x), static_cast<float>(color1.y), static_cast<float>(color1.z), static_cast<float>(color1.w),  // Bas gauche
              0.5f,  0.5f, -0.5f, 0.0f, 0.0f, -1.0f, static_cast<float>(color1.x), static_cast<float>(color1.y), static_cast<float>(color1.z), static_cast<float>(color1.w),  // Haut droite
              0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, static_cast<float>(color1.x), static_cast<float>(color1.y), static_cast<float>(color1.z), static_cast<float>(color1.w),  // Bas droite
