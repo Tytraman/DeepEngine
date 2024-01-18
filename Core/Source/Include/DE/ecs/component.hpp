@@ -38,14 +38,12 @@ namespace deep
         GL3::gl_id vao;
         ref_counter<imaterial> material;
         drawable_render_callback renderCallback;
-        GL3::gl_id texture;
-        uint8_t textureUnit;
 
         DE_API static void classic_render_callback(GL3::gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, camera *camera);
         DE_API static void skybox_render_callback(GL3::gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, camera *camera);
         
         private:
-            drawable_component(GL3::gl_id vbo, GL3::gl_id vao, imaterial *material = nullptr, GL3::gl_id texture = 0, uint8_t textureUnit = 0);
+            drawable_component(GL3::gl_id vbo, GL3::gl_id vao, imaterial *material = nullptr);
 
             friend component_manager;
     };

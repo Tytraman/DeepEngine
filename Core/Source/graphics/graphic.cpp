@@ -80,14 +80,11 @@ namespace deep
         entity_manager *entityManager = entity_manager::get_singleton();
         GL3::vbo_manager *vboManager = GL3::vbo_manager::get_singleton();
         GL3::vao_manager *vaoManager = GL3::vao_manager::get_singleton();
-        GL3::texture_manager *textureManager = GL3::texture_manager::get_singleton();
 
         component_id drawableComponentID       = componentManager->create_drawable_component(vboManager->create(name), vaoManager->create(name));
         component_id transformationComponentID = componentManager->create_transformation_component(position, vec3<float>(width, height, 1.0f), 0.0f);
 
         drawable_component *drawableComponent = componentManager->get_drawable_component(drawableComponentID);
-        drawableComponent->texture = textureManager->get_white_texture();
-        drawableComponent->textureUnit = 0;
         drawableComponent->renderCallback = drawable_component::classic_render_callback;
 
         float vPos[] =
@@ -225,14 +222,11 @@ namespace deep
         component_manager *componentManager = component_manager::get_singleton();
         GL3::vbo_manager *vboManager = GL3::vbo_manager::get_singleton();
         GL3::vao_manager *vaoManager = GL3::vao_manager::get_singleton();
-        GL3::texture_manager *textureManager = GL3::texture_manager::get_singleton();
 
         component_id drawableComponentID       = componentManager->create_drawable_component(vboManager->create(name), vaoManager->create(name));
         component_id transformationComponentID = componentManager->create_transformation_component(position, vec3<float>(width, height, length), 0.0f);
 
         drawable_component *drawableComponent = componentManager->get_drawable_component(drawableComponentID);
-        drawableComponent->texture = textureManager->get_white_texture();
-        drawableComponent->textureUnit = 0;
         drawableComponent->renderCallback = drawable_component::classic_render_callback;
 
         float vPos[] = {

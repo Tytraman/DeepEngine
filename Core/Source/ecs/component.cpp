@@ -36,22 +36,15 @@ namespace deep
     {
         GL3::gl_id program;
         GL3::gl_id vao = drawable->vao;
-        GL3::gl_id texture = drawable->texture;
-        uint8_t textureUnit = drawable->textureUnit;
 
         if(drawable->material.get() != nullptr)
-        {
             program = drawable->material->get_program();
-
-            drawable->material->send_data();
-        } 
         else
             program = 0;
 
         GL3::program_manager *programManager = GL3::program_manager::get_singleton();
         GL3::vbo_manager *vboManager = GL3::vbo_manager::get_singleton();
         GL3::vao_manager *vaoManager = GL3::vao_manager::get_singleton();
-        GL3::texture_manager *textureManager = GL3::texture_manager::get_singleton();
 
         // Pas besoin d'indiquer à OpenGL d'utiliser un programme qui est déjà en cours d'utilisation.
         if(program != programManager->current_id())
@@ -61,11 +54,6 @@ namespace deep
         if(vao != vaoManager->current_id())
             vaoManager->bind(vao);
 
-        // Pas besoin d'indiquer à OpenGL d'utiliser une texture si elle est déjà en cours d'utilisation.
-        if(texture != textureManager->current_id() || textureUnit != textureManager->current_unit())
-            textureManager->bind(texture, textureUnit);
-
-        programManager->set_uniform("myTex", 0);
         programManager->set_uniform("mTrs", transformation->get_translation());
         programManager->set_uniform("mRotX", transformation->get_rotation_X());
         programManager->set_uniform("mRotY", transformation->get_rotation_Y());
@@ -74,8 +62,11 @@ namespace deep
         programManager->set_uniform("view", camera->get_look_at());
         programManager->set_uniform("deViewPos", camera->get_position());
         programManager->set_uniform("proj", fmat4x4::perspective(fmat4x4(), 45.0f, (float) window->get_width() / (float) window->get_height(), 0.1f, 1000.0f));
-
-        programManager->send_uniforms();
+        
+        if(drawable->material.get() != nullptr)
+            drawable->material->send_data();
+        else
+            programManager->send_uniforms();
 
         renderer.draw(vboManager->get_vertices_number(drawable->vbo));
     }
@@ -90,7 +81,6 @@ namespace deep
         GL3::program_manager *programManager = GL3::program_manager::get_singleton();
         GL3::vbo_manager *vboManager = GL3::vbo_manager::get_singleton();
         GL3::vao_manager *vaoManager = GL3::vao_manager::get_singleton();
-        GL3::texture_manager *textureManager = GL3::texture_manager::get_singleton();
 
         GL3::core::disable_depth_mask();
         GL3::core::set_depth_function(GL3::core::gl_depth_function::Lequal);
@@ -100,7 +90,6 @@ namespace deep
 
         vaoManager->bind(drawable->vao);
 
-        textureManager->bind(drawable->texture);
         fmat4x4 view = camera->get_look_at();
         view[static_cast<uint8_t>(fmat4x4_index::w1)] = 0.0f;
         view[static_cast<uint8_t>(fmat4x4_index::w2)] = 0.0f;
@@ -110,7 +99,10 @@ namespace deep
         programManager->set_uniform("view", view);
         programManager->set_uniform("proj", fmat4x4::perspective(fmat4x4(), 45.0f, (float) window->get_width() / (float) window->get_height(), 0.1f, 1000.0f));
 
-        programManager->send_uniforms();
+        if(drawable->material.get() != nullptr)
+            drawable->material->send_data();
+        else
+            programManager->send_uniforms();
 
         renderer.draw(vboManager->get_vertices_number(drawable->vbo));
         GL3::core::set_depth_function(GL3::core::gl_depth_function::Less);
@@ -164,11 +156,9 @@ namespace deep
     drawable_component::drawable_component
     ======================================
     */
-    drawable_component::drawable_component(GL3::gl_id _vbo, GL3::gl_id _vao, imaterial *_material, GL3::gl_id _texture, uint8_t _textureUnit)
+    drawable_component::drawable_component(GL3::gl_id _vbo, GL3::gl_id _vao, imaterial *_material)
         : vbo(_vbo),
           vao(_vao),
-          texture(_texture),
-          textureUnit(_textureUnit),
           renderCallback(nullptr),
           material(_material)
     { }

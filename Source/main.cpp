@@ -126,7 +126,7 @@ void update_callback(deep::window & /* win */)
 
     collectionID = deep::scene::get_entity_collection(sceneID);
 
-    float cameraSpeed = 0.05f;
+    float cameraSpeed = 0.15f;
 
     deep::camera &camera = scene->get_attached_camera();
     deep::vec3<float> cameraPos = camera.get_position();
@@ -492,35 +492,35 @@ int main()
     if(proj != -1)
         programManager->add_uniform("proj", proj, deep::fmat4x4(0.0f));
 
-    objectColorLoc = deep::GL3::uniform_manager::find(lightedObjectProgram, "deMaterial.diffuse");
+    objectColorLoc = deep::GL3::uniform_manager::find(lightedTexturedObjectProgram, "deMaterial.diffuse");
     if(objectColorLoc != -1)
         programManager->add_uniform("deMaterial.diffuse", objectColorLoc, 0);
 
-    objectColorLoc = deep::GL3::uniform_manager::find(lightedObjectProgram, "deMaterial.specular");
+    objectColorLoc = deep::GL3::uniform_manager::find(lightedTexturedObjectProgram, "deMaterial.specular");
     if(objectColorLoc != -1)
         programManager->add_uniform("deMaterial.specular", objectColorLoc, deep::vec3<float>(0.5f, 0.5f, 0.5f));
 
-    objectColorLoc = deep::GL3::uniform_manager::find(lightedObjectProgram, "deMaterial.shininess");
+    objectColorLoc = deep::GL3::uniform_manager::find(lightedTexturedObjectProgram, "deMaterial.shininess");
     if(objectColorLoc != -1)
         programManager->add_uniform("deMaterial.shininess", objectColorLoc, 32.0f);
 
-    objectColorLoc = deep::GL3::uniform_manager::find(lightedObjectProgram, "deLight.position");
+    objectColorLoc = deep::GL3::uniform_manager::find(lightedTexturedObjectProgram, "deLight.position");
     if(objectColorLoc != -1)
         programManager->add_uniform("deLight.position", objectColorLoc, lightSourcePos);
 
-    objectColorLoc = deep::GL3::uniform_manager::find(lightedObjectProgram, "deLight.ambient");
+    objectColorLoc = deep::GL3::uniform_manager::find(lightedTexturedObjectProgram, "deLight.ambient");
     if(objectColorLoc != -1)
         programManager->add_uniform("deLight.ambient", objectColorLoc, deep::vec3<float>(0.2f, 0.2f, 0.2f));
 
-    objectColorLoc = deep::GL3::uniform_manager::find(lightedObjectProgram, "deLight.diffuse");
+    objectColorLoc = deep::GL3::uniform_manager::find(lightedTexturedObjectProgram, "deLight.diffuse");
     if(objectColorLoc != -1)
         programManager->add_uniform("deLight.diffuse", objectColorLoc, deep::vec3<float>(0.5f, 0.5f, 0.5f));
 
-    objectColorLoc = deep::GL3::uniform_manager::find(lightedObjectProgram, "deLight.specular");
+    objectColorLoc = deep::GL3::uniform_manager::find(lightedTexturedObjectProgram, "deLight.specular");
     if(objectColorLoc != -1)
         programManager->add_uniform("deLight.specular", objectColorLoc, lightCubeColor.rgb());
 
-    objectColorLoc = deep::GL3::uniform_manager::find(lightedObjectProgram, "deViewPos");
+    objectColorLoc = deep::GL3::uniform_manager::find(lightedTexturedObjectProgram, "deViewPos");
     if(objectColorLoc != -1)
         programManager->add_uniform("deViewPos", objectColorLoc, deep::vec3<float>());
 
@@ -594,16 +594,16 @@ int main()
     points.topBottomRight.y = 0.0f;
 
     deep::polygon lightedCube = deep::graphic::create_cube("lighted_cube", lightedCubeColor, lightedCubeColor, lightedCubeColor, lightedCubeColor, lightedCubeColor, lightedCubeColor);
+    deep::polygon testLightedCube = deep::graphic::create_cube("test_lighted_cube", lightedCubeColor, lightedCubeColor, lightedCubeColor, lightedCubeColor, lightedCubeColor, lightedCubeColor, points);
     deep::polygon lightSourceCube = deep::graphic::create_cube("light_source_cube", lightCubeColor, lightCubeColor, lightCubeColor, lightCubeColor, lightCubeColor, lightCubeColor);
-    deep::polygon testLightedCube = deep::graphic::create_cube("test_lightes_cube", lightedCubeColor, lightedCubeColor, lightedCubeColor, lightedCubeColor, lightedCubeColor, lightedCubeColor, points);
 
     deep::color_material *lightedMaterial1 = deep::mem::alloc_type<deep::color_material>(lightedObjectProgram, deep::vec3<float>(0.75f, 0.32f, 0.67f), deep::vec3<float>(0.75f, 0.32f, 0.67f), deep::vec3<float>(0.5f, 0.5f, 0.5f), 32.0f);
-    deep::color_material *lightedMaterial2 = deep::mem::alloc_type<deep::color_material>(lightedObjectProgram, deep::vec3<float>(204.0f / 255.0f, 188.0f / 255.0f, 22.0f / 255.0f), deep::vec3<float>(204.0f / 255.0f, 188.0f / 255.0f, 22.0f / 255.0f), deep::vec3<float>(0.5f, 0.5f, 0.5f), 64.0f);
-    deep::color_material *lightedMaterial3 = deep::mem::alloc_type<deep::color_material>(lightSourceObjectProgram, deep::vec3<float>(0.75f, 0.32f, 0.67f), deep::vec3<float>(0.75f, 0.32f, 0.67f), deep::vec3<float>(0.5f, 0.5f, 0.5f), 32.0f);
+    deep::texture_material *lightedMaterial2 = deep::mem::alloc_type<deep::texture_material>(lightedTexturedObjectProgram, mcTexture, deep::vec3<float>(0.5f, 0.5f, 0.5f), 64.0f);
+    deep::color_material *lightSourceMaterial = deep::mem::alloc_type<deep::color_material>(lightSourceObjectProgram, deep::vec3<float>(1.0f, 1.0f, 1.0f), deep::vec3<float>(1.0f, 1.0f, 1.0f), deep::vec3<float>(0.5f, 0.5f, 0.5f), 32.0f);
 
     entityManager->create_entity("lighted_entity", collectionID, lightedCube, deep::vec3<float>(0.0f, 0.0f, -5.0f), deep::vec3<float>(3.0f, 3.0f, 3.0f), lightedMaterial1);
     entityManager->create_entity("test_lighted_entity", collectionID, testLightedCube, deep::vec3<float>(0.0f, 6.0f, -5.0f), deep::vec3<float>(3.0f, 3.0f, 3.0f), lightedMaterial2);
-    entityManager->create_entity("light_source_entity", collectionID, lightSourceCube, lightSourcePos, deep::vec3<float>(1.0f, 1.0f, 1.0f), lightedMaterial3);
+    entityManager->create_entity("light_source_entity", collectionID, lightSourceCube, lightSourcePos, deep::vec3<float>(1.0f, 1.0f, 1.0f), lightSourceMaterial);
 
     //== deep::component_id testDrawableComponentID 
 

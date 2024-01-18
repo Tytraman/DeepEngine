@@ -167,12 +167,80 @@ namespace deep
 
             DE_API bool send_data() override;
 
+            DE_API GL3::gl_id get_diffuse_texture() const;
+            DE_API vec3<float> get_specular() const;
+            DE_API float get_shininess() const;
+
+            DE_API void set_diffuse_texture(GL3::gl_id texture);
+            DE_API void set_specular(const vec3<float> &specular);
+            DE_API void set_shininess(float shininess);
+
         private:
             GL3::gl_id  m_DiffuseTexture;
             vec3<float> m_Specular;
             float       m_Shininess;
 
     };
+
+    /*
+    ===================================
+    color_material::get_diffuse_texture
+    ===================================
+    */
+    inline GL3::gl_id texture_material::get_diffuse_texture() const
+    {
+        return m_DiffuseTexture;
+    }
+
+    /*
+    ============================
+    color_material::get_specular
+    ============================
+    */
+    inline vec3<float> texture_material::get_specular() const
+    {
+        return m_Specular;
+    }
+
+    /*
+    =============================
+    color_material::get_shininess
+    =============================
+    */
+    inline float texture_material::get_shininess() const
+    {
+        return m_Shininess;
+    }
+
+    /*
+    ===================================
+    color_material::set_diffuse_texture
+    ===================================
+    */
+    inline void texture_material::set_diffuse_texture(GL3::gl_id texture)
+    {
+        m_DiffuseTexture = texture;
+    }
+
+    /*
+    ============================
+    color_material::set_specular
+    ============================
+    */
+    inline void texture_material::set_specular(const vec3<float> &specular)
+    {
+        m_Specular = specular;
+    }
+
+    /*
+    =============================
+    color_material::set_shininess
+    =============================
+    */
+    inline void texture_material::set_shininess(float shininess)
+    {
+        m_Shininess = shininess;
+    }
 
 }
 

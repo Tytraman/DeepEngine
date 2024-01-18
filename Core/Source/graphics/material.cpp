@@ -54,6 +54,11 @@ namespace deep
         m_Program = program;
     }
 
+    /*
+    ===========================
+    texture_material::send_data
+    ===========================
+    */
     bool texture_material::send_data()
     {
         GL3::program_manager *programManager = GL3::program_manager::get_singleton();
@@ -63,7 +68,7 @@ namespace deep
             programManager->use(m_Program);
 
         if(textureManager->current_id() != m_DiffuseTexture)
-            textureManager->bind(m_DiffuseTexture);
+            textureManager->bind(m_DiffuseTexture, 0);
 
         programManager->set_uniform("deMaterial.diffuse", 0);
         programManager->set_uniform("deMaterial.specular", m_Specular);

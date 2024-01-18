@@ -28,7 +28,7 @@
     fragment : light_source_object.frag
 }
 
-5 {
+6 {
     name : lighted_textured_object
     vertex : lighted_object.vert
     fragment : lighted_textured_object.frag

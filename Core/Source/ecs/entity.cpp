@@ -136,9 +136,7 @@ namespace deep
         const polygon &pol,
         const vec3<float> &position,
         const vec3<float> &size,
-        imaterial *material,
-        GL3::gl_id texture,
-        uint8_t textureUnit)
+        imaterial *material)
     {
         entity ent = create_entity(name, collection);
         if(!ent.is_ok())
@@ -150,8 +148,6 @@ namespace deep
         component_id transformationComponentID = componentManager->create_transformation_component(position, size, 0.0f);
 
         drawable_component *drawableComponent = componentManager->get_drawable_component(drawableComponentID);
-        drawableComponent->texture = texture;
-        drawableComponent->textureUnit = textureUnit;
         drawableComponent->renderCallback = drawable_component::classic_render_callback;
 
         entity_manager::attach_component(name, ent.m_CollectionID, drawableComponentID);
