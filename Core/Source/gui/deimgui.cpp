@@ -619,7 +619,7 @@ namespace deep
                                     if(vaoSel.currentVao == nullptr || shaderSel.currentProgram == nullptr)
                                         goto cancel_component;
 
-                                    component_id id = componentManager->create_drawable_component(vaoSel.currentVao->attachedVbo, vaoSel.currentVaoID, nullptr, textureSel.currentTextureID);
+                                    component_id id = componentManager->create_drawable_component(vaoSel.currentVao->attachedVbo, vaoSel.currentVaoID, nullptr);
 
                                     drawable_component *drawableComponent = componentManager->get_drawable_component(id);
                                     drawableComponent->renderCallback = drawable_component::classic_render_callback;

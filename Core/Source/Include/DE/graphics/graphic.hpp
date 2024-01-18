@@ -76,8 +76,6 @@ namespace deep
                 float width,
                 float height,
                 const colora &color,
-                GL3::gl_id texture,
-                uint8_t textureUnit,
                 bool collidable = false);
 
             DE_API static entity_manager::entity create3DRectangle(
@@ -109,19 +107,17 @@ namespace deep
                 const colora &color4,
                 const colora &color5,
                 const colora &color6,
-                GL3::gl_id texture,
-                uint8_t textureUnit,
                 bool collidable = false
             );
 
             DE_API static polygon create_cube(
                 const char *name,
-                const colora &color1,
-                const colora &color2,
-                const colora &color3,
-                const colora &color4,
-                const colora &color5,
-                const colora &color6,
+                const vec4<float> &color1,
+                const vec4<float> &color2,
+                const vec4<float> &color3,
+                const vec4<float> &color4,
+                const vec4<float> &color5,
+                const vec4<float> &color6,
                 const cube_texture_points &texturePoints
             );
 
@@ -142,8 +138,6 @@ namespace deep
                 float width,
                 float height,
                 float length,
-                GL3::gl_id texture,
-                uint8_t textureUnit,
                 bool collidable = false
             );
 

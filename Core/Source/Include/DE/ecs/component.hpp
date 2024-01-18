@@ -156,8 +156,8 @@ namespace deep
 
             DE_API component_type get_type(component_id component);
 
-            DE_API component_id create_drawable_component(GL3::gl_id vbo, GL3::gl_id vao, imaterial *material = nullptr, GL3::gl_id texture = 0, uint8_t textureUnit = 0);
-            DE_API component_id create_drawable_component(const char *vboName, const char *vaoName, imaterial *material = nullptr, const char *textName = nullptr, uint8_t textureUnit = 0);
+            DE_API component_id create_drawable_component(GL3::gl_id vbo, GL3::gl_id vao, imaterial *material = nullptr);
+            DE_API component_id create_drawable_component(const char *vboName, const char *vaoName, imaterial *material = nullptr);
 
             DE_API drawable_component *get_drawable_component(component_id component);
             DE_API void delete_drawable_component(component_id id);

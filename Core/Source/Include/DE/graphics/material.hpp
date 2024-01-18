@@ -17,7 +17,8 @@ namespace deep
     {
         None,
         Custom,
-        Colored
+        Colored,
+        Textured
     };
 
     class imaterial : public reference_counter
@@ -157,6 +158,21 @@ namespace deep
     {
         m_Shininess = shininess;
     }
+
+    class texture_material : public imaterial
+    {
+
+        public:
+            DE_API texture_material(GL3::gl_id program, GL3::gl_id diffuseTexture, const vec3<float> &specular, float shininess);
+
+            DE_API bool send_data() override;
+
+        private:
+            GL3::gl_id  m_DiffuseTexture;
+            vec3<float> m_Specular;
+            float       m_Shininess;
+
+    };
 
 }
 

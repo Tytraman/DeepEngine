@@ -178,10 +178,10 @@ namespace deep
     component_manager::create_drawable_component
     ============================================
     */
-    component_id component_manager::create_drawable_component(GL3::gl_id vbo, GL3::gl_id vao, imaterial *material, GL3::gl_id texture, uint8_t textureUnit)
+    component_id component_manager::create_drawable_component(GL3::gl_id vbo, GL3::gl_id vao, imaterial *material)
     {
         component_id id = m_ComponentCount;
-        drawable_component drawable(vbo, vao, material, texture, textureUnit);
+        drawable_component drawable(vbo, vao, material);
         component_type type = component_manager::component_type::drawable;
 
         m_DrawableComponents.insert(id, drawable);
@@ -197,7 +197,7 @@ namespace deep
     component_manager::create_drawable_component
     ============================================
     */
-    component_id component_manager::create_drawable_component(const char *vboName, const char *vaoName, imaterial *material, const char *textName, uint8_t textureUnit)
+    component_id component_manager::create_drawable_component(const char *vboName, const char *vaoName, imaterial *material)
     {
         GL3::program_manager *programManager = GL3::program_manager::get_singleton();
 
@@ -206,11 +206,7 @@ namespace deep
         GL3::gl_id vbo  = hash(vboName);
         GL3::gl_id vao  = hash(vaoName);
 
-        GL3::gl_id texture = 0;
-        if(textName != nullptr)
-            texture = hash(textName);
-
-        return create_drawable_component(vbo, vao, material, texture, textureUnit);
+        return create_drawable_component(vbo, vao, material);
     }
 
     /*

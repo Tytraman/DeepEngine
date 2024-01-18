@@ -145,8 +145,6 @@ namespace deep
         float width,
         float height,
         const colora &color,
-        GL3::gl_id texture,
-        uint8_t textureUnit,
         bool collidable)
     {
         component_manager *componentManager = component_manager::get_singleton();
@@ -154,7 +152,7 @@ namespace deep
         GL3::vbo_manager *vboManager = GL3::vbo_manager::get_singleton();
         GL3::vao_manager *vaoManager = GL3::vao_manager::get_singleton();
 
-        component_id drawableComponentID       = componentManager->create_drawable_component(vboManager->create(name), vaoManager->create(name), nullptr, texture, textureUnit);
+        component_id drawableComponentID       = componentManager->create_drawable_component(vboManager->create(name), vaoManager->create(name), nullptr);
         component_id transformationComponentID = componentManager->create_transformation_component(position, vec3<float>(width, height, 1.0f), 0.0f);
 
         drawable_component *drawableComponent = componentManager->get_drawable_component(drawableComponentID);
@@ -352,15 +350,13 @@ namespace deep
         const colora &color4,
         const colora &color5,
         const colora &color6,
-        GL3::gl_id texture,
-        uint8_t textureUnit,
         bool collidable)
     {
         component_manager *componentManager = component_manager::get_singleton();
         GL3::vbo_manager *vboManager = GL3::vbo_manager::get_singleton();
         GL3::vao_manager *vaoManager = GL3::vao_manager::get_singleton();
 
-        component_id drawableComponentID       = componentManager->create_drawable_component(vboManager->create(name), vaoManager->create(name), nullptr, texture, textureUnit);
+        component_id drawableComponentID       = componentManager->create_drawable_component(vboManager->create(name), vaoManager->create(name), nullptr);
         component_id transformationComponentID = componentManager->create_transformation_component(position, vec3<float>(width, height, length), 0.0f);
 
         drawable_component *drawableComponent = componentManager->get_drawable_component(drawableComponentID);
@@ -466,12 +462,12 @@ namespace deep
 
     polygon graphic::create_cube(
         const char *name,
-        const colora &color1,
-        const colora &color2,
-        const colora &color3,
-        const colora &color4,
-        const colora &color5,
-        const colora &color6,
+        const vec4<float> &color1,
+        const vec4<float> &color2,
+        const vec4<float> &color3,
+        const vec4<float> &color4,
+        const vec4<float> &color5,
+        const vec4<float> &color6,
         const cube_texture_points &texturePoints
     )
     {
@@ -481,64 +477,64 @@ namespace deep
         float vPos[] =
         {
 
-            // Face avant
-            -0.5f, -0.5f, -0.5f, static_cast<float>(color1.R), static_cast<float>(color1.G), static_cast<float>(color1.B), static_cast<float>(color1.A), texturePoints.frontBottomLeft.x, texturePoints.frontBottomLeft.y,      // 1.0f, 1.0f,  // Bas gauche
-             0.5f,  0.5f, -0.5f, static_cast<float>(color1.R), static_cast<float>(color1.G), static_cast<float>(color1.B), static_cast<float>(color1.A), texturePoints.frontTopRight.x, texturePoints.frontTopRight.y,          // 0.0f, 0.0f,  // Haut droite
-             0.5f, -0.5f, -0.5f, static_cast<float>(color1.R), static_cast<float>(color1.G), static_cast<float>(color1.B), static_cast<float>(color1.A), texturePoints.frontBottomRight.x, texturePoints.frontBottomRight.y,    // 0.0f, 1.0f,  // Bas droite
-             
-            -0.5f, -0.5f, -0.5f, static_cast<float>(color1.R), static_cast<float>(color1.G), static_cast<float>(color1.B), static_cast<float>(color1.A), texturePoints.frontBottomLeft.x, texturePoints.frontBottomLeft.y,      // 1.0f, 1.0f,  // Bas gauche
-            -0.5f,  0.5f, -0.5f, static_cast<float>(color1.R), static_cast<float>(color1.G), static_cast<float>(color1.B), static_cast<float>(color1.A), texturePoints.frontTopLeft.x, texturePoints.frontTopLeft.y,            // 1.0f, 0.0f,  // Haut gauche
-             0.5f,  0.5f, -0.5f, static_cast<float>(color1.R), static_cast<float>(color1.G), static_cast<float>(color1.B), static_cast<float>(color1.A), texturePoints.frontTopRight.x, texturePoints.frontTopRight.y,          // 0.0f, 0.0f,  // Haut droite
-            
-
-            // Face arrière
-             0.5f, -0.5f,  0.5f, static_cast<float>(color2.R), static_cast<float>(color2.G), static_cast<float>(color2.B), static_cast<float>(color2.A), texturePoints.backBottomLeft.x, texturePoints.backBottomLeft.y,        // 1.0f, 1.0f,  // Bas gauche
-            -0.5f,  0.5f,  0.5f, static_cast<float>(color2.R), static_cast<float>(color2.G), static_cast<float>(color2.B), static_cast<float>(color2.A), texturePoints.backTopRight.x, texturePoints.backTopRight.y,            // 0.0f, 0.0f,  // Haut droite
-            -0.5f, -0.5f,  0.5f, static_cast<float>(color2.R), static_cast<float>(color2.G), static_cast<float>(color2.B), static_cast<float>(color2.A), texturePoints.backBottomRight.x, texturePoints.backBottomRight.y,      // 0.0f, 1.0f,  // Bas droite
-
-             0.5f, -0.5f,  0.5f, static_cast<float>(color2.R), static_cast<float>(color2.G), static_cast<float>(color2.B), static_cast<float>(color2.A), texturePoints.backBottomLeft.x, texturePoints.backBottomLeft.y,        // 1.0f, 1.0f,  // Bas gauche
-             0.5f,  0.5f,  0.5f, static_cast<float>(color2.R), static_cast<float>(color2.G), static_cast<float>(color2.B), static_cast<float>(color2.A), texturePoints.backTopLeft.x, texturePoints.backTopLeft.y,              // 1.0f, 0.0f,  // Haut gauche
-            -0.5f,  0.5f,  0.5f, static_cast<float>(color2.R), static_cast<float>(color2.G), static_cast<float>(color2.B), static_cast<float>(color2.A), texturePoints.backTopRight.x, texturePoints.backTopRight.y,            // 0.0f, 0.0f,  // Haut droite
-            
-
-            // Face droite
-            -0.5f,  0.5f,  0.5f, static_cast<float>(color3.R), static_cast<float>(color3.G), static_cast<float>(color3.B), static_cast<float>(color3.A), texturePoints.rightTopLeft.x, texturePoints.rightTopLeft.y,            // 1.0f, 0.0f,  // Haut gauche
-            -0.5f,  0.5f, -0.5f, static_cast<float>(color3.R), static_cast<float>(color3.G), static_cast<float>(color3.B), static_cast<float>(color3.A), texturePoints.rightTopRight.x, texturePoints.rightTopRight.y,          // 0.0f, 0.0f,  // Haut droite
-            -0.5f, -0.5f, -0.5f, static_cast<float>(color3.R), static_cast<float>(color3.G), static_cast<float>(color3.B), static_cast<float>(color3.A), texturePoints.rightBottomRight.x, texturePoints.rightBottomRight.y,    // 0.0f, 1.0f,  // Bas droite
-
-            -0.5f, -0.5f, -0.5f, static_cast<float>(color3.R), static_cast<float>(color3.G), static_cast<float>(color3.B), static_cast<float>(color3.A), texturePoints.rightBottomRight.x, texturePoints.rightBottomRight.y,    // 0.0f, 1.0f,  // Bas droite
-            -0.5f, -0.5f,  0.5f, static_cast<float>(color3.R), static_cast<float>(color3.G), static_cast<float>(color3.B), static_cast<float>(color3.A), texturePoints.rightBottomLeft.x, texturePoints.rightBottomLeft.y,      // 1.0f, 1.0f,  // Bas gauche
-            -0.5f,  0.5f,  0.5f, static_cast<float>(color3.R), static_cast<float>(color3.G), static_cast<float>(color3.B), static_cast<float>(color3.A), texturePoints.rightTopLeft.x, texturePoints.rightTopLeft.y,            // 1.0f, 0.0f,  // Haut gauche
-
-
-            // Face gauche
-             0.5f,  0.5f,  0.5f, static_cast<float>(color4.R), static_cast<float>(color4.G), static_cast<float>(color4.B), static_cast<float>(color4.A), texturePoints.leftTopRight.x, texturePoints.leftTopRight.y,            // 0.0f, 0.0f,  // Haut droite
-             0.5f, -0.5f, -0.5f, static_cast<float>(color4.R), static_cast<float>(color4.G), static_cast<float>(color4.B), static_cast<float>(color4.A), texturePoints.leftBottomLeft.x, texturePoints.leftBottomLeft.y,        // 1.0f, 1.0f,  // Bas gauche
-             0.5f,  0.5f, -0.5f, static_cast<float>(color4.R), static_cast<float>(color4.G), static_cast<float>(color4.B), static_cast<float>(color4.A), texturePoints.leftTopLeft.x, texturePoints.leftTopLeft.y,              // 1.0f, 0.0f,  // Haut gauche
-
-             0.5f, -0.5f, -0.5f, static_cast<float>(color4.R), static_cast<float>(color4.G), static_cast<float>(color4.B), static_cast<float>(color4.A), texturePoints.leftBottomLeft.x, texturePoints.leftBottomLeft.y,        // 1.0f, 1.0f,  // Bas gauche
-             0.5f,  0.5f,  0.5f, static_cast<float>(color4.R), static_cast<float>(color4.G), static_cast<float>(color4.B), static_cast<float>(color4.A), texturePoints.leftTopRight.x, texturePoints.leftTopRight.y,            // 0.0f, 0.0f,  // Haut droite
-             0.5f, -0.5f,  0.5f, static_cast<float>(color4.R), static_cast<float>(color4.G), static_cast<float>(color4.B), static_cast<float>(color4.A), texturePoints.leftBottomRight.x, texturePoints.leftBottomRight.y,      // 0.0f, 1.0f,  // Bas droite
-
-
-            // Face bas
-             0.5f, -0.5f,  0.5f, static_cast<float>(color5.R), static_cast<float>(color5.G), static_cast<float>(color5.B), static_cast<float>(color5.A), texturePoints.bottomTopRight.x, texturePoints.bottomTopRight.y,        // 1.0f, 0.0f,  // Haut droite
-            -0.5f, -0.5f, -0.5f, static_cast<float>(color5.R), static_cast<float>(color5.G), static_cast<float>(color5.B), static_cast<float>(color5.A), texturePoints.bottomBottomLeft.x, texturePoints.bottomBottomLeft.y,    // 0.0f, 1.0f,  // Bas gauche
-             0.5f, -0.5f, -0.5f, static_cast<float>(color5.R), static_cast<float>(color5.G), static_cast<float>(color5.B), static_cast<float>(color5.A), texturePoints.bottomBottomRight.x, texturePoints.bottomBottomRight.y,  // 1.0f, 1.0f,  // Bas droite
-
-            -0.5f, -0.5f, -0.5f, static_cast<float>(color5.R), static_cast<float>(color5.G), static_cast<float>(color5.B), static_cast<float>(color5.A), texturePoints.bottomBottomLeft.x, texturePoints.bottomBottomLeft.y,    // 0.0f, 1.0f,  // Bas gauche
-             0.5f, -0.5f,  0.5f, static_cast<float>(color5.R), static_cast<float>(color5.G), static_cast<float>(color5.B), static_cast<float>(color5.A), texturePoints.bottomTopRight.x, texturePoints.bottomTopRight.y,        // 1.0f, 0.0f,  // Haut droite
-            -0.5f, -0.5f,  0.5f, static_cast<float>(color5.R), static_cast<float>(color5.G), static_cast<float>(color5.B), static_cast<float>(color5.A), texturePoints.bottomTopLeft.x, texturePoints.bottomTopLeft.y,          // 0.0f, 0.0f,  // Top gauche
-            
-
-            // Face haut
-            -0.5f,  0.5f, -0.5f, static_cast<float>(color6.R), static_cast<float>(color6.G), static_cast<float>(color6.B), static_cast<float>(color6.A), texturePoints.topBottomLeft.x, texturePoints.topBottomLeft.y,          // 1.0f, 1.0f,  // Bas gauche
-             0.5f,  0.5f,  0.5f, static_cast<float>(color6.R), static_cast<float>(color6.G), static_cast<float>(color6.B), static_cast<float>(color6.A), texturePoints.topTopRight.x, texturePoints.topTopRight.y,              // 0.0f, 0.0f,  // Haut droite
-             0.5f,  0.5f, -0.5f, static_cast<float>(color6.R), static_cast<float>(color6.G), static_cast<float>(color6.B), static_cast<float>(color6.A), texturePoints.topBottomRight.x, texturePoints.topBottomRight.y,        // 0.0f, 1.0f,  // Bas droite
-
-             0.5f,  0.5f,  0.5f, static_cast<float>(color6.R), static_cast<float>(color6.G), static_cast<float>(color6.B), static_cast<float>(color6.A), texturePoints.topTopRight.x, texturePoints.topTopRight.y,              // 0.0f, 0.0f,  // Haut droite
-            -0.5f,  0.5f, -0.5f, static_cast<float>(color6.R), static_cast<float>(color6.G), static_cast<float>(color6.B), static_cast<float>(color6.A), texturePoints.topBottomLeft.x, texturePoints.topBottomLeft.y,          // 1.0f, 1.0f,  // Bas gauche
-            -0.5f,  0.5f,  0.5f, static_cast<float>(color6.R), static_cast<float>(color6.G), static_cast<float>(color6.B), static_cast<float>(color6.A), texturePoints.topTopLeft.x, texturePoints.topTopLeft.y                 // 1.0f, 0.0f   // Haut gauche
+            // Face avant        // Normales
+            -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, static_cast<float>(color1.x), static_cast<float>(color1.y), static_cast<float>(color1.z), static_cast<float>(color1.w), texturePoints.frontBottomLeft.x, texturePoints.frontBottomLeft.y,      // 1.0f, 1.0f,  // Bas gauche
+             0.5f,  0.5f, -0.5f, 0.0f, 0.0f, -1.0f, static_cast<float>(color1.x), static_cast<float>(color1.y), static_cast<float>(color1.z), static_cast<float>(color1.w), texturePoints.frontTopRight.x, texturePoints.frontTopRight.y,          // 0.0f, 0.0f,  // Haut droite
+             0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, static_cast<float>(color1.x), static_cast<float>(color1.y), static_cast<float>(color1.z), static_cast<float>(color1.w), texturePoints.frontBottomRight.x, texturePoints.frontBottomRight.y,    // 0.0f, 1.0f,  // Bas droite
+                                 
+            -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, static_cast<float>(color1.x), static_cast<float>(color1.y), static_cast<float>(color1.z), static_cast<float>(color1.w), texturePoints.frontBottomLeft.x, texturePoints.frontBottomLeft.y,      // 1.0f, 1.0f,  // Bas gauche
+            -0.5f,  0.5f, -0.5f, 0.0f, 0.0f, -1.0f, static_cast<float>(color1.x), static_cast<float>(color1.y), static_cast<float>(color1.z), static_cast<float>(color1.w), texturePoints.frontTopLeft.x, texturePoints.frontTopLeft.y,            // 1.0f, 0.0f,  // Haut gauche
+             0.5f,  0.5f, -0.5f, 0.0f, 0.0f, -1.0f, static_cast<float>(color1.x), static_cast<float>(color1.y), static_cast<float>(color1.z), static_cast<float>(color1.w), texturePoints.frontTopRight.x, texturePoints.frontTopRight.y,          // 0.0f, 0.0f,  // Haut droite
+                                 
+                                 
+            // Face arrière      
+             0.5f, -0.5f,  0.5f, 0.0f, 0.0f, 1.0f, static_cast<float>(color2.x), static_cast<float>(color2.y), static_cast<float>(color2.z), static_cast<float>(color2.w), texturePoints.backBottomLeft.x, texturePoints.backBottomLeft.y,        // 1.0f, 1.0f,  // Bas gauche
+            -0.5f,  0.5f,  0.5f, 0.0f, 0.0f, 1.0f, static_cast<float>(color2.x), static_cast<float>(color2.y), static_cast<float>(color2.z), static_cast<float>(color2.w), texturePoints.backTopRight.x, texturePoints.backTopRight.y,            // 0.0f, 0.0f,  // Haut droite
+            -0.5f, -0.5f,  0.5f, 0.0f, 0.0f, 1.0f, static_cast<float>(color2.x), static_cast<float>(color2.y), static_cast<float>(color2.z), static_cast<float>(color2.w), texturePoints.backBottomRight.x, texturePoints.backBottomRight.y,      // 0.0f, 1.0f,  // Bas droite
+                                 
+             0.5f, -0.5f,  0.5f, 0.0f, 0.0f, 1.0f, static_cast<float>(color2.x), static_cast<float>(color2.y), static_cast<float>(color2.z), static_cast<float>(color2.w), texturePoints.backBottomLeft.x, texturePoints.backBottomLeft.y,        // 1.0f, 1.0f,  // Bas gauche
+             0.5f,  0.5f,  0.5f, 0.0f, 0.0f, 1.0f, static_cast<float>(color2.x), static_cast<float>(color2.y), static_cast<float>(color2.z), static_cast<float>(color2.w), texturePoints.backTopLeft.x, texturePoints.backTopLeft.y,              // 1.0f, 0.0f,  // Haut gauche
+            -0.5f,  0.5f,  0.5f, 0.0f, 0.0f, 1.0f, static_cast<float>(color2.x), static_cast<float>(color2.y), static_cast<float>(color2.z), static_cast<float>(color2.w), texturePoints.backTopRight.x, texturePoints.backTopRight.y,            // 0.0f, 0.0f,  // Haut droite
+                                 
+                                 
+            // Face droite       
+            -0.5f,  0.5f,  0.5f, -1.0f, 0.0f, 0.0f, static_cast<float>(color3.x), static_cast<float>(color3.y), static_cast<float>(color3.z), static_cast<float>(color3.w), texturePoints.rightTopLeft.x, texturePoints.rightTopLeft.y,            // 1.0f, 0.0f,  // Haut gauche
+            -0.5f,  0.5f, -0.5f, -1.0f, 0.0f, 0.0f, static_cast<float>(color3.x), static_cast<float>(color3.y), static_cast<float>(color3.z), static_cast<float>(color3.w), texturePoints.rightTopRight.x, texturePoints.rightTopRight.y,          // 0.0f, 0.0f,  // Haut droite
+            -0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0f, static_cast<float>(color3.x), static_cast<float>(color3.y), static_cast<float>(color3.z), static_cast<float>(color3.w), texturePoints.rightBottomRight.x, texturePoints.rightBottomRight.y,    // 0.0f, 1.0f,  // Bas droite
+                                 
+            -0.5f, -0.5f, -0.5f, -1.0f, 0.0f, 0.0, static_cast<float>(color3.x), static_cast<float>(color3.y), static_cast<float>(color3.z), static_cast<float>(color3.w), texturePoints.rightBottomRight.x, texturePoints.rightBottomRight.y,    // 0.0f, 1.0f,  // Bas droite
+            -0.5f, -0.5f,  0.5f, -1.0f, 0.0f, 0.0, static_cast<float>(color3.x), static_cast<float>(color3.y), static_cast<float>(color3.z), static_cast<float>(color3.w), texturePoints.rightBottomLeft.x, texturePoints.rightBottomLeft.y,      // 1.0f, 1.0f,  // Bas gauche
+            -0.5f,  0.5f,  0.5f, -1.0f, 0.0f, 0.0, static_cast<float>(color3.x), static_cast<float>(color3.y), static_cast<float>(color3.z), static_cast<float>(color3.w), texturePoints.rightTopLeft.x, texturePoints.rightTopLeft.y,            // 1.0f, 0.0f,  // Haut gauche
+                                 
+                                 
+            // Face gauche       
+             0.5f,  0.5f,  0.5f, 1.0f, 0.0f, 0.0f, static_cast<float>(color4.x), static_cast<float>(color4.y), static_cast<float>(color4.z), static_cast<float>(color4.w), texturePoints.leftTopRight.x, texturePoints.leftTopRight.y,            // 0.0f, 0.0f,  // Haut droite
+             0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0f, static_cast<float>(color4.x), static_cast<float>(color4.y), static_cast<float>(color4.z), static_cast<float>(color4.w), texturePoints.leftBottomLeft.x, texturePoints.leftBottomLeft.y,        // 1.0f, 1.0f,  // Bas gauche
+             0.5f,  0.5f, -0.5f, 1.0f, 0.0f, 0.0f, static_cast<float>(color4.x), static_cast<float>(color4.y), static_cast<float>(color4.z), static_cast<float>(color4.w), texturePoints.leftTopLeft.x, texturePoints.leftTopLeft.y,              // 1.0f, 0.0f,  // Haut gauche
+                                 
+             0.5f, -0.5f, -0.5f, 1.0f, 0.0f, 0.0,  static_cast<float>(color4.x), static_cast<float>(color4.y), static_cast<float>(color4.z), static_cast<float>(color4.w), texturePoints.leftBottomLeft.x, texturePoints.leftBottomLeft.y,        // 1.0f, 1.0f,  // Bas gauche
+             0.5f,  0.5f,  0.5f, 1.0f, 0.0f, 0.0,  static_cast<float>(color4.x), static_cast<float>(color4.y), static_cast<float>(color4.z), static_cast<float>(color4.w), texturePoints.leftTopRight.x, texturePoints.leftTopRight.y,            // 0.0f, 0.0f,  // Haut droite
+             0.5f, -0.5f,  0.5f, 1.0f, 0.0f, 0.0,  static_cast<float>(color4.x), static_cast<float>(color4.y), static_cast<float>(color4.z), static_cast<float>(color4.w), texturePoints.leftBottomRight.x, texturePoints.leftBottomRight.y,      // 0.0f, 1.0f,  // Bas droite
+                                 
+                                 
+            // Face bas          
+             0.5f, -0.5f,  0.5f, 0.0f, -1.0f, 0.0f, static_cast<float>(color5.x), static_cast<float>(color5.y), static_cast<float>(color5.z), static_cast<float>(color5.w), texturePoints.bottomTopRight.x, texturePoints.bottomTopRight.y,        // 1.0f, 0.0f,  // Haut droite
+            -0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f, static_cast<float>(color5.x), static_cast<float>(color5.y), static_cast<float>(color5.z), static_cast<float>(color5.w), texturePoints.bottomBottomLeft.x, texturePoints.bottomBottomLeft.y,    // 0.0f, 1.0f,  // Bas gauche
+             0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f, static_cast<float>(color5.x), static_cast<float>(color5.y), static_cast<float>(color5.z), static_cast<float>(color5.w), texturePoints.bottomBottomRight.x, texturePoints.bottomBottomRight.y,  // 1.0f, 1.0f,  // Bas droite
+                                 
+            -0.5f, -0.5f, -0.5f, 0.0f, -1.0f, 0.0f, static_cast<float>(color5.x), static_cast<float>(color5.y), static_cast<float>(color5.z), static_cast<float>(color5.w), texturePoints.bottomBottomLeft.x, texturePoints.bottomBottomLeft.y,    // 0.0f, 1.0f,  // Bas gauche
+             0.5f, -0.5f,  0.5f, 0.0f, -1.0f, 0.0f, static_cast<float>(color5.x), static_cast<float>(color5.y), static_cast<float>(color5.z), static_cast<float>(color5.w), texturePoints.bottomTopRight.x, texturePoints.bottomTopRight.y,        // 1.0f, 0.0f,  // Haut droite
+            -0.5f, -0.5f,  0.5f, 0.0f, -1.0f, 0.0f, static_cast<float>(color5.x), static_cast<float>(color5.y), static_cast<float>(color5.z), static_cast<float>(color5.w), texturePoints.bottomTopLeft.x, texturePoints.bottomTopLeft.y,          // 0.0f, 0.0f,  // Top gauche
+                                 
+                                 
+            // Face haut         
+            -0.5f,  0.5f, -0.5f, 0.0f, 1.0f, 0.0f, static_cast<float>(color6.x), static_cast<float>(color6.y), static_cast<float>(color6.z), static_cast<float>(color6.w), texturePoints.topBottomLeft.x, texturePoints.topBottomLeft.y,          // 1.0f, 1.0f,  // Bas gauche
+             0.5f,  0.5f,  0.5f, 0.0f, 1.0f, 0.0f, static_cast<float>(color6.x), static_cast<float>(color6.y), static_cast<float>(color6.z), static_cast<float>(color6.w), texturePoints.topTopRight.x, texturePoints.topTopRight.y,              // 0.0f, 0.0f,  // Haut droite
+             0.5f,  0.5f, -0.5f, 0.0f, 1.0f, 0.0f, static_cast<float>(color6.x), static_cast<float>(color6.y), static_cast<float>(color6.z), static_cast<float>(color6.w), texturePoints.topBottomRight.x, texturePoints.topBottomRight.y,        // 0.0f, 1.0f,  // Bas droite
+                                 
+             0.5f,  0.5f,  0.5f, 0.0f, 1.0f, 0.0f, static_cast<float>(color6.x), static_cast<float>(color6.y), static_cast<float>(color6.z), static_cast<float>(color6.w), texturePoints.topTopRight.x, texturePoints.topTopRight.y,              // 0.0f, 0.0f,  // Haut droite
+            -0.5f,  0.5f, -0.5f, 0.0f, 1.0f, 0.0f, static_cast<float>(color6.x), static_cast<float>(color6.y), static_cast<float>(color6.z), static_cast<float>(color6.w), texturePoints.topBottomLeft.x, texturePoints.topBottomLeft.y,          // 1.0f, 1.0f,  // Bas gauche
+            -0.5f,  0.5f,  0.5f, 0.0f, 1.0f, 0.0f, static_cast<float>(color6.x), static_cast<float>(color6.y), static_cast<float>(color6.z), static_cast<float>(color6.w), texturePoints.topTopLeft.x, texturePoints.topTopLeft.y                 // 1.0f, 0.0f   // Haut gauche
             
         };
 
@@ -552,9 +548,10 @@ namespace deep
         vboManager->transmit_data(chunk);
         vboManager->set_vertices_number(36);
 
-        vboManager->add_attribute(0, GL3::gl_attrib_components_number::x3, GL3::gl_type::Float, 9 * sizeof(float), 0);
-        vboManager->add_attribute(1, GL3::gl_attrib_components_number::x4, GL3::gl_type::Float, 9 * sizeof(float), 3 * sizeof(float));
-        vboManager->add_attribute(2, GL3::gl_attrib_components_number::x2, GL3::gl_type::Float, 9 * sizeof(float), 7 * sizeof(float));
+        vboManager->add_attribute(0, GL3::gl_attrib_components_number::x3, GL3::gl_type::Float, 12 * sizeof(float), 0);
+        vboManager->add_attribute(1, GL3::gl_attrib_components_number::x3, GL3::gl_type::Float, 12 * sizeof(float), 3 * sizeof(float));
+        vboManager->add_attribute(2, GL3::gl_attrib_components_number::x4, GL3::gl_type::Float, 12 * sizeof(float), 6 * sizeof(float));
+        vboManager->add_attribute(3, GL3::gl_attrib_components_number::x2, GL3::gl_type::Float, 12 * sizeof(float), 10 * sizeof(float));
 
         vaoManager->bind_default();
 
@@ -577,7 +574,7 @@ namespace deep
         float vPos[] =
         {
 
-            // Face avant         // Normales
+            // Face avant        // Normales
             -0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, static_cast<float>(color1.x), static_cast<float>(color1.y), static_cast<float>(color1.z), static_cast<float>(color1.w),  // Bas gauche
              0.5f,  0.5f, -0.5f, 0.0f, 0.0f, -1.0f, static_cast<float>(color1.x), static_cast<float>(color1.y), static_cast<float>(color1.z), static_cast<float>(color1.w),  // Haut droite
              0.5f, -0.5f, -0.5f, 0.0f, 0.0f, -1.0f, static_cast<float>(color1.x), static_cast<float>(color1.y), static_cast<float>(color1.z), static_cast<float>(color1.w),  // Bas droite
@@ -664,8 +661,6 @@ namespace deep
         float width,
         float height,
         float length,
-        GL3::gl_id texture,
-        uint8_t textureUnit,
         bool collidable
     )
     {
@@ -673,7 +668,7 @@ namespace deep
         GL3::vbo_manager *vboManager = GL3::vbo_manager::get_singleton();
         GL3::vao_manager *vaoManager = GL3::vao_manager::get_singleton();
 
-        component_id drawableComponentID       = componentManager->create_drawable_component(vboManager->create(name), vaoManager->create(name), nullptr, texture, textureUnit);
+        component_id drawableComponentID       = componentManager->create_drawable_component(vboManager->create(name), vaoManager->create(name), nullptr);
         component_id transformationComponentID = componentManager->create_transformation_component(position, vec3<float>(width, height, length), 0.0f);
 
         drawable_component *drawableComponent = componentManager->get_drawable_component(drawableComponentID);
