@@ -159,14 +159,14 @@ namespace deep
         // Vérifie qu'il est possible de réserver une plage continue d'octets.
         if(virtualRamNeeded > 0)
         {
-            mem_ptr ptr = mem::allocNoTrack(virtualRamNeeded);
+            mem_ptr ptr = mem::alloc_no_track(virtualRamNeeded);
             if(ptr == nullptr)
             {
                 printf("BAD\n");
                 return false;
             }
 
-            mem::freeNoTrack(ptr);
+            mem::free_no_track(ptr);
         }
         
 #else
@@ -296,7 +296,7 @@ end:
 
 #if DE_WINDOWS
         DWORD pwdLength = GetCurrentDirectoryA(0, NULL);
-        char *buffer = (char *) mem::allocNoTrack(pwdLength);
+        char *buffer = (char *) mem::alloc_no_track(pwdLength);
         GetCurrentDirectoryA(pwdLength, buffer);
         p = buffer;
 #else

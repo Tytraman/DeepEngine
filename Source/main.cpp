@@ -530,37 +530,17 @@ int main()
     points.topBottomRight.x = 1.0f;
     points.topBottomRight.y = 0.0f;
 
-    
-    
-
-    /*
-    
-    deep::polygon pol = deep::graphic::create_cube("grass_cube", white, white, white, white, white, white, points);
-    deep::string baseName("entity_");
-    float cubeSize = 3.0f;
-    size_t i, j;
-    uint64_t count = 0;
-
-    for(i = 0; i < 10; ++i)
-    {
-        for(j = 0; j < 10; ++j)
-        {
-            deep::string entityName = baseName;
-            entityName.append(std::to_string(count).c_str());
-            deep::entity_manager::entity entTest = entityManager->create_entity(entityName.str(), collectionID, pol, defaultProgram, deep::fvec3(i * cubeSize, 0.0f, j * cubeSize), deep::fvec3(cubeSize, cubeSize, cubeSize), mcTexture);
-
-            count++;
-        }
-    }*/
-
     deep::polygon lightedCube = deep::graphic::create_cube("lighted_cube", lightedCubeColor, lightedCubeColor, lightedCubeColor, lightedCubeColor, lightedCubeColor, lightedCubeColor);
     deep::polygon lightSourceCube = deep::graphic::create_cube("light_source_cube", lightCubeColor, lightCubeColor, lightCubeColor, lightCubeColor, lightCubeColor, lightCubeColor);
     deep::polygon testLightedCube = deep::graphic::create_cube("test_lightes_cube", lightedCubeColor, lightedCubeColor, lightedCubeColor, lightedCubeColor, lightedCubeColor, lightedCubeColor);
 
+    deep::color_material *lightedMaterial1 = deep::mem::alloc_type<deep::color_material>(lightedObjectProgram, deep::vec3<float>(0.75f, 0.32f, 0.67f), deep::vec3<float>(0.75f, 0.32f, 0.67f), deep::vec3<float>(0.5f, 0.5f, 0.5f), 32.0f);
+    deep::color_material *lightedMaterial2 = deep::mem::alloc_type<deep::color_material>(lightedObjectProgram, deep::vec3<float>(204.0f / 255.0f, 188.0f / 255.0f, 22.0f / 255.0f), deep::vec3<float>(204.0f / 255.0f, 188.0f / 255.0f, 22.0f / 255.0f), deep::vec3<float>(0.5f, 0.5f, 0.5f), 64.0f);
+    deep::color_material *lightedMaterial3 = deep::mem::alloc_type<deep::color_material>(lightSourceObjectProgram, deep::vec3<float>(0.75f, 0.32f, 0.67f), deep::vec3<float>(0.75f, 0.32f, 0.67f), deep::vec3<float>(0.5f, 0.5f, 0.5f), 32.0f);
 
-    entityManager->create_entity("lighted_entity", collectionID, lightedCube, lightedObjectProgram, deep::vec3<float>(0.0f, 0.0f, -5.0f), deep::vec3<float>(3.0f, 3.0f, 3.0f));
-    entityManager->create_entity("light_source_entity", collectionID, lightSourceCube, lightSourceObjectProgram, lightSourcePos, deep::vec3<float>(1.0f, 1.0f, 1.0f));
-    entityManager->create_entity("test_lighted_entity", collectionID, testLightedCube, lightedObjectProgram, deep::vec3<float>(0.0f, 6.0f, -5.0f), deep::vec3<float>(3.0f, 3.0f, 3.0f));
+    entityManager->create_entity("lighted_entity", collectionID, lightedCube, deep::vec3<float>(0.0f, 0.0f, -5.0f), deep::vec3<float>(3.0f, 3.0f, 3.0f), lightedMaterial1);
+    entityManager->create_entity("test_lighted_entity", collectionID, testLightedCube, deep::vec3<float>(0.0f, 6.0f, -5.0f), deep::vec3<float>(3.0f, 3.0f, 3.0f), lightedMaterial2);
+    entityManager->create_entity("light_source_entity", collectionID, lightSourceCube, lightSourcePos, deep::vec3<float>(1.0f, 1.0f, 1.0f), lightedMaterial3);
 
     //== deep::component_id testDrawableComponentID 
 

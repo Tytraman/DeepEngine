@@ -7,11 +7,17 @@
 #include "DE/drivers/opengl/vao.hpp"
 #include "DE/drivers/opengl/shader.hpp"
 
+#include <vector>
+
 namespace deep
 {
 
     void destroy_drawable_callback(mem_ptr ptr)
     {
+        std::vector<float> test;
+
+        test.emplace_back(32.0f);
+
         drawable_component *drawable = (drawable_component *) ptr;
 
         GL3::vbo_manager *vboManager = GL3::vbo_manager::get_singleton();
@@ -28,10 +34,19 @@ namespace deep
     */
     void drawable_component::classic_render_callback(GL3::gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, camera *camera)
     {
-        GL3::gl_id program = drawable->program;
+        GL3::gl_id program;
         GL3::gl_id vao = drawable->vao;
         GL3::gl_id texture = drawable->texture;
         uint8_t textureUnit = drawable->textureUnit;
+
+        if(drawable->material.get() != nullptr)
+        {
+            program = drawable->material->get_program();
+
+            drawable->material->send_data();
+        } 
+        else
+            program = 0;
 
         GL3::program_manager *programManager = GL3::program_manager::get_singleton();
         GL3::vbo_manager *vboManager = GL3::vbo_manager::get_singleton();
@@ -80,7 +95,9 @@ namespace deep
         GL3::core::disable_depth_mask();
         GL3::core::set_depth_function(GL3::core::gl_depth_function::Lequal);
 
-        programManager->use(drawable->program);
+        if(drawable->material.get() != nullptr)
+            programManager->use(drawable->material->get_program());
+
         vaoManager->bind(drawable->vao);
 
         textureManager->bind(drawable->texture);
@@ -147,13 +164,13 @@ namespace deep
     drawable_component::drawable_component
     ======================================
     */
-    drawable_component::drawable_component(GL3::gl_id _program, GL3::gl_id _vbo, GL3::gl_id _vao, GL3::gl_id _texture, uint8_t _textureUnit)
+    drawable_component::drawable_component(GL3::gl_id _vbo, GL3::gl_id _vao, imaterial *_material, GL3::gl_id _texture, uint8_t _textureUnit)
         : vbo(_vbo),
           vao(_vao),
           texture(_texture),
           textureUnit(_textureUnit),
-          program(_program),
-          renderCallback(nullptr)
+          renderCallback(nullptr),
+          material(_material)
     { }
 
     /*
@@ -161,10 +178,10 @@ namespace deep
     component_manager::create_drawable_component
     ============================================
     */
-    component_id component_manager::create_drawable_component(GL3::gl_id program, GL3::gl_id vbo, GL3::gl_id vao, GL3::gl_id texture, uint8_t textureUnit)
+    component_id component_manager::create_drawable_component(GL3::gl_id vbo, GL3::gl_id vao, imaterial *material, GL3::gl_id texture, uint8_t textureUnit)
     {
         component_id id = m_ComponentCount;
-        drawable_component drawable(program, vbo, vao, texture, textureUnit);
+        drawable_component drawable(vbo, vao, material, texture, textureUnit);
         component_type type = component_manager::component_type::drawable;
 
         m_DrawableComponents.insert(id, drawable);
@@ -180,13 +197,12 @@ namespace deep
     component_manager::create_drawable_component
     ============================================
     */
-    component_id component_manager::create_drawable_component(const char *progName, const char *vboName, const char *vaoName, const char *textName, uint8_t textureUnit)
+    component_id component_manager::create_drawable_component(const char *vboName, const char *vaoName, imaterial *material, const char *textName, uint8_t textureUnit)
     {
         GL3::program_manager *programManager = GL3::program_manager::get_singleton();
 
         hash_function hash = programManager->get_hash_function();
 
-        GL3::gl_id prog = hash(progName);
         GL3::gl_id vbo  = hash(vboName);
         GL3::gl_id vao  = hash(vaoName);
 
@@ -194,7 +210,7 @@ namespace deep
         if(textName != nullptr)
             texture = hash(textName);
 
-        return create_drawable_component(prog, vbo, vao, texture, textureUnit);
+        return create_drawable_component(vbo, vao, material, texture, textureUnit);
     }
 
     /*

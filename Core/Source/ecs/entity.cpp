@@ -134,9 +134,9 @@ namespace deep
         const char *name,
         entity_collection_id collection,
         const polygon &pol,
-        GL3::gl_id program,
         const vec3<float> &position,
         const vec3<float> &size,
+        imaterial *material,
         GL3::gl_id texture,
         uint8_t textureUnit)
     {
@@ -146,7 +146,7 @@ namespace deep
 
         component_manager *componentManager = component_manager::get_singleton();
 
-        component_id drawableComponentID       = componentManager->create_drawable_component(program, pol.vbo(), pol.vao());
+        component_id drawableComponentID       = componentManager->create_drawable_component(pol.vbo(), pol.vao(), material);
         component_id transformationComponentID = componentManager->create_transformation_component(position, size, 0.0f);
 
         drawable_component *drawableComponent = componentManager->get_drawable_component(drawableComponentID);

@@ -252,9 +252,12 @@ namespace deep
 
                     if(drawable != nullptr)
                     {
-                        GL3::program_manager::program_item *program = programManager->get(drawable->program);
+                        GL3::program_manager::program_item *program = nullptr;
                         GL3::vao_manager::vao_item *vao = vaoManager->get(drawable->vao);
                         GL3::texture_manager::texture_item *texture = textureManager->get(drawable->texture);
+
+                        if(drawable->material.get() != nullptr)
+                            program = programManager->get(drawable->material->get_program());
 
                         if(ImGui::BeginCombo("VAO", vao != nullptr ? vao->name.str() : ""))
                         {
@@ -289,7 +292,11 @@ namespace deep
 
                         if(ImGui::BeginCombo("Shader", program != nullptr ? program->name.str() : ""))
                         {
-                            programManager->enum_programs(__edit_program_enum_callback, &drawable->program);
+                            GL3::gl_id prog;
+                            programManager->enum_programs(__edit_program_enum_callback, &prog);
+
+                            if(drawable->material.get() != nullptr)
+                                drawable->material->set_program(prog);
 
                             ImGui::EndCombo();
                         }
@@ -612,7 +619,7 @@ namespace deep
                                     if(vaoSel.currentVao == nullptr || shaderSel.currentProgram == nullptr)
                                         goto cancel_component;
 
-                                    component_id id = componentManager->create_drawable_component(shaderSel.currentProgramID, vaoSel.currentVao->attachedVbo, vaoSel.currentVaoID, textureSel.currentTextureID);
+                                    component_id id = componentManager->create_drawable_component(vaoSel.currentVao->attachedVbo, vaoSel.currentVaoID, nullptr, textureSel.currentTextureID);
 
                                     drawable_component *drawableComponent = componentManager->get_drawable_component(id);
                                     drawableComponent->renderCallback = drawable_component::classic_render_callback;

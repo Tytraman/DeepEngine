@@ -10,6 +10,7 @@
 #include "DE/graphics/shape.hpp"
 #include "DE/graphics/material.hpp"
 #include "DE/memory/hash_table.hpp"
+#include "DE/memory/ref_counter.hpp"
 #include "DE/drivers/opengl/renderer.hpp"
 
 namespace deep
@@ -35,17 +36,16 @@ namespace deep
     {
         GL3::gl_id vbo;
         GL3::gl_id vao;
+        ref_counter<imaterial> material;
+        drawable_render_callback renderCallback;
         GL3::gl_id texture;
         uint8_t textureUnit;
-        GL3::gl_id program;
-        drawable_render_callback renderCallback;
-        imaterial *material;
 
         DE_API static void classic_render_callback(GL3::gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, camera *camera);
         DE_API static void skybox_render_callback(GL3::gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, camera *camera);
         
         private:
-            drawable_component(GL3::gl_id program, GL3::gl_id vbo, GL3::gl_id vao, GL3::gl_id texture = 0, uint8_t textureUnit = 0);
+            drawable_component(GL3::gl_id vbo, GL3::gl_id vao, imaterial *material = nullptr, GL3::gl_id texture = 0, uint8_t textureUnit = 0);
 
             friend component_manager;
     };
@@ -156,8 +156,8 @@ namespace deep
 
             DE_API component_type get_type(component_id component);
 
-            DE_API component_id create_drawable_component(GL3::gl_id program, GL3::gl_id vbo, GL3::gl_id vao, GL3::gl_id texture = 0, uint8_t textureUnit = 0);
-            DE_API component_id create_drawable_component(const char *progName, const char *vboName, const char *vaoName, const char *textName = nullptr, uint8_t textureUnit = 0);
+            DE_API component_id create_drawable_component(GL3::gl_id vbo, GL3::gl_id vao, imaterial *material = nullptr, GL3::gl_id texture = 0, uint8_t textureUnit = 0);
+            DE_API component_id create_drawable_component(const char *vboName, const char *vaoName, imaterial *material = nullptr, const char *textName = nullptr, uint8_t textureUnit = 0);
 
             DE_API drawable_component *get_drawable_component(component_id component);
             DE_API void delete_drawable_component(component_id id);

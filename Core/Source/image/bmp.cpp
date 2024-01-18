@@ -155,8 +155,8 @@ namespace deep
             return false;
         }
 
-        m_MemoryChunk.setData(data);
-        m_MemoryChunk.setSize(size);
+        m_MemoryChunk.set_data(data);
+        m_MemoryChunk.set_size(size);
 
         bmp_file_header *bmpFileHeader = (bmp_file_header *) data;
         bmp_info_header *bmpInfoHeader = (bmp_info_header *) ((uint8_t *) data + sizeof(*bmpFileHeader));
@@ -310,8 +310,8 @@ namespace deep
         m_Height  = height;
         m_RowSize = newRowSize;
 
-        m_MemoryChunk.setData(newData);
-        m_MemoryChunk.setSize(newSize);
+        m_MemoryChunk.set_data(newData);
+        m_MemoryChunk.set_size(newSize);
 
         return true;
     }
@@ -691,13 +691,13 @@ namespace deep
         size_t destOffset = second * rowSize;
 
         // TODO: optimiser ça
-        mem_ptr buffer = mem::allocNoTrack(rowSize);
+        mem_ptr buffer = mem::alloc_no_track(rowSize);
 
         memcpy(buffer, data + destOffset, rowSize);
         memcpy(data + destOffset, data + indexOffset, rowSize);
         memcpy(data + indexOffset, buffer, rowSize);
 
-        mem::freeNoTrack(buffer);
+        mem::free_no_track(buffer);
     }
 
     /*
@@ -888,8 +888,8 @@ namespace deep
             if(memData != nullptr)
                 mem::free(memData);
 
-            m_MemoryChunk.setData(newData);
-            m_MemoryChunk.setSize(newSize);
+            m_MemoryChunk.set_data(newData);
+            m_MemoryChunk.set_size(newSize);
         }
         else
             return false;

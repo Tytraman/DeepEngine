@@ -71,9 +71,9 @@ namespace deep
                 const char *name,
                 entity_collection_id collection,
                 const polygon &pol,
-                GL3::gl_id program,
                 const vec3<float> &position,
                 const vec3<float> &size,
+                imaterial *material = nullptr,
                 GL3::gl_id texture = GL3::texture_manager::get_singleton()->get_white_texture(),
                 uint8_t textureUnit = 0);
 

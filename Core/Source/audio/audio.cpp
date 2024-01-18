@@ -38,7 +38,7 @@ namespace deep
 		// L'offset 20 est le début des données du chunk "fmt".
 		size_t offset = sizeof(wave_header);
 
-		wave_header *soundBuffer = (wave_header *) mem::allocNoTrack(filesize);
+		wave_header *soundBuffer = (wave_header *) mem::alloc_no_track(filesize);
 		size_t bytesRead;
 
 		if(!s.readAll(soundBuffer, &bytesRead))
@@ -123,7 +123,7 @@ namespace deep
 		// Rempli le buffer des données du son.
 		alBufferData(m_Buffer, alFormat, (uint8_t *) soundBuffer + offset, size, fmtChunk->sampleRate);
 
-		mem::freeNoTrack(soundBuffer);
+		mem::free_no_track(soundBuffer);
 
 		// Si une erreur survint alors on détruit le buffer.
 		if(alGetError() != AL_NO_ERROR) {

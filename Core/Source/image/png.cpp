@@ -68,8 +68,8 @@ namespace deep {
             return false;
         }
 
-        m_MemoryChunk.setSize(size);
-        m_MemoryChunk.setData(data);
+        m_MemoryChunk.set_size(size);
+        m_MemoryChunk.set_data(data);
 
         size_t bytesRead;
 

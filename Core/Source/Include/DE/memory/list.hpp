@@ -343,7 +343,7 @@ namespace deep
             return true;
 
         size_t newCapacity = (numberOfElements / m_CapacityStep + 1) * m_CapacityStep;
-        mem_ptr ptr = mem::reallocNoTrack(m_Data, newCapacity * sizeof(Type));
+        mem_ptr ptr = mem::realloc_no_track(m_Data, newCapacity * sizeof(Type));
 
         if(ptr == nullptr)
             return false;
@@ -387,7 +387,7 @@ namespace deep
     template<typename Type>
     void list<Type>::free()
     {
-        mem::freeNoTrack(m_Data);
+        mem::free_no_track(m_Data);
         m_Data = nullptr;
         m_NumberOfElements = 0;
         m_Capacity = 0;
@@ -461,7 +461,7 @@ namespace deep
         if(m_NumberOfElements >= m_Capacity)
         {
             size_t newCapacity = m_Capacity + m_CapacityStep;
-            mem_ptr ptr = mem::reallocNoTrack(m_Data, newCapacity * sizeof(Type));
+            mem_ptr ptr = mem::realloc_no_track(m_Data, newCapacity * sizeof(Type));
 
             if(ptr == nullptr)
                 return false;

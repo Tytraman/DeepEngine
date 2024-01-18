@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "C++/Paterne de conception.md",
+                "file": "C++/Allocation dynamique.md",
                 "mode": "source",
                 "source": false
               }
@@ -105,7 +105,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "C++/Paterne de conception.md",
+                "file": "C++/Allocation dynamique.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -122,7 +122,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "C++/Paterne de conception.md",
+                "file": "C++/Allocation dynamique.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -145,7 +145,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "C++/Paterne de conception.md"
+                "file": "C++/Allocation dynamique.md"
               }
             }
           }
@@ -167,15 +167,16 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "d41b1b510a6fb05e",
+  "active": "4ecb7d3eaf11af18",
   "lastOpenFiles": [
+    "C++/Paterne de conception.md",
+    "C++/Allocation dynamique.md",
     "Analyses/Godot/RefCounted.md",
     "Analyses/Godot/Materials.md",
     "OpenGL/Normal.md",
     "OpenGL/Lumières.md",
     "Maths/dot product.md",
     "C++/Smart pointers.md",
-    "C++/Paterne de conception.md",
     "C++/Parallélisme.md",
     "C++/Alignement des données.md",
     "res/img/basic_lighting_specular_shininess.png",

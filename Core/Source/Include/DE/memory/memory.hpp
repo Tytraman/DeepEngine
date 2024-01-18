@@ -7,6 +7,7 @@
 
 #include <stddef.h>
 #include <utility>
+#include <new>
 
 namespace deep
 {
@@ -38,7 +39,7 @@ namespace deep
             /// @brief      Alloue un espace mémoire sans le traquer avec le gestionnaire de mémoire.
             /// @param size Nombre d'octets à allouer pour l'espace mémoire. 
             /// @return     L'adresse vers l'espace mémoire ou \c nullptr si une erreur est survenue.
-            DE_API static mem_ptr allocNoTrack(size_t size);
+            DE_API static mem_ptr alloc_no_track(size_t size);
 
             /// @brief      Alloue un espace mémoire en le traquant avec le gesionnaire de mémoire. <i>(Recommandé pour éviter les memory leaks)</i>.
             /// @param size Nombre d'octets à allouer pour l'espace mémoire.
@@ -49,7 +50,7 @@ namespace deep
             /// @param memory  Adresse de l'espace mémoire à ré-allouer.
             /// @param newSize Nombre d'octets à allouer pour l'espace mémoire. 
             /// @return        L'adresse vers le nouvel espace mémoire ou \c nullptr si une erreur est survenue.
-            DE_API static mem_ptr reallocNoTrack(mem_ptr memory, size_t newSize);
+            DE_API static mem_ptr realloc_no_track(mem_ptr memory, size_t newSize);
 
             /// @brief         Ré-alloue un espace mémoire en le traquant avec le gestionnaire de mémoire.
             /// @param memory  Adresse de l'espace mémoire à ré-allouer.
@@ -59,16 +60,29 @@ namespace deep
 
             /// @brief        Libère un espace mémoire qui a été créé sans être traqué.
             /// @param memory Adresse de l'espace mémoire à libérer.
-            DE_API static void freeNoTrack(mem_ptr memory);
+            DE_API static void free_no_track(mem_ptr memory);
 
             /// @brief        Libère un espace mémoire qui a été créé en étant traqué.
             /// @param memory Adresse de l'espace mémoire à libérer.
             DE_API static void free(const mem_ptr memory);
 
+            template<typename Type, typename... Args>
+            static Type *alloc_type(Args&&... args);
+
         private:
             static list<mem_ptr> g_MemoryTrack;
 
     };
+
+
+    template<typename Type, typename... Args>
+    inline Type *memory_manager::alloc_type(Args&&... args)
+    {
+        Type *obj = (Type *) mem::alloc(sizeof(Type));
+        new(obj) Type(std::forward<Args>(args)...);
+        
+        return obj;
+    }
 
     using mem = memory_manager;
 
@@ -85,8 +99,8 @@ namespace deep
             mem_ptr data();
             size_t size() const;
 
-            void setData(mem_ptr data);
-            void setSize(size_t size);
+            void set_data(mem_ptr data);
+            void set_size(size_t size);
 
         private:
             mem_ptr m_Data;
@@ -95,9 +109,9 @@ namespace deep
     };
 
     /*
-    =================
+    ==================
     memory_chunk::free
-    =================
+    ==================
     */
     inline void memory_chunk::free()
     {
@@ -109,9 +123,9 @@ namespace deep
     }
 
     /*
-    =================
+    ==================
     memory_chunk::data
-    =================
+    ==================
     */
     inline mem_ptr memory_chunk::data()
     {
@@ -119,9 +133,9 @@ namespace deep
     }
 
     /*
-    =================
+    ==================
     memory_chunk::size
-    =================
+    ==================
     */
     inline size_t memory_chunk::size() const
     {
@@ -129,21 +143,21 @@ namespace deep
     }
 
     /*
-    ====================
-    memory_chunk::setData
-    ====================
+    ======================
+    memory_chunk::set_data
+    ======================
     */
-    inline void memory_chunk::setData(mem_ptr data)
+    inline void memory_chunk::set_data(mem_ptr data)
     {
         m_Data = data;
     }
 
     /*
-    ====================
-    memory_chunk::setSize
-    ====================
+    ======================
+    memory_chunk::set_size
+    ======================
     */
-    inline void memory_chunk::setSize(size_t size)
+    inline void memory_chunk::set_size(size_t size)
     {
         m_Size = size;
     }
@@ -202,9 +216,9 @@ namespace deep
     };
 
     /*
-    =======================
+    =========================
     unique_ptr<T>::unique_ptr
-    =======================
+    =========================
     */
     template<typename T>
     unique_ptr<T>::unique_ptr(T *ptr)
@@ -212,9 +226,9 @@ namespace deep
     { }
 
     /*
-    ========================
+    ==========================
     unique_ptr<T>::~unique_ptr
-    ========================
+    ==========================
     */
     template<typename T>
     unique_ptr<T>::~unique_ptr()
@@ -224,9 +238,9 @@ namespace deep
     }
 
     /*
-    =======================
+    =========================
     unique_ptr<T>::unique_ptr
-    =======================
+    =========================
     */
     template<typename T>
     unique_ptr<T>::unique_ptr(unique_ptr &&other)
@@ -234,9 +248,9 @@ namespace deep
     { }
 
     /*
-    =======================
+    ========================
     unique_ptr<T>::operator=
-    =======================
+    ========================
     */
     template<typename T>
     unique_ptr<T> &unique_ptr<T>::operator=(unique_ptr &&other) noexcept
@@ -248,9 +262,9 @@ namespace deep
     }
 
     /*
-    =======================
+    ========================
     unique_ptr<T>::operator=
-    =======================
+    ========================
     */
     template<typename T>
     unique_ptr<T> &unique_ptr<T>::operator=(T *ptr)
@@ -262,9 +276,9 @@ namespace deep
     }
 
     /*
-    ========================
+    ==========================
     unique_ptr<T>::~unique_ptr
-    ========================
+    ==========================
     */
     template<typename T>
     void *unique_ptr<T>::operator new(size_t size)
@@ -273,9 +287,9 @@ namespace deep
     }
 
     /*
-    =======================
+    ========================
     unique_ptr<T>::operator*
-    =======================
+    ========================
     */
     template<typename T>
     T &unique_ptr<T>::operator*()
@@ -284,9 +298,9 @@ namespace deep
     }
 
     /*
-    =====================
+    ======================
     unique_ptr<T>::release
-    =====================
+    ======================
     */
     template<typename T>
     T *unique_ptr<T>::release()
@@ -295,9 +309,9 @@ namespace deep
     }
 
     /*
-    ===================
+    ====================
     unique_ptr<T>::reset
-    ===================
+    ====================
     */
     template<typename T>
     void unique_ptr<T>::reset(T *ptr)
@@ -309,9 +323,9 @@ namespace deep
     }
 
     /*
-    =================
+    ==================
     unique_ptr<T>::get
-    =================
+    ==================
     */
     template<typename T>
     T *unique_ptr<T>::get() const

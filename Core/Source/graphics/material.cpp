@@ -13,9 +13,11 @@ namespace deep
         : m_Ambient(ambient),
           m_Diffuse(diffuse),
           m_Specular(specular),
-          m_Shininess(shininess),
-          m_Program(program)
-    { }
+          m_Shininess(shininess)
+    {
+        m_Type = material_type::Colored;
+        m_Program = program;
+    }
 
     /*
     =========================

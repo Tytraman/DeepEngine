@@ -69,7 +69,6 @@ namespace deep
     */
     entity_manager::entity graphic::createRectangle(
         const char *name,
-        GL3::gl_id program,
         entity_collection_id collectionID,
         const vec3<float> &position,
         float width,
@@ -83,7 +82,7 @@ namespace deep
         GL3::vao_manager *vaoManager = GL3::vao_manager::get_singleton();
         GL3::texture_manager *textureManager = GL3::texture_manager::get_singleton();
 
-        component_id drawableComponentID       = componentManager->create_drawable_component(program, vboManager->create(name), vaoManager->create(name));
+        component_id drawableComponentID       = componentManager->create_drawable_component(vboManager->create(name), vaoManager->create(name));
         component_id transformationComponentID = componentManager->create_transformation_component(position, vec3<float>(width, height, 1.0f), 0.0f);
 
         drawable_component *drawableComponent = componentManager->get_drawable_component(drawableComponentID);
@@ -141,7 +140,6 @@ namespace deep
     */
     entity_manager::entity graphic::createRectangleTexture(
         const char *name,
-        GL3::gl_id program,
         entity_collection_id collectionID,
         const vec3<float> &position,
         float width,
@@ -156,7 +154,7 @@ namespace deep
         GL3::vbo_manager *vboManager = GL3::vbo_manager::get_singleton();
         GL3::vao_manager *vaoManager = GL3::vao_manager::get_singleton();
 
-        component_id drawableComponentID       = componentManager->create_drawable_component(program, vboManager->create(name), vaoManager->create(name), texture, textureUnit);
+        component_id drawableComponentID       = componentManager->create_drawable_component(vboManager->create(name), vaoManager->create(name), nullptr, texture, textureUnit);
         component_id transformationComponentID = componentManager->create_transformation_component(position, vec3<float>(width, height, 1.0f), 0.0f);
 
         drawable_component *drawableComponent = componentManager->get_drawable_component(drawableComponentID);
@@ -213,7 +211,6 @@ namespace deep
     */
     entity_manager::entity graphic::create3DRectangle(
         const char *name,
-        GL3::gl_id program,
         entity_collection_id collectionID,
         const vec3<float> &position,
         float width,
@@ -232,7 +229,7 @@ namespace deep
         GL3::vao_manager *vaoManager = GL3::vao_manager::get_singleton();
         GL3::texture_manager *textureManager = GL3::texture_manager::get_singleton();
 
-        component_id drawableComponentID       = componentManager->create_drawable_component(program, vboManager->create(name), vaoManager->create(name));
+        component_id drawableComponentID       = componentManager->create_drawable_component(vboManager->create(name), vaoManager->create(name));
         component_id transformationComponentID = componentManager->create_transformation_component(position, vec3<float>(width, height, length), 0.0f);
 
         drawable_component *drawableComponent = componentManager->get_drawable_component(drawableComponentID);
@@ -344,7 +341,6 @@ namespace deep
     */
     entity_manager::entity graphic::create_3D_rectangle_texture(
         const char *name,
-        GL3::gl_id program,
         entity_collection_id collectionID,
         const vec3<float> &position,
         float width,
@@ -364,7 +360,7 @@ namespace deep
         GL3::vbo_manager *vboManager = GL3::vbo_manager::get_singleton();
         GL3::vao_manager *vaoManager = GL3::vao_manager::get_singleton();
 
-        component_id drawableComponentID       = componentManager->create_drawable_component(program, vboManager->create(name), vaoManager->create(name), texture, textureUnit);
+        component_id drawableComponentID       = componentManager->create_drawable_component(vboManager->create(name), vaoManager->create(name), nullptr, texture, textureUnit);
         component_id transformationComponentID = componentManager->create_transformation_component(position, vec3<float>(width, height, length), 0.0f);
 
         drawable_component *drawableComponent = componentManager->get_drawable_component(drawableComponentID);
@@ -663,7 +659,6 @@ namespace deep
 
     entity_manager::entity graphic::create_cubemap(
         const char *name,
-        GL3::gl_id program,
         entity_collection_id collectionID,
         const vec3<float> &position,
         float width,
@@ -678,7 +673,7 @@ namespace deep
         GL3::vbo_manager *vboManager = GL3::vbo_manager::get_singleton();
         GL3::vao_manager *vaoManager = GL3::vao_manager::get_singleton();
 
-        component_id drawableComponentID       = componentManager->create_drawable_component(program, vboManager->create(name), vaoManager->create(name), texture, textureUnit);
+        component_id drawableComponentID       = componentManager->create_drawable_component(vboManager->create(name), vaoManager->create(name), nullptr, texture, textureUnit);
         component_id transformationComponentID = componentManager->create_transformation_component(position, vec3<float>(width, height, length), 0.0f);
 
         drawable_component *drawableComponent = componentManager->get_drawable_component(drawableComponentID);

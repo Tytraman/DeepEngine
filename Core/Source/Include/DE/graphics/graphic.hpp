@@ -62,7 +62,6 @@ namespace deep
             /// @return                L'entité nouvellement créée ou \ref entity::bad() si une erreur est survenue.
             DE_API static entity_manager::entity createRectangle(
                 const char *name,
-                GL3::gl_id program,
                 entity_collection_id collectionID,
                 const vec3<float> &position,
                 float width,
@@ -72,7 +71,6 @@ namespace deep
 
             DE_API static entity_manager::entity createRectangleTexture(
                 const char *name,
-                GL3::gl_id program,
                 entity_collection_id collectionID,
                 const vec3<float> &position,
                 float width,
@@ -84,7 +82,6 @@ namespace deep
 
             DE_API static entity_manager::entity create3DRectangle(
                 const char *name,
-                GL3::gl_id program,
                 entity_collection_id collectionID,
                 const vec3<float> &position,
                 float width,
@@ -101,7 +98,6 @@ namespace deep
             
             DE_API static entity_manager::entity create_3D_rectangle_texture(
                 const char *name,
-                GL3::gl_id program,
                 entity_collection_id collectionID,
                 const vec3<float> &position,
                 float width,
@@ -141,7 +137,6 @@ namespace deep
 
             DE_API static entity_manager::entity create_cubemap(
                 const char *name,
-                GL3::gl_id program,
                 entity_collection_id collectionID,
                 const vec3<float> &position,
                 float width,

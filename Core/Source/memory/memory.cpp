@@ -10,10 +10,10 @@ namespace deep
 
     /*
     ============================
-    memory_manager::allocNoTrack
+    memory_manager::alloc_no_track
     ============================
     */
-    mem_ptr memory_manager::allocNoTrack(size_t size)
+    mem_ptr memory_manager::alloc_no_track(size_t size)
     {
 
 #if DE_WINDOWS
@@ -35,7 +35,7 @@ namespace deep
     */
     mem_ptr memory_manager::alloc(size_t size)
     {
-        mem_ptr memory = allocNoTrack(size);
+        mem_ptr memory = alloc_no_track(size);
 
         if(memory == nullptr)
             return nullptr;
@@ -46,14 +46,14 @@ namespace deep
 
     /*
     ==============================
-    memory_manager::reallocNoTrack
+    memory_manager::realloc_no_track
     ==============================
     */
-    mem_ptr memory_manager::reallocNoTrack(mem_ptr memory, size_t newSize)
+    mem_ptr memory_manager::realloc_no_track(mem_ptr memory, size_t newSize)
     {
 #if DE_WINDOWS
         if(memory == nullptr)
-            return allocNoTrack(newSize);
+            return alloc_no_track(newSize);
 
         HANDLE processHeap = GetProcessHeap();
 
@@ -73,7 +73,7 @@ namespace deep
     */
     mem_ptr memory_manager::realloc(mem_ptr memory, size_t newSize)
     {
-        mem_ptr mem = reallocNoTrack(memory, newSize);
+        mem_ptr mem = realloc_no_track(memory, newSize);
 
         if(mem == nullptr)
             return nullptr;
@@ -88,10 +88,10 @@ namespace deep
 
     /*
     ===========================
-    memory_manager::freeNoTrack
+    memory_manager::free_no_track
     ===========================
     */
-    void memory_manager::freeNoTrack(mem_ptr memory)
+    void memory_manager::free_no_track(mem_ptr memory)
     {
 #if DE_WINDOWS
         HANDLE processHeap = GetProcessHeap();
@@ -116,7 +116,7 @@ namespace deep
         if(index != nothing)
             g_MemoryTrack.remove(index);
 
-        freeNoTrack(memory);
+        free_no_track(memory);
     }
 
     /*
