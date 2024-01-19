@@ -41,3 +41,10 @@ Le paramètre `shininess` a cet impact visuel :
 ![[basic_lighting_specular_shininess.png]]
 Moins la valeur est haute et plus la lumière se diffuse sur l'objet.
 
+**Cas sur les textures**
+Les effets spéculaires peuvent être appliqués sur des textures, mais l'effet peut avoir un résultat peu réaliste :
+![[screenshot_2024_1_19_9_33_47.bmp]]
+*On peut voir que l'effet spéculaire est aussi fort sur l'herbe que sur la terre, ce qui n'est pas réaliste car ces 2 surfaces reflètent différemment la lumière.*
+
+Pour contrer ce problème, on peut utiliser ce qu'on appelle une '*specular maps*'.
+Le principe est de décomposer la texture en plusieurs textures et appliquer un effet différent selon les *couches* de la texture finale.

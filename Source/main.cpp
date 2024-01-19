@@ -249,11 +249,17 @@ int main()
         "Version: %s\n"
         "Max vertex attribs: %d\n"
         "Max texture image units: %d\n"
+        "Max texture size: %d\n"
+        "Max 3D texture size: %d\n"
+        "Max array texture layers: %d\n"
         DE_TERM_FG_YELLOW "====================================================\n" DE_TERM_RESET,
         
         deep::GL3::core::query_version(),
         deep::GL3::core::query_max_vertex_attribs(),
-        deep::GL3::core::query_max_texture_image_units()
+        deep::GL3::core::query_max_texture_image_units(),
+        deep::GL3::core::query_max_texture_size(),
+        deep::GL3::core::query_max_3D_texture_size(),
+        deep::GL3::core::query_max_array_texture_layers()
     );
 
     deep::bmp mcGrass, mcGrassTop, mcDirt;

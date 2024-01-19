@@ -45,6 +45,10 @@ namespace deep
 
                 DE_API static int query_max_texture_image_units();
 
+                DE_API static int query_max_texture_size();
+                DE_API static int query_max_3D_texture_size();
+                DE_API static int query_max_array_texture_layers();
+
                 /// @brief        Met à jour le viewport d'OpenGL.
                 /// @param width  Largeur du viewport.
                 /// @param height Hauteur du viewport.

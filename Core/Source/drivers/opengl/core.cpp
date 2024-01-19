@@ -7,9 +7,9 @@ namespace deep
     {
         
         /*
-        ================
-        core::version
-        ================
+        ===================
+        core::query_version
+        ===================
         */
         const char *core::query_version()
         {
@@ -17,9 +17,9 @@ namespace deep
         }
 
         /*
-        =======================
+        =====================
         core::update_viewport
-        =======================
+        =====================
         */
         void core::update_viewport(int width, int height)
         {
@@ -27,9 +27,9 @@ namespace deep
         }
 
         /*
-        =========================
+        ==============================
         core::query_max_vertex_attribs
-        =========================
+        ==============================
         */
         int core::query_max_vertex_attribs()
         {
@@ -39,14 +39,50 @@ namespace deep
         }
 
         /*
-        =============================
+        ===================================
         core::query_max_texture_image_units
-        =============================
+        ===================================
         */
         int core::query_max_texture_image_units()
         {
             int val = 0;
             DE_GL_CALL(glGetIntegerv(GL_MAX_TEXTURE_IMAGE_UNITS, &val));
+            return val;
+        }
+
+        /*
+        ============================
+        core::query_max_texture_size
+        ============================
+        */
+        int core::query_max_texture_size()
+        {
+            int val = 0;
+            DE_GL_CALL(glGetIntegerv(GL_MAX_TEXTURE_SIZE, &val));
+            return val;
+        }
+
+        /*
+        ===============================
+        core::query_max_3D_texture_size
+        ===============================
+        */
+        int core::query_max_3D_texture_size()
+        {
+            int val = 0;
+            DE_GL_CALL(glGetIntegerv(GL_MAX_3D_TEXTURE_SIZE, &val));
+            return val;
+        }
+
+        /*
+        ====================================
+        core::query_max_array_texture_layers
+        ====================================
+        */
+        int core::query_max_array_texture_layers()
+        {
+            int val = 0;
+            DE_GL_CALL(glGetIntegerv(GL_MAX_ARRAY_TEXTURE_LAYERS, &val));
             return val;
         }
 

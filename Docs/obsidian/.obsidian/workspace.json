@@ -4,28 +4,16 @@
     "type": "split",
     "children": [
       {
-        "id": "099d6a61a3999798",
+        "id": "816fc4eef6f39a76",
         "type": "tabs",
         "children": [
           {
-            "id": "4ecb7d3eaf11af18",
+            "id": "4b79483f98b98cfc",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "C++/Allocation dynamique.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
-            "id": "5b7c1695a088c39b",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "OpenGL/Lumières.md",
+                "file": "OpenGL/Textures.md",
                 "mode": "source",
                 "source": false
               }
@@ -105,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "C++/Allocation dynamique.md",
+                "file": "OpenGL/Textures.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -122,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "C++/Allocation dynamique.md",
+                "file": "OpenGL/Textures.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -145,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "C++/Allocation dynamique.md"
+                "file": "OpenGL/Textures.md"
               }
             }
           }
@@ -167,14 +155,18 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "4ecb7d3eaf11af18",
+  "active": "bb2f43f72b8547d4",
   "lastOpenFiles": [
-    "C++/Paterne de conception.md",
+    "res/img/OpenGL_Anatomy_of_a_Texture.png",
+    "OpenGL/Objects.md",
+    "OpenGL/Textures.md",
+    "OpenGL/Lumières.md",
+    "res/img/screenshot_2024_1_19_9_33_47.bmp",
     "C++/Allocation dynamique.md",
+    "C++/Paterne de conception.md",
     "Analyses/Godot/RefCounted.md",
     "Analyses/Godot/Materials.md",
     "OpenGL/Normal.md",
-    "OpenGL/Lumières.md",
     "Maths/dot product.md",
     "C++/Smart pointers.md",
     "C++/Parallélisme.md",
