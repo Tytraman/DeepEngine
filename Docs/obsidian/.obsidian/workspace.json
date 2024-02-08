@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "OpenGL/Textures.md",
+                "file": "OpenGL/Lumières.md",
                 "mode": "source",
                 "source": false
               }
@@ -93,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "OpenGL/Textures.md",
+                "file": "OpenGL/Lumières.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "OpenGL/Textures.md",
+                "file": "OpenGL/Lumières.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "OpenGL/Textures.md"
+                "file": "OpenGL/Lumières.md"
               }
             }
           }
@@ -155,36 +155,37 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "bb2f43f72b8547d4",
+  "active": "4b79483f98b98cfc",
   "lastOpenFiles": [
-    "res/img/OpenGL_Anatomy_of_a_Texture.png",
-    "OpenGL/Objects.md",
-    "OpenGL/Textures.md",
+    "Maths/dot product.md",
     "OpenGL/Lumières.md",
+    "res/img/dot_negative.png",
+    "res/img/phong_reflection_model_example_2.png",
+    "res/img/dot_equals_zero.png",
+    "res/img/normal_mapping.png",
+    "res/img/dot_positive.png",
+    "res/img/OpenGL_Anatomy_of_a_Texture.png",
+    "res/img/phong_reflection_model.png",
     "res/img/screenshot_2024_1_19_9_33_47.bmp",
+    "OpenGL/GLSL/OpenGL Shading Language.md",
+    "DeepEngine/TODO list.md",
+    "OpenGL/Normal.md",
+    "OpenGL/Textures.md",
+    "OpenGL/GLSL",
+    "OpenGL/Objects.md",
     "C++/Allocation dynamique.md",
     "C++/Paterne de conception.md",
     "Analyses/Godot/RefCounted.md",
     "Analyses/Godot/Materials.md",
-    "OpenGL/Normal.md",
-    "Maths/dot product.md",
     "C++/Smart pointers.md",
     "C++/Parallélisme.md",
     "C++/Alignement des données.md",
     "res/img/basic_lighting_specular_shininess.png",
-    "DeepEngine/TODO list.md",
     "Maths",
-    "res/img/phong_reflection_model_example_2.png",
     "DeepEngine/Materials.md",
     "res/img/lighting_diffuse_3.png",
-    "res/img/lighting_diffuse_2.png",
-    "res/img/lighting_diffuse_1.png",
-    "res/img/phong_reflection_model.png",
-    "res/img/normal_mapping.png",
     "res/img",
     "res",
-    "Pasted image 20240111102737.png",
-    "Pasted image 20240111102654.png",
     "OpenGL",
     "DeepEngine",
     "Analyses/Godot",

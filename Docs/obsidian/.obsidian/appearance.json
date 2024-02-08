@@ -2,5 +2,7 @@
   "accentColor": "",
   "theme": "obsidian",
   "cssTheme": "80s Neon",
-  "enabledCssSnippets": []
+  "enabledCssSnippets": [
+    "latex"
+  ]
 }

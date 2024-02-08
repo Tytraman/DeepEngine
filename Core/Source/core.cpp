@@ -286,24 +286,40 @@ end:
     }
 
     /*
-    ============
-    core::getPwd
-    ============
+    =============
+    core::set_pwd
+    =============
     */
-    const char *core::getPwd()
+    bool core::set_pwd(const char *path)
     {
-        static string p;
+#if DE_WINDOWS
 
+        return SetCurrentDirectoryA(path);
+
+#else
+#error Need implementation.
+#endif
+    }
+
+    /*
+    =============
+    core::get_pwd
+    =============
+    */
+    string core::get_pwd()
+    {
 #if DE_WINDOWS
         DWORD pwdLength = GetCurrentDirectoryA(0, NULL);
         char *buffer = (char *) mem::alloc_no_track(pwdLength);
         GetCurrentDirectoryA(pwdLength, buffer);
-        p = buffer;
+        string p = buffer;
+
+        return p;
 #else
 #error Need implementation.
 #endif
 
-        return p.str();
+        
     }
 
 }

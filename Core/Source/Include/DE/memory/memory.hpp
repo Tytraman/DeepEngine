@@ -162,7 +162,7 @@ namespace deep
         m_Size = size;
     }
 
-    template<typename T>
+    template<typename Type>
     class unique_ptr
     {
 
@@ -170,14 +170,14 @@ namespace deep
             /// @brief      Instancie un pointeur unique.
             /// @remark     Le constructeur est explicite pour éviter de confondre une instanciation avec l'opération = et ainsi avoir une meilleure compréhension du code.
             /// @param ptr  Une adresse pointant sur une zone mémoire allouée avec \ref mem::alloc.
-            explicit unique_ptr(T *ptr = nullptr);
+            explicit unique_ptr(Type *ptr = nullptr);
 
             /// @brief Destructeur du pointeur unique. Permet de libérer la mémoire automatiquement et éviter des memory leaks.
             ~unique_ptr();
 
             unique_ptr(unique_ptr &&other);
             unique_ptr &operator=(unique_ptr &&other) noexcept;
-            unique_ptr &operator=(T *ptr);
+            unique_ptr &operator=(Type *ptr);
 
             /// @brief      Surcharge de l'opérateur new pour attribuer un espace mémoire grâce à \ref mem::alloc.
             /// @param size
@@ -186,74 +186,74 @@ namespace deep
 
             /// @brief  Retourne la référence vers l'objet pointé.
             /// @return La référence de l'objet pointé.
-            T &operator*();
+            Type &operator*();
 
             /// @brief  Retourne le pointeur interne après l'avoir défini à \c nullptr.
             /// @return Le pointeur interne.
-            T *release();
+            Type *release();
 
             /// @brief      Modifie la valeur du pointeur interne après avoir \ref mem::free celui déjà présent.
             /// @param ptr  Le nouveau pointeur.
-            void reset(T *ptr);
+            void reset(Type *ptr);
 
             /// @brief  Retourne le pointeur interne.
             /// @return Le pointeur interne.
-            T *get() const;
+            Type *get() const;
 
             /// @brief  Retourne le pointeur interne.
             /// @return Le pointeur interne.
-            T *operator->() const;
+            Type *operator->() const;
 
-            void assign(T *ptr);
+            void assign(Type *ptr);
 
         public:
             unique_ptr(const unique_ptr &other) = delete;             // Il ne faut pas que la classe puisse copier un autre pointeur unique sinon elle perd tout son intérêt.
             unique_ptr &operator=(const unique_ptr &other) = delete;
 
         private:
-            T *m_Ptr;
+            Type *m_Ptr;
 
     };
 
     /*
-    =========================
-    unique_ptr<T>::unique_ptr
-    =========================
+    ============================
+    unique_ptr<Type>::unique_ptr
+    ============================
     */
-    template<typename T>
-    unique_ptr<T>::unique_ptr(T *ptr)
+    template<typename Type>
+    unique_ptr<Type>::unique_ptr(Type *ptr)
         : m_Ptr(ptr)
     { }
 
     /*
-    ==========================
-    unique_ptr<T>::~unique_ptr
-    ==========================
+    =============================
+    unique_ptr<Type>::~unique_ptr
+    =============================
     */
-    template<typename T>
-    unique_ptr<T>::~unique_ptr()
+    template<typename Type>
+    unique_ptr<Type>::~unique_ptr()
     {
         if(m_Ptr != nullptr)
             mem::free(m_Ptr);
     }
 
     /*
-    =========================
-    unique_ptr<T>::unique_ptr
-    =========================
+    ============================
+    unique_ptr<Type>::unique_ptr
+    ============================
     */
-    template<typename T>
-    unique_ptr<T>::unique_ptr(unique_ptr &&other)
+    template<typename Type>
+    unique_ptr<Type>::unique_ptr(unique_ptr &&other)
         : m_Ptr(other.release())
     { }
 
     /*
-    ========================
-    unique_ptr<T>::operator=
-    ========================
+    ===========================
+    unique_ptr<Type>::operator=
+    ===========================
     */
-    template<typename T>
-    unique_ptr<T> &unique_ptr<T>::operator=(unique_ptr &&other) noexcept
+    template<typename Type>
+    unique_ptr<Type> &unique_ptr<Type>::operator=(unique_ptr &&other) noexcept
     {
         if(this != &other)
             reset(other.release());
@@ -262,12 +262,12 @@ namespace deep
     }
 
     /*
-    ========================
-    unique_ptr<T>::operator=
-    ========================
+    ===========================
+    unique_ptr<Type>::operator=
+    ===========================
     */
-    template<typename T>
-    unique_ptr<T> &unique_ptr<T>::operator=(T *ptr)
+    template<typename Type>
+    unique_ptr<Type> &unique_ptr<Type>::operator=(Type *ptr)
     {
         if(m_Ptr != ptr)
             reset(ptr);
@@ -280,41 +280,41 @@ namespace deep
     unique_ptr<T>::~unique_ptr
     ==========================
     */
-    template<typename T>
-    void *unique_ptr<T>::operator new(size_t size)
+    template<typename Type>
+    void *unique_ptr<Type>::operator new(size_t size)
     {
         return mem::alloc(size);
     }
 
     /*
-    ========================
-    unique_ptr<T>::operator*
-    ========================
+    ===========================
+    unique_ptr<Type>::operator*
+    ===========================
     */
-    template<typename T>
-    T &unique_ptr<T>::operator*()
+    template<typename Type>
+    Type &unique_ptr<Type>::operator*()
     {
         return *m_Ptr;
     }
 
     /*
-    ======================
-    unique_ptr<T>::release
-    ======================
+    =========================
+    unique_ptr<Type>::release
+    =========================
     */
-    template<typename T>
-    T *unique_ptr<T>::release()
+    template<typename Type>
+    Type *unique_ptr<Type>::release()
     {
         return exchange(m_Ptr, nullptr);
     }
 
     /*
-    ====================
-    unique_ptr<T>::reset
-    ====================
+    =======================
+    unique_ptr<Type>::reset
+    =======================
     */
-    template<typename T>
-    void unique_ptr<T>::reset(T *ptr)
+    template<typename Type>
+    void unique_ptr<Type>::reset(Type *ptr)
     {
         if(m_Ptr != nullptr)
             mem::free(m_Ptr);
@@ -323,23 +323,23 @@ namespace deep
     }
 
     /*
-    ==================
-    unique_ptr<T>::get
-    ==================
+    =====================
+    unique_ptr<Type>::get
+    =====================
     */
-    template<typename T>
-    T *unique_ptr<T>::get() const
+    template<typename Type>
+    Type *unique_ptr<Type>::get() const
     {
         return m_Ptr;
     }
 
     /*
-    =========================
-    unique_ptr<T>::operator->
-    =========================
+    ============================
+    unique_ptr<Type>::operator->
+    ============================
     */
-    template<typename T>
-    T *unique_ptr<T>::operator->() const
+    template<typename Type>
+    Type *unique_ptr<Type>::operator->() const
     {
         return m_Ptr;
     }

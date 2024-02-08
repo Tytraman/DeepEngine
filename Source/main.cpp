@@ -25,6 +25,7 @@
 #include <DE/safe_integer.hpp>
 #include <DE/os/COM.hpp>
 #include <DE/hardware/cpu.hpp>
+#include <DE/os/file_dialog.hpp>
 
 extern "C"
 {
@@ -213,7 +214,7 @@ int main()
         } return EXIT_FAILURE;
     }
 
-    printf("pwd: %s\n", deep::core::getPwd());
+    printf("pwd: %s\n", deep::core::get_pwd().str());
 
     deep::window win(TARGET_MS, TARGET_FPS);
     win.set_event_callback(event_callback);
@@ -265,7 +266,7 @@ int main()
     deep::bmp mcGrass, mcGrassTop, mcDirt;
     if(!resourcesManager->loadBMP("grass_block_side.bmp", mcGrass))
     {
-        fprintf(stderr, "Unable to load resource.\n");
+        fprintf(stderr, "Unable to load resource: %d\n", GetLastError());
         return EXIT_FAILURE;
     }
 

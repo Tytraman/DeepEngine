@@ -42,7 +42,7 @@ id:: 656f5954-5393-4868-9c24-2e1b4c005d8b
 				- **"UI"** : **entiers non signés**, chaque composant est un entier dans la plage [0, `MAX_INT`].
 			- Pour chaque type de format de couleur, il y a une limite sur la profondeur de bits disponible  par composant :
 				- | **Type de format** | **Profondeur de bits par composant** |
-				  | Normalisé non-signé | 2 *(1)*, 4 *(2)*, 5 *(3)*, 8, 10 *(3)*, 12 *(2), 16 |
+				  | Normalisé non-signé | 2 *(1)*, 4 *(2)*, 5 *(3)*, 8, 10 *(3)*, 12 *(2)*, 16 |
 				  | Normalisé signé | 8, 16 |
 				  | Entier non-signé | 8, 16, 32 |
 				  | Entier signé | 8, 16, 32 |

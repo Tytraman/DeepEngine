@@ -323,14 +323,16 @@ namespace deep
     }
 
     /*
-    =======================
+    ========================
     string_utils::remove_all
-    =======================
+    ========================
     */
     size_t string_utils::remove_all(char **str, char caractere)
     {
         if(*str == nullptr)
+        {
             return 0;
+        }
 
         size_t len = length(*str);
         size_t backupLen = len;
@@ -360,6 +362,35 @@ namespace deep
         }
 
         return backupLen - len;
+    }
+
+    /*
+    =========================
+    string_utils::replace_all
+    =========================
+    */
+    size_t string_utils::replace_all(char *str, char toReplace, char replacement)
+    {
+        if(str == nullptr)
+        {
+            return 0;
+        }
+
+        size_t number = 0;
+        size_t len = length(str);
+        size_t index;
+
+        for(index = 0; index < len; ++index)
+        {
+            if(str[index] == toReplace)
+            {
+                str[index] = replacement;
+
+                number++;
+            }
+        }
+
+        return number;
     }
 
     /*

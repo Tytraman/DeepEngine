@@ -29,7 +29,9 @@ namespace deep
             DE_API static bool append(wchar_t **dest, const char *source);
             DE_API static bool append(char **dest, uint8_t *buffer, size_t size);
 
-            DE_API static size_t remove_all(char **str, char caractere);
+            DE_API static size_t remove_all(char **str, char charactere);
+
+            DE_API static size_t replace_all(char *str, char toReplace, char replacement);
 
             DE_API static bool ends_with(const char *toSearch, const char *end);
             DE_API static bool ends_with(const wchar_t *toSearch, const wchar_t *end);

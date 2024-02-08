@@ -1,10 +1,10 @@
 #ifndef __DEEP_ENGINE_CORE_HPP__
 #define __DEEP_ENGINE_CORE_HPP__
 
-#include <DE/def.hpp>
-#include <DE/error.hpp>
-
-#include <stdint.h>
+#include "DE/def.hpp"
+#include "DE/types.hpp"
+#include "DE/error.hpp"
+#include "DE/string.hpp"
 
 namespace deep
 {
@@ -25,63 +25,64 @@ namespace deep
         Unknown                  = 255
     };
 
-	class DE_API core
+    class DE_API core
     {
 
-		public:
-			static core_init_status init(const char *gameTitle, uint64_t diskSpaceRequired, uint64_t physicalRamNeeded, uint64_t virtualRamNeeded);
+        public:
+            static core_init_status init(const char *gameTitle, uint64_t diskSpaceRequired, uint64_t physicalRamNeeded, uint64_t virtualRamNeeded);
 
             static bool focusInstance(const char *gameTitle);
             static bool checkAvailableDiskSpace(uint64_t diskSpaceRequired);
             static bool checkMemory(uint64_t physicalRamNeeded, uint64_t virtualRamNeeded);
 
-			static uint32_t getMousePosition(int *x, int *y);
+            static uint32_t getMousePosition(int *x, int *y);
 
-			static void shutdown();
+            static void shutdown();
 
-			static uint64_t getTick();
-			static uint64_t getCurrentTimeMillis();
-			static void sleep(uint32_t millis);
+            static uint64_t getTick();
+            static uint64_t getCurrentTimeMillis();
+            static void sleep(uint32_t millis);
 
             static void getLocalTime(uint32_t *year, uint32_t *month, uint32_t *day, uint32_t *hour, uint32_t *minute, uint32_t *second, uint32_t *millis);
 
-			static const char *getPwd();
+            static bool set_pwd(const char *path);
+            static string get_pwd();
 
         private:
-			static uint64_t m_InitTime;
+            static uint64_t m_InitTime;
 
         public:
             core() = delete;
 
-	};
+    };
 
     /*
     =============
     core::getTick
     =============
     */
-	inline uint64_t core::getTick()
+    inline uint64_t core::getTick()
     {
 #ifdef DE_WINDOWS
-		return GetTickCount64() - m_InitTime;
+        return GetTickCount64() - m_InitTime;
 #else
 #error Need implementation
 #endif
-	}
+    }
 
     /*
     ===========
     core::sleep
     ===========
     */
-	inline void core::sleep(uint32_t millis)
-	{
+    inline void core::sleep(uint32_t millis)
+    {
 #ifdef DE_WINDOWS
-		Sleep(millis);
+        Sleep(millis);
 #else
 #error Need implementation
 #endif
-	}
+    }
 
 }
 
