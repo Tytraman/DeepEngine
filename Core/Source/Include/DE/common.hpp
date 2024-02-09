@@ -39,7 +39,7 @@ namespace deep
     /// @brief          Retire la référence d'un type.
     /// @tparam Type    Le type auquel retirer la référence.
     template<class Type>
-    using rm_ref = typename rm_ref_s<Type>::type;
+    using rm_ref = typename rm_ref_s<Type>::type;    
 
     // ===== REMOVE CONST ===== //
 
@@ -107,42 +107,45 @@ namespace deep
     // ===== IS SAME ===== //
 
     template<typename, typename>
-    inline constexpr bool isSame = false;
+    inline constexpr bool is_same = false;
 
     template<typename Type>
-    inline constexpr bool isSame<Type, Type> = true;
+    inline constexpr bool is_same<Type, Type> = true;
 
     // ===== IS POINTER ===== //
 
     template<typename>
-    inline constexpr bool isPointer = false;
+    inline constexpr bool is_pointer = false;
 
     template<typename Type>
-    inline constexpr bool isPointer<Type *> = true;
+    inline constexpr bool is_pointer<Type *> = true;
 
     template<typename Type>
-    inline constexpr bool isPointer<const Type *> = true;
+    inline constexpr bool is_pointer<const Type *> = true;
 
     template<typename Type>
-    inline constexpr bool isPointer<volatile Type *> = true;
+    inline constexpr bool is_pointer<volatile Type *> = true;
 
     template<typename Type>
-    inline constexpr bool isPointer<const volatile Type *> = true;
+    inline constexpr bool is_pointer<const volatile Type *> = true;
 
     // ===== IS VOID ===== //
 
     template<typename Type>
-    inline constexpr bool isVoid = isSame<rm_const_volatile<Type>, void>;
+    inline constexpr bool is_void = is_same<rm_const_volatile<Type>, void>;
 
     // ===== IS ENUM ===== //
 
     template<typename Type>
-    inline constexpr bool isEnum = __is_enum(Type);
+    inline constexpr bool is_enum = __is_enum(Type);
 
     // ===== UNDERLYING TYPE ===== //
 
     template<typename Type>
     using underlying_type = __underlying_type(Type);
+
+    template<typename Base, typename Derived>
+    inline constexpr bool is_base_of = __is_base_of(Base, Derived);
 
 
     template<typename Enum>
@@ -174,6 +177,11 @@ namespace deep
         value = static_cast<K &&>(newValue);
         return oldVal;
     }
+
+
+
+
+
 
     DE_API uint64_t next_bit_number(uint64_t value, uint16_t fromBitNumber);
 

@@ -10,13 +10,18 @@
 namespace deep
 {
 
+    /// @brief  Compte le nombre de référence faite à l'objet, libère la mémoire automatiquement une fois le compteur à 0.
+    /// @remark Pour compter les références d'une classe, celle-ci doit hériter de cette classe.
     class reference_counter
     {
 
         public:
             reference_counter();
 
+            /// @brief Ajoute 1 au compteur de références.
             void take() const;
+
+            /// @brief Retire 1 au compteur de références, s'il atteint 0, libère la mémoire.
             void drop() const;
 
         private:
@@ -46,7 +51,9 @@ namespace deep
         m_Count--;
 
         if(m_Count == 0)
+        {
             mem::free((mem_ptr) this);
+        }
     }
 
     template<typename Type>
@@ -87,8 +94,12 @@ namespace deep
     ref_counter<Type>::ref_counter(Type *ptr)
         : m_Ptr(ptr)
     {
+        static_assert(is_base_of<reference_counter, Type>, "The specified class needs to inherit from class reference_counter.");
+
         if(ptr != nullptr)
+        {
             ptr->take();
+        }
     }
 
     /*
@@ -101,14 +112,18 @@ namespace deep
         : m_Ptr(other.m_Ptr)
     {
         if(other.m_Ptr != nullptr)
+        {
             other.m_Ptr->take();
+        }
     }
 
     template<typename Type>
     ref_counter<Type>::~ref_counter()
     {
         if(m_Ptr != nullptr)
+        {
             m_Ptr->drop();
+        }
     }
 
     /*
@@ -120,9 +135,14 @@ namespace deep
     ref_counter<Type> &ref_counter<Type>::operator=(Type *ptr)
     {
         if(ptr != nullptr)
+        {
             ptr->take();
+        }
+
         if(m_Ptr != nullptr)
+        {
             m_Ptr->drop();
+        }
 
         m_Ptr = ptr;
 

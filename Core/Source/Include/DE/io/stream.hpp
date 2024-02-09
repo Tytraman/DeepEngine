@@ -1,15 +1,75 @@
 #ifndef __DEEP_ENGINE_STREAM_HPP__
 #define __DEEP_ENGINE_STREAM_HPP__
 
-#include <DE/def.hpp>
-#include <DE/types.hpp>
-#include <DE/memory/memory.hpp>
+#include "DE/def.hpp"
+#include "DE/types.hpp"
+#include "DE/memory/memory.hpp"
+#include "DE/memory/ref_counter.hpp"
 
 #include <stddef.h>
 #include <stdint.h>
 
 namespace deep
 {
+
+    /// @brief  Interface à la base de toutes les classes de stream.
+    /// @remark Très inspirée des Stream sous .NET
+    class stream : public reference_counter
+    {
+
+        public:
+
+            /// @brief  Indique si le stream supporte la lecture.
+            /// @return \c true si le stream supporte la lecture.
+            virtual bool can_read() const = 0;
+
+            /// @brief  Indique si le stream supporte l'écriture.
+            /// @return \c true si le stream supporte l'écriture.
+            virtual bool can_write() const = 0;
+
+            /// @brief  Indique si le stream peut timeout.
+            /// @return \c true si le stream peut timeout.
+            virtual bool can_timeout() const = 0;
+
+            /// @brief  Indique s'il est possible de changer la position du curseur du stream.
+            /// @return \c true s'il est possible de changer la position du curseur du stream.
+            virtual bool can_seek() const = 0;
+
+            //TODO: se renseigner sur la longueur d'un stream.
+
+            virtual size_t get_position() const = 0;
+
+            virtual uint32_t get_read_timeout() const = 0;
+            virtual uint32_t get_write_timeout() const = 0;
+
+            virtual void set_read_timeout(uint32_t value) = 0;
+            virtual void set_write_timeout(uint32_t value) = 0;
+
+            virtual bool close() = 0;
+
+            /// @brief                Lit \p count octets en les plaçants dans \p buffer à partir d'\p offset.
+            /// @remark               Avance le curseur du stream du nombre d'octets lus.
+            /// @param[out] buffer    Buffer dans lequel stocker les données à lire.
+            /// @param offset         Offset à partir duquel les données seront stockées dans le buffer.
+            /// @param count          Nombre d'octets à lire.
+            /// @param bytesRead      Pointeur vers une variable qui contiendra le nombre d'octets lus.
+            /// @return               \c true si la procédure a réussi.
+            virtual bool read(mem_ptr buffer, size_t offset, size_t count, size_t *bytesRead) = 0;
+
+            /// @brief                Écrit \p count octets depuis le \p buffer à partir d'\offset.
+            /// @remark               Avance le curseur du stream du nombre d'octets écris.
+            /// @param[in] buffer     Buffer depuis lequel écrire les données.
+            /// @param offset         Offset à partir duquel les données du buffer seront écrites.
+            /// @param count          Nombre d'octets à écrire.
+            /// @param bytesWrite     Pointeur vers une variable qui contiendra le nombre d'octets écris.
+            /// @return               \c true si la procédure a réussi.
+            virtual bool write(mem_ptr buffer, size_t offset, size_t count, size_t *bytesWrite) = 0;
+        
+        protected:
+            stream();
+
+    };
+
 
     class DE_API input_stream 
     {

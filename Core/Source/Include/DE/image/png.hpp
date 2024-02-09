@@ -1,8 +1,8 @@
 #ifndef __DEEP_ENGINE_MYPNG_HPP__
 #define __DEEP_ENGINE_MYPNG_HPP__
 
-#include <DE/image/image.hpp>
-#include <DE/stream.hpp>
+#include "DE/image/image.hpp"
+#include "DE/io/stream.hpp"
 
 namespace deep
 {

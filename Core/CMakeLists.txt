@@ -87,6 +87,7 @@ file(GLOB CORE_HEADERS
     "${CORE_INCLUDE}/DE/rendering/*.hpp" "${CORE_INCLUDE}/DE/rendering/*.h"
     "${CORE_INCLUDE}/DE/resource/*.hpp" "${CORE_INCLUDE}/DE/resource/*.h"
     "${CORE_INCLUDE}/DE/file/*.hpp" "${CORE_INCLUDE}/DE/file/*.h"
+    "${CORE_INCLUDE}/DE/io/*.hpp" "${CORE_INCLUDE}/DE/io/*.h"
 )
 
 file(GLOB CORE_SOURCES
@@ -108,6 +109,7 @@ file(GLOB CORE_SOURCES
     "${CORE_SOURCE}/rendering/*.cpp" "${CORE_SOURCE}/rendering/*.c"
     "${CORE_SOURCE}/resource/*.cpp" "${CORE_SOURCE}/resource/*.c"
     "${CORE_SOURCE}/file/*.cpp" "${CORE_SOURCE}/file/*.c"
+    "${CORE_SOURCE}/io/*.cpp" "${CORE_SOURCE}/io/*.c"
 )
 
 

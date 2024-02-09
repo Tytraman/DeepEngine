@@ -1,32 +1,42 @@
-#include <DE/stream.hpp>
-#include <DE/string_utils.hpp>
+#include "DE/io/stream.hpp"
+#include "DE/string_utils.hpp"
 
 #include <string.h>
 
-namespace deep {
+namespace deep
+{
 
     /*
-    ========================
+    ==============
+    stream::stream
+    ==============
+    */
+    stream::stream()
+    { }
+
+
+    /*
+    ==========================
     input_stream::input_stream
-    ========================
+    ==========================
     */
     input_stream::input_stream()
         : m_FD(NULL_FD)
     { }
 
     /*
-    ==========================
+    ============================
     output_stream::output_stream
-    ==========================
+    ============================
     */
     output_stream::output_stream()
         : m_FD(NULL_FD)
     { }
 
     /*
-    ==================================
+    ======================================
     output_file_stream::output_file_stream
-    ==================================
+    ======================================
     */
     output_file_stream::output_file_stream(const char *filename)
     {

@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "OpenGL/Lumières.md",
+                "file": "C++/Assertion.md",
                 "mode": "source",
                 "source": false
               }
@@ -93,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "OpenGL/Lumières.md",
+                "file": "C++/Assertion.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "OpenGL/Lumières.md",
+                "file": "C++/Assertion.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "OpenGL/Lumières.md"
+                "file": "C++/Assertion.md"
               }
             }
           }
@@ -157,8 +157,13 @@
   },
   "active": "4b79483f98b98cfc",
   "lastOpenFiles": [
-    "Maths/dot product.md",
+    "C++/Smart pointers.md",
+    "C++/Assertion.md",
+    "C++/Alignement des données.md",
+    "C++/Allocation dynamique.md",
+    "C++/Paterne de conception.md",
     "OpenGL/Lumières.md",
+    "Maths/dot product.md",
     "res/img/dot_negative.png",
     "res/img/phong_reflection_model_example_2.png",
     "res/img/dot_equals_zero.png",
@@ -173,13 +178,9 @@
     "OpenGL/Textures.md",
     "OpenGL/GLSL",
     "OpenGL/Objects.md",
-    "C++/Allocation dynamique.md",
-    "C++/Paterne de conception.md",
     "Analyses/Godot/RefCounted.md",
     "Analyses/Godot/Materials.md",
-    "C++/Smart pointers.md",
     "C++/Parallélisme.md",
-    "C++/Alignement des données.md",
     "res/img/basic_lighting_specular_shininess.png",
     "Maths",
     "DeepEngine/Materials.md",

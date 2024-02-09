@@ -15,7 +15,9 @@ namespace deep
         for(; mask > 0; mask >>= 1)
         {
             if((value & mask) > 0)
+            {
                 break;
+            }
 
             fromBitNumber--;
         }

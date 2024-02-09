@@ -3,7 +3,7 @@
 #include "DE/memory/memory.hpp"
 #include "DE/memory/pair.hpp"
 #include "DE/file.hpp"
-#include "DE/stream.hpp"
+#include "DE/io/stream.hpp"
 #include "DE/image/png.hpp"
 #include "DE/common.hpp"
 #include "DE/file/file_object.hpp"
