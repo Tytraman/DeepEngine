@@ -1,8 +1,7 @@
 #ifndef __DEEP_ENGINE_COMMON_HPP__
 #define __DEEP_ENGINE_COMMON_HPP__
 
-#include <DE/def.hpp>
-#include <DE/types.hpp>
+#include "DE/def.hpp"
 
 namespace deep
 {
@@ -81,6 +80,9 @@ namespace deep
     struct rm_const_volatile_s
     {
         using type = Type;
+
+        template<template<typename> typename Fn>
+        using apply = Fn<Type>;
     };
 
     template<typename Type>
@@ -163,6 +165,38 @@ namespace deep
     {
         return static_cast<rm_ref<Type>&&>(value);
     }
+
+    // Indique que le template prend comme paramètre une 'taille'.
+    template<size_t>
+    struct mk_signed;
+
+    // Ensuite il y a une spécification du template selon les différentes tailles.
+    template<>
+    struct mk_signed<1>
+    {
+        using type = int8_t;
+    };
+
+    template<>
+    struct mk_signed<2>
+    {
+        using type = int16_t;
+    };
+
+    template<>
+    struct mk_signed<4>
+    {
+        using type = int32_t;
+    };
+
+    template<>
+    struct mk_signed<8>
+    {
+        using type = int64_t;
+    };
+
+    template<typename Type>
+    using make_signed = typename mk_signed<sizeof(Type)>::type;
 
     /// @brief          Retourne la valeur de \ref val et met à jour sa valeur en prenant celle de \ref newVal.
     /// @tparam Type       

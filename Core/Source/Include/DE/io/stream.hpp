@@ -18,6 +18,17 @@ namespace deep
     {
 
         public:
+            enum class seek_origin
+            {
+                Begin,
+                Current,
+                End
+            };
+
+        public:
+
+            virtual bool open() = 0;
+            virtual bool close() = 0;
 
             /// @brief  Indique si le stream supporte la lecture.
             /// @return \c true si le stream supporte la lecture.
@@ -35,7 +46,7 @@ namespace deep
             /// @return \c true s'il est possible de changer la position du curseur du stream.
             virtual bool can_seek() const = 0;
 
-            //TODO: se renseigner sur la longueur d'un stream.
+            virtual size_t get_length() const = 0;
 
             virtual size_t get_position() const = 0;
 
@@ -45,7 +56,7 @@ namespace deep
             virtual void set_read_timeout(uint32_t value) = 0;
             virtual void set_write_timeout(uint32_t value) = 0;
 
-            virtual bool close() = 0;
+            virtual size_t seek(ssize_t offset, seek_origin origin) = 0;
 
             /// @brief                Lit \p count octets en les plaçants dans \p buffer à partir d'\p offset.
             /// @remark               Avance le curseur du stream du nombre d'octets lus.
@@ -65,6 +76,8 @@ namespace deep
             /// @return               \c true si la procédure a réussi.
             virtual bool write(mem_ptr buffer, size_t offset, size_t count, size_t *bytesWrite) = 0;
         
+            virtual bool copy_to(stream &other) = 0;
+
         protected:
             stream();
 

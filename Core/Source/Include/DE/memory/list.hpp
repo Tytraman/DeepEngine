@@ -148,6 +148,7 @@ namespace deep
     template<typename Type>
     class list : public icollection<Type, list_iterator<Type>>
     {
+
         public:
             using TypePtr = Type*;
             using ConstTypePtr = const Type*;
@@ -164,6 +165,9 @@ namespace deep
             bool add(ConstTypeRef element) override;
             bool add(Type &&element)       override;
 
+            bool set(const Type *buffer, size_t index, size_t count);
+            bool set(const Type &value, size_t index, size_t count);
+
             bool remove(size_t index) override;
 
             size_t find(const Type &toSearch) const override;
@@ -177,7 +181,7 @@ namespace deep
             list_iterator<Type> begin() override;
             list_iterator<Type> end()   override;
 
-            size_t   get_capacity()         const;
+            size_t   get_capacity()          const;
             uint32_t get_capacity_step()     const;
             TypeRef operator[](size_t index);
 
@@ -190,6 +194,7 @@ namespace deep
             uint32_t  m_CapacityStep;
 
             bool grow_if_needed();
+            bool grow_if_needed(size_t index, size_t count);
 
     };
 
@@ -282,6 +287,46 @@ namespace deep
     }
 
     /*
+    ===============
+    list<Type>::set
+    ===============
+    */
+    template<typename Type>
+    bool list<Type>::set(const Type *buffer, size_t index, size_t count)
+    {
+        if(!grow_if_needed(index, count))
+        {
+            return false;
+        }
+
+        memcpy(m_Data + index, buffer, count * sizeof(Type));
+
+        return true;
+    }
+
+    /*
+    ===============
+    list<Type>::set
+    ===============
+    */
+    template<typename Type>
+    bool list<Type>::set(const Type &value, size_t index, size_t count)
+    {
+        if(!grow_if_needed(index, count))
+        {
+            return false;
+        }
+
+        size_t i;
+        for(i = 0; i < count; ++i)
+        {
+            memcpy(m_Data + index + i, &value, sizeof(Type));
+        }
+        
+        return true;
+    }
+
+    /*
     ==================
     list<Type>::remove
     ==================
@@ -290,7 +335,9 @@ namespace deep
     bool list<Type>::remove(size_t index)
     {
         if(index >= m_NumberOfElements)
+        {
             return false;
+        }
 
         // Obtient le nombre d'éléments pour atteindre la fin de la liste.
         size_t diff = m_NumberOfElements - index - 1;
@@ -320,9 +367,12 @@ namespace deep
         ConstTypePtr element = &toSearch;
 
         // Vérifie pour chaque élément de la liste si la donnée est la même que celle recherchée.
-        while(index < numberOfElements) {
+        while(index < numberOfElements)
+        {
             if(memcmp(ptr, element, elementSize) == 0)
+            {
                 return index;
+            }
 
             ptr += elementSize;
             index++;
@@ -449,9 +499,9 @@ namespace deep
     }
 
     /*
-    ========================
+    ==========================
     list<Type>::grow_if_needed
-    ========================
+    ==========================
     */
     template<typename Type>
     bool list<Type>::grow_if_needed()
@@ -468,6 +518,32 @@ namespace deep
 
             m_Data = (TypePtr) ptr;
             m_Capacity = newCapacity;
+        }
+
+        return true;
+    }
+
+    /*
+    ==========================
+    list<Type>::grow_if_needed
+    ==========================
+    */
+    template<typename Type>
+    bool list<Type>::grow_if_needed(size_t index, size_t count)
+    {
+        if(index >= m_NumberOfElements)
+        {
+            size_t numberOfElements = m_NumberOfElements;
+            size_t diff = index + count - numberOfElements;
+
+            m_NumberOfElements += diff;
+
+            if(!grow_if_needed())
+            {
+                m_NumberOfElements = numberOfElements;
+
+                return false;
+            }
         }
 
         return true;

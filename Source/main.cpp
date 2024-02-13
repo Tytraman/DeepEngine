@@ -27,6 +27,7 @@
 #include <DE/hardware/cpu.hpp>
 #include <DE/os/file_dialog.hpp>
 #include <DE/io/stream.hpp>
+#include <DE/io/memory_stream.hpp>
 
 extern "C"
 {
@@ -239,8 +240,6 @@ int main()
         deep::core::shutdown();
         return 1;
     }
-
-    deep::ref_counter refTest(new deep::bmp);
 
     deep::im_gui_window::init(win);
 

@@ -1,16 +1,20 @@
 #ifndef __DEEP_ENGINE_TYPES_HPP__
 #define __DEEP_ENGINE_TYPES_HPP__
 
-#include <DE/def.hpp>
-#include <DE/color.hpp>
-
-#include <stdint.h>
+#include "DE/def.hpp"
+#include "DE/color.hpp"
+#include "DE/common.hpp"
 
 #include <SDL.h>
 
 /// @namespace de
 /// @brief Espace de nom regroupant tout ce qui est relatif au DeepEngine.
-namespace deep {
+namespace deep
+{
+
+    // Il n'existe pas dans le standard de version signée de size_t, donc il faut
+    // la créer soi-même.
+    using ssize_t = make_signed<size_t>;
 
 
 #if DE_WINDOWS

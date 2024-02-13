@@ -2,6 +2,7 @@
 #define __DEEP_ENGINE_DEF_H__
 
 #include <math.h>
+#include <stdint.h>
 
 //===== HELPERs =====//
 
