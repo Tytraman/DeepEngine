@@ -21,6 +21,7 @@ namespace deep
     typedef WCHAR os_char;
 
     typedef HANDLE os_fd;
+#define os_invalid_fd INVALID_HANDLE_VALUE
 
 #define NULL_FD NULL
 

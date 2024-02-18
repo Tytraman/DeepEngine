@@ -28,6 +28,7 @@
 #include <DE/os/file_dialog.hpp>
 #include <DE/io/stream.hpp>
 #include <DE/io/memory_stream.hpp>
+#include <DE/io/file_stream.hpp>
 
 extern "C"
 {
@@ -108,12 +109,12 @@ void event_callback(deep::window &window, deep::devent e)
         };
     }
 
-    // Appelle le callback par défaut
+    // Appelle le callback par dÃ©faut
     deep::window::default_input_callback(window, e);
 }
 
-// Fonction appelée en boucle dans la boucle du jeu,
-// pour mettre à jour toutes les valeurs du jeu
+// Fonction appelÃ©e en boucle dans la boucle du jeu,
+// pour mettre Ã  jour toutes les valeurs du jeu
 void update_callback(deep::window & /* win */)
 {
     deep::scene_id sceneID = deep::scene::get_active_scene_id();
@@ -138,43 +139,43 @@ void update_callback(deep::window & /* win */)
 
     deep::entity_manager::entity entity = deep::entity_manager::entity::bad();
 
-    // Augmentation de la vitesse de déplacement de la caméra.
+    // Augmentation de la vitesse de dÃ©placement de la camÃ©ra.
     if(deep::key::isPressed(deep::dkey::LShift))
     {
         cameraSpeed += 0.10f;
     }
 
-    // Déplacer la caméra vers l'avant.
+    // DÃ©placer la camÃ©ra vers l'avant.
     if(deep::key::isPressed(deep::dkey::Z))
     {
         camera.move_forward(cameraSpeed);
     }
 
-    // Déplacer la caméra vers la gauche.
+    // DÃ©placer la camÃ©ra vers la gauche.
     if(deep::key::isPressed(deep::dkey::Q))
     {
         camera.move_left(cameraSpeed);
     }
 
-    // Déplacer la caméra vers la droite.
+    // DÃ©placer la camÃ©ra vers la droite.
     if(deep::key::isPressed(deep::dkey::D))
     {
         camera.move_right(cameraSpeed);
     }
 
-    // Déplacer la caméra vers l'arrière.
+    // DÃ©placer la camÃ©ra vers l'arriÃ¨re.
     if(deep::key::isPressed(deep::dkey::S))
     {
         camera.move_backward(cameraSpeed);
     }
 
-    // Fait monter la caméra.
+    // Fait monter la camÃ©ra.
     if(deep::key::isPressed(deep::dkey::Space))
     {
         camera.move_up(cameraSpeed);
     }
 
-    // Fait descendre la caméra.
+    // Fait descendre la camÃ©ra.
     if(deep::key::isPressed(deep::dkey::LCtrl))
     {
         camera.move_down(cameraSpeed);
@@ -234,7 +235,7 @@ int main()
     deep::resource_manager *resourcesManager = deep::resource_manager::get_singleton();
     deep::GL3::texture_manager *textureManager = deep::GL3::texture_manager::get_singleton();
 
-    // Charge les ressources nécessaires au jeu.
+    // Charge les ressources nÃ©cessaires au jeu.
     if(!resourcesManager->init(engineSettings->get_resources_directory().str()))
     {
         deep::core::shutdown();
@@ -616,7 +617,7 @@ int main()
 
     //== deep::component_id testDrawableComponentID 
 
-    // Affiche la skybox à la fin pour optimiser les appelles au fragment shader = FPS++
+    // Affiche la skybox Ã  la fin pour optimiser les appelles au fragment shader = FPS++
     //deep::entity_manager::entity skyboxEnt = deep::graphic::create_cubemap("skybox", skyboxProgram, collectionID, deep::fvec3(0.0f, 0.0f, 0.0f), 5005.0f, 105.0f, 2005.0f, skybox, 0);
 
     deep::scene::set_active_scene(sceneID);

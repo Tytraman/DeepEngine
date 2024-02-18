@@ -29,6 +29,7 @@ namespace deep
 
             virtual bool open() = 0;
             virtual bool close() = 0;
+            virtual bool flush() = 0;
 
             /// @brief  Indique si le stream supporte la lecture.
             /// @return \c true si le stream supporte la lecture.

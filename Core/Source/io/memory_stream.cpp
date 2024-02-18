@@ -161,7 +161,7 @@ namespace deep
         size_t length = get_length();
         size_t diff;
 
-        // Il ne reste plus rien à lire.
+        // Il ne reste plus rien Ã  lire.
         if(position >= length)
         {
             return true;
@@ -169,7 +169,7 @@ namespace deep
 
         diff = length - position;
 
-        bool ret = other.write(&m_Data[position], 0, diff, nullptr);
+        bool ret = other.write(&m_Data[position], 0, diff, nullptr) && other.flush();
 
         m_Position = length;
 

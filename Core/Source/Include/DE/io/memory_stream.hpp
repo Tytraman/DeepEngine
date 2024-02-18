@@ -15,8 +15,9 @@ namespace deep
         public:
             DE_API memory_stream();
 
-            DE_API virtual bool open();
-            DE_API virtual bool close();
+            DE_API virtual bool open() override;
+            DE_API virtual bool close() override;
+            DE_API virtual bool flush() override;
 
             DE_API virtual bool can_read() const override;
             DE_API virtual bool can_write() const override;
@@ -66,6 +67,16 @@ namespace deep
         m_Data.free();
         m_Position = 0;
 
+        return true;
+    }
+
+    /*
+    ====================
+    memory_stream::flush
+    ====================
+    */
+    inline bool memory_stream::flush()
+    {
         return true;
     }
 
