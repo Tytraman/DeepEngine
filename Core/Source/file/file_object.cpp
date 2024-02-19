@@ -11,8 +11,9 @@ namespace deep
     file_object::file_object
     ========================
     */
-    file_object::file_object(const char *filename)
-        : input_file_stream(filename),
+    file_object::file_object(stream *inputStream, const char *name)
+        : m_InputStream(inputStream),
+          m_Name(name),
           m_WarningsNumber(0)
     { }
 
@@ -23,6 +24,16 @@ namespace deep
     */
     bool file_object::load(file_object_load_warning_callback warningCallback)
     {
+        if(m_InputStream == nullptr)
+        {
+            return false;
+        }
+
+        if(!m_InputStream->can_read())
+        {
+            return false;
+        }
+
         uint8_t buffer[4096];
         size_t bytesRead = 1;
 
@@ -51,7 +62,7 @@ namespace deep
             {
 rread:
                 // Lit un chunk de données du fichier.
-                if(!read(buffer, sizeof(buffer), &bytesRead))
+                if(!m_InputStream->read(buffer, 0, sizeof(buffer), &bytesRead))
                     return false;
 
                 if(bytesRead == 0)
@@ -82,7 +93,7 @@ rread:
                         m_WarningsNumber++;
 
                         if(warningCallback)
-                            warningCallback(m_Filename, lines, car);
+                            warningCallback(m_Name, lines, car);
 
                         // Ignore la ligne.
                         finder.skipTo('\n');
@@ -302,10 +313,10 @@ end: ;
 
     /*
     ======================================
-    file_object_container::searchContainer
+    file_object_container::search_container
     ======================================
     */
-    file_object_container *file_object_container::searchContainer(const char *path)
+    file_object_container *file_object_container::search_container(const char *path)
     {
         file_object_container *container = nullptr;
 
@@ -323,10 +334,10 @@ end: ;
 
     /*
     ====================================
-    file_object_container::searchElement
+    file_object_container::search_element
     ====================================
     */
-    pair<string, string> *file_object_container::searchElement(const char *path)
+    pair<string, string> *file_object_container::search_element(const char *path)
     {
         pair<string, string> *element = nullptr;
 

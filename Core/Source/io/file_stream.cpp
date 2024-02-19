@@ -13,7 +13,8 @@ namespace deep
           m_Mode(mode),
           m_Access(access),
           m_Share(share),
-          m_FD(os_invalid_fd)
+          m_FD(os_invalid_fd),
+          m_IsOpened(false)
     { }
 
     /*

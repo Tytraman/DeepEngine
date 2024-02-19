@@ -79,6 +79,8 @@ namespace deep
         
             virtual bool copy_to(stream &other) = 0;
 
+            virtual bool is_opened() const = 0;
+
         protected:
             stream();
 

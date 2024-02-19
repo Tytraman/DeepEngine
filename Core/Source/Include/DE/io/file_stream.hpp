@@ -68,6 +68,8 @@ namespace deep
 
             DE_API virtual bool copy_to(stream &other) override;
 
+            DE_API virtual bool is_opened() const override;
+
             DE_API string get_filename() const;
 
         protected:
@@ -76,6 +78,7 @@ namespace deep
             file_access m_Access;
             file_share m_Share;
             os_fd m_FD;
+            bool m_IsOpened;
 
     };
 
@@ -240,6 +243,16 @@ namespace deep
 #else
 #error Need implementation
 #endif
+    }
+
+    /*
+    ======================
+    file_stream::is_opened
+    ======================
+    */
+    inline bool file_stream::is_opened() const
+    {
+        return m_IsOpened;
     }
 
     /*

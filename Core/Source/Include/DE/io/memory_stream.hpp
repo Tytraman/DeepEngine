@@ -41,6 +41,8 @@ namespace deep
 
             DE_API virtual bool copy_to(stream &other) override;
 
+            DE_API virtual bool is_opened() const override;
+
         protected:
             list<uint8_t> m_Data;
             size_t m_Position;
@@ -175,6 +177,16 @@ namespace deep
     */
     inline void memory_stream::set_write_timeout(uint32_t /*value*/)
     { }
+
+    /*
+    ========================
+    memory_stream::is_opened
+    ========================
+    */
+    inline bool memory_stream::is_opened() const
+    {
+        return true;
+    }
 
 }
 

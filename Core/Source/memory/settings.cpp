@@ -33,9 +33,9 @@ namespace deep
         return &singleton;
     }
 
-    void fobj_load_warning_callback(const char *filename, uint64_t line, char charactere)
+    void fobj_load_warning_callback(const string &name, uint64_t line, char charactere)
     {
-        fprintf(stderr, "[WARNING] File Object \"%s\" invalid charactere '%c' at line %llu. Ignoring the line.\n", filename, charactere, line);
+        fprintf(stderr, "[WARNING] File Object \"%s\" invalid charactere '%c' at line %llu. Ignoring the line.\n", name.str(), charactere, line);
     }
 
     /*
@@ -43,34 +43,47 @@ namespace deep
     engine_settings::init
     =====================
     */
-    bool engine_settings::init(const char *filepath)
+    bool engine_settings::init(stream *inputStream)
     {
-        file_object fobj(filepath);
-
-        if(!fobj.open())
-            return false;
-
-        if(!fobj.load(fobj_load_warning_callback))
+        if(inputStream == nullptr)
         {
-            fobj.close();
             return false;
         }
 
-        fobj.close();
+        file_object fobj(inputStream, "engine_settings");
 
-        pair<string, string> *element = fobj.searchElement("resources_directory");
+        if(!inputStream->is_opened())
+        {
+            if(!inputStream->open())
+            {
+                return false;
+            }
+        }
+
+        if(!fobj.load(fobj_load_warning_callback))
+        {
+            inputStream->close();
+
+            return false;
+        }
+
+        inputStream->close();
+
+        pair<string, string> *element = fobj.search_element("resources_directory");
         if(element == nullptr)
         {
             fprintf(stderr, "[ERROR] Engine settings: Unable to find 'resources_directory' parameter.\n");
+
             return false;
         }
 
         m_ResourcesDirectory = rvalue_cast(element->value2());
 
-        element = fobj.searchElement("imgui_font_filename");
+        element = fobj.search_element("imgui_font_filename");
         if(element == nullptr)
         {
             fprintf(stderr, "[ERROR] Engine settings: Unable to find 'imgui_font_filename' parameter.\n");
+
             return false;
         }
 

@@ -10,6 +10,7 @@
 #include "DE/memory/hash_table.hpp"
 #include "DE/drivers/opengl/shader.hpp"
 #include "DE/drivers/opengl/texture.hpp"
+#include "DE/io/file_stream.hpp"
 
 #include <stdio.h>
 
@@ -36,15 +37,15 @@ namespace deep
         // Contient la liste des fusions Vertex Fragment shaders.
         hash_table<shader_fusion> *table = static_cast<hash_table<shader_fusion>*>(args);
 
-        pair<string, string> *name = container.searchElement("name");
+        pair<string, string> *name = container.search_element("name");
         if(name == nullptr)
             return true;
 
-        pair<string, string> *vertex = container.searchElement("vertex");
+        pair<string, string> *vertex = container.search_element("vertex");
         if(vertex == nullptr)
             return true;
 
-        pair<string, string> *fragment = container.searchElement("fragment");
+        pair<string, string> *fragment = container.search_element("fragment");
         if(fragment == nullptr)
             return true;
 
@@ -133,16 +134,21 @@ namespace deep
         string shadersConfig(m_ShadersFolder);
         shadersConfig.append("shaders.fobj");
 
-        file_object shadersFobj(shadersConfig.str());
-
-        if(!shadersFobj.open())
-            return false;
-
-        if(!shadersFobj.load())
+        file_stream ifs(shadersConfig.str(), file_stream::file_mode::Open, file_stream::file_access::Read, file_stream::file_share::Read);
+        if(!ifs.open())
         {
-            shadersFobj.close();
             return false;
         }
+
+        file_object shadersFobj(&ifs, "shaders");
+        if(!shadersFobj.load())
+        {
+            ifs.close();
+
+            return false;
+        }
+
+        ifs.close();
 
         hash_table<shader_fusion> shaderFiles;
         shadersFobj.enumerate(nullptr, enum_shaders_config_fobj, static_cast<mem_ptr>(&shaderFiles), 1);

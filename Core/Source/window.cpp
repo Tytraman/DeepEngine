@@ -64,7 +64,7 @@ namespace deep
 
                             uint32_t year, month, day, hour, minute, second;
 
-                            core::getLocalTime(&year, &month, &day, &hour, &minute, &second, nullptr);
+                            core::get_local_time(&year, &month, &day, &hour, &minute, &second, nullptr);
                             string destpath = resourcesManager->getScreenshotsFolder();
                             destpath.append("screenshot_");
                             destpath.append(std::to_string(year).c_str());
@@ -282,7 +282,7 @@ namespace deep
     {
         devent e;
         uint64_t lag = 0;
-        uint64_t previous = core::getTick();
+        uint64_t previous = core::get_tick();
         uint64_t end;
         uint64_t current;
         uint64_t elapsed;
@@ -298,13 +298,13 @@ namespace deep
         key::update();
 
         // Boucle infinie du jeu.
-        uint64_t startTime = core::getCurrentTimeMillis(), endTime;
+        uint64_t startTime = core::get_current_time_millis(), endTime;
         while(m_Running)
         {
             scene_id sceneID = scene::get_active_scene_id();
 
             // Calcule le temps passé à faire la boucle
-            current = core::getTick();		// Récupère le tick actuel.
+            current = core::get_tick();		// Récupère le tick actuel.
             elapsed = current - previous;	// Compte combien de temps s'est écoulé entre la dernière itération et maintenant.
             previous = current;				// Sauvegarde le temps actuel pour qu'il devienne le temps précédent à la prochaine itération.
             lag += elapsed;					// Plus le système est lent, et plus le lag sera élevé.
@@ -368,10 +368,10 @@ namespace deep
             // Fait le rendu final de la frame !
             systemManager->renderSystem(m_Renderer, m_FRB, sceneID);
 
-            end = core::getTick();
+            end = core::get_tick();
 
             cn++;
-            endTime = core::getCurrentTimeMillis();
+            endTime = core::get_current_time_millis();
             elapsed = endTime - startTime;
 
             if(elapsed >= 1000)

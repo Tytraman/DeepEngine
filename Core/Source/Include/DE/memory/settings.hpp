@@ -4,6 +4,7 @@
 #include "DE/def.hpp"
 #include "DE/types.hpp"
 #include "DE/string.hpp"
+#include "DE/io/stream.hpp"
 
 namespace deep
 {
@@ -14,7 +15,7 @@ namespace deep
         public:
             DE_API static engine_settings *get_singleton();
 
-            DE_API bool init(const char *filepath);
+            DE_API bool init(stream *inputStream);
 
             DE_API bool get_debug_mode();
             DE_API string &get_resources_directory();

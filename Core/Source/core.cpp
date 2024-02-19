@@ -10,6 +10,7 @@
 #include "DE/memory/settings.hpp"
 #include "DE/os/COM.hpp"
 #include "DE/hardware/cpu.hpp"
+#include "DE/io/file_stream.hpp"
 
 #include <SDL.h>
 
@@ -23,11 +24,11 @@ namespace deep
     #endif
 
     /*
-    ======================
-    core::getMousePosition
-    ======================
+    ========================
+    core::get_mouse_position
+    ========================
     */
-    uint32_t core::getMousePosition(int *x, int *y)
+    uint32_t core::get_mouse_position(int *x, int *y)
     {
         return SDL_GetMouseState(x, y);
     }
@@ -54,43 +55,61 @@ namespace deep
 
         // Vérifie s'il y a une autre instance du programme et
         // si c'est le cas, lui donne le focus.
-        if(focusInstance(gameTitle))
+        if(focus_instance(gameTitle))
+        {
             return core_init_status::InstanceAlreadyExists;
+        }
 
         // Vérifie qu'il y a suffisamment de place dans le disque.
-        if(!checkAvailableDiskSpace(diskSpaceRequired))
+        if(!check_available_disk_space(diskSpaceRequired))
+        {
             return core_init_status::NoEnoughDiskSpace;
+        }
 
         // Vérifie qu'il y a suffisamment de mémoire.
-        if(!checkMemory(physicalRamNeeded, virtualRamNeeded))
+        if(!check_memory(physicalRamNeeded, virtualRamNeeded))
+        {
             return core_init_status::NoEnoughMemory;
+        }
 
-        deep::engine_settings *engineSettings = deep::engine_settings::get_singleton();
+        engine_settings *engineSettings = engine_settings::get_singleton();
+
+        file_stream ifs("engine_config.fobj", file_stream::file_mode::Open, file_stream::file_access::Read, file_stream::file_share::Read);
 
         // Charge les paramètres liés au moteur.
-        if(!engineSettings->init("engine_config.fobj"))
+        if(!engineSettings->init(&ifs))
+        {
             return core_init_status::CannotLoadEngineSettings;
+        }
 
         if(SDL_Init(SDL_INIT_VIDEO) != 0)
+        {
             return core_init_status::Unknown;
+        }
 
         COM *com = COM::get_singleton();
         if(!com->init())
+        {
             return core_init_status::CannotInitCOM;
-
-        
+        }
 
         printf(DE_TERM_FG_YELLOW "====================[ " DE_TERM_FG_RED "CPU" DE_TERM_FG_YELLOW " ]====================\n" DE_TERM_RESET);
 
         CPU *cpu = CPU::get_singleton();
         if(!cpu->query_info())
+        {
             return core_init_status::CannotQueryCpuInfo;
+        }
 
         printf(
             DE_TERM_RESET "Name: %s\n"
             "Architecture: %s\n"
             "Address width: %u-bit\n"
-            DE_TERM_FG_YELLOW "===============================================" DE_TERM_RESET "\n", cpu->get_name().str(), cpu->get_architecture_str(), cpu->get_address_width());
+            DE_TERM_FG_YELLOW "===============================================" DE_TERM_RESET "\n",
+            
+            cpu->get_name().str(),
+            cpu->get_architecture_str(),
+            cpu->get_address_width());
 
         printf(DE_TERM_FG_GREEN "core::init'ialisation successful" DE_TERM_RESET "\n");
 
@@ -98,11 +117,11 @@ namespace deep
     }
 
     /*
-    =============================
-    core::checkAvailableDiskSpace
-    =============================
+    ================================
+    core::check_available_disk_space
+    ================================
     */
-    bool core::checkAvailableDiskSpace(uint64_t diskSpaceRequired)
+    bool core::check_available_disk_space(uint64_t diskSpaceRequired)
     {
         printf("Checking available disk space... ");
         fflush(stdout);
@@ -130,11 +149,11 @@ namespace deep
     }
 
     /*
-    =================
-    core::checkMemory
-    =================
+    ==================
+    core::check_memory
+    ==================
     */
-    bool core::checkMemory(uint64_t physicalRamNeeded, uint64_t virtualRamNeeded)
+    bool core::check_memory(uint64_t physicalRamNeeded, uint64_t virtualRamNeeded)
     {
         printf("Checking memory... ");
         fflush(stdout);
@@ -179,10 +198,10 @@ namespace deep
 
     /*
     ====================
-    core::isOnlyInstance
+    core::focus_instance
     ====================
     */
-    bool core::focusInstance(const char *gameTitle)
+    bool core::focus_instance(const char *gameTitle)
     {
         const char *retText = "OK";
 
@@ -235,11 +254,11 @@ end:
     }
 
     /*
-    ==========================
-    core::getCurrentTimeMillis
-    ==========================
+    =============================
+    core::get_current_time_millis
+    =============================
     */
-    uint64_t core::getCurrentTimeMillis()
+    uint64_t core::get_current_time_millis()
     {
         FILETIME t;
         uint64_t millis;
@@ -250,11 +269,11 @@ end:
     }
 
     /*
-    ==================
-    core::getLocalTime
-    ==================
+    ====================
+    core::get_local_time
+    ====================
     */
-    void core::getLocalTime(uint32_t *year, uint32_t *month, uint32_t *day, uint32_t *hour, uint32_t *minute, uint32_t *second, uint32_t *millis)
+    void core::get_local_time(uint32_t *year, uint32_t *month, uint32_t *day, uint32_t *hour, uint32_t *minute, uint32_t *second, uint32_t *millis)
     {
 #if DE_WINDOWS
         SYSTEMTIME st;
@@ -330,5 +349,5 @@ de_core_get_tick
 ================
 */
 de_uint64 de_core_get_tick() {
-    return deep::core::getTick();
+    return deep::core::get_tick();
 }
