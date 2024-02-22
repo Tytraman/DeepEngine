@@ -74,7 +74,7 @@ namespace deep
 
         engine_settings *engineSettings = engine_settings::get_singleton();
 
-        file_stream ifs("engine_config.fobj", file_stream::file_mode::Open, file_stream::file_access::Read, file_stream::file_share::Read);
+        file_stream ifs("engine_settings.fobj", file_stream::file_mode::Open, file_stream::file_access::Read, file_stream::file_share::Read);
 
         // Charge les paramètres liés au moteur.
         if(!engineSettings->init(&ifs))

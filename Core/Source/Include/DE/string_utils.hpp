@@ -1,11 +1,13 @@
 #ifndef __DEEP_ENGINE_STRING_UTILS_HPP__
 #define __DEEP_ENGINE_STRING_UTILS_HPP__
 
-#include <DE/def.hpp>
-#include <DE/types.hpp>
+#include "DE/def.hpp"
+#include "DE/types.hpp"
 
 namespace deep
 {
+
+    class string;
 
     class string_utils
     {
@@ -50,6 +52,9 @@ namespace deep
 
             DE_API static size_t length(const char *str);
             DE_API static size_t length(const wchar_t *str);
+
+            DE_API static string bool_to_str(bool value);
+            DE_API static string uint_to_str(uint64_t value);
 
         public:
             string_utils() = delete;

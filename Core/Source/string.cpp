@@ -146,6 +146,26 @@ namespace deep
     }
 
     /*
+    ===============
+    string::reserve
+    ===============
+    */
+    bool string::reserve(size_t len)
+    {
+        char *ptr = m_Chars.get();
+
+        ptr = static_cast<char *>(mem::realloc(ptr, len));
+        if(ptr == nullptr)
+        {
+            return false;
+        }
+
+        m_Chars.assign(ptr);
+
+        return true;
+    }
+
+    /*
     ==============
     string::append
     ==============

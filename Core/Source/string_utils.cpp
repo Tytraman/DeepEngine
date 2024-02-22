@@ -1,7 +1,8 @@
-#include <DE/string_utils.hpp>
-#include <DE/memory/memory.hpp>
+#include "DE/string_utils.hpp"
+#include "DE/memory/memory.hpp"
+#include "DE/string.hpp"
 
-#include <DE/c-wrapper/string_utils.h>
+#include "DE/c-wrapper/string_utils.h"
 
 #include <string.h>
 #include <stdio.h>
@@ -303,15 +304,21 @@ namespace deep
         size_t destLen;
 
         if(*dest != nullptr)
+        {
             destLen = length(*dest);
+        }
         else
+        {
             destLen = 0;
+        }
 
         size_t len = destLen + size;
 
         mem_ptr ptr = mem::realloc(*dest, len * sizeof(char) + sizeof(char));
         if(ptr == nullptr)
+        {
             return false;
+        }
 
         *dest = static_cast<char *>(ptr);
 
@@ -527,9 +534,9 @@ namespace deep
     }
 
     /*
-    ========================
+    ===========================
     string_utils::wchar_to_char
-    ========================
+    ===========================
     */
     void string_utils::wchar_to_char(char *dest, const wchar_t *source)
     {
@@ -540,6 +547,75 @@ namespace deep
             dest[i] = (source[i] & 0x00FF);
 
         dest[i] = '\0';
+    }
+
+    /*
+    =========================
+    string_utils::bool_to_str
+    =========================
+    */
+    string string_utils::bool_to_str(bool value)
+    {
+        string str;
+
+        switch(value)
+        {
+            case false:
+            {
+                str = "false";
+            } break;
+            case true:
+            {
+                str = "true";
+            } break;
+        }
+
+        return str;
+    }
+
+    /*
+    =========================
+    string_utils::uint_to_str
+    =========================
+    */
+    string string_utils::uint_to_str(uint64_t value)
+    {
+        string str;
+
+        if(value < 10)
+        {
+            str.append(static_cast<char>(value + '0'));
+
+            return str;
+        }
+
+        uint8_t len = 0;
+        uint64_t copy = value;
+
+        while(copy != 0)
+        {
+            copy /= 10;
+            len++;
+        }
+
+        if(!str.reserve(len * sizeof(char) + sizeof(char)))
+        {
+            return str;
+        }
+
+        str.set_length(len);
+        str[len] = '\0';
+
+        len--;
+
+        while(value != 0)
+        {
+            str[len] = value % 10 + '0';
+            value /= 10;
+            len--;
+        }
+
+        return str;
     }
 
 }

@@ -29,6 +29,7 @@
 #include <DE/io/stream.hpp>
 #include <DE/io/memory_stream.hpp>
 #include <DE/io/file_stream.hpp>
+#include <DE/io/stream_writer.hpp>
 
 extern "C"
 {
@@ -215,9 +216,36 @@ int main()
         {
             fprintf(stderr, "Cannot query CPU info.\n");
         } return EXIT_FAILURE;
+        case deep::core_init_status::CannotLoadEngineSettings:
+        {
+            fprintf(stderr, "Cannot load engine settings.\n");
+        } return EXIT_FAILURE;
     }
 
     printf("pwd: %s\n", deep::core::get_pwd().str());
+
+    {
+        deep::file_stream fs("fsfs.txt", deep::file_stream::file_mode::Create, deep::file_stream::file_access::Write, deep::file_stream::file_share::Read);
+        if(!fs.open())
+        {
+            fprintf(stderr, "Error opening fsfs.txt\n");
+
+            return 1;
+        }
+
+        deep::stream_writer sw(&fs);
+
+        sw.write(true);
+        sw.write('\n');
+        sw.write(false);
+        sw.write('\n');
+        sw.write(static_cast<uint64_t>(9));
+        sw.write('\n');
+        sw.write(static_cast<uint64_t>(1024));
+        sw.write('\n');
+
+        fs.close();
+    }
 
     deep::window win(TARGET_MS, TARGET_FPS);
     win.set_event_callback(event_callback);

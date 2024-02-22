@@ -57,6 +57,9 @@ namespace deep
     template<typename Type>
     using rm_const = typename rm_const_s<Type>::type;
 
+    template<typename Type>
+    using add_const = const Type;
+
     // ===== REMOVE VOLATILE ===== //
 
     template<typename Type>

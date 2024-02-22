@@ -26,12 +26,13 @@ namespace deep
             DE_API string &operator=(string &&other) noexcept;
             DE_API string &operator=(const char *str);
 
-            DE_API char operator[](size_t index) const;
+            DE_API char &operator[](size_t index) const;
 
             DE_API void clear();
 
             DE_API bool append(const char *str);
             DE_API bool append(uint8_t *buffer, size_t size);
+            DE_API bool append(char charactere);
 
             DE_API size_t remove_all(char charactere);
 
@@ -51,6 +52,8 @@ namespace deep
             DE_API void set_ptr(char *ptr);
             DE_API void set_length(size_t len);
 
+            DE_API bool reserve(size_t len);
+
             // ===== Converter ===== //
 
             DE_API bool to_bool() const;
@@ -69,11 +72,21 @@ namespace deep
     };
 
     /*
+    ==============
+    string::append
+    ==============
+    */
+    inline bool string::append(char charactere)
+    {
+        return append(add_const<uint8_t *>(&charactere), static_cast<size_t>(1));
+    }
+
+    /*
     ==================
     string::operator[]
     ==================
     */
-    inline char string::operator[](size_t index) const
+    inline char &string::operator[](size_t index) const
     {
         return m_Chars.get()[index];
     }
