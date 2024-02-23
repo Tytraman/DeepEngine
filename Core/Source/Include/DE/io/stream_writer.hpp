@@ -80,10 +80,11 @@ namespace deep
     stream_writer::write
     ====================
     */
-    inline bool stream_writer::write(int64_t /*value*/)
+    inline bool stream_writer::write(int64_t value)
     {
-        // TODO: à faire
-        return true;
+        string str = string_utils::int_to_str(value);
+        
+        return m_OutputStream->write(rm_const<char *>(str.str()), 0, str.length(), nullptr);
     }
 
     /*
@@ -103,10 +104,11 @@ namespace deep
     stream_writer::write
     ====================
     */
-    inline bool stream_writer::write(double /*value*/)
+    inline bool stream_writer::write(double value)
     {
-        // TODO: à faire
-        return true;
+        string str = string_utils::double_to_str(value);
+
+        return m_OutputStream->write(rm_const<char *>(str.str()), 0, str.length(), nullptr);
     }
 
 }

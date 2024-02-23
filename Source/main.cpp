@@ -243,6 +243,26 @@ int main()
         sw.write('\n');
         sw.write(static_cast<uint64_t>(1024));
         sw.write('\n');
+        sw.write(static_cast<int64_t>(242));
+        sw.write('\n');
+        sw.write(static_cast<int64_t>(-749666));
+        sw.write('\n');
+        sw.write(9.0);
+        sw.write('\n');
+        sw.write(8.256);
+        sw.write('\n');
+        sw.write(-4.0); 
+        sw.write('\n');
+        sw.write(-1.9731);
+        sw.write('\n');
+        sw.write(781.0);
+        sw.write('\n');
+        sw.write(1024.6847);
+        sw.write('\n');
+        sw.write(-123456.0);
+        sw.write('\n');
+        sw.write(-256.308);
+        sw.write('\n');
 
         fs.close();
     }

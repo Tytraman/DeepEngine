@@ -6,6 +6,7 @@
 
 #include <string.h>
 #include <stdio.h>
+#include <cmath>
 
 namespace deep
 {
@@ -613,6 +614,157 @@ namespace deep
             str[len] = value % 10 + '0';
             value /= 10;
             len--;
+        }
+
+        return str;
+    }
+
+    /*
+    ========================
+    string_utils::int_to_str
+    ========================
+    */
+    string string_utils::int_to_str(int64_t value)
+    {
+        string str;
+
+        auto ab = std::abs(value);
+
+        if(value > -10 && value < 10)
+        {
+            if(value < 0)
+            {
+                str.append('-');
+            }
+
+            str.append(static_cast<char>(ab + '0'));
+
+            return str;
+        }
+
+        uint8_t len = 0;
+        auto copy = ab;
+
+        while(copy != 0)
+        {
+            copy /= 10;
+            len++;
+        }
+
+        if(value < 0)
+        {
+            len++;
+        }
+
+        if(!str.reserve(len * sizeof(char) + sizeof(char)))
+        {
+            return str;
+        }
+
+        str.set_length(len);
+        str[len] = '\0';
+
+        len--;
+
+        while(ab != 0)
+        {
+            str[len] = ab % 10 + '0';
+            ab /= 10;
+            len--;
+        }
+
+        if(value < 0)
+        {
+            str[0] = '-';
+        }
+
+        return str;
+    }
+
+    /*
+    ===========================
+    string_utils::double_to_str
+    ===========================
+    */
+    string string_utils::double_to_str(double value)
+    {
+        string str;
+        uint16_t len = 0;
+
+        // Récupère la partie entière.
+        double integer;
+        double decimal = std::modf(value, &integer);
+
+        if(value > -10.0 && value < 10.0)
+        {
+            if(value < 0.0)
+            {
+                str.append('-');
+
+                len++;
+            }
+
+            str.append(static_cast<char>(static_cast<uint8_t>(integer) + '0'));
+
+            len++;
+        }
+        else
+        {
+            double copy = integer;
+
+            while(copy != 0.0)
+            {
+                copy /= 10.0;
+                len++;
+            }
+
+            if(value < 0.0)
+            {
+                len++;
+            }
+
+            if(!str.reserve(len * sizeof(char) + sizeof(char)))
+            {
+                return str;
+            }
+            
+            str.set_length(len);
+
+            len--;
+
+            while(integer != 0.0)
+            {
+                str[len] = static_cast<uint64_t>(integer) % 10 + '0';
+                integer /= 10.0;
+                len--;
+            }
+
+            if(value < 0)
+            {
+                str[0] = '-';
+            }
+        }
+
+        // S'occupe ensuite de la partie décimale.
+        str.append('.');
+        
+        number = static_cast<uint8_t>(decimal * 10);
+
+        if(decimal == 0.0)
+        {
+            str.append('0');
+
+            return str;
+        }
+
+        while(decimal != 0.0)
+        {
+            str.append(number + '0');
+
+            decimal *= 10;
+            decimal = std::modf();
+            
+            number = static_cast<uint8_t>(decimal * 10);
         }
 
         return str;
