@@ -58,10 +58,11 @@ namespace deep
     stream_writer::write
     ====================
     */
-    inline bool stream_writer::write(const char */*str*/)
+    inline bool stream_writer::write(const char *str)
     {
-        // TODO: à faire
-        return true;
+        size_t len = string_utils::length(str);
+
+        return write(str, 0, len);
     }
 
     /*
@@ -69,10 +70,9 @@ namespace deep
     stream_writer::write
     ====================
     */
-    inline bool stream_writer::write(const char */*str*/, size_t /*offset*/, size_t /*count*/)
+    inline bool stream_writer::write(const char *str, size_t offset, size_t count)
     {
-        // TODO: à faire
-        return true;
+        return m_OutputStream->write(rm_const<char *>(str), offset, count, nullptr);
     }
 
     /*
