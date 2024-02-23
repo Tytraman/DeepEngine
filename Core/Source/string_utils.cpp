@@ -694,6 +694,7 @@ namespace deep
         // Récupère la partie entière.
         double integer;
         double decimal = std::modf(value, &integer);
+        integer = std::abs(integer);
 
         if(value > -10.0 && value < 10.0)
         {
@@ -710,11 +711,11 @@ namespace deep
         }
         else
         {
-            double copy = integer;
+            uint64_t copy = static_cast<uint64_t>(integer);
 
-            while(copy != 0.0)
+            while(copy != 0)
             {
-                copy /= 10.0;
+                copy /= 10;
                 len++;
             }
 
@@ -732,10 +733,12 @@ namespace deep
 
             len--;
 
-            while(integer != 0.0)
+            copy = static_cast<uint64_t>(integer);
+
+            while(copy != 0)
             {
-                str[len] = static_cast<uint64_t>(integer) % 10 + '0';
-                integer /= 10.0;
+                str[len] = copy % 10 + '0';
+                copy /= 10;
                 len--;
             }
 
@@ -747,8 +750,6 @@ namespace deep
 
         // S'occupe ensuite de la partie décimale.
         str.append('.');
-        
-        number = static_cast<uint8_t>(decimal * 10);
 
         if(decimal == 0.0)
         {
@@ -759,12 +760,11 @@ namespace deep
 
         while(decimal != 0.0)
         {
-            str.append(number + '0');
-
             decimal *= 10;
-            decimal = std::modf();
-            
-            number = static_cast<uint8_t>(decimal * 10);
+            decimal = std::modf(decimal, &integer);
+            integer = std::abs(integer);
+
+            str.append(static_cast<char>(static_cast<uint8_t>(integer) + '0'));
         }
 
         return str;

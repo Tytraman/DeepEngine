@@ -251,7 +251,7 @@ int main()
         sw.write('\n');
         sw.write(8.256);
         sw.write('\n');
-        sw.write(-4.0); 
+        sw.write(-4.0);
         sw.write('\n');
         sw.write(-1.9731);
         sw.write('\n');
