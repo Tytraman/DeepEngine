@@ -23,6 +23,8 @@ namespace deep
     #error Need implementation
     #endif
 
+    text_writer *core::m_Stdout = nullptr;
+
     /*
     ========================
     core::get_mouse_position
@@ -48,8 +50,11 @@ namespace deep
             GetConsoleMode(stdHandle, &consoleMode);
             consoleMode |= ENABLE_PROCESSED_OUTPUT | ENABLE_VIRTUAL_TERMINAL_PROCESSING;
             SetConsoleMode(stdHandle, consoleMode);
+
         }
 #endif
+
+
 
         printf(DE_TERM_FG_GREEN "core::init" DE_TERM_RESET " " DE_VERSION " - " DE_TERM_FG_RED "this is where it all begins" DE_TERM_RESET "\n");
 

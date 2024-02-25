@@ -5,6 +5,7 @@
 #include "DE/types.hpp"
 #include "DE/error.hpp"
 #include "DE/string.hpp"
+#include "DE/io/text_writer.hpp"
 
 namespace deep
 {
@@ -48,6 +49,7 @@ namespace deep
 
         private:
             static uint64_t m_InitTime;
+            static text_writer *m_Stdout;
 
         public:
             core() = delete;
