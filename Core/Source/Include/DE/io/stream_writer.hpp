@@ -171,6 +171,7 @@ namespace deep
     inline bool stream_writer::write(uint32_t value)
     {
         return write(static_cast<uint64_t>(value));
+        return true;
     }
 
     /*
