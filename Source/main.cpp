@@ -216,6 +216,14 @@ int main()
         {
             fprintf(stderr, "Cannot query CPU info.\n");
         } return EXIT_FAILURE;
+        case deep::core_init_status::CannotInitNtDll:
+        {
+            fprintf(stderr, "Cannot load NTDLL.\n");
+        } return EXIT_FAILURE;
+        case deep::core_init_status::CannotDuplicateStd:
+        {
+            fprintf(stderr, "Cannot duplicate STD.\n");
+        } return EXIT_FAILURE;
         case deep::core_init_status::CannotLoadEngineSettings:
         {
             fprintf(stderr, "Cannot load engine settings.\n");

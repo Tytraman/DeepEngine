@@ -20,6 +20,8 @@ namespace deep
         CannotLoadResources      = 5,
         CannotInitCOM            = 6,
         CannotQueryCpuInfo       = 7,
+        CannotInitNtDll          = 8,
+        CannotDuplicateStd       = 9,
 
         Unknown                  = 255
     };

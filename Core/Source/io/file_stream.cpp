@@ -1,4 +1,5 @@
 #include "DE/io/file_stream.hpp"
+#include "DE/os/win32.hpp"
 
 namespace deep
 {
@@ -16,6 +17,81 @@ namespace deep
           m_FD(os_invalid_fd),
           m_IsOpened(false)
     { }
+
+    /*
+    ========================
+    file_stream::file_stream
+    ========================
+    */
+    file_stream::file_stream(const char *filename, os_fd fd)
+        : m_Filename(filename),
+          m_FD(fd),
+          m_Mode(file_stream::file_mode::None),
+          m_Access(file_stream::file_access::None),
+          m_Share(file_stream::file_share::None),
+          m_IsOpened(false)
+    {
+#if DE_WINDOWS
+
+        // Microsoft ne nous laisse pas récupérer nativement les informations d'un handle,
+        // donc il faut bien trouver un moyen de le faire...
+        // Heureusement c'est possible avec l'API native !
+
+        OBJECT_BASIC_INFORMATION obi;
+        ULONG bytes;
+
+        NTSTATUS status = nt_query_object(fd, ObjectBasicInformation, &obi, sizeof(obi), &bytes);
+        if(status != DE_NT_STATUS_SUCCESS)
+        {
+            return;
+        }
+
+        bool genericRead = false;
+        bool genericWrite = false;
+
+        // GENERIC_READ
+        if(
+            ((obi.GrantedAccess & FILE_READ_DATA) > 0)       &&
+            ((obi.GrantedAccess & FILE_READ_EA) > 0)         &&
+            ((obi.GrantedAccess & FILE_READ_ATTRIBUTES) > 0) &&
+            ((obi.GrantedAccess & STANDARD_RIGHTS_READ) > 0) &&
+            ((obi.GrantedAccess & SYNCHRONIZE) > 0)
+        )
+        {
+            genericRead = true;
+        }
+
+        // GENERIC_WRITE
+        if(
+            ((obi.GrantedAccess & FILE_WRITE_DATA) > 0)       &&
+            ((obi.GrantedAccess & FILE_WRITE_ATTRIBUTES) > 0) &&
+            ((obi.GrantedAccess & FILE_WRITE_EA) > 0)         &&
+            ((obi.GrantedAccess & STANDARD_RIGHTS_WRITE) > 0) &&
+            ((obi.GrantedAccess & SYNCHRONIZE) > 0)
+        )
+        {
+            genericWrite = true;
+        }
+
+        if(genericRead && genericWrite)
+        {
+            m_Access = file_access::ReadWrite;
+        }
+        else if(genericRead)
+        {
+            m_Access = file_access::Read;
+        }
+        else if(genericWrite)
+        {
+            m_Access = file_access::Write;
+        }
+
+        m_IsOpened = true;
+
+#else
+#error Need implementation
+#endif
+    }
 
     /*
     =================

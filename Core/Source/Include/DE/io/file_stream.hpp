@@ -15,6 +15,7 @@ namespace deep
         public:
             enum class file_mode
             {
+                None,
                 Append,
                 Create,
                 CreateNew,
@@ -25,6 +26,7 @@ namespace deep
 
             enum class file_access
             {
+                None,
                 Read,
                 Write,
                 ReadWrite
@@ -41,6 +43,7 @@ namespace deep
 
         public:
             DE_API file_stream(const char *filename, file_mode mode, file_access access, file_share share);
+            DE_API file_stream(const char *filename, os_fd fd);
 
             DE_API virtual bool open() override;
             DE_API virtual bool close() override;

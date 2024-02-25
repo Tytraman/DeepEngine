@@ -12,13 +12,18 @@
 #include "DE/hardware/cpu.hpp"
 #include "DE/io/file_stream.hpp"
 
+#include "DE/os/win32.hpp"
+
 #include <SDL.h>
+#include <io.h>
+#include <fcntl.h>
+#include <sys/stat.h>
 
 namespace deep
 {
 
     #ifdef DE_WINDOWS
-    uint64_t deep::core::m_InitTime = GetTickCount64();
+    uint64_t core::m_InitTime = GetTickCount64();
     #else
     #error Need implementation
     #endif
@@ -52,6 +57,21 @@ namespace deep
             SetConsoleMode(stdHandle, consoleMode);
 
         }
+
+        HMODULE hModule = GetModuleHandleA("NTDLL");
+        if(hModule == nullptr)
+        {
+            return core_init_status::CannotInitNtDll;
+        }
+
+        nt_query_object = (NtQueryObject) GetProcAddress(hModule, "NtQueryObject");
+        if(nt_query_object == nullptr)
+        {
+            return core_init_status::CannotInitNtDll;
+        }
+
+        file_stream consoleStream("stdout", stdHandle);
+
 #endif
 
 
@@ -256,6 +276,11 @@ end:
         im_gui_window::shutdown();
         scene::shutdown();
         SDL_Quit();
+
+        if(m_StdoutFD != -1)
+        {
+            _close(m_StdoutFD);
+        }
     }
 
     /*
