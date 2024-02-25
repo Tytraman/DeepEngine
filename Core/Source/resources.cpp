@@ -1,4 +1,5 @@
 #include "DE/resources.hpp"
+#include "DE/core.hpp"
 #include "DE/string_utils.hpp"
 #include "DE/memory/memory.hpp"
 #include "DE/memory/pair.hpp"
@@ -154,7 +155,7 @@ namespace deep
         shadersFobj.enumerate(nullptr, enum_shaders_config_fobj, static_cast<mem_ptr>(&shaderFiles), 1);
         size_t numberOfShaders = shaderFiles.getNumberOfElements();
 
-        printf("Found %llu shaders.\n", numberOfShaders);
+        core::out() << "Found " << numberOfShaders << " shaders.\n";
 
         hash_table_iterator<shader_fusion> shaderIterator = shaderFiles.begin();
         hash_table_iterator<shader_fusion> shaderEndIterator = shaderFiles.end();
@@ -167,13 +168,13 @@ namespace deep
             vertexShaderFilename.append(shaderIterator->value.vertexFilename.str());
             fragmentShaderFilename.append(shaderIterator->value.fragmentFilename.str());
 
-            printf("(\n  %s\n  %s\n  Opening files...\n  ", vertexShaderFilename.str(), fragmentShaderFilename.str());
+            core::out() << "(\n  " << vertexShaderFilename.str() << "\n  " << fragmentShaderFilename.str() << "\n  Opening files...\n  ";
 
             input_file_stream vis(vertexShaderFilename.str());
             if(!vis.open())
             {
                 fprintf(stderr, "Unable to open vertex shader file.\n");
-                printf(")\n");
+                core::out() << ")\n";
 
                 ret = false;
                 goto end;
@@ -183,7 +184,7 @@ namespace deep
             if(!fis.open())
             {
                 fprintf(stderr, "Unable to open fragment shader file.\n");
-                printf(")\n");
+                core::out() << ")\n";
 
                 vis.close();
 
@@ -198,12 +199,12 @@ namespace deep
 
             size_t bytesRead;
 
-            printf("Reading files...\n  ");
+            core::out() << "Reading files...\n  ";
 
             if(!vis.readAll(vertexShaderChunk.data(), &bytesRead))
             {
                 fprintf(stderr, "Can't read vertex shader.\n");
-                printf(")\n");
+                core::out() << ")\n";
 
                 vertexShaderChunk.free();
                 fragmentShaderChunk.free();
@@ -218,7 +219,7 @@ namespace deep
             if(!fis.readAll(fragmentShaderChunk.data(), &bytesRead))
             {
                 fprintf(stderr, "Can't read fragment shader.\n");
-                printf(")\n");
+                core::out() << ")\n";
 
                 vertexShaderChunk.free();
                 fragmentShaderChunk.free();
@@ -250,7 +251,7 @@ namespace deep
             vertexShaderChunk.free();
             fragmentShaderChunk.free();
 
-            printf("Compiling shaders...\n");
+            core::out() << "Compiling shaders...\n";
             if(!shaderManager->compile(vertexShader))
             {
                 shaderManager->destroy(vertexShader);
@@ -274,10 +275,10 @@ namespace deep
             programManager->attach_shader(program, vertexShader);
             programManager->attach_shader(program, fragmentShader);
 
-            printf("  Linking shaders...\n");
+            core::out() << "  Linking shaders...\n";
             if(!programManager->link(program))
             {
-                printf(")\n");
+                core::out() << ")\n";
                 shaderManager->destroy(vertexShader);
                 shaderManager->destroy(fragmentShader);
                             
@@ -288,7 +289,7 @@ namespace deep
             shaderManager->destroy(vertexShader);
             shaderManager->destroy(fragmentShader);
 
-            printf("  " DE_TERM_FG_GREEN "Done." DE_TERM_RESET "\n)\n");
+            core::out() << "  " DE_TERM_FG_GREEN "Done." DE_TERM_RESET "\n)\n";
         }
 
 end:

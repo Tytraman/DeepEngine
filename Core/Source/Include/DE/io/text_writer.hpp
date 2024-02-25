@@ -24,14 +24,14 @@ namespace deep
             virtual bool write(uint64_t value) = 0;
             virtual bool write(double value) = 0;
 
-            text_writer &operator<<(bool value);
-            text_writer &operator<<(char value);
-            text_writer &operator<<(const char *str);
-            text_writer &operator<<(int32_t value);
-            text_writer &operator<<(uint32_t value);
-            text_writer &operator<<(int64_t value);
-            text_writer &operator<<(uint64_t value);
-            text_writer &operator<<(double value);
+            DE_API text_writer &operator<<(bool value);
+            DE_API text_writer &operator<<(char value);
+            DE_API text_writer &operator<<(const char *str);
+            DE_API text_writer &operator<<(int32_t value);
+            DE_API text_writer &operator<<(uint32_t value);
+            DE_API text_writer &operator<<(int64_t value);
+            DE_API text_writer &operator<<(uint64_t value);
+            DE_API text_writer &operator<<(double value);
 
     };
 

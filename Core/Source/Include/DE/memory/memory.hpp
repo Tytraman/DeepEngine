@@ -69,12 +69,18 @@ namespace deep
             template<typename Type, typename... Args>
             static Type *alloc_type(Args&&... args);
 
+            static constexpr auto free_type = free;
+
         private:
             static list<mem_ptr> g_MemoryTrack;
 
     };
 
-
+    /*
+    ==========================
+    memory_manager::alloc_type
+    ==========================
+    */
     template<typename Type, typename... Args>
     inline Type *memory_manager::alloc_type(Args&&... args)
     {
@@ -86,21 +92,23 @@ namespace deep
 
     using mem = memory_manager;
 
-    class DE_API memory_chunk
+    
+
+    class memory_chunk
     {
 
         public:
-            memory_chunk(mem_ptr data = nullptr, size_t size = 0);
-            memory_chunk(const memory_chunk &other);
+            DE_API memory_chunk(mem_ptr data = nullptr, size_t size = 0);
+            DE_API memory_chunk(const memory_chunk &other);
 
-            static bool alloc(memory_chunk &dest, size_t size);
-            void free();
+            DE_API static bool alloc(memory_chunk &dest, size_t size);
+            DE_API void free();
 
-            mem_ptr data();
-            size_t size() const;
+            DE_API mem_ptr data();
+            DE_API size_t size() const;
 
-            void set_data(mem_ptr data);
-            void set_size(size_t size);
+            DE_API void set_data(mem_ptr data);
+            DE_API void set_size(size_t size);
 
         private:
             mem_ptr m_Data;

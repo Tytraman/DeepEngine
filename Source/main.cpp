@@ -220,9 +220,9 @@ int main()
         {
             fprintf(stderr, "Cannot load NTDLL.\n");
         } return EXIT_FAILURE;
-        case deep::core_init_status::CannotDuplicateStd:
+        case deep::core_init_status::CannotLoadStdStream:
         {
-            fprintf(stderr, "Cannot duplicate STD.\n");
+            fprintf(stderr, "Cannot load STD stream.\n");
         } return EXIT_FAILURE;
         case deep::core_init_status::CannotLoadEngineSettings:
         {
@@ -230,50 +230,7 @@ int main()
         } return EXIT_FAILURE;
     }
 
-    printf("pwd: %s\n", deep::core::get_pwd().str());
-
-    {
-        deep::file_stream fs("fsfs.txt", deep::file_stream::file_mode::Create, deep::file_stream::file_access::Write, deep::file_stream::file_share::Read);
-        if(!fs.open())
-        {
-            fprintf(stderr, "Error opening fsfs.txt\n");
-
-            return 1;
-        }
-
-        deep::stream_writer sw(&fs);
-
-        sw.write(true);
-        sw.write('\n');
-        sw.write(false);
-        sw.write('\n');
-        sw.write(static_cast<uint64_t>(9));
-        sw.write('\n');
-        sw.write(static_cast<uint64_t>(1024));
-        sw.write('\n');
-        sw.write(static_cast<int64_t>(242));
-        sw.write('\n');
-        sw.write(static_cast<int64_t>(-749666));
-        sw.write('\n');
-        sw.write(9.0);
-        sw.write('\n');
-        sw.write(8.256);
-        sw.write('\n');
-        sw.write(-4.0);
-        sw.write('\n');
-        sw.write(-1.9731);
-        sw.write('\n');
-        sw.write(781.0);
-        sw.write('\n');
-        sw.write(1024.6847);
-        sw.write('\n');
-        sw.write(-123456.0);
-        sw.write('\n');
-        sw.write(-256.308);
-        sw.write('\n');
-
-        fs.close();
-    }
+    deep::core::out() << "pwd: " << deep::core::get_pwd().str() << "\n";
 
     deep::window win(TARGET_MS, TARGET_FPS);
     win.set_event_callback(event_callback);
@@ -304,23 +261,15 @@ int main()
 
     deep::entity_collection_id collectionID = deep::scene::get_entity_collection(sceneID);
 
-    printf(
+    deep::core::out() <<
         DE_TERM_FG_YELLOW "====================[ " DE_TERM_FG_RED "\\OpenGL/" DE_TERM_FG_YELLOW " ]====================\n" DE_TERM_RESET
-        "Version: %s\n"
-        "Max vertex attribs: %d\n"
-        "Max texture image units: %d\n"
-        "Max texture size: %d\n"
-        "Max 3D texture size: %d\n"
-        "Max array texture layers: %d\n"
-        DE_TERM_FG_YELLOW "====================================================\n" DE_TERM_RESET,
-        
-        deep::GL3::core::query_version(),
-        deep::GL3::core::query_max_vertex_attribs(),
-        deep::GL3::core::query_max_texture_image_units(),
-        deep::GL3::core::query_max_texture_size(),
-        deep::GL3::core::query_max_3D_texture_size(),
-        deep::GL3::core::query_max_array_texture_layers()
-    );
+        "Version: "                  << deep::GL3::core::query_version() << "\n"
+        "Max vertex attribs: "       << deep::GL3::core::query_max_vertex_attribs() << "\n"
+        "Max texture image units: "  << deep::GL3::core::query_max_texture_image_units() << "\n"
+        "Max texture size: "         << deep::GL3::core::query_max_texture_size() << "\n"
+        "Max 3D texture size: "      << deep::GL3::core::query_max_3D_texture_size() << "\n"
+        "Max array texture layers: " << deep::GL3::core::query_max_array_texture_layers() << "\n"
+        DE_TERM_FG_YELLOW "====================================================\n" DE_TERM_RESET;
 
     deep::bmp mcGrass, mcGrassTop, mcDirt;
     if(!resourcesManager->loadBMP("grass_block_side.bmp", mcGrass))
@@ -683,6 +632,8 @@ int main()
     // Lance la boucle du jeu, bloquant.
     win.run();
 
+    deep::core::out() << DE_TERM_FG_RED "~Good-bye~" DE_TERM_RESET "\n";
+
     programManager->destroy_all_programs();
     resourcesManager->shutdown();
     deep::core::shutdown();
@@ -690,8 +641,6 @@ int main()
     win.destroy();
 
     _CrtDumpMemoryLeaks();
-
-    printf(DE_TERM_FG_RED "~Good-bye~" DE_TERM_RESET "\n");
 
     return EXIT_SUCCESS;
 }

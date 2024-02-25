@@ -11,6 +11,7 @@
 #include "DE/os/COM.hpp"
 #include "DE/hardware/cpu.hpp"
 #include "DE/io/file_stream.hpp"
+#include "DE/io/stream_writer.hpp"
 
 #include "DE/os/win32.hpp"
 
@@ -55,7 +56,6 @@ namespace deep
             GetConsoleMode(stdHandle, &consoleMode);
             consoleMode |= ENABLE_PROCESSED_OUTPUT | ENABLE_VIRTUAL_TERMINAL_PROCESSING;
             SetConsoleMode(stdHandle, consoleMode);
-
         }
 
         HMODULE hModule = GetModuleHandleA("NTDLL");
@@ -70,13 +70,20 @@ namespace deep
             return core_init_status::CannotInitNtDll;
         }
 
-        file_stream consoleStream("stdout", stdHandle);
+        file_stream *consoleStream = mem::alloc_type<file_stream>("stdout", stdHandle);
+        stream_writer *stdoutWriter = mem::alloc_type<stream_writer>(consoleStream);
 
+        if(!stdoutWriter->open())
+        {
+            mem::free_type(stdoutWriter);
+
+            return core_init_status::CannotLoadStdStream;
+        }
+
+        m_Stdout = stdoutWriter;
 #endif
 
-
-
-        printf(DE_TERM_FG_GREEN "core::init" DE_TERM_RESET " " DE_VERSION " - " DE_TERM_FG_RED "this is where it all begins" DE_TERM_RESET "\n");
+        *m_Stdout << DE_TERM_FG_GREEN "core::init" DE_TERM_RESET " " DE_VERSION " - " DE_TERM_FG_RED "this is where it all begins" DE_TERM_RESET "\n";
 
         // Vérifie s'il y a une autre instance du programme et
         // si c'est le cas, lui donne le focus.
@@ -118,7 +125,7 @@ namespace deep
             return core_init_status::CannotInitCOM;
         }
 
-        printf(DE_TERM_FG_YELLOW "====================[ " DE_TERM_FG_RED "CPU" DE_TERM_FG_YELLOW " ]====================\n" DE_TERM_RESET);
+        *m_Stdout << DE_TERM_FG_YELLOW "====================[ " DE_TERM_FG_RED "CPU" DE_TERM_FG_YELLOW " ]====================\n" DE_TERM_RESET;
 
         CPU *cpu = CPU::get_singleton();
         if(!cpu->query_info())
@@ -126,17 +133,13 @@ namespace deep
             return core_init_status::CannotQueryCpuInfo;
         }
 
-        printf(
-            DE_TERM_RESET "Name: %s\n"
-            "Architecture: %s\n"
-            "Address width: %u-bit\n"
-            DE_TERM_FG_YELLOW "===============================================" DE_TERM_RESET "\n",
-            
-            cpu->get_name().str(),
-            cpu->get_architecture_str(),
-            cpu->get_address_width());
+        *m_Stdout <<
+            DE_TERM_RESET "Name: " << cpu->get_name().str() << "\n"
+            "Architecture: " << cpu->get_architecture_str() << "\n"
+            "Address width: " << cpu->get_address_width() << "- bit\n"
+            DE_TERM_FG_YELLOW "===============================================" DE_TERM_RESET "\n";
 
-        printf(DE_TERM_FG_GREEN "core::init'ialisation successful" DE_TERM_RESET "\n");
+        *m_Stdout << DE_TERM_FG_GREEN "core::init'ialisation successful" DE_TERM_RESET "\n";
 
         return core_init_status::OK;
     }
@@ -148,25 +151,24 @@ namespace deep
     */
     bool core::check_available_disk_space(uint64_t diskSpaceRequired)
     {
-        printf("Checking available disk space... ");
-        fflush(stdout);
+        *m_Stdout << "Checking available disk space... ";
 
 #if DE_WINDOWS
         ULARGE_INTEGER space;
 
         if(!GetDiskFreeSpaceExA(nullptr, &space, nullptr, nullptr))
         {
-            printf("BAD\n");
+            *m_Stdout << "BAD\n";
             return false;
         }
 
         if(space.QuadPart >= diskSpaceRequired)
         {
-            printf("OK\n");
+            *m_Stdout << "OK\n";
             return true;
         }
 
-        printf("BAD\n");
+        *m_Stdout << "BAD\n";
         return false;
 #else
 #error Need implementation
@@ -180,8 +182,7 @@ namespace deep
     */
     bool core::check_memory(uint64_t physicalRamNeeded, uint64_t virtualRamNeeded)
     {
-        printf("Checking memory... ");
-        fflush(stdout);
+        *m_Stdout << "Checking memory... ";
 
 #if DE_WINDOWS
 
@@ -190,13 +191,13 @@ namespace deep
 
         if(!GlobalMemoryStatusEx(&status))
         {
-            printf("BAD\n");
+            *m_Stdout << "BAD\n";
             return false;
         }
 
         if(physicalRamNeeded > status.ullTotalPhys || virtualRamNeeded > status.ullAvailVirtual)
         {
-            printf("BAD\n");
+            *m_Stdout << "BAD\n";
             return false;
         }
 
@@ -206,7 +207,7 @@ namespace deep
             mem_ptr ptr = mem::alloc_no_track(virtualRamNeeded);
             if(ptr == nullptr)
             {
-                printf("BAD\n");
+                *m_Stdout << "BAD\n";
                 return false;
             }
 
@@ -217,7 +218,7 @@ namespace deep
 #error Need implementation
 #endif
 
-        printf("OK\n");
+        *m_Stdout << "OK\n";
         return true;
     }
 
@@ -230,8 +231,7 @@ namespace deep
     {
         const char *retText = "OK";
 
-        printf("Checking if another instance of the game is not currently running... ");
-        fflush(stdout);
+        *m_Stdout << "Checking if another instance of the game is not currently running... ";
 
         mutex_handle mutexHandle = mutex::create(gameTitle);
         bool ret = false;
@@ -259,7 +259,8 @@ namespace deep
         mutex::close(mutexHandle);
 
 end:
-        printf("%s\n", retText);
+        *m_Stdout << retText << "\n";
+
         return ret;
     }
 
@@ -277,9 +278,30 @@ end:
         scene::shutdown();
         SDL_Quit();
 
-        if(m_StdoutFD != -1)
+        if(m_Stdout != nullptr)
         {
-            _close(m_StdoutFD);
+            m_Stdout->close();
+
+            mem::free_type(m_Stdout);
+
+            m_Stdout = nullptr;
+        }
+    }
+
+    /*
+    =============
+    core::set_out
+    =============
+    */
+    void core::set_out(text_writer *writer)
+    {
+        if(m_Stdout != nullptr)
+        {
+            m_Stdout->close();
+
+            mem::free_type(m_Stdout);
+
+            m_Stdout = writer;
         }
     }
 

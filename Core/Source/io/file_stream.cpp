@@ -100,6 +100,11 @@ namespace deep
     */
     bool file_stream::open()
     {
+        if(m_IsOpened)
+        {
+            return true;
+        }
+
 #if DE_WINDOWS
 
         DWORD mode = 0;
@@ -182,6 +187,8 @@ ignore_access:
         {
             return false;
         }
+
+        m_IsOpened = true;
 
         return true;
 

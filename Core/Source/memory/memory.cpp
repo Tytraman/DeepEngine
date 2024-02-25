@@ -1,5 +1,5 @@
-#include <DE/memory/memory.hpp>
-#include <DE/memory/list.hpp>
+#include "DE/memory/memory.hpp"
+#include "DE/memory/list.hpp"
 
 #include <stdio.h>
 
@@ -9,9 +9,9 @@ namespace deep
     list<mem_ptr> memory_manager::g_MemoryTrack;
 
     /*
-    ============================
+    ==============================
     memory_manager::alloc_no_track
-    ============================
+    ==============================
     */
     mem_ptr memory_manager::alloc_no_track(size_t size)
     {
@@ -45,9 +45,9 @@ namespace deep
     }
 
     /*
-    ==============================
+    ================================
     memory_manager::realloc_no_track
-    ==============================
+    ================================
     */
     mem_ptr memory_manager::realloc_no_track(mem_ptr memory, size_t newSize)
     {
@@ -87,9 +87,9 @@ namespace deep
     }
 
     /*
-    ===========================
+    =============================
     memory_manager::free_no_track
-    ===========================
+    =============================
     */
     void memory_manager::free_no_track(mem_ptr memory)
     {
@@ -101,7 +101,7 @@ namespace deep
 
         HeapFree(processHeap, 0, memory);
 #else
-
+#error Need implementation
 #endif
     }
 
@@ -113,8 +113,11 @@ namespace deep
     void memory_manager::free(const mem_ptr memory)
     {
         size_t index = g_MemoryTrack.find(memory);
+
         if(index != nothing)
+        {
             g_MemoryTrack.remove(index);
+        }
 
         free_no_track(memory);
     }

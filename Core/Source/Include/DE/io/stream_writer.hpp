@@ -20,9 +20,6 @@ namespace deep
             DE_API bool open() override;
             DE_API bool close() override;
 
-            DE_API stream_writer &operator=(const stream_writer &other);
-            DE_API stream_writer &operator=(stream_writer &&other);
-
             DE_API virtual bool write(bool value) override;
             DE_API virtual bool write(char value) override;
             DE_API virtual bool write(const char *str) override;
@@ -33,8 +30,8 @@ namespace deep
             DE_API virtual bool write(uint64_t value) override;
             DE_API virtual bool write(double value) override;
 
-        private:
-            stream *m_OutputStream;
+        protected:
+            unique_ptr<stream> m_OutputStream;
 
         public:
             stream_writer() = delete;
@@ -48,7 +45,7 @@ namespace deep
     */
     inline bool stream_writer::open()
     {
-        if(m_OutputStream == nullptr)
+        if(m_OutputStream.get() == nullptr)
         {
             return false;
         }
@@ -63,7 +60,7 @@ namespace deep
     */
     inline bool stream_writer::close()
     {
-        if(m_OutputStream == nullptr)
+        if(m_OutputStream.get() == nullptr)
         {
             return false;
         }
@@ -78,35 +75,6 @@ namespace deep
         {
             return false;
         }
-    }
-
-    /*
-    ========================
-    stream_writer::operator=
-    ========================
-    */
-    inline stream_writer &stream_writer::operator=(const stream_writer &other)
-    {
-        m_OutputStream->close();
-
-        m_OutputStream = other.m_OutputStream;
-
-        return *this;
-    }
-
-    /*
-    ========================
-    stream_writer::operator=
-    ========================
-    */
-    inline stream_writer &stream_writer::operator=(stream_writer &&other)
-    {
-        m_OutputStream->close();
-
-        m_OutputStream = other.m_OutputStream;
-        other.m_OutputStream = nullptr;
-
-        return *this;
     }
 
     /*
@@ -171,7 +139,6 @@ namespace deep
     inline bool stream_writer::write(uint32_t value)
     {
         return write(static_cast<uint64_t>(value));
-        return true;
     }
 
     /*

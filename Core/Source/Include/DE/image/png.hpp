@@ -7,55 +7,55 @@
 namespace deep
 {
 
-    class DE_API png
+    class png
     {
 
         public:
-            png();
+            DE_API png();
 
-            bool loadFile(input_file_stream &ifs);
+            DE_API bool loadFile(input_file_stream &ifs);
 
             /// @brief          Charge le contenu d'un fichier dans la mémoire.
             /// @param filename Nom du fichier à charger.
             /// @return         \c true si le fichier à été chargé en mémoire, sinon \c false.
-            bool loadFile(const char *filename);
-            bool loadFile(const wchar_t *filename);
+            DE_API bool loadFile(const char *filename);
+            DE_API bool loadFile(const wchar_t *filename);
 
             /// @brief Libère la mémoire utilisée.
-            void destroy();
+            DE_API void destroy();
 
             /// @brief  Vérifie si les données chargées correspondent au format PNG.
             /// @return  \c true si le format est PNG, sinon \c false.
-            bool check();
+            DE_API bool check();
 
-            bool readPNGInfo();
-            bool readPNGImage();
+            DE_API bool readPNGInfo();
+            DE_API bool readPNGImage();
 
-            bool loadAndRead(const char *filename);
-            bool loadAndRead(const wchar_t *filename);
+            DE_API bool loadAndRead(const char *filename);
+            DE_API bool loadAndRead(const wchar_t *filename);
 
-            void applyHorizontalMirrorEffect();
-            void applyVerticalMirrorEffect();
-            void copyChannelColors(image_channel from, image_channel to);
-            void swapChannelColors(image_channel channel1, image_channel channel2);
-            void setChannelColor(image_channel channel, uint8_t value);
+            DE_API void applyHorizontalMirrorEffect();
+            DE_API void applyVerticalMirrorEffect();
+            DE_API void copyChannelColors(image_channel from, image_channel to);
+            DE_API void swapChannelColors(image_channel channel1, image_channel channel2);
+            DE_API void setChannelColor(image_channel channel, uint8_t value);
 
-            uint8_t *data();
-            size_t size() const;
-            size_t position() const;
-            uint32_t width() const;
-            uint32_t height() const;
-            int bitDepth() const;
-            image_color_space colorType() const;
-            int interlaceType() const;
-            uint8_t channels() const;
-            uint32_t colorDepth() const;
-            uint8_t *image();
-            mem_ptr rawImage();
+            DE_API uint8_t *data();
+            DE_API size_t size() const;
+            DE_API size_t position() const;
+            DE_API uint32_t width() const;
+            DE_API uint32_t height() const;
+            DE_API int bitDepth() const;
+            DE_API image_color_space colorType() const;
+            DE_API int interlaceType() const;
+            DE_API uint8_t channels() const;
+            DE_API uint32_t colorDepth() const;
+            DE_API uint8_t *image();
+            DE_API mem_ptr rawImage();
 
-            void setPosition(size_t pos);
+            DE_API void setPosition(size_t pos);
 
-            static const char *colorTypeName(image_color_space colorType);
+            DE_API static const char *colorTypeName(image_color_space colorType);
 
         private:
             memory_chunk m_MemoryChunk;

@@ -21,7 +21,7 @@ namespace deep
         CannotInitCOM            = 6,
         CannotQueryCpuInfo       = 7,
         CannotInitNtDll          = 8,
-        CannotDuplicateStd       = 9,
+        CannotLoadStdStream      = 9,
 
         Unknown                  = 255
     };
@@ -48,6 +48,10 @@ namespace deep
 
             DE_API static bool set_pwd(const char *path);
             DE_API static string get_pwd();
+
+            DE_API static void set_out(text_writer *writer);
+
+            DE_API static text_writer &out();
 
         private:
             static uint64_t m_InitTime;
@@ -84,6 +88,16 @@ namespace deep
 #else
 #error Need implementation
 #endif
+    }
+
+    /*
+    =========
+    core::out
+    =========
+    */
+    inline text_writer &core::out()
+    {
+        return *m_Stdout;
     }
 
 }
