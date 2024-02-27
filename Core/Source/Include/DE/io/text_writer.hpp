@@ -3,11 +3,12 @@
 
 #include "DE/def.hpp"
 #include "DE/types.hpp"
+#include "DE/memory/ref_counted.hpp"
 
 namespace deep
 {
 
-    class text_writer
+    class text_writer : public ref_counted
     {
 
         public:

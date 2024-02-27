@@ -21,7 +21,7 @@ namespace deep
         Textured
     };
 
-    class imaterial : public ref_counted
+    class material : public ref_counted
     {
 
         public:
@@ -30,7 +30,7 @@ namespace deep
 
             DE_API void set_program(GL3::gl_id program);
 
-            DE_API virtual bool send_data() = 0;
+            virtual bool send_data() = 0;
 
         protected:
             material_type m_Type;
@@ -38,22 +38,37 @@ namespace deep
 
     };
 
-    inline material_type imaterial::get_type() const
+    /*
+    ==================
+    material::get_type
+    ==================
+    */
+    inline material_type material::get_type() const
     {
         return m_Type;
     }
 
-    inline GL3::gl_id imaterial::get_program() const
+    /*
+    =====================
+    material::get_program
+    =====================
+    */
+    inline GL3::gl_id material::get_program() const
     {
         return m_Program;
     }
 
-    inline void imaterial::set_program(GL3::gl_id program)
+    /*
+    =====================
+    material::set_program
+    =====================
+    */
+    inline void material::set_program(GL3::gl_id program)
     {
         m_Program = program;
     }
 
-    class color_material : public imaterial
+    class color_material : public material
     {
 
         public:
@@ -159,7 +174,7 @@ namespace deep
         m_Shininess = shininess;
     }
 
-    class texture_material : public imaterial
+    class texture_material : public material
     {
 
         public:

@@ -73,7 +73,7 @@ namespace deep
                 const polygon &pol,
                 const vec3<float> &position,
                 const vec3<float> &size,
-                imaterial *material = nullptr);
+                material *material = nullptr);
 
             DE_API void destroy_entity(uint64_t keyName, entity_collection_id collectionID);
             DE_API void destroy_entity(const char *entityName, entity_collection_id collectionID);

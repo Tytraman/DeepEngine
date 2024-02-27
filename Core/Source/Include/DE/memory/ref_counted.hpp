@@ -73,6 +73,7 @@ namespace deep
     {
 
         public:
+            ref();
             ref(Type *ptr);
             ref(const ref<Type> &other);
             ~ref();
@@ -98,9 +99,6 @@ namespace deep
         private:
             Type *m_Ptr;
 
-        public:
-            ref() = delete;
-
     };
 
     /*
@@ -109,7 +107,17 @@ namespace deep
     ==============
     */
     template<typename Type>
-    ref<Type>::ref(Type *ptr)
+    inline ref<Type>::ref()
+        : m_Ptr(nullptr)
+    { }
+
+    /*
+    ==============
+    ref<Type>::ref
+    ==============
+    */
+    template<typename Type>
+    inline ref<Type>::ref(Type *ptr)
         : m_Ptr(ptr)
     {
         static_assert(is_base_of<ref_counted, Type>, "The specified class needs to inherit from class ref_counted.");
@@ -126,7 +134,7 @@ namespace deep
     ==============
     */
     template<typename Type>
-    ref<Type>::ref(const ref<Type> &other)
+    inline ref<Type>::ref(const ref<Type> &other)
         : m_Ptr(other.m_Ptr)
     {
         if(other.m_Ptr != nullptr)
@@ -141,7 +149,7 @@ namespace deep
     ===============
     */
     template<typename Type>
-    ref<Type>::~ref()
+    inline ref<Type>::~ref()
     {
         unreference();
     }

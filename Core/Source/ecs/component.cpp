@@ -156,7 +156,7 @@ namespace deep
     drawable_component::drawable_component
     ======================================
     */
-    drawable_component::drawable_component(GL3::gl_id _vbo, GL3::gl_id _vao, imaterial *_material)
+    drawable_component::drawable_component(GL3::gl_id _vbo, GL3::gl_id _vao, material *_material)
         : vbo(_vbo),
           vao(_vao),
           renderCallback(nullptr),
@@ -168,7 +168,7 @@ namespace deep
     component_manager::create_drawable_component
     ============================================
     */
-    component_id component_manager::create_drawable_component(GL3::gl_id vbo, GL3::gl_id vao, imaterial *material)
+    component_id component_manager::create_drawable_component(GL3::gl_id vbo, GL3::gl_id vao, material *material)
     {
         component_id id = m_ComponentCount;
         drawable_component drawable(vbo, vao, material);
@@ -187,7 +187,7 @@ namespace deep
     component_manager::create_drawable_component
     ============================================
     */
-    component_id component_manager::create_drawable_component(const char *vboName, const char *vaoName, imaterial *material)
+    component_id component_manager::create_drawable_component(const char *vboName, const char *vaoName, material *material)
     {
         GL3::program_manager *programManager = GL3::program_manager::get_singleton();
 

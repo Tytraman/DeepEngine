@@ -29,7 +29,7 @@ namespace deep
     #error Need implementation
     #endif
 
-    text_writer *core::m_Stdout = nullptr;
+    ref<text_writer> core::m_Stdout;
 
     /*
     ========================
@@ -277,15 +277,6 @@ end:
         im_gui_window::shutdown();
         scene::shutdown();
         SDL_Quit();
-
-        if(m_Stdout != nullptr)
-        {
-            m_Stdout->close();
-
-            mem::free_type(m_Stdout);
-
-            m_Stdout = nullptr;
-        }
     }
 
     /*
@@ -295,14 +286,7 @@ end:
     */
     void core::set_out(text_writer *writer)
     {
-        if(m_Stdout != nullptr)
-        {
-            m_Stdout->close();
-
-            mem::free_type(m_Stdout);
-
-            m_Stdout = writer;
-        }
+        m_Stdout = writer;
     }
 
     /*

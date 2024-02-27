@@ -36,14 +36,14 @@ namespace deep
     {
         GL3::gl_id vbo;
         GL3::gl_id vao;
-        ref<imaterial> material;
+        ref<material> material;
         drawable_render_callback renderCallback;
 
         DE_API static void classic_render_callback(GL3::gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, camera *camera);
         DE_API static void skybox_render_callback(GL3::gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, camera *camera);
         
         private:
-            drawable_component(GL3::gl_id vbo, GL3::gl_id vao, imaterial *material = nullptr);
+            drawable_component(GL3::gl_id vbo, GL3::gl_id vao, material *material = nullptr);
 
             friend component_manager;
     };
@@ -154,8 +154,8 @@ namespace deep
 
             DE_API component_type get_type(component_id component);
 
-            DE_API component_id create_drawable_component(GL3::gl_id vbo, GL3::gl_id vao, imaterial *material = nullptr);
-            DE_API component_id create_drawable_component(const char *vboName, const char *vaoName, imaterial *material = nullptr);
+            DE_API component_id create_drawable_component(GL3::gl_id vbo, GL3::gl_id vao, material *material = nullptr);
+            DE_API component_id create_drawable_component(const char *vboName, const char *vaoName, material *material = nullptr);
 
             DE_API drawable_component *get_drawable_component(component_id component);
             DE_API void delete_drawable_component(component_id id);

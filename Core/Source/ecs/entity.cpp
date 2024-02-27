@@ -136,7 +136,7 @@ namespace deep
         const polygon &pol,
         const vec3<float> &position,
         const vec3<float> &size,
-        imaterial *material)
+        material *material)
     {
         entity ent = create_entity(name, collection);
         if(!ent.is_ok())
