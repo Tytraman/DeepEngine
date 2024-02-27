@@ -5,7 +5,7 @@
 #include "DE/types.hpp"
 #include "DE/vec.hpp"
 #include "DE/memory/hash_table.hpp"
-#include "DE/memory/ref_counter.hpp"
+#include "DE/memory/ref_counted.hpp"
 #include "DE/string.hpp"
 
 #include "DE/drivers/opengl/shader.hpp"
@@ -21,7 +21,7 @@ namespace deep
         Textured
     };
 
-    class imaterial : public reference_counter
+    class imaterial : public ref_counted
     {
 
         public:

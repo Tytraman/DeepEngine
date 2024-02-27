@@ -152,6 +152,8 @@ namespace deep
     template<typename Base, typename Derived>
     inline constexpr bool is_base_of = __is_base_of(Base, Derived);
 
+    template<typename Type>
+    inline constexpr bool is_trivially_destructible = __is_trivially_destructible(Type);
 
     template<typename Enum>
     inline constexpr underlying_type<Enum> to_utype(Enum e)

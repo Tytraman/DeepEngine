@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Analyses/Godot/Compteur de références.md",
+                "file": "C++/Allocation dynamique.md",
                 "mode": "source",
                 "source": false
               }
@@ -93,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Analyses/Godot/Compteur de références.md",
+                "file": "C++/Allocation dynamique.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Analyses/Godot/Compteur de références.md",
+                "file": "C++/Allocation dynamique.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Analyses/Godot/Compteur de références.md"
+                "file": "C++/Allocation dynamique.md"
               }
             }
           }
@@ -157,8 +157,8 @@
   },
   "active": "4b79483f98b98cfc",
   "lastOpenFiles": [
-    "Untitled.canvas",
     "Analyses/Godot/Compteur de références.md",
+    "Untitled.canvas",
     "Analyses/Godot/Object.md",
     "C++/Parallélisme.md",
     "C++/Paterne de conception.md",

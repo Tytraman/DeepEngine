@@ -4,7 +4,7 @@
 #include "DE/def.hpp"
 #include "DE/types.hpp"
 #include "DE/memory/memory.hpp"
-#include "DE/memory/ref_counter.hpp"
+#include "DE/memory/ref_counted.hpp"
 
 #include <stddef.h>
 #include <stdint.h>
@@ -14,7 +14,7 @@ namespace deep
 
     /// @brief  Interface à la base de toutes les classes de stream.
     /// @remark Très inspirée des Stream sous .NET
-    class stream : public reference_counter
+    class stream : public ref_counted
     {
 
         public:

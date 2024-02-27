@@ -10,7 +10,7 @@
 #include "DE/graphics/shape.hpp"
 #include "DE/graphics/material.hpp"
 #include "DE/memory/hash_table.hpp"
-#include "DE/memory/ref_counter.hpp"
+#include "DE/memory/ref_counted.hpp"
 #include "DE/drivers/opengl/renderer.hpp"
 
 namespace deep
@@ -36,7 +36,7 @@ namespace deep
     {
         GL3::gl_id vbo;
         GL3::gl_id vao;
-        ref_counter<imaterial> material;
+        ref<imaterial> material;
         drawable_render_callback renderCallback;
 
         DE_API static void classic_render_callback(GL3::gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, camera *camera);

@@ -1,17 +1,14 @@
-#include "DE/memory/ref_counter.hpp"
+#include "DE/memory/ref_counted.hpp"
 
 namespace deep
 {
     
     /*
     ====================================
-    reference_counter::reference_counter
+    ref_counted::ref_counted
     ====================================
     */
-    reference_counter::reference_counter()
+    ref_counted::ref_counted()
         : m_Count(0)
     { }
-
-
-
 }

@@ -27,8 +27,11 @@ Retourne `true` si l'objet doit être libéré de la mémoire.
 ### get_reference_count
 Retourne le nombre de *références* qu'il y a vers l'objet.
 
+## A noter
 
 A elle toute seule, cette classe ne sert pas à grand chose, elle fonctionne en complément de la classe suivante :
+
+La destruction de l'objet ne se fait pas directement dans celui-ci, mais c'est la classe `Ref` qui le détruit par le biais de la fonction `unref` lorsque le compteur est à 0.
 
 # Ref
 C'est une classe `template` qui encapsule une classe à compter. Elle doit être utilisée afin de pouvoir se servir de [[Compteur de références#RefCounted]]

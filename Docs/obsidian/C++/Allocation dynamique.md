@@ -18,3 +18,11 @@ object *ptr = malloc(sizeof(object));
 new(ptr) object(args);    // args équivaut aux paramètres du constructeur.
 ```
 
+
+# Appeler le destructeur
+
+Le destructeur d'une classe est automatiquement appelé lorsque l'objet est déclaré dans le stack et que l'on sort du scope dans lequel il a été déclaré.
+Il est aussi appelé lorsque l'on utilise `delete` sur un objet alloué avec `new`.
+
+Il est aussi **possible** d'appeler le destructeur **manuellement**.
+

@@ -1,13 +1,14 @@
 #ifndef __DEEP_ENGINE_MEMORY_HPP__
 #define __DEEP_ENGINE_MEMORY_HPP__
 
-#include <DE/def.hpp>
-#include <DE/types.hpp>
-#include <DE/common.hpp>
+#include "DE/def.hpp"
+#include "DE/types.hpp"
+#include "DE/common.hpp"
 
 #include <stddef.h>
 #include <utility>
 #include <new>
+#include <type_traits>
 
 namespace deep
 {
@@ -69,7 +70,8 @@ namespace deep
             template<typename Type, typename... Args>
             static Type *alloc_type(Args&&... args);
 
-            static constexpr auto free_type = free;
+            template<typename Type>
+            static void free_type(Type *ptr);
 
         private:
             static list<mem_ptr> g_MemoryTrack;
@@ -88,6 +90,23 @@ namespace deep
         new(obj) Type(std::forward<Args>(args)...);
         
         return obj;
+    }
+
+    /*
+    =========================
+    memory_manager::free_type
+    =========================
+    */
+    template<typename Type>
+    inline void memory_manager::free_type(Type *ptr)
+    {
+        // Si l'objet a un destructeur défini, l'appelle.
+        if(!is_trivially_destructible<Type>)
+        {
+            ptr->~Type();
+        }
+
+        mem::free(ptr);
     }
 
     using mem = memory_manager;
@@ -124,7 +143,9 @@ namespace deep
     inline void memory_chunk::free()
     {
         if(m_Data != nullptr)
+        {
             mem::free(m_Data);
+        }
 
         m_Data = nullptr;
         m_Size = 0;
@@ -242,7 +263,9 @@ namespace deep
     unique_ptr<Type>::~unique_ptr()
     {
         if(m_Ptr != nullptr)
+        {
             mem::free(m_Ptr);
+        }
     }
 
     /*
@@ -264,7 +287,9 @@ namespace deep
     unique_ptr<Type> &unique_ptr<Type>::operator=(unique_ptr &&other) noexcept
     {
         if(this != &other)
+        {
             reset(other.release());
+        }
 
         return *this;
     }
@@ -278,7 +303,9 @@ namespace deep
     unique_ptr<Type> &unique_ptr<Type>::operator=(Type *ptr)
     {
         if(m_Ptr != ptr)
+        {
             reset(ptr);
+        }
 
         return *this;
     }
@@ -325,7 +352,9 @@ namespace deep
     void unique_ptr<Type>::reset(Type *ptr)
     {
         if(m_Ptr != nullptr)
+        {
             mem::free(m_Ptr);
+        }
 
         m_Ptr = ptr;
     }
