@@ -106,10 +106,10 @@ namespace deep
 
         engine_settings *engineSettings = engine_settings::get_singleton();
 
-        file_stream ifs("engine_settings.fobj", file_stream::file_mode::Open, file_stream::file_access::Read, file_stream::file_share::Read);
+        ref<file_stream> ifs(mem::alloc_type<file_stream>("engine_settings.fobj", file_stream::file_mode::Open, file_stream::file_access::Read, file_stream::file_share::Read));
 
         // Charge les paramètres liés au moteur.
-        if(!engineSettings->init(&ifs))
+        if(!engineSettings->init(ifs.get()))
         {
             return core_init_status::CannotLoadEngineSettings;
         }
@@ -136,7 +136,7 @@ namespace deep
         *m_Stdout <<
             DE_TERM_RESET "Name: " << cpu->get_name().str() << "\n"
             "Architecture: " << cpu->get_architecture_str() << "\n"
-            "Address width: " << cpu->get_address_width() << "- bit\n"
+            "Address width: " << cpu->get_address_width() << "-bit\n"
             DE_TERM_FG_YELLOW "===============================================" DE_TERM_RESET "\n";
 
         *m_Stdout << DE_TERM_FG_GREEN "core::init'ialisation successful" DE_TERM_RESET "\n";

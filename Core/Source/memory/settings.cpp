@@ -45,29 +45,31 @@ namespace deep
     */
     bool engine_settings::init(stream *inputStream)
     {
-        if(inputStream == nullptr)
+        ref<stream> is(inputStream);
+
+        if(!is.is_valid())
         {
             return false;
         }
 
-        file_object fobj(inputStream, "engine_settings");
+        file_object fobj("engine_settings");
 
-        if(!inputStream->is_opened())
+        if(!is->is_opened())
         {
-            if(!inputStream->open())
+            if(!is->open())
             {
                 return false;
             }
         }
 
-        if(!fobj.load(fobj_load_warning_callback))
+        if(!fobj.load(is.get(), fobj_load_warning_callback))
         {
-            inputStream->close();
+            is->close();
 
             return false;
         }
 
-        inputStream->close();
+        is->close();
 
         pair<string, string> *element = fobj.search_element("resources_directory");
         if(element == nullptr)

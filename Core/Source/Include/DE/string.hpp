@@ -18,6 +18,7 @@ namespace deep
         public:
             DE_API string();
             DE_API string(const char *str);
+            DE_API string(const char *str, size_t count);
             DE_API string(mem_ptr rawStr);
             DE_API string(const string &other);
             DE_API string(string &&other) noexcept;

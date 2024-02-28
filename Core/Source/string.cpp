@@ -29,6 +29,21 @@ namespace deep
     string::string
     ==============
     */
+    string::string(const char *str, size_t count)
+        : m_Chars(static_cast<char *>(mem::alloc(count + 1))),
+          m_Length(count)
+    {
+        char *c = m_Chars.get();
+
+        c[count] = '\0';
+        memcpy(c, str, count);
+    }
+
+    /*
+    ==============
+    string::string
+    ==============
+    */
     string::string(mem_ptr rawStr)
         : m_Chars(static_cast<char *>(rawStr)),
           m_Length(string_utils::length(static_cast<char *>(rawStr)))

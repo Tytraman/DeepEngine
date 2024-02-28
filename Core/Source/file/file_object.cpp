@@ -1,5 +1,6 @@
-#include <de/file/file_object.hpp>
-#include <DE/memory/stack.hpp>
+#include "DE/file/file_object.hpp"
+#include "DE/memory/stack.hpp"
+#include "DE/io/stream_writer.hpp"
 
 #include <stdio.h>
 
@@ -11,25 +12,26 @@ namespace deep
     file_object::file_object
     ========================
     */
-    file_object::file_object(stream *inputStream, const char *name)
-        : m_InputStream(inputStream),
-          m_Name(name),
+    file_object::file_object(const char *name)
+        : m_Name(name),
           m_WarningsNumber(0)
     { }
 
     /*
-    ========================
-    file_object::file_object
-    ========================
+    =================
+    file_object::load
+    =================
     */
-    bool file_object::load(file_object_load_warning_callback warningCallback)
+    bool file_object::load(stream *inputStream, file_object_load_warning_callback warningCallback)
     {
-        if(m_InputStream == nullptr)
+        ref<stream> is(inputStream);
+
+        if(!is.is_valid())
         {
             return false;
         }
 
-        if(!m_InputStream->can_read())
+        if(!is->can_read())
         {
             return false;
         }
@@ -62,11 +64,15 @@ namespace deep
             {
 rread:
                 // Lit un chunk de données du fichier.
-                if(!m_InputStream->read(buffer, 0, sizeof(buffer), &bytesRead))
+                if(!is->read(buffer, 0, sizeof(buffer), &bytesRead))
+                {
                     return false;
+                }
 
                 if(bytesRead == 0)
+                {
                     break;
+                }
 
                 // Ajoute le chunk lu dans la chaîne de caractères.
                 text.append(buffer, bytesRead);
@@ -75,7 +81,9 @@ rread:
                 finder.skipWhiteChars();
 
                 if(finder.position() == text.length())
+                {
                     goto rread;
+                }
             }
 
             car = finder.current();
@@ -93,7 +101,9 @@ rread:
                         m_WarningsNumber++;
 
                         if(warningCallback)
+                        {
                             warningCallback(m_Name, lines, car);
+                        }
 
                         // Ignore la ligne.
                         finder.skipTo('\n');
@@ -166,8 +176,81 @@ rread:
 
             // Vérifie s'il faut lire de nouveaux octets.
             if(finder.position() >= text.length())
+            {
                 processing = false;
+            }
         }
+
+        return true;
+    }
+
+    bool __de_file_object_element_save_callback(hash_entry<pair<string, string>> &entry, string &/*currentPath*/, size_t subContainerNumber, mem_ptr args)
+    {
+        ref<stream_writer> tw(static_cast<stream_writer *>(args));
+        size_t i;
+
+        for(i = 0; i < subContainerNumber; ++i)
+        {
+            *tw << "  ";
+        }
+
+        *tw << entry.value.value1().str() << " : " << entry.value.value2().str() << "\n";
+
+        return true;
+    }
+
+    bool __de_file_object_new_container_save_callback(file_object_container &container, string &/*currentPath*/, size_t subContainerNumber, mem_ptr args)
+    {
+        ref<stream_writer> tw(static_cast<stream_writer *>(args));
+        size_t i;
+
+        for(i = 1; i < subContainerNumber; ++i)
+        {
+            *tw << "  ";
+        }
+
+        *tw << container.name.str() << " {\n";
+
+        return true;
+    }
+
+    bool __de_file_object_end_container_save_callback(file_object_container &/*container*/, string &/*currentPath*/, size_t subContainerNumber, mem_ptr args)
+    {
+        ref<stream_writer> tw(static_cast<stream_writer *>(args));
+        size_t i;
+
+        for(i = 1; i < subContainerNumber; ++i)
+        {
+            *tw << "  ";
+        }
+
+        *tw << "}\n";
+
+        return true;
+    }
+
+    /*
+    =================
+    file_object::save
+    =================
+    */
+    bool file_object::save(stream *outputStream)
+    {
+        ref<stream> os(outputStream);
+
+        if(!os.is_valid())
+        {
+            return false;
+        }
+
+        if(!os->can_write())
+        {
+            return false;
+        }
+
+        ref<stream_writer> writer(mem::alloc_type<stream_writer>(os.get()));
+
+        enumerate(__de_file_object_element_save_callback, __de_file_object_new_container_save_callback, __de_file_object_end_container_save_callback, writer.get());
 
         return true;
     }
@@ -198,7 +281,7 @@ rread:
     file_object_container::enumerate
     ================================
     */
-    void file_object_container::enumerate(file_object_enum_element_callback elementCallback, file_object_enum_container_callback containerCallback, mem_ptr args, size_t maxSubContainer, file_object_container **container, pair<string, string> **element)
+    void file_object_container::enumerate(file_object_enum_element_callback elementCallback, file_object_enum_new_container_callback newContainerCallback, file_object_enum_end_container_callback endContainerCallback, mem_ptr args, size_t maxSubContainer, file_object_container **container, pair<string, string> **element)
     {
         stack<pair<hash_table_iterator<file_object_container>, file_object_container *>> snapshots;
         bool containerProcessed = false;
@@ -213,6 +296,8 @@ rread:
             hash_table_iterator<file_object_container> &lastIterator = lastSnapshot->value1();
             file_object_container *currentContainer = lastSnapshot->value2();
             hash_table_iterator<file_object_container> containerEndIterator = currentContainer->containers.end();
+
+            // S'occupe d'abord des éléments.
 
             if(!containerProcessed)
             {
@@ -232,22 +317,30 @@ rread:
                     {
                         currentPath.append(itemsIterator->value.value1().str());
 
-                        if(!elementCallback(*itemsIterator, currentPath, args))
+                        if(!elementCallback(*itemsIterator, currentPath, indexContainer, args))
                         {
                             if(element != nullptr)
+                            {
                                 *element = &itemsIterator->value;
+                            }
 
                             goto end;
                         }
 
                         if(currentPathLength == 0)
+                        {
                             currentPath.clear();
+                        }
                         else
+                        {
                             currentPath.substring(0, currentPathLength);
+                        }
                     }
 
                     if(currentPathLength > 0)
+                    {
                         currentPath.substring(0, currentPathLength - 1);
+                    }
                 }
             }
 
@@ -255,14 +348,30 @@ rread:
 
             hash_table_iterator<file_object_container> lastIteratorBackup = lastIterator;
 
+            // S'occupe ensuite du conteneur.
+
+            // S'il n'y a pas d'autre conteneur qui suit.
             if(lastIterator == containerEndIterator)
             {
                 // Retire la clé du conteneur du chemin total.
                 size_t dotIndex = currentPath.find_from_end('.');
+
+                if(endContainerCallback != nullptr && indexContainer > 0)
+                {
+                    if(!endContainerCallback(*currentContainer, currentPath, indexContainer, args))
+                    {
+                        goto end;
+                    }
+                }
+
                 if(dotIndex == 0 || dotIndex == static_cast<size_t>(-1))
+                {
                     currentPath.clear();
+                }
                 else
+                {
                     currentPath.substring(0, dotIndex);
+                }
 
                 containerProcessed = true;
                 snapshots.pop();
@@ -278,7 +387,10 @@ rread:
 
                 // Ajoute la clé du conteneur dans le chemin total.
                 if(currentPath.length() > 0)
+                {
                     currentPath.append(".");
+                }
+                    
                 currentPath.append(lastIterator->value.name.str());
 
                 // Le conteneur possède d'autres conteneurs.
@@ -288,12 +400,14 @@ rread:
                 lastIterator++;
                 indexContainer++;
 
-                if(containerCallback)
+                if(newContainerCallback)
                 {
-                    if(!containerCallback(lastIteratorBackup->value, currentPath, args))
+                    if(!newContainerCallback(lastIteratorBackup->value, currentPath, indexContainer, args))
                     {
                         if(container != nullptr)
+                        {
                             *container = &lastIteratorBackup->value;
+                        }
 
                         goto end;
                     }
@@ -304,7 +418,7 @@ end_loop: ;
 end: ;
     }
 
-    bool __de_file_object_container_search_callback(file_object_container &, string &currentPath, mem_ptr args)
+    bool __de_file_object_container_search_callback(file_object_container &, string &currentPath, size_t /*subContainerNumber*/, mem_ptr args)
     {
         const char *path = static_cast<const char *>(args);
 
@@ -312,20 +426,20 @@ end: ;
     }
 
     /*
-    ======================================
+    =======================================
     file_object_container::search_container
-    ======================================
+    =======================================
     */
     file_object_container *file_object_container::search_container(const char *path)
     {
         file_object_container *container = nullptr;
 
-        enumerate(nullptr, __de_file_object_container_search_callback, (mem_ptr) path, static_cast<size_t>(-1), &container, nullptr);
+        enumerate(nullptr, __de_file_object_container_search_callback, nullptr, rm_const<char *>(path), static_cast<size_t>(-1), &container, nullptr);
 
         return container;
     }
 
-    bool __de_file_object_element_search_callback(hash_entry<pair<string, string>> & /* entry */, string &currentPath, mem_ptr args)
+    bool __de_file_object_element_search_callback(hash_entry<pair<string, string>> & /* entry */, string &currentPath, size_t /*subContainerNumber*/, mem_ptr args)
     {
         const char *path = static_cast<const char *>(args);
 
@@ -333,17 +447,27 @@ end: ;
     }
 
     /*
-    ====================================
+    =====================================
     file_object_container::search_element
-    ====================================
+    =====================================
     */
     pair<string, string> *file_object_container::search_element(const char *path)
     {
         pair<string, string> *element = nullptr;
 
-        enumerate(__de_file_object_element_search_callback, nullptr, (mem_ptr) path, true, nullptr, &element);
+        enumerate(__de_file_object_element_search_callback, nullptr, nullptr, rm_const<char *>(path), true, nullptr, &element);
 
         return element;
+    }
+
+    /*
+    ====================================
+    file_object_container::add_container
+    ====================================
+    */
+    file_object_container *file_object_container::add_container(const char */*path*/)
+    {
+        return nullptr;
     }
 
 }

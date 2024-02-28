@@ -36,14 +36,14 @@ namespace deep
     {
         GL3::gl_id vbo;
         GL3::gl_id vao;
-        ref<material> material;
+        ref<material> mat;
         drawable_render_callback renderCallback;
 
         DE_API static void classic_render_callback(GL3::gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, camera *camera);
         DE_API static void skybox_render_callback(GL3::gl_renderer &renderer, drawable_component *drawable, transformation_component *transformation, window *window, camera *camera);
         
         private:
-            drawable_component(GL3::gl_id vbo, GL3::gl_id vao, material *material = nullptr);
+            drawable_component(GL3::gl_id vbo, GL3::gl_id vao, material *mat = nullptr);
 
             friend component_manager;
     };

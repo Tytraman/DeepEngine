@@ -1,32 +1,29 @@
 #ifndef __DEEP_ENGINE_COLLECTION_HPP__
 #define __DEEP_ENGINE_COLLECTION_HPP__
 
-#include <DE/def.hpp>
-#include <DE/types.hpp>
-#include <DE/memory/memory.hpp>
+#include "DE/def.hpp"
+#include "DE/types.hpp"
+#include "DE/memory/memory.hpp"
 
 namespace deep
 {
-    template<typename Type, typename Iterator>
-    class icollection;
 
     template<typename Type, typename Iterator>
     class iiterator;
 
-
     template<typename Type, typename Iterator>
-    class icollection
+    class collection
     {
 
         public:
             static constexpr size_t nothing = static_cast<size_t>(-1);
 
         public:
-            icollection();
+            collection();
 
-            virtual bool add()                    = 0;
+            virtual bool add() = 0;
             virtual bool add(const Type &element) = 0;
-            virtual bool add(Type &&element)      = 0;
+            virtual bool add(Type &&element) = 0;
 
             virtual bool remove(size_t index) = 0;
 
@@ -48,12 +45,12 @@ namespace deep
     };
 
     template<typename Type, typename Iterator>
-    icollection<Type, Iterator>::icollection()
+    collection<Type, Iterator>::collection()
         : m_NumberOfElements(0)
     { }
 
     template<typename Type, typename Iterator>
-    size_t icollection<Type, Iterator>::count() const
+    size_t collection<Type, Iterator>::count() const
     {
         return m_NumberOfElements;
     }

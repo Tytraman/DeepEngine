@@ -1,6 +1,7 @@
 #include "DE/string_utils.hpp"
-#include "DE/memory/memory.hpp"
 #include "DE/string.hpp"
+#include "DE/memory/memory.hpp"
+#include "DE/memory/list.hpp"
 
 #include "DE/c-wrapper/string_utils.h"
 
@@ -53,7 +54,7 @@ namespace deep
             return nullptr;
         }
 
-        size_t len = strlen(source);
+        size_t len = length(source);
         char *dest = (char *) mem::alloc(len + 1);
 
         if(dest == nullptr)
@@ -541,17 +542,25 @@ namespace deep
     size_t string_utils::last_index(const wchar_t *str, wchar_t charactere)
     {
         size_t num = length(str);
+
         if(num <= 1)
+        {
             return 0;
+        }
 
         num--;
 
-        while(1) {
+        while(1)
+        {
             if(str[num] == charactere)
+            {
                 break;
+            }
 
             if(num == 0)
+            {
                 break;
+            }
 
             num--;
         }
@@ -571,7 +580,9 @@ namespace deep
 
         // Si la longueur des 2 chaînes n'est pas la même alors il est clair que les 2 chaînes ne sont pas identiques.
         if(len1 != len2)
+        {
             return false;
+        }
 
         return memcmp(first, second, len1 * sizeof(wchar_t)) == 0;
     }
@@ -584,20 +595,28 @@ namespace deep
     bool string_utils::equals(const char *first, const char *second)
     {
         if(first == nullptr && second == nullptr)
+        {
             return true;
+        }
 
         if(first == nullptr)
+        {
             return false;
+        }
 
         if(second == nullptr)
+        {
             return false;
+        }
 
         size_t len1 = length(first);
         size_t len2 = length(second);
 
         // Si la longueur des 2 chaînes n'est pas la même alors il est clair que les 2 chaînes ne sont pas identiques.
         if(len1 != len2)
+        {
             return false;
+        }
 
         return memcmp(first, second, len1 * sizeof(char)) == 0;
     }
@@ -836,6 +855,34 @@ namespace deep
         }
 
         return str;
+    }
+
+    /*
+    ===================
+    string_utils::split
+    ===================
+    */
+    list<string> string_utils::split(const char *str, char separator)
+    {
+        list<string> strs;
+
+        size_t i;
+        size_t lastFound = 0;
+        size_t len = length(str);
+        const char *current = str;
+
+        for(i = 0; i < len; ++i)
+        {
+            if(str[i] == separator)
+            {
+                strs.add(string(current, i - lastFound));
+
+                current = str + i + 1;
+                lastFound = i + 1;
+            }
+        }
+
+        return strs;
     }
 
 }

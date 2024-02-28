@@ -256,11 +256,11 @@ namespace deep
                         GL3::vao_manager::vao_item *vao = vaoManager->get(drawable->vao);
                         GL3::texture_manager::texture_item *texture;
 
-                        if(drawable->material.get() != nullptr)
+                        if(drawable->mat.get() != nullptr)
                         {
-                            program = programManager->get(drawable->material->get_program());
-                            if(drawable->material->get_type() == material_type::Textured)
-                                texture = textureManager->get(((texture_material *) drawable->material.get())->get_diffuse_texture());
+                            program = programManager->get(drawable->mat->get_program());
+                            if(drawable->mat->get_type() == material_type::Textured)
+                                texture = textureManager->get(((texture_material *) drawable->mat.get())->get_diffuse_texture());
                             else
                                 texture = nullptr;
                         }
@@ -287,10 +287,10 @@ namespace deep
                         if(ImGui::BeginCombo("Texture", texture != nullptr ? texture->name.str() : ""))
                         {
                             edit_texture edit;
-                            if(drawable->material.get() != nullptr)
+                            if(drawable->mat.get() != nullptr)
                             {
-                                if(drawable->material->get_type() == material_type::Textured)
-                                    texture = textureManager->get(((texture_material *) drawable->material.get())->get_diffuse_texture());
+                                if(drawable->mat->get_type() == material_type::Textured)
+                                    texture = textureManager->get(((texture_material *) drawable->mat.get())->get_diffuse_texture());
                                 else
                                     edit.textureID = static_cast<GL3::gl_id>(-1);
                             }
@@ -304,10 +304,10 @@ namespace deep
 
                             textureManager->enum_textures(__edit_texture_enum_callback, &edit);
 
-                            if(drawable->material.get() != nullptr)
+                            if(drawable->mat.get() != nullptr)
                             {
-                                if(drawable->material->get_type() == material_type::Textured)
-                                    ((texture_material *) drawable->material.get())->set_diffuse_texture(edit.textureID);
+                                if(drawable->mat->get_type() == material_type::Textured)
+                                    ((texture_material *) drawable->mat.get())->set_diffuse_texture(edit.textureID);
                             }
                             
 
@@ -319,8 +319,8 @@ namespace deep
                             GL3::gl_id prog;
                             programManager->enum_programs(__edit_program_enum_callback, &prog);
 
-                            if(drawable->material.get() != nullptr)
-                                drawable->material->set_program(prog);
+                            if(drawable->mat.get() != nullptr)
+                                drawable->mat->set_program(prog);
 
                             ImGui::EndCombo();
                         }

@@ -8,6 +8,9 @@ namespace deep
 {
 
     class string;
+    
+    template<typename Type>
+    class list;
 
     class string_utils
     {
@@ -57,6 +60,8 @@ namespace deep
             DE_API static string uint_to_str(uint64_t value);
             DE_API static string int_to_str(int64_t value);
             DE_API static string double_to_str(double value);
+
+            DE_API static list<string> split(const char *str, char separator);
 
         public:
             string_utils() = delete;

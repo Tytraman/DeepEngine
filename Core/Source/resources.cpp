@@ -33,7 +33,7 @@ namespace deep
           fragmentFilename(third)
     { }
 
-    bool enum_shaders_config_fobj(file_object_container &container, string & /* currentPath */, mem_ptr args)
+    bool enum_shaders_config_fobj(file_object_container &container, string & /* currentPath */, size_t /*subContainerNumber*/, mem_ptr args)
     {
         // Contient la liste des fusions Vertex Fragment shaders.
         hash_table<shader_fusion> *table = static_cast<hash_table<shader_fusion>*>(args);
@@ -135,24 +135,24 @@ namespace deep
         string shadersConfig(m_ShadersFolder);
         shadersConfig.append("shaders.fobj");
 
-        file_stream ifs(shadersConfig.str(), file_stream::file_mode::Open, file_stream::file_access::Read, file_stream::file_share::Read);
-        if(!ifs.open())
+        ref<file_stream> ifs(mem::alloc_type<file_stream>(shadersConfig.str(), file_stream::file_mode::Open, file_stream::file_access::Read, file_stream::file_share::Read));
+        if(!ifs->open())
         {
             return false;
         }
 
-        file_object shadersFobj(&ifs, "shaders");
-        if(!shadersFobj.load())
+        file_object shadersFobj("shaders");
+        if(!shadersFobj.load(ifs.get()))
         {
-            ifs.close();
+            ifs->close();
 
             return false;
         }
 
-        ifs.close();
+        ifs->close();
 
         hash_table<shader_fusion> shaderFiles;
-        shadersFobj.enumerate(nullptr, enum_shaders_config_fobj, static_cast<mem_ptr>(&shaderFiles), 1);
+        shadersFobj.enumerate(nullptr, enum_shaders_config_fobj, nullptr, static_cast<mem_ptr>(&shaderFiles), 1);
         size_t numberOfShaders = shaderFiles.getNumberOfElements();
 
         core::out() << "Found " << numberOfShaders << " shaders.\n";

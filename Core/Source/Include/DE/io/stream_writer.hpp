@@ -5,6 +5,7 @@
 #include "DE/io/stream.hpp"
 #include "DE/string_utils.hpp"
 #include "DE/string.hpp"
+#include "DE/memory/ref_counted.hpp"
 
 namespace deep
 {
@@ -31,7 +32,7 @@ namespace deep
             DE_API virtual bool write(double value) override;
 
         protected:
-            unique_ptr<stream> m_OutputStream;
+            ref<stream> m_OutputStream;
 
         public:
             stream_writer() = delete;
@@ -45,7 +46,7 @@ namespace deep
     */
     inline bool stream_writer::open()
     {
-        if(m_OutputStream.get() == nullptr)
+        if(!m_OutputStream.is_valid())
         {
             return false;
         }
@@ -60,7 +61,7 @@ namespace deep
     */
     inline bool stream_writer::close()
     {
-        if(m_OutputStream.get() == nullptr)
+        if(!m_OutputStream.is_valid())
         {
             return false;
         }

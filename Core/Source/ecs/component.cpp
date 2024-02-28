@@ -37,8 +37,8 @@ namespace deep
         GL3::gl_id program;
         GL3::gl_id vao = drawable->vao;
 
-        if(drawable->material.get() != nullptr)
-            program = drawable->material->get_program();
+        if(drawable->mat.get() != nullptr)
+            program = drawable->mat->get_program();
         else
             program = 0;
 
@@ -63,8 +63,8 @@ namespace deep
         programManager->set_uniform("deViewPos", camera->get_position());
         programManager->set_uniform("proj", fmat4x4::perspective(fmat4x4(), 45.0f, (float) window->get_width() / (float) window->get_height(), 0.1f, 1000.0f));
         
-        if(drawable->material.get() != nullptr)
-            drawable->material->send_data();
+        if(drawable->mat.get() != nullptr)
+            drawable->mat->send_data();
         else
             programManager->send_uniforms();
 
@@ -85,8 +85,8 @@ namespace deep
         GL3::core::disable_depth_mask();
         GL3::core::set_depth_function(GL3::core::gl_depth_function::Lequal);
 
-        if(drawable->material.get() != nullptr)
-            programManager->use(drawable->material->get_program());
+        if(drawable->mat.get() != nullptr)
+            programManager->use(drawable->mat->get_program());
 
         vaoManager->bind(drawable->vao);
 
@@ -99,8 +99,8 @@ namespace deep
         programManager->set_uniform("view", view);
         programManager->set_uniform("proj", fmat4x4::perspective(fmat4x4(), 45.0f, (float) window->get_width() / (float) window->get_height(), 0.1f, 1000.0f));
 
-        if(drawable->material.get() != nullptr)
-            drawable->material->send_data();
+        if(drawable->mat.get() != nullptr)
+            drawable->mat->send_data();
         else
             programManager->send_uniforms();
 
@@ -160,7 +160,7 @@ namespace deep
         : vbo(_vbo),
           vao(_vao),
           renderCallback(nullptr),
-          material(_material)
+          mat(_material)
     { }
 
     /*

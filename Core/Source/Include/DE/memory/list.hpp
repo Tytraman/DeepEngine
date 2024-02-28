@@ -146,7 +146,7 @@ namespace deep
     }
 
     template<typename Type>
-    class list : public icollection<Type, list_iterator<Type>>
+    class list : public collection<Type, list_iterator<Type>>
     {
 
         public:
@@ -161,9 +161,9 @@ namespace deep
 
             void init(uint32_t capacityStep = 10);
 
-            bool add()                     override;
+            bool add() override;
             bool add(ConstTypeRef element) override;
-            bool add(Type &&element)       override;
+            bool add(Type &&element) override;
 
             bool set(const Type *buffer, size_t index, size_t count);
             bool set(const Type &value, size_t index, size_t count);
@@ -176,13 +176,13 @@ namespace deep
             void fill_with_byte(uint8_t value);
 
             void empty() override;
-            void free()  override;
+            void free() override;
 
             list_iterator<Type> begin() override;
-            list_iterator<Type> end()   override;
+            list_iterator<Type> end() override;
 
-            size_t   get_capacity()          const;
-            uint32_t get_capacity_step()     const;
+            size_t get_capacity() const;
+            uint32_t get_capacity_step() const;
             TypeRef operator[](size_t index);
 
             void set_count(size_t count);
@@ -205,7 +205,7 @@ namespace deep
     */
     template<typename Type>
     list<Type>::list(uint32_t capacityStep)
-        : icollection<Type, list_iterator<Type>>(),
+        : collection<Type, list_iterator<Type>>(),
           m_Data(nullptr),
           m_Capacity(0),
           m_CapacityStep(capacityStep)
@@ -220,7 +220,20 @@ namespace deep
     list<Type>::~list()
     {
         if(m_Data != nullptr)
+        {
+            if(!is_trivially_destructible<Type>)
+            {
+                size_t len = m_NumberOfElements;
+                size_t i;
+
+                for(i = 0; i < len; ++i)
+                {
+                    (m_Data + i)->~Type();
+                }
+            }
+
             free();
+        }
     }
 
     template<typename Type>
@@ -242,7 +255,9 @@ namespace deep
     {
         // Augmente la taille du buffer si nécessaire.
         if(!grow_if_needed())
+        {
             return false;
+        }
 
         // Déplace ou copie l'élément dans la case mémoire.
         m_Data[m_NumberOfElements] = element;
@@ -261,7 +276,9 @@ namespace deep
     {
         // Augmente la taille du buffer si nécessaire.
         if(!grow_if_needed())
+        {
             return false;
+        }
 
         // Déplace ou copie l'élément dans la case mémoire.
         m_Data[m_NumberOfElements] = rvalue_cast(element);
@@ -279,7 +296,9 @@ namespace deep
     bool list<Type>::add()
     {
         if(!grow_if_needed())
+        {
             return false;
+        }
 
         m_NumberOfElements++;
 
@@ -390,13 +409,17 @@ namespace deep
     bool list<Type>::reserve(size_t numberOfElements)
     {
         if(numberOfElements == m_NumberOfElements)
+        {
             return true;
+        }
 
         size_t newCapacity = (numberOfElements / m_CapacityStep + 1) * m_CapacityStep;
         mem_ptr ptr = mem::realloc_no_track(m_Data, newCapacity * sizeof(Type));
 
         if(ptr == nullptr)
+        {
             return false;
+        }
 
         m_Data = static_cast<TypePtr>(ptr);
         m_Capacity = newCapacity;
@@ -514,7 +537,9 @@ namespace deep
             mem_ptr ptr = mem::realloc_no_track(m_Data, newCapacity * sizeof(Type));
 
             if(ptr == nullptr)
+            {
                 return false;
+            }
 
             m_Data = (TypePtr) ptr;
             m_Capacity = newCapacity;
@@ -549,12 +574,22 @@ namespace deep
         return true;
     }
 
+    /*
+    =====================
+    list<Type>::set_count
+    =====================
+    */
     template<typename Type>
     inline void list<Type>::set_count(size_t count)
     {
         m_NumberOfElements = count;
     }
 
+    /*
+    =============================
+    list<Type>::set_capacity_step
+    =============================
+    */
     template<typename Type>
     inline void list<Type>::set_capacity_step(size_t size)
     {
