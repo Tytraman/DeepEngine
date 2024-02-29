@@ -15,18 +15,19 @@ namespace deep
 
         public:
             DE_API static resource_manager *get_singleton();
+            DE_API static void set_singleton(resource_manager *ptr);
             
             DE_API bool init(const char *filepath);
             DE_API void shutdown();
 
-            DE_API GL3::gl_id loadTexture(const char *name, uint8_t unit);
-            DE_API bool loadBMP(const char *name, bmp &dest);
+            DE_API GL3::gl_id load_texture(const char *name, uint8_t unit);
+            DE_API bool load_bmp(const char *name, bmp &dest);
 
-            DE_API string getResourcesFolder();
-            DE_API string getShadersFolder();
-            DE_API string getTexturesFolder();
-            DE_API string getSoundsFolder();
-            DE_API string getScreenshotsFolder();
+            DE_API string get_resources_folder();
+            DE_API string get_shaders_folder();
+            DE_API string get_textures_folder();
+            DE_API string get_sounds_folder();
+            DE_API string get_screenshots_folder();
             DE_API string get_fonts_folder();
 
         private:
@@ -43,54 +44,79 @@ namespace deep
             resource_manager(const resource_manager &) = delete;
             resource_manager(resource_manager &&) = delete;
 
+            friend memory_manager;
+
+        private:
+            static resource_manager *g_ResourceManager;
+
     };
 
     /*
+    ===============================
+    resource_manager::get_singleton
+    ===============================
+    */
+    inline resource_manager *resource_manager::get_singleton()
+    {
+        return g_ResourceManager;
+    }
+
+    /*
+    ===============================
+    resource_manager::set_singleton
+    ===============================
+    */
+    inline void resource_manager::set_singleton(resource_manager *ptr)
+    {
+        g_ResourceManager = ptr;
+    }
+
+    /*
     ====================================
-    resource_manager::getResourcesFolder
+    resource_manager::get_resources_folder
     ====================================
     */
-    inline string resource_manager::getResourcesFolder()
+    inline string resource_manager::get_resources_folder()
     {
         return m_ResourcesFolder;
     }
 
     /*
     ==================================
-    resource_manager::getShadersFolder
+    resource_manager::get_shaders_folder
     ==================================
     */
-    inline string resource_manager::getShadersFolder()
+    inline string resource_manager::get_shaders_folder()
     {
         return m_ShadersFolder;
     }
 
     /*
     ===================================
-    resource_manager::getTexturesFolder
+    resource_manager::get_textures_folder
     ===================================
     */
-    inline string resource_manager::getTexturesFolder()
+    inline string resource_manager::get_textures_folder()
     {
         return m_TexturesFolder;
     }
 
     /*
     =================================
-    resource_manager::getSoundsFolder
+    resource_manager::get_sounds_folder
     =================================
     */
-    inline string resource_manager::getSoundsFolder()
+    inline string resource_manager::get_sounds_folder()
     {
         return m_SoundsFolder;
     }
 
     /*
     ======================================
-    resource_manager::getScreenshotsFolder
+    resource_manager::get_screenshots_folder
     ======================================
     */
-    inline string resource_manager::getScreenshotsFolder()
+    inline string resource_manager::get_screenshots_folder()
     {
         return m_ScreenshotsFolder;
     }

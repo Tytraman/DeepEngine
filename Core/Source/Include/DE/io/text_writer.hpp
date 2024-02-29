@@ -23,7 +23,9 @@ namespace deep
             virtual bool write(uint32_t value) = 0;
             virtual bool write(int64_t value) = 0;
             virtual bool write(uint64_t value) = 0;
+            virtual bool write(unsigned long value) = 0;
             virtual bool write(double value) = 0;
+            virtual bool write(mem_ptr ptr) = 0;
 
             DE_API text_writer &operator<<(bool value);
             DE_API text_writer &operator<<(char value);
@@ -32,7 +34,9 @@ namespace deep
             DE_API text_writer &operator<<(uint32_t value);
             DE_API text_writer &operator<<(int64_t value);
             DE_API text_writer &operator<<(uint64_t value);
+            DE_API text_writer &operator<<(unsigned long value);
             DE_API text_writer &operator<<(double value);
+            DE_API text_writer &operator<<(mem_ptr ptr);
 
     };
 
@@ -125,9 +129,33 @@ namespace deep
     text_writer::operator<<
     =======================
     */
+    inline text_writer &text_writer::operator<<(unsigned long value)
+    {
+        write(value);
+
+        return *this;
+    }
+
+    /*
+    =======================
+    text_writer::operator<<
+    =======================
+    */
     inline text_writer &text_writer::operator<<(double value)
     {
         write(value);
+
+        return *this;
+    }
+
+    /*
+    =======================
+    text_writer::operator<<
+    =======================
+    */
+    inline text_writer &text_writer::operator<<(mem_ptr ptr)
+    {
+        write(ptr);
 
         return *this;
     }

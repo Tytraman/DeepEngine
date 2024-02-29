@@ -56,6 +56,7 @@ namespace deep
 
         public:
             DE_API static CPU *get_singleton();
+            DE_API static void set_singleton(CPU *ptr);
 
             DE_API bool query_info();
 
@@ -87,8 +88,34 @@ namespace deep
             uint16_t m_NumberOfL1Caches;
             uint16_t m_NumberOfL2Caches;
             uint16_t m_NumberOfL3Caches;
+
+        public:
+            friend memory_manager;
+
+        private:
+            static CPU *g_CPU;
                 
     };
+
+    /*
+    ==================
+    CPU::get_singleton
+    ==================
+    */
+    inline CPU *CPU::get_singleton()
+    {
+        return g_CPU;
+    }
+
+    /*
+    ==================
+    CPU::set_singleton
+    ==================
+    */
+    inline void CPU::set_singleton(CPU *ptr)
+    {
+        g_CPU = ptr;
+    }
 
     /*
     =============

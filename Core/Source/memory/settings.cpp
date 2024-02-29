@@ -7,6 +7,8 @@
 namespace deep
 {
 
+    engine_settings *engine_settings::g_EngineSettings = nullptr;
+
     /*
     ================================
     engine_settings::engine_settings
@@ -20,18 +22,6 @@ namespace deep
           m_DebugMode(false)
 #endif
     { }
-
-    /*
-    ==============================
-    engine_settings::get_singleton
-    ==============================
-    */
-    engine_settings *engine_settings::get_singleton()
-    {
-        static engine_settings singleton;
-
-        return &singleton;
-    }
 
     void fobj_load_warning_callback(const string &name, uint64_t line, char charactere)
     {

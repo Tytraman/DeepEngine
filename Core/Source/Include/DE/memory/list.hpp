@@ -378,6 +378,11 @@ namespace deep
     template<typename Type>
     size_t list<Type>::find(const Type &toSearch) const
     {
+        if(m_Data == nullptr)
+        {
+            return list::nothing;
+        }
+
         // Pointeur vers le tableau des éléments de la liste.
         uint8_t *ptr = (uint8_t *) m_Data;
         size_t elementSize = sizeof(Type);

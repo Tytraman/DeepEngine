@@ -6,6 +6,8 @@
 namespace deep
 {
 
+    CPU *CPU::g_CPU = nullptr;
+
     /*
     ===============
     CPU::core::core
@@ -15,7 +17,10 @@ namespace deep
         : L1CacheSize(0),
           L2CacheSize(0),
           L3CacheSize(0),
-          associatedCaches(0)
+          associatedCaches(0),
+          numberOfL1Caches(0),
+          numberOfL2Caches(0),
+          numberOfL3Caches(0)
     { }
 
     /*
@@ -33,18 +38,6 @@ namespace deep
           m_NumberOfL2Caches(0),
           m_NumberOfL3Caches(0)
     { }
-
-    /*
-    ==================
-    CPU::get_singleton
-    ==================
-    */
-    CPU *CPU::get_singleton()
-    {
-        static CPU singleton;
-
-        return &singleton;
-    }
 
     /*
     ===============

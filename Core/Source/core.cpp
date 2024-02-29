@@ -12,6 +12,7 @@
 #include "DE/hardware/cpu.hpp"
 #include "DE/io/file_stream.hpp"
 #include "DE/io/stream_writer.hpp"
+#include "DE/memory/list.hpp"
 
 #include "DE/os/win32.hpp"
 
@@ -29,6 +30,7 @@ namespace deep
     #error Need implementation
     #endif
 
+    ref<text_writer> core::m_Stderr;
     ref<text_writer> core::m_Stdout;
 
     /*
@@ -49,14 +51,68 @@ namespace deep
     core_init_status core::init(const char *gameTitle, uint64_t diskSpaceRequired, uint64_t physicalRamNeeded, uint64_t virtualRamNeeded)
     {
 #if DE_WINDOWS
-        HANDLE stdHandle = GetStdHandle(STD_OUTPUT_HANDLE);
-        if(stdHandle != INVALID_HANDLE_VALUE)
+        HANDLE stdoutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
+        HANDLE stderrHandle = GetStdHandle(STD_ERROR_HANDLE);
+
+        if(stdoutHandle != INVALID_HANDLE_VALUE)
         {
             DWORD consoleMode;
-            GetConsoleMode(stdHandle, &consoleMode);
+            GetConsoleMode(stdoutHandle, &consoleMode);
             consoleMode |= ENABLE_PROCESSED_OUTPUT | ENABLE_VIRTUAL_TERMINAL_PROCESSING;
-            SetConsoleMode(stdHandle, consoleMode);
+            SetConsoleMode(stdoutHandle, consoleMode);
         }
+
+        if(stderrHandle != INVALID_HANDLE_VALUE)
+        {
+            DWORD consoleMode;
+            GetConsoleMode(stderrHandle, &consoleMode);
+            consoleMode |= ENABLE_PROCESSED_OUTPUT | ENABLE_VIRTUAL_TERMINAL_PROCESSING;
+            SetConsoleMode(stderrHandle, consoleMode);
+        }
+
+        // Allocation des singletons.
+
+        list<mem_ptr> *memoryTrack = mem::alloc_type_no_track<list<mem_ptr>>();
+        if(memoryTrack == nullptr)
+        {
+            return core_init_status::CannotInstantiateObjects;
+        }
+
+        mem::set_memory_track(memoryTrack);
+
+        resource_manager *resourceManager = mem::alloc_type_no_track<resource_manager>();
+        if(resourceManager == nullptr)
+        {
+            mem::free_type_no_track(memoryTrack);
+
+            return core_init_status::CannotInstantiateObjects;
+        }
+
+        resource_manager::set_singleton(resourceManager);
+
+        CPU *ccpu = mem::alloc_type_no_track<CPU>();
+        if(ccpu == nullptr)
+        {
+            mem::free_type_no_track(resourceManager);
+            mem::free_type_no_track(memoryTrack);
+            
+
+            return core_init_status::CannotInstantiateObjects;
+        }
+
+        CPU::set_singleton(ccpu);
+
+        engine_settings *sset = mem::alloc_type_no_track<engine_settings>();
+        if(sset == nullptr)
+        {
+            mem::free_type_no_track(ccpu);
+            mem::free_type_no_track(resourceManager);
+            mem::free_type_no_track(memoryTrack);
+
+            return core_init_status::CannotInstantiateObjects;
+        }
+
+        engine_settings::set_singleton(sset);
 
         HMODULE hModule = GetModuleHandleA("NTDLL");
         if(hModule == nullptr)
@@ -70,17 +126,24 @@ namespace deep
             return core_init_status::CannotInitNtDll;
         }
 
-        file_stream *consoleStream = mem::alloc_type<file_stream>("stdout", stdHandle);
-        stream_writer *stdoutWriter = mem::alloc_type<stream_writer>(consoleStream);
+        ref<file_stream> stdoutStream = mem::alloc_type<file_stream>("stdout", stdoutHandle);
+        ref<stream_writer> stdoutWriter = mem::alloc_type<stream_writer>(stdoutStream.get());
+
+        ref<file_stream> stderrStream = mem::alloc_type<file_stream>("stderr", stderrHandle);
+        ref<stream_writer> stderrWriter = mem::alloc_type<stream_writer>(stderrStream.get());
 
         if(!stdoutWriter->open())
         {
-            mem::free_type(stdoutWriter);
-
             return core_init_status::CannotLoadStdStream;
         }
 
-        m_Stdout = stdoutWriter;
+        if(!stderrWriter->open())
+        {
+            return core_init_status::CannotLoadStdStream;
+        }
+
+        m_Stdout = stdoutWriter.get();
+        m_Stderr = stderrWriter.get();
 #endif
 
         *m_Stdout << DE_TERM_FG_GREEN "core::init" DE_TERM_RESET " " DE_VERSION " - " DE_TERM_FG_RED "this is where it all begins" DE_TERM_RESET "\n";
@@ -276,6 +339,17 @@ end:
 
         im_gui_window::shutdown();
         scene::shutdown();
+
+        mem::free_type_no_track(engine_settings::get_singleton());
+        mem::free_type_no_track(CPU::get_singleton());
+        mem::free_type_no_track(resource_manager::get_singleton());
+        mem::free_type_no_track(mem::get_memory_track());
+
+        engine_settings::set_singleton(nullptr);
+        CPU::set_singleton(nullptr);
+        resource_manager::set_singleton(nullptr);
+        mem::set_memory_track(nullptr);
+
         SDL_Quit();
     }
 

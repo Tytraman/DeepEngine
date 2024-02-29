@@ -65,18 +65,47 @@ namespace deep
 
             /// @brief        Libère un espace mémoire qui a été créé en étant traqué.
             /// @param memory Adresse de l'espace mémoire à libérer.
-            DE_API static void free(const mem_ptr memory);
+            DE_API static bool free(const mem_ptr memory);
 
             template<typename Type, typename... Args>
             static Type *alloc_type(Args&&... args);
 
+            template<typename Type, typename... Args>
+            static Type *alloc_type_no_track(Args&&... args);
+
             template<typename Type>
             static void free_type(Type *ptr);
 
+            template<typename Type>
+            static void free_type_no_track(Type *ptr);
+
+            static list<mem_ptr> *get_memory_track();
+            static void set_memory_track(list<mem_ptr> *ptr);
+
         private:
-            static list<mem_ptr> g_MemoryTrack;
+            static list<mem_ptr> *g_MemoryTrack;
 
     };
+
+    /*
+    ================================
+    memory_manager::get_memory_track
+    ================================
+    */
+    inline list<mem_ptr> *memory_manager::get_memory_track()
+    {
+        return g_MemoryTrack;
+    }
+
+    /*
+    ================================
+    memory_manager::set_memory_track
+    ================================
+    */
+    inline void memory_manager::set_memory_track(list<mem_ptr> *ptr)
+    {
+        g_MemoryTrack = ptr;
+    }
 
     /*
     ==========================
@@ -87,6 +116,20 @@ namespace deep
     inline Type *memory_manager::alloc_type(Args&&... args)
     {
         Type *obj = (Type *) mem::alloc(sizeof(Type));
+        new(obj) Type(std::forward<Args>(args)...);
+        
+        return obj;
+    }
+
+    /*
+    ===================================
+    memory_manager::alloc_type_no_track
+    ===================================
+    */
+    template<typename Type, typename... Args>
+    inline Type *memory_manager::alloc_type_no_track(Args&&... args)
+    {
+        Type *obj = (Type *) mem::alloc_no_track(sizeof(Type));
         new(obj) Type(std::forward<Args>(args)...);
         
         return obj;
@@ -107,6 +150,23 @@ namespace deep
         }
 
         mem::free(ptr);
+    }
+
+    /*
+    ==================================
+    memory_manager::free_type_no_track
+    ==================================
+    */
+    template<typename Type>
+    inline void memory_manager::free_type_no_track(Type *ptr)
+    {
+        // Si l'objet a un destructeur défini, l'appelle.
+        if(!is_trivially_destructible<Type>)
+        {
+            ptr->~Type();
+        }
+
+        mem::free_no_track(ptr);
     }
 
     using mem = memory_manager;

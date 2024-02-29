@@ -14,6 +14,7 @@ namespace deep
 
         public:
             DE_API static engine_settings *get_singleton();
+            DE_API static void set_singleton(engine_settings *ptr);
 
             DE_API bool init(stream *inputStream);
 
@@ -31,7 +32,32 @@ namespace deep
         public:
             engine_settings(const engine_settings &) = delete;
 
+            friend memory_manager;
+
+        private:
+            static engine_settings *g_EngineSettings;
+
     };
+
+    /*
+    ==============================
+    engine_settings::get_singleton
+    ==============================
+    */
+    inline engine_settings *engine_settings::get_singleton()
+    {
+        return g_EngineSettings;
+    }
+
+    /*
+    ==============================
+    engine_settings::set_singleton
+    ==============================
+    */
+    inline void engine_settings::set_singleton(engine_settings *ptr)
+    {
+        g_EngineSettings = ptr;
+    }
 
     /*
     ===============================

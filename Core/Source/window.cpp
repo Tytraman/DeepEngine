@@ -65,7 +65,7 @@ namespace deep
                             uint32_t year, month, day, hour, minute, second;
 
                             core::get_local_time(&year, &month, &day, &hour, &minute, &second, nullptr);
-                            string destpath = resourcesManager->getScreenshotsFolder();
+                            string destpath = resourcesManager->get_screenshots_folder();
                             destpath.append("screenshot_");
                             destpath.append(std::to_string(year).c_str());
                             destpath.append("_");

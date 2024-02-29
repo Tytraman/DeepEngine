@@ -862,11 +862,9 @@ namespace deep
     string_utils::split
     ===================
     */
-    list<string> string_utils::split(const char *str, char separator)
+    size_t string_utils::split(const char *str, char separator, list<string> &dest)
     {
-        list<string> strs;
-
-        size_t i;
+        size_t i, number = 1;
         size_t lastFound = 0;
         size_t len = length(str);
         const char *current = str;
@@ -875,14 +873,18 @@ namespace deep
         {
             if(str[i] == separator)
             {
-                strs.add(string(current, i - lastFound));
+                dest.add(string(current, i - lastFound));
 
                 current = str + i + 1;
                 lastFound = i + 1;
+
+                number++;
             }
         }
 
-        return strs;
+        dest.add(string(current, i - lastFound));
+
+        return number;
     }
 
 }

@@ -1,12 +1,13 @@
 #include "DE/memory/memory.hpp"
 #include "DE/memory/list.hpp"
+#include "DE/core.hpp"
 
 #include <stdio.h>
 
 namespace deep
 {
 
-    list<mem_ptr> memory_manager::g_MemoryTrack;
+    list<mem_ptr> *memory_manager::g_MemoryTrack = nullptr;
 
     /*
     ==============================
@@ -15,12 +16,13 @@ namespace deep
     */
     mem_ptr memory_manager::alloc_no_track(size_t size)
     {
-
 #if DE_WINDOWS
         HANDLE processHeap = GetProcessHeap();
 
         if(processHeap == NULL)
+        {
             return nullptr;
+        }
 
         return HeapAlloc(processHeap, HEAP_ZERO_MEMORY, size);
 #else
@@ -38,9 +40,15 @@ namespace deep
         mem_ptr memory = alloc_no_track(size);
 
         if(memory == nullptr)
+        {
             return nullptr;
+        }
 
-        g_MemoryTrack.add(memory);
+        if(g_MemoryTrack != nullptr)
+        {
+            g_MemoryTrack->add(memory);
+        }
+        
         return memory;
     }
 
@@ -53,16 +61,20 @@ namespace deep
     {
 #if DE_WINDOWS
         if(memory == nullptr)
+        {
             return alloc_no_track(newSize);
+        }
 
         HANDLE processHeap = GetProcessHeap();
 
         if(processHeap == NULL)
+        {
             return nullptr;
+        }
         
         return HeapReAlloc(processHeap, HEAP_ZERO_MEMORY, memory, newSize);
 #else
-
+#error Need implementation
 #endif
     }
 
@@ -76,12 +88,23 @@ namespace deep
         mem_ptr mem = realloc_no_track(memory, newSize);
 
         if(mem == nullptr)
+        {
             return nullptr;
+        }
 
-        size_t index = g_MemoryTrack.find(memory);
+        if(g_MemoryTrack != nullptr)
+        {
+            size_t index = g_MemoryTrack->find(memory);
 
-        if(index != list<mem_ptr>::nothing)
-            g_MemoryTrack[index] = mem;
+            if(index != list<mem_ptr>::nothing)
+            {
+                (*g_MemoryTrack)[index] = mem;
+            }
+            else
+            {
+                g_MemoryTrack->add(mem);
+            }
+        }
 
         return mem;
     }
@@ -97,7 +120,9 @@ namespace deep
         HANDLE processHeap = GetProcessHeap();
 
         if(processHeap == NULL)
+        {
             return;
+        }
 
         HeapFree(processHeap, 0, memory);
 #else
@@ -110,16 +135,36 @@ namespace deep
     memory_manager::free
     ====================
     */
-    void memory_manager::free(const mem_ptr memory)
+    bool memory_manager::free(const mem_ptr memory)
     {
-        size_t index = g_MemoryTrack.find(memory);
+        static bool error = false;
 
-        if(index != nothing)
+        if(g_MemoryTrack != nullptr)
         {
-            g_MemoryTrack.remove(index);
+            size_t index = g_MemoryTrack->find(memory);
+
+            if(index == nothing)
+            {
+                if(!error)
+                {
+                    error = true;
+
+                    core::err() << DE_TERM_FG_RED "[ERROR]" DE_TERM_RESET " Trying to free an unknown memory address: " << memory << "\n";
+
+                    assert(false);
+
+                    error = false;
+                }
+
+                return false;
+            }
+
+            g_MemoryTrack->remove(index);
         }
 
         free_no_track(memory);
+
+        return true;
     }
 
     /*
@@ -147,7 +192,9 @@ namespace deep
             memcpy(m_Data, other.m_Data, m_Size);
         }
         else
+        {
             m_Size = 0;
+        }
     }
 
     /*
@@ -160,7 +207,9 @@ namespace deep
         mem_ptr data = mem::alloc(size);
 
         if(data == nullptr)
+        {
             return false;
+        }
 
         dest.m_Data = data;
         dest.m_Size = size;

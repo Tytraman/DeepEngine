@@ -18,6 +18,8 @@
 namespace deep
 {
 
+    resource_manager *resource_manager::g_ResourceManager = nullptr;
+
     struct shader_fusion
     {
         string name;
@@ -82,18 +84,6 @@ namespace deep
     */
     resource_manager::resource_manager()
     { }
-
-    /*
-    ===============================
-    resource_manager::get_singleton
-    ===============================
-    */
-    resource_manager *resource_manager::get_singleton()
-    {
-        static resource_manager singleton;
-
-        return &singleton;
-    }
 
     /*
     ======================
@@ -308,10 +298,10 @@ end:
 
     /*
     =============================
-    resource_manager::loadTexture
+    resource_manager::load_texture
     =============================
     */
-    GL3::gl_id resource_manager::loadTexture(const char *name, uint8_t unit)
+    GL3::gl_id resource_manager::load_texture(const char *name, uint8_t unit)
     {
         png png;
         string filename = m_TexturesFolder;
@@ -342,10 +332,10 @@ end:
 
     /*
     =========================
-    resource_manager::loadBMP
+    resource_manager::load_bmp
     =========================
     */
-    bool resource_manager::loadBMP(const char *name, bmp &dest)
+    bool resource_manager::load_bmp(const char *name, bmp &dest)
     {
         string filename = m_TexturesFolder;
         filename.append(name);

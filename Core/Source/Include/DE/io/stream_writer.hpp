@@ -29,7 +29,9 @@ namespace deep
             DE_API virtual bool write(uint32_t value) override;
             DE_API virtual bool write(int64_t value) override;
             DE_API virtual bool write(uint64_t value) override;
+            DE_API virtual bool write(unsigned long value) override;
             DE_API virtual bool write(double value) override;
+            DE_API virtual bool write(mem_ptr ptr) override;
 
         protected:
             ref<stream> m_OutputStream;
@@ -171,11 +173,31 @@ namespace deep
     stream_writer::write
     ====================
     */
+    inline bool stream_writer::write(unsigned long value)
+    {
+        return write(static_cast<uint64_t>(value));
+    }
+
+    /*
+    ====================
+    stream_writer::write
+    ====================
+    */
     inline bool stream_writer::write(double value)
     {
         string str = string_utils::double_to_str(value);
 
         return m_OutputStream->write(rm_const<char *>(str.str()), 0, str.length(), nullptr);
+    }
+
+    /*
+    ====================
+    stream_writer::write
+    ====================
+    */
+    inline bool stream_writer::write(mem_ptr ptr)
+    {
+        return write(reinterpret_cast<uint64_t>(ptr));
     }
 
 }

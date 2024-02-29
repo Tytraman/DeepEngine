@@ -13,18 +13,19 @@ namespace deep
 
     enum class core_init_status : uint8_t
     {
-        OK                       = 0,
-        InstanceAlreadyExists    = 1,
-        NoEnoughDiskSpace        = 2,
-        NoEnoughMemory           = 3,
-        CannotLoadEngineSettings = 4,
-        CannotLoadResources      = 5,
-        CannotInitCOM            = 6,
-        CannotQueryCpuInfo       = 7,
-        CannotInitNtDll          = 8,
-        CannotLoadStdStream      = 9,
+        OK,
+        CannotInstantiateObjects,
+        InstanceAlreadyExists,    
+        NoEnoughDiskSpace,        
+        NoEnoughMemory,           
+        CannotLoadEngineSettings, 
+        CannotLoadResources,      
+        CannotInitCOM,            
+        CannotQueryCpuInfo,       
+        CannotInitNtDll,          
+        CannotLoadStdStream,      
 
-        Unknown                  = 255
+        Unknown
     };
 
     class core
@@ -53,9 +54,11 @@ namespace deep
             DE_API static void set_out(text_writer *writer);
 
             DE_API static text_writer &out();
+            DE_API static text_writer &err();
 
         private:
             static uint64_t m_InitTime;
+            static ref<text_writer> m_Stderr;
             static ref<text_writer> m_Stdout;
 
         public:
@@ -99,6 +102,16 @@ namespace deep
     inline text_writer &core::out()
     {
         return *m_Stdout;
+    }
+
+    /*
+    =========
+    core::err
+    =========
+    */
+    inline text_writer &core::err()
+    {
+        return *m_Stderr;
     }
 
 }

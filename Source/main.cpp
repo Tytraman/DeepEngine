@@ -272,33 +272,33 @@ int main()
         DE_TERM_FG_YELLOW "====================================================\n" DE_TERM_RESET;
 
     deep::bmp mcGrass, mcGrassTop, mcDirt;
-    if(!resourcesManager->loadBMP("grass_block_side.bmp", mcGrass))
+    if(!resourcesManager->load_bmp("grass_block_side.bmp", mcGrass))
     {
-        fprintf(stderr, "Unable to load resource: %d\n", GetLastError());
+        deep::core::err() << "Unable to load resource:" << GetLastError() << "\n";
         return EXIT_FAILURE;
     }
 
-    if(!resourcesManager->loadBMP("grass_block_top.bmp", mcGrassTop))
+    if(!resourcesManager->load_bmp("grass_block_top.bmp", mcGrassTop))
     {
-        fprintf(stderr, "Unable to load resource.\n");
+        deep::core::err() << "Unable to load resource.\n";
         return EXIT_FAILURE;
     }
 
-    if(!resourcesManager->loadBMP("dirt.bmp", mcDirt))
+    if(!resourcesManager->load_bmp("dirt.bmp", mcDirt))
     {
-        fprintf(stderr, "Unable to load resource.\n");
+        deep::core::err() << "Unable to load resource.\n";
         return EXIT_FAILURE;
     }
 
     if(!mcGrass.add(mcGrassTop))
     {
-        fprintf(stderr, "Unable to add bmp image.\n");
+        deep::core::err() << "Unable to add bmp image.\n";
         return EXIT_FAILURE;
     }
 
     if(!mcGrass.add(mcDirt, deep::ivec2(0, mcGrass.get_height())))
     {
-        fprintf(stderr, "Unable to add bmp image.\n");
+        deep::core::err() << "Unable to add bmp image.\n";
         return EXIT_FAILURE;
     }
 
