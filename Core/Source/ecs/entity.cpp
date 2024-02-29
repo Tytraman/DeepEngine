@@ -52,17 +52,21 @@ namespace deep
     entity_manager::enum_entities
     =============================
     */
-    void entity_manager::enum_entities(entity_collection_id collection, entity_enum_callback callback)
+    void entity_manager::enum_entities(entity_collection_id collection, entity_enum_callback callback, mem_ptr args)
     {
         hash_entry<hash_table<entity_item>> *hs = m_Collections[collection];
         if(hs == nullptr)
+        {
             return;
+        }
 
         hash_table_iterator begin = hs->value.begin();
         hash_table_iterator end = hs->value.end();
 
         for(; begin != end; ++begin)
-            callback(begin->value.ent);
+        {
+            callback(begin->value.ent, args);
+        }
 
         delete_entities();
     }

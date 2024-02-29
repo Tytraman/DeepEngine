@@ -1,14 +1,15 @@
 #ifndef __DEEP_ENGINE_SCENE_HPP__
 #define __DEEP_ENGINE_SCENE_HPP__
 
-#include <DE/def.hpp>
-#include <DE/types.hpp>
-#include <DE/ecs/ecs.hpp>
-#include <DE/ecs/entity.hpp>
-#include <DE/memory/list.hpp>
-#include <DE/vec.hpp>
+#include "DE/def.hpp"
+#include "DE/types.hpp"
+#include "DE/ecs/ecs.hpp"
+#include "DE/ecs/entity.hpp"
+#include "DE/memory/list.hpp"
+#include "DE/vec.hpp"
 #include "DE/graphics/shape.hpp"
 #include "DE/rendering/camera.hpp"
+#include "DE/file/file_object.hpp"
 
 namespace deep
 {
@@ -40,6 +41,8 @@ namespace deep
             //DE_API static entity create_entity(scene_id scn);
 
             DE_API static void enum_scenes(enum_callback callback);
+
+            DE_API static bool export_scene(scene_id scn, file_object &dest);
 
 
             //===== GETTERS =====//

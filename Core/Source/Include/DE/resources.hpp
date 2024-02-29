@@ -29,6 +29,7 @@ namespace deep
             DE_API string get_sounds_folder();
             DE_API string get_screenshots_folder();
             DE_API string get_fonts_folder();
+            DE_API string get_export_folder();
 
         private:
             resource_manager();
@@ -39,6 +40,7 @@ namespace deep
             string m_SoundsFolder;
             string m_ScreenshotsFolder;
             string m_FontsFolder;
+            string m_ExportFolder;
 
         public:
             resource_manager(const resource_manager &) = delete;
@@ -129,6 +131,16 @@ namespace deep
     inline string resource_manager::get_fonts_folder()
     {
         return m_FontsFolder;
+    }
+
+    /*
+    ===================================
+    resource_manager::get_export_folder
+    ===================================
+    */
+    inline string resource_manager::get_export_folder()
+    {
+        return m_ExportFolder;
     }
 
 }

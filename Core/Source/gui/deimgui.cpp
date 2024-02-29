@@ -2,17 +2,18 @@
 #include "DE/memory/memory.hpp"
 #include "DE/memory/list.hpp"
 #include "DE/memory/pair.hpp"
+#include "DE/memory/settings.hpp"
 #include "DE/string_utils.hpp"
 #include "DE/vec.hpp"
 #include "DE/window.hpp"
 #include "DE/ecs/scene.hpp"
 #include "DE/ecs/component.hpp"
 #include "DE/hardware/cpu.hpp"
-#include "DE/memory/settings.hpp"
 #include "DE/resources.hpp"
 #include "DE/drivers/opengl/vao.hpp"
 #include "DE/drivers/opengl/shader.hpp"
 #include "DE/drivers/opengl/texture.hpp"
+#include "DE/io/file_stream.hpp"
 
 #include <unordered_map>
 #include <string>
@@ -202,7 +203,7 @@ namespace deep
         }
     }
 
-    void __entities_enum_callback(entity_manager::entity &ent)
+    void __entities_enum_callback(entity_manager::entity &ent, mem_ptr /*args*/)
     {
         entity_manager *entityManager = entity_manager::get_singleton();
 
@@ -522,8 +523,10 @@ namespace deep
                         ImGui::Text("Nom:"); ImGui::SameLine(); ImGui::InputText("##", nameBuffer, sizeof(nameBuffer)); ImGui::SameLine();
                         if(ImGui::Button("Créer une scène"))
                         {
-                            if(strlen(nameBuffer) == 0)
+                            if(string_utils::length(nameBuffer) == 0)
+                            {
                                 emptyNameBuffer = true;
+                            }
                             else
                             {
                                 emptyNameBuffer = false;
@@ -533,7 +536,44 @@ namespace deep
                         }
 
                         if(emptyNameBuffer)
+                        {
                             ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Le nom de la scène ne peut pas être vide.");
+                        }
+
+                        ImGui::Spacing();
+
+                        // Exportation d'une scène.
+                        ImGui::Text("Nom:"); ImGui::SameLine(); ImGui::InputText("##", nameBuffer, sizeof(nameBuffer)); ImGui::SameLine();
+                        if(ImGui::Button("Exporter"))
+                        {
+                            if(string_utils::length(nameBuffer) == 0)
+                            {
+                                emptyNameBuffer = true;
+                            }
+                            else
+                            {
+                                emptyNameBuffer = false;
+
+                                resource_manager *resourcesManager = resource_manager::get_singleton();
+                                
+                                string destPath = resourcesManager->get_export_folder();
+                                destPath.append("scenes\\");
+                                destPath.append(nameBuffer);
+                                destPath.append(".fobj");
+
+                                ref<file_stream> fs = mem::alloc_type<file_stream>(destPath.str(), file_stream::file_mode::Create, file_stream::file_access::Write, file_stream::file_share::Read);
+                                if(fs->open())
+                                {
+                                    file_object fobj(nameBuffer);
+
+                                    scene::export_scene(scene::get_active_scene_id(), fobj);
+
+                                    fobj.save(fs.get());
+
+                                    fs->close();
+                                }
+                            }
+                        }
 
                         ImGui::Spacing();
 

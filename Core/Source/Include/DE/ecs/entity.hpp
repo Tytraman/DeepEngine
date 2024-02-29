@@ -44,7 +44,7 @@ namespace deep
 
             };
 
-            using entity_enum_callback = void (*)(entity &ent);
+            using entity_enum_callback = void (*)(entity &ent, mem_ptr args);
 
             /// @struct entity
             /// @brief	Une entité peut contenir plusieurs composants et est représentée par un ID.
@@ -60,7 +60,7 @@ namespace deep
         public:
             DE_API static entity_manager *get_singleton();
 
-            DE_API void enum_entities(entity_collection_id collection, entity_enum_callback callback);
+            DE_API void enum_entities(entity_collection_id collection, entity_enum_callback callback, mem_ptr args = nullptr);
             DE_API size_t get_number_of_entities(entity_collection_id collection);
 
             DE_API entity_collection_id create_entity_collection();

@@ -1,7 +1,7 @@
-#include <DE/ecs/scene.hpp>
-#include <DE/ecs/entity.hpp>
-#include <DE/string_utils.hpp>
-#include <DE/memory/hash_table.hpp>
+#include "DE/ecs/scene.hpp"
+#include "DE/ecs/entity.hpp"
+#include "DE/string_utils.hpp"
+#include "DE/memory/hash_table.hpp"
 
 namespace deep
 {
@@ -12,9 +12,9 @@ namespace deep
     static hash_table<scene> m_Scenes;
 
     /*
-    ==================
+    ===================
     scene::create_scene
-    ==================
+    ===================
     */
     scene_id scene::create_scene(const char *name)
     {
@@ -26,36 +26,40 @@ namespace deep
     }
 
     /*
-    ==================
+    ===================
     scene::delete_scene
-    ==================
+    ===================
     */
     void scene::delete_scene(scene_id scn)
     {
         scene *s = get_scene(scn);
         if(s != nullptr)
+        {
             mem::free(s->m_Name);
+        }
 
         m_Scenes.remove(scn);
     }
 
     /*
-    ======================
+    ========================
     scene::delete_all_scenes
-    ======================
+    ========================
     */
     void scene::delete_all_scenes()
     {
         for(auto &it : m_Scenes)
+        {
             mem::free(it.value.m_Name);
+        }
 
         m_Scenes.clear();
     }
 
     /*
-    ===================
+    ====================
     scene::delete_scenes
-    ===================
+    ====================
     */
     void scene::delete_scenes()
     {
@@ -89,59 +93,78 @@ namespace deep
     }
 
     /*
-    ================
-    scene::addEntity
-    ================
-    */
-    /*entity scene::create_entity(scene_id scene)
-    {
-        hash_entry<deep::scene> *s = m_Scenes[scene];
-
-        if(s == nullptr)
-            return entity::bad();
-
-        entity_manager *entityManager = entity_manager::get_singleton();
-
-        return entityManager->create_entity(s->value.m_EntityCollection);
-    }*/
-
-    /*
-    =================
+    ==================
     scene::enum_scenes
-    =================
+    ==================
     */
     void scene::enum_scenes(enum_callback callback)
     {
         for(auto &el : m_Scenes)
+        {
             callback(static_cast<scene_id>(el.key), el.value);
+        }
 
         delete_scenes();
     }
 
+    void __deep_export_scene_entity_callback(entity_manager::entity &ent, mem_ptr args)
+    {
+        file_object_container *container = static_cast<file_object_container *>(args);
+
+        /*file_object_container *entContainer = */container->add_container(ent.get_name().str());
+    }
+
     /*
-    ==========================
+    ===================
+    scene::export_scene
+    ===================
+    */
+    bool scene::export_scene(scene_id scn, file_object &dest)
+    {
+        hash_entry<deep::scene> *s = m_Scenes[scn];
+        if(s == nullptr)
+        {
+            return false;
+        }
+
+        entity_manager *entityManager = entity_manager::get_singleton();
+
+        file_object_container *container = dest.add_container("scenes");
+        container = container->add_container(s->value.m_Name);
+
+        entityManager->enum_entities(s->value.m_EntityCollection, __deep_export_scene_entity_callback, container);
+
+        return true;
+    }
+
+    /*
+    ============================
     scene::get_entity_collection
-    ==========================
+    ============================
     */
     entity_collection_id scene::get_entity_collection(scene_id scn)
     {
         hash_entry<deep::scene> *s = m_Scenes[scn];
         if(s == nullptr)
+        {
             return badID;
+        }
 
         return s->value.m_EntityCollection;
     }
 
     /*
-    ===============
+    ================
     scene::get_scene
-    ===============
+    ================
     */
     scene *scene::get_scene(scene_id scn)
     {
         hash_entry<deep::scene> *s = m_Scenes[scn];
         if(s == nullptr)
+        {
             return nullptr;
+        }
 
         return &s->value;
     }

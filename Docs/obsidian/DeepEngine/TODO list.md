@@ -11,6 +11,7 @@
 - [ ] Faire une classe `image` dans laquelle se trouve un tableau de pixels et les informations concernant le format.
 - [ ] Les `struct` ne doivent plus être utilisées comme des classes.
 	- Arrêter d'utiliser `private`, `public` et de déclarer des méthodes.
+		- Sauf exceptions.
 
 # Mémoire
 - [ ] Gestion des données par `queue`.
@@ -57,7 +58,7 @@
 	- Afficher le **type** de log.
 	- Afficher le **message** du log.
 - [ ] Implémenter la même gestion de crash qu'à *FB Technology*.
-	- En ayant un `launcher` qui lance le processus du moteur, qui s'échangent ensuite des **messages** les `pipes` pour s'assurer que le moteur n'a pas planté.
+	- En ayant un `launcher` qui lance le processus du moteur, qui s'échangent ensuite des **messages** via les `pipes` pour s'assurer que le moteur n'a pas planté.
 
 # Stockage
 - [x] Créer un format pour stocker des données **hiérarchiques**. ✅ 2024-01-01
