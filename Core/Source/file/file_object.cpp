@@ -204,6 +204,11 @@ rread:
         ref<stream_writer> tw(static_cast<stream_writer *>(args));
         size_t i;
 
+        if(subContainerNumber == 1)
+        {
+            *tw << '\n';
+        }
+
         for(i = 1; i < subContainerNumber; ++i)
         {
             *tw << "  ";
@@ -432,6 +437,11 @@ end: ;
     */
     file_object_container *file_object_container::search_container(const char *path)
     {
+        if(string_utils::is_null_or_whitespace(path))
+        {
+            return this;
+        }
+
         file_object_container *container = nullptr;
 
         enumerate(nullptr, __de_file_object_container_search_callback, nullptr, rm_const<char *>(path), static_cast<size_t>(-1), &container, nullptr);
@@ -465,9 +475,59 @@ end: ;
     file_object_container::add_container
     ====================================
     */
-    file_object_container *file_object_container::add_container(const char */*path*/)
+    file_object_container *file_object_container::add_container(const char *path)
     {
-        return nullptr;
+        list<string> conts;
+        size_t number = string_utils::split(path, '.', conts);
+        size_t i;
+
+        if(number == 0)
+        {
+            return nullptr;
+        }
+
+        hash_table<file_object_container> *current = &containers;
+        file_object_container *last = nullptr;
+
+        // Cherche d'abord les conteneurs existants.
+        for(i = 0; i < number; ++i)
+        {
+            hash_entry<file_object_container> *search = (*current)[conts[i].str()];
+
+            if(search == nullptr)
+            {
+                break;
+            }
+
+            current = &search->value.containers;
+        }
+
+        for(; i < number; ++i)
+        {
+            hash_entry<file_object_container> &entry = current->insert(conts[i].str(), file_object_container(conts[i].str()));
+
+            last = &entry.value;
+            current = &last->containers;
+        }
+
+        return last;
+    }
+
+    /*
+    ==================================
+    file_object_container::add_element
+    ==================================
+    */
+    pair<string, string> *file_object_container::add_element(const char *path, const char *key, const char *value)
+    {
+        file_object_container *container = search_container(path);
+
+        if(container == nullptr)
+        {
+            return nullptr;
+        }
+
+        return &container->items.insert(key, pair<string, string>(key, value)).value;
     }
 
 }

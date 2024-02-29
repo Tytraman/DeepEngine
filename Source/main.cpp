@@ -196,6 +196,10 @@ int main()
     {
         default:
             break;
+        case deep::core_init_status::CannotInstantiateObjects:
+        {
+            fprintf(stderr, "Cannot instanciate objects.\n");
+        } return EXIT_FAILURE;
         case deep::core_init_status::InstanceAlreadyExists:
         {
             fprintf(stderr, "Process already running.\n");

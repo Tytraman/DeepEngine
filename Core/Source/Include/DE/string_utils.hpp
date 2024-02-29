@@ -63,6 +63,8 @@ namespace deep
 
             DE_API static size_t split(const char *str, char separator, list<string> &dest);
 
+            DE_API static bool is_null_or_whitespace(const char *str);
+
         public:
             string_utils() = delete;
 

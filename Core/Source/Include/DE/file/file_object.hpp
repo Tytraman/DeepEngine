@@ -38,6 +38,8 @@ namespace deep
         /// @param path Chemin d'un ou plusieurs conteneurs à créer.
         /// @return Pointeur vers le conteneur créé ou \c nullptr en cas d'erreur.
         DE_API file_object_container *add_container(const char *path);
+
+        DE_API pair<string, string> *add_element(const char *path, const char *key, const char *value);
     };
 
     /// @brief File Object est un format spécialement créé pour le DeepEngine. La syntax ressemble à celle du JSON.
@@ -57,6 +59,9 @@ namespace deep
             DE_API void enumerate(file_object_enum_element_callback elementCallback, file_object_enum_new_container_callback newContainerCallback, file_object_enum_end_container_callback endContainerCallback, mem_ptr args, size_t maxSubContainer = -1, file_object_container **container = nullptr, pair<string, string> **element = nullptr);
             DE_API file_object_container *search_container(const char *path);
             DE_API pair<string, string> *search_element(const char *path);
+
+            DE_API file_object_container *add_container(const char *path);
+            DE_API pair<string, string> *add_element(const char *path, const char *key, const char *value);
 
         private:
             string m_Name;
@@ -79,9 +84,9 @@ namespace deep
     }
     
     /*
-    ============================
+    =============================
     file_object::search_container
-    ============================
+    =============================
     */
     inline file_object_container *file_object::search_container(const char *path)
     {
@@ -89,13 +94,33 @@ namespace deep
     }
 
     /*
-    ==========================
+    ===========================
     file_object::search_element
-    ==========================
+    ===========================
     */
     inline pair<string, string> *file_object::search_element(const char *path)
     {
         return m_Container.search_element(path);
+    }
+
+    /*
+    ==========================
+    file_object::add_container
+    ==========================
+    */
+    inline file_object_container *file_object::add_container(const char *path)
+    {
+        return m_Container.add_container(path);
+    }
+
+    /*
+    ========================
+    file_object::add_element
+    ========================
+    */
+    inline pair<string, string> *file_object::add_element(const char *path, const char *key, const char *value)
+    {
+        return m_Container.add_element(path, key, value);
     }
 
 }

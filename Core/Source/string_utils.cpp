@@ -887,6 +887,33 @@ namespace deep
         return number;
     }
 
+    bool string_utils::is_null_or_whitespace(const char *str)
+    {
+        if(str == nullptr)
+        {
+            return true;
+        }
+
+        while(*str != '\0')
+        {
+            if(
+                *str != ' '  &&
+                *str != '\t' &&
+                *str != '\n' &&
+                *str != '\v' &&
+                *str != '\f' &&
+                *str != '\r'
+                )
+            {
+                return false;
+            }
+
+            str++;
+        }
+
+        return true;
+    }
+
 }
 
 size_t de_string_utils_copy(char *dest, size_t destSize, const char *source, size_t sourceLength) {
