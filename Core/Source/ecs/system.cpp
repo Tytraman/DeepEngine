@@ -49,11 +49,11 @@ namespace deep
     }
 
     /*
-    ============================
-    system_manager::createSystem
-    ============================
+    =============================
+    system_manager::create_system
+    =============================
     */
-    system_id system_manager::createSystem(system_function function, component_manager::component_type componentTypesToInclude, component_manager::component_type componentTypesToExclude)
+    system_id system_manager::create_system(system_function function, component_manager::component_type componentTypesToInclude, component_manager::component_type componentTypesToExclude)
     {
         system_id id = m_NextID;
 
@@ -65,19 +65,23 @@ namespace deep
     }
 
     /*
-    =============================
-    system_manager::executeSystem
-    =============================
+    ==============================
+    system_manager::execute_system
+    ==============================
     */
-    void system_manager::executeSystem(system_id system)
+    void system_manager::execute_system(system_id system)
     {
         hash_entry<system_item> *s = m_Functions[system];
         if(s == nullptr)
+        {
             return;
+        }
 
         scene_id scene = scene::get_active_scene_id();
         if(scene == badID)
+        {
             return;
+        }
 
         entity_manager *entityManager = entity_manager::get_singleton();
 
@@ -92,11 +96,11 @@ namespace deep
     }
 
     /*
-    ==============================
-    system_manager::executeSystems
-    ==============================
+    ===============================
+    system_manager::execute_systems
+    ===============================
     */
-    void system_manager::executeSystems()
+    void system_manager::execute_systems()
     {
         size_t i;
         size_t length = m_EnabledSystems.count();
@@ -104,7 +108,9 @@ namespace deep
 
         scene_id scene = scene::get_active_scene_id();
         if(scene == badID)
+        {
             return;
+        }
 
         entity_manager *entityManager = entity_manager::get_singleton();
 
@@ -129,17 +135,19 @@ namespace deep
     }
 
     /*
-    ==================================
-    system_manager::accelerationSystem
-    ==================================
+    ===========================================
+    system_manager::execute_acceleration_system
+    ===========================================
     */
-    void system_manager::accelerationSystem()
+    void system_manager::execute_acceleration_system()
     {
         scene_id sceneID = scene::get_active_scene_id();
 
         // Si aucune scène n'est active, cela ne sert à rien de continuer la procédure.
         if(sceneID == badID)
+        {
             return;
+        }
 
         component_manager *componentManager = component_manager::get_singleton();
         entity_manager *entityManager = entity_manager::get_singleton();
@@ -148,7 +156,7 @@ namespace deep
         entity_collection_id collectionID = scene::get_entity_collection(sceneID);
 
         // Query toutes les entités possédant une vélocité et une accélération.
-        entityManager->query(collectionID, to_utype(component_manager::component_type::velocity) | to_utype(component_manager::component_type::acceleration), 0, entities);
+        entityManager->query(collectionID, to_utype(component_manager::component_type::Velocity) | to_utype(component_manager::component_type::Acceleration), 0, entities);
 
         size_t length = entities.count();
         size_t i;
@@ -159,17 +167,21 @@ namespace deep
         {
             entity = entities[i];
 
-            component_id velCpnID = entityManager->get_component_id(collectionID, entity, component_manager::component_type::velocity);
+            component_id velCpnID = entityManager->get_component_id(collectionID, entity, component_manager::component_type::Velocity);
             velocity_component *velCpn = componentManager->get_velocity_component(velCpnID);
 
             if(velCpn == nullptr)
+            {
                 continue;
+            }
 
-            component_id accCpnID = entityManager->get_component_id(collectionID, entity, component_manager::component_type::acceleration);
+            component_id accCpnID = entityManager->get_component_id(collectionID, entity, component_manager::component_type::Acceleration);
             acceleration_component *accCpn = componentManager->get_acceleration_component(accCpnID);
 
             if(accCpn == nullptr)
+            {
                 continue;
+            }
 
             // Applique l'accélération à la vélocité.
             velCpn->set_velocity(velCpn->get_velocity() + accCpn->acceleration);
@@ -177,17 +189,19 @@ namespace deep
     }
 
     /*
-    ==============================
-    system_manager::velocitySystem
-    ==============================
+    =======================================
+    system_manager::execute_velocity_system
+    =======================================
     */
-    void system_manager::velocitySystem()
+    void system_manager::execute_velocity_system()
     {
         scene_id sceneID = scene::get_active_scene_id();
 
         // Si aucune scène n'est active, cela ne sert à rien de continuer la procédure.
         if(sceneID == badID)
+        {
             return;
+        }
 
         component_manager *componentManager = component_manager::get_singleton();
         entity_manager *entityManager = entity_manager::get_singleton();
@@ -196,7 +210,7 @@ namespace deep
         entity_collection_id collectionID = scene::get_entity_collection(sceneID);
 
         // Query toutes les entités possédant une vélocité et une transformation.
-        entityManager->query(collectionID, to_utype(component_manager::component_type::transformation) | to_utype(component_manager::component_type::velocity), 0, entities);
+        entityManager->query(collectionID, to_utype(component_manager::component_type::Transformation) | to_utype(component_manager::component_type::Velocity), 0, entities);
 
         size_t length = entities.count();
         size_t i;
@@ -207,19 +221,23 @@ namespace deep
         {
             entity = entities[i];
 
-            component_id transformationComponentID = entityManager->get_component_id(collectionID, entity, component_manager::component_type::transformation);
+            component_id transformationComponentID = entityManager->get_component_id(collectionID, entity, component_manager::component_type::Transformation);
 
             transformation_component *transformationComponent = componentManager->get_transformation_component(transformationComponentID);
 
             if(transformationComponent == nullptr)
+            {
                 continue;
+            }
 
-            component_id velocityComponentID = entityManager->get_component_id(collectionID, entity, component_manager::component_type::velocity);
+            component_id velocityComponentID = entityManager->get_component_id(collectionID, entity, component_manager::component_type::Velocity);
 
             velocity_component *velocityComponent = componentManager->get_velocity_component(velocityComponentID);
 
             if(velocityComponent == nullptr)
+            {
                 continue;
+            }
 
             // Applique la vélocité sur la transformation.
             vec3<float> translation = transformationComponent->get_translation();
@@ -228,7 +246,7 @@ namespace deep
             transformationComponent->set_translation(translation);
 
             // Si l'entité possède une collision, on met à jour sa position aussi.
-            component_id colliderComponentID = entityManager->get_component_id(collectionID, entity, component_manager::component_type::collider);
+            component_id colliderComponentID = entityManager->get_component_id(collectionID, entity, component_manager::component_type::Collider);
             if(colliderComponentID != badID)
             {
                 //collider_component *colliderComponent = componentManager->get_collider_component(colliderComponentID);
@@ -238,133 +256,143 @@ namespace deep
     }
 
     /*
-    ==============================
-    system_manager::colliderSystem
-    ==============================
+    =======================================
+    system_manager::execute_collider_system
+    =======================================
     */
-    void system_manager::colliderSystem()
+    void system_manager::execute_collider_system()
     {
-        scene_id sceneID = scene::get_active_scene_id();
+        //scene_id sceneID = scene::get_active_scene_id();
 
-        // Si aucune scène n'est active, cela ne sert à rien de continuer la procédure.
-        if(sceneID == badID)
-            return;
+        //// Si aucune scène n'est active, cela ne sert à rien de continuer la procédure.
+        //if(sceneID == badID)
+        //{
+        //    return;
+        //}
 
-        scene *scene = scene::get_scene(sceneID);
+        //scene *scene = scene::get_scene(sceneID);
 
-        // scene n'est pas censée pouvoir valoir nullptr, mais ne sait-on jamais.
-        if(scene == nullptr)
-            return;
+        //// scene n'est pas censée pouvoir valoir nullptr, mais ne sait-on jamais.
+        //if(scene == nullptr)
+        //{
+        //    return;
+        //}
 
-        collider_in_callback callback = scene->get_collider_callback();
-        collider_out_callback outCallback = scene->get_collider_out_callback();
-        
-        // S'il n'y a pas de callback à appeler alors ça ne sert à rien de trouver les collisions.
-        if(callback == nullptr || outCallback == nullptr)
-            return;
+        //collider_in_callback callback = scene->get_collider_callback();
+        //collider_out_callback outCallback = scene->get_collider_out_callback();
+        //
+        //// S'il n'y a pas de callback à appeler alors ça ne sert à rien de trouver les collisions.
+        //if(callback == nullptr || outCallback == nullptr)
+        //{
+        //    return;
+        //}
 
-        component_manager *componentManager = component_manager::get_singleton();
-        entity_manager *entityManager = entity_manager::get_singleton();
+        //component_manager *componentManager = component_manager::get_singleton();
+        //entity_manager *entityManager = entity_manager::get_singleton();
 
-        list<entity_id> entities;
-        entity_collection_id collectionID = scene::get_entity_collection(sceneID);
+        //list<entity_id> entities;
+        //entity_collection_id collectionID = scene::get_entity_collection(sceneID);
 
-        // Query toutes les entités possédant une boîte de collision.
-        entityManager->query(collectionID, to_utype(component_manager::component_type::collider), 0, entities);
+        //// Query toutes les entités possédant une boîte de collision.
+        //entityManager->query(collectionID, to_utype(component_manager::component_type::Collider), 0, entities);
 
-        size_t length = entities.count();
-        size_t i, j;
-        entity_id entity1, entity2;
+        //size_t length = entities.count();
+        //size_t i, j;
+        //entity_id entity1, entity2;
 
-        // S'il n'y a pas plus qu'une seule entité il est inutile de continuer la procédure.
-        if(length < 2)
-            return;
+        //// S'il n'y a pas plus qu'une seule entité il est inutile de continuer la procédure.
+        //if(length < 2)
+        //{
+        //    return;
+        //}
 
-        // Itère à travers toutes les entités possédant une boîte de collision.
-        for(i = 0; i < length - 1; ++i)
-        {
-            entity1 = entities[i];
+        //// Itère à travers toutes les entités possédant une boîte de collision.
+        //for(i = 0; i < length - 1; ++i)
+        //{
+        //    entity1 = entities[i];
 
-            component_id colliderComponentID1 = entityManager->get_component_id(collectionID, entity1, component_manager::component_type::collider);
+        //    component_id colliderComponentID1 = entityManager->get_component_id(collectionID, entity1, component_manager::component_type::Collider);
 
-            collider_component *colliderComponent1 = componentManager->get_collider_component(colliderComponentID1);
+        //    collider_component *colliderComponent1 = componentManager->get_collider_component(colliderComponentID1);
 
-            const fvec2 &col1 = colliderComponent1->contour.pos;
-            const float &w1   = colliderComponent1->contour.w;
-            const float &h1   = colliderComponent1->contour.h;
+        //    const fvec2 &col1 = colliderComponent1->contour.pos;
+        //    const float &w1   = colliderComponent1->contour.w;
+        //    const float &h1   = colliderComponent1->contour.h;
 
-            if(colliderComponent1 == nullptr)
-                continue;
+        //    if(colliderComponent1 == nullptr)
+        //    {
+        //        continue;
+        //    }
 
-            fvec2 entity1Middle((col1.x + col1.x + w1) / 2, (col1.y + col1.y + h1) / 2);
+        //    fvec2 entity1Middle((col1.x + col1.x + w1) / 2, (col1.y + col1.y + h1) / 2);
 
-            for(j = i + 1; j < length; ++j)
-            {
-                entity2 = entities[j];
+        //    for(j = i + 1; j < length; ++j)
+        //    {
+        //        entity2 = entities[j];
 
-                component_id colliderComponentID2 = entityManager->get_component_id(collectionID, entity2, component_manager::component_type::collider);
-                collider_component *colliderComponent2 = componentManager->get_collider_component(colliderComponentID2);
+        //        component_id colliderComponentID2 = entityManager->get_component_id(collectionID, entity2, component_manager::component_type::Collider);
+        //        collider_component *colliderComponent2 = componentManager->get_collider_component(colliderComponentID2);
 
-                if(colliderComponent2 == nullptr)
-                    continue;
+        //        if(colliderComponent2 == nullptr)
+        //            continue;
 
-                const fvec2 &col2 = colliderComponent2->contour.pos;
-                const float &w2   = colliderComponent2->contour.w;
-                const float &h2   = colliderComponent2->contour.h;
+        //        const fvec2 &col2 = colliderComponent2->contour.pos;
+        //        const float &w2   = colliderComponent2->contour.w;
+        //        const float &h2   = colliderComponent2->contour.h;
 
-                fvec2 entity2Middle((col2.x + col2.x + w2) / 2, (col2.y + col2.y + h2) / 2);
+        //        fvec2 entity2Middle((col2.x + col2.x + w2) / 2, (col2.y + col2.y + h2) / 2);
 
-                if(colliderComponent2->contour.isInside(colliderComponent1->contour))
-                {
-                    rect collision(fvec2(), 0.0f, 0.0f);
+        //        if(colliderComponent2->contour.isInside(colliderComponent1->contour))
+        //        {
+        //            rect collision(fvec2(), 0.0f, 0.0f);
 
-                    // Détermine le rectangle de collision.
-                    if(col1.y > col2.y) {
-                        collision.pos.y = col1.y;
-                        collision.h = col2.y + h2 - col1.y;
-                    }
-                    else
-                    {
-                        collision.pos.y = col2.y;
-                        collision.h = col1.y + h1 - col2.y;
-                    }
+        //            // Détermine le rectangle de collision.
+        //            if(col1.y > col2.y) {
+        //                collision.pos.y = col1.y;
+        //                collision.h = col2.y + h2 - col1.y;
+        //            }
+        //            else
+        //            {
+        //                collision.pos.y = col2.y;
+        //                collision.h = col1.y + h1 - col2.y;
+        //            }
 
-                    if(col1.x > col2.x)
-                    {
-                        collision.pos.x = col1.x;
-                        collision.w = col2.x + w2 - col1.x;
-                    }
-                    else
-                    {
-                        collision.pos.x = col2.x;
-                        collision.w = col1.x + w1 - col2.x;
-                    }
+        //            if(col1.x > col2.x)
+        //            {
+        //                collision.pos.x = col1.x;
+        //                collision.w = col2.x + w2 - col1.x;
+        //            }
+        //            else
+        //            {
+        //                collision.pos.x = col2.x;
+        //                collision.w = col1.x + w1 - col2.x;
+        //            }
 
-                    m_Collisions[entity1]->value[entity2]->value = collision;
+        //            m_Collisions[entity1]->value[entity2]->value = collision;
 
-                    // Appelle la fonction callback entre les 2 entités qui sont en collision entre elles.
+        //            // Appelle la fonction callback entre les 2 entités qui sont en collision entre elles.
 
-                    callback(collectionID, entity1, entity2, entity2Middle - entity1Middle, collision);
-                }
-                else
-                {
-                    hash_entry<hash_table<rect>> *s = m_Collisions[entity1];
-                    if(s == nullptr)
-                        continue;
+        //            callback(collectionID, entity1, entity2, entity2Middle - entity1Middle, collision);
+        //        }
+        //        else
+        //        {
+        //            hash_entry<hash_table<rect>> *s = m_Collisions[entity1];
+        //            if(s == nullptr)
+        //                continue;
 
-                    if(s->value.remove(entity2))
-                        outCallback(collectionID, entity1, entity2, entity2Middle - entity1Middle);
-                }
-            }
-        }
+        //            if(s->value.remove(entity2))
+        //                outCallback(collectionID, entity1, entity2, entity2Middle - entity1Middle);
+        //        }
+        //    }
+        //}
     }
 
     /*
-    ============================
-    system_manager::renderSystem
-    ============================
+    =====================================
+    system_manager::execute_render_system
+    =====================================
     */
-    void system_manager::renderSystem(GL3::gl_renderer &renderer, GL3::framerenderbuffer &frb, scene_id sceneID)
+    void system_manager::execute_render_system(GL3::gl_renderer &renderer, GL3::framerenderbuffer &frb, scene_id sceneID)
     {
         window *window = renderer.get_window();
 
@@ -396,7 +424,7 @@ namespace deep
             entity_collection_id collection = scene::get_entity_collection(sceneID);
 
             // Récupère toutes les entités dessinables et ayant une transformation.
-            entityManager->query(collection, to_utype(component_manager::component_type::drawable) | to_utype(component_manager::component_type::transformation), 0, entities);
+            entityManager->query(collection, to_utype(component_manager::component_type::Drawable) | to_utype(component_manager::component_type::Transformation), 0, entities);
 
             component_id drawableComponentID;
             component_id transformationComponentID;
@@ -425,14 +453,14 @@ namespace deep
                 {
                     for(j = 1; j < numberOfEntities; ++j)
                     {
-                        drawableComponentID       = entityManager->get_component_id(entities[i], collection, component_manager::component_type::drawable);
-                        transformationComponentID = entityManager->get_component_id(entities[i], collection, component_manager::component_type::transformation);
+                        drawableComponentID       = entityManager->get_component_id(entities[i], collection, component_manager::component_type::Drawable);
+                        transformationComponentID = entityManager->get_component_id(entities[i], collection, component_manager::component_type::Transformation);
 
                         drawableComponent       = componentManager->get_drawable_component(drawableComponentID);
                         transformationComponent = componentManager->get_transformation_component(transformationComponentID);
 
-                        nextDrawableComponentID       = entityManager->get_component_id(entities[j], collection, component_manager::component_type::drawable);
-                        nextTransformationComponentID = entityManager->get_component_id(entities[j], collection, component_manager::component_type::transformation);
+                        nextDrawableComponentID       = entityManager->get_component_id(entities[j], collection, component_manager::component_type::Drawable);
+                        nextTransformationComponentID = entityManager->get_component_id(entities[j], collection, component_manager::component_type::Transformation);
 
                         nextDrawableComponent       = componentManager->get_drawable_component(nextDrawableComponentID);
                         nextTransformationComponent = componentManager->get_transformation_component(nextTransformationComponentID);
@@ -460,15 +488,17 @@ namespace deep
             for(; begin != end; ++begin)
             {
                 // Récupère les composants de l'entité.
-                drawableComponentID       = entityManager->get_component_id(*begin, collection, component_manager::component_type::drawable);
-                transformationComponentID = entityManager->get_component_id(*begin, collection, component_manager::component_type::transformation);
+                drawableComponentID       = entityManager->get_component_id(*begin, collection, component_manager::component_type::Drawable);
+                transformationComponentID = entityManager->get_component_id(*begin, collection, component_manager::component_type::Transformation);
 
                 drawableComponent       = componentManager->get_drawable_component(drawableComponentID);
                 transformationComponent = componentManager->get_transformation_component(transformationComponentID);
 
                 // La façon dont un drawable est rendu peut être différente selon leur type, donc on utilise une fonction de callback.
                 if(drawableComponent->renderCallback != nullptr)
+                {
                     drawableComponent->renderCallback(renderer, drawableComponent, transformationComponent, window, &cam);
+                }
             }
 
             // Remet le compteur à 0 sans libérer la mémoire afin d'économiser des performances au détriment de la mémoire.

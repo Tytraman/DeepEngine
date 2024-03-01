@@ -1,0 +1,11 @@
+
+scenes {
+  scn_main {
+    test_lighted_entity {
+    }
+    light_source_entity {
+    }
+    lighted_entity {
+    }
+  }
+}

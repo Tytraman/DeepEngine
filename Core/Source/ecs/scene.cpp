@@ -1,5 +1,6 @@
 #include "DE/ecs/scene.hpp"
 #include "DE/ecs/entity.hpp"
+#include "DE/ecs/component.hpp"
 #include "DE/string_utils.hpp"
 #include "DE/memory/hash_table.hpp"
 
@@ -111,7 +112,98 @@ namespace deep
     {
         file_object_container *container = static_cast<file_object_container *>(args);
 
-        /*file_object_container *entContainer = */container->add_container(ent.get_name().str());
+        file_object_container *entContainer = container->add_container(ent.get_name().str());
+
+        component_manager *componentManager = component_manager::get_singleton();
+        entity_manager *entityManager = entity_manager::get_singleton();
+
+        component_manager::component_type componentTypes = entityManager->get_component_types(ent.get_entity_id(), ent.get_collection_id());
+
+        if((to_utype(componentTypes) & to_utype(component_manager::component_type::Drawable)) > 0)
+        {
+            /*component_id drawID = entityManager->get_component_id(ent.get_entity_id(), ent.get_collection_id(), component_manager::component_type::drawable);
+            drawable_component *comp = componentManager->get_drawable_component(drawID);*/
+            /*file_object_container *drawableContainer = */entContainer->add_container("drawable_component");
+
+            // Pour le moment il n'y a rien à sauvegarder.
+        }
+
+        if((to_utype(componentTypes) & to_utype(component_manager::component_type::Transformation)) > 0)
+        {
+            component_id transID = entityManager->get_component_id(ent.get_entity_id(), ent.get_collection_id(), component_manager::component_type::Transformation);
+            transformation_component *comp = componentManager->get_transformation_component(transID);
+
+            file_object_container *transContainer = entContainer->add_container("transformation_component");
+
+            string x = string_utils::double_to_str(comp->get_translation().x);
+            string y = string_utils::double_to_str(comp->get_translation().y);
+            string z = string_utils::double_to_str(comp->get_translation().z);
+
+            transContainer->add_element("", "translation_x", x.str());
+            transContainer->add_element("", "translation_y", y.str());
+            transContainer->add_element("", "translation_z", z.str());
+
+            x = string_utils::double_to_str(comp->get_scaling().x);
+            y = string_utils::double_to_str(comp->get_scaling().y);
+            z = string_utils::double_to_str(comp->get_scaling().z);
+
+            transContainer->add_element("", "scaling_x", x.str());
+            transContainer->add_element("", "scaling_y", y.str());
+            transContainer->add_element("", "scaling_z", z.str());
+
+            x = string_utils::double_to_str(comp->get_rotation_X());
+            y = string_utils::double_to_str(comp->get_rotation_Y());
+            z = string_utils::double_to_str(comp->get_rotation_Z());
+
+            transContainer->add_element("", "rotation_x", x.str());
+            transContainer->add_element("", "rotation_y", y.str());
+            transContainer->add_element("", "rotation_z", z.str());
+        }
+
+        if((to_utype(componentTypes) & to_utype(component_manager::component_type::Collider)) > 0)
+        {
+            component_id colID = entityManager->get_component_id(ent.get_entity_id(), ent.get_collection_id(), component_manager::component_type::Collider);
+            collider_component *comp = componentManager->get_collider_component(colID);
+
+            file_object_container *colContainer = entContainer->add_container("collider_component");
+
+            vec3<float> colPos = comp->position;
+            vec3<float> colSize = comp->size;
+
+            string x = string_utils::double_to_str(colPos.x);
+            string y = string_utils::double_to_str(colPos.y);
+            string z = string_utils::double_to_str(colPos.z);
+
+            colContainer->add_element("", "collider_position_x", x.str());
+            colContainer->add_element("", "collider_position_y", y.str());
+            colContainer->add_element("", "collider_position_z", z.str());
+
+            x = string_utils::double_to_str(colSize.x);
+            y = string_utils::double_to_str(colSize.y);
+            z = string_utils::double_to_str(colSize.z);
+
+            colContainer->add_element("", "collider_size_x", x.str());
+            colContainer->add_element("", "collider_size_y", y.str());
+            colContainer->add_element("", "collider_size_z", z.str());
+        }
+
+        if((to_utype(componentTypes) & to_utype(component_manager::component_type::Velocity)) > 0)
+        {
+            component_id veloID = entityManager->get_component_id(ent.get_entity_id(), ent.get_collection_id(), component_manager::component_type::Velocity);
+            velocity_component *comp = componentManager->get_velocity_component(veloID);
+
+            file_object_container *veloContainer = entContainer->add_container("velocity_component");
+
+            vec3<float> vel = comp->get_velocity();
+
+            string x = string_utils::double_to_str(vel.x);
+            string y = string_utils::double_to_str(vel.y);
+            string z = string_utils::double_to_str(vel.z);
+
+            veloContainer->add_element("", "velocity_x", x.str());
+            veloContainer->add_element("", "velocity_y", y.str());
+            veloContainer->add_element("", "velocity_z", z.str());
+        }
     }
 
     /*

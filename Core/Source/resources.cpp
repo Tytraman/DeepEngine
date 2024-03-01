@@ -117,6 +117,9 @@ namespace deep
         m_ExportFolder = m_ResourcesFolder;
         m_ExportFolder.append("export\\");
 
+        string scenePath = m_ExportFolder;
+        scenePath.append("scenes\\");
+
         // Création des dossiers.
         CreateDirectoryA(m_ResourcesFolder.str(), NULL);
         CreateDirectoryA(m_ShadersFolder.str(), NULL);
@@ -125,6 +128,7 @@ namespace deep
         CreateDirectoryA(m_ScreenshotsFolder.str(), NULL);
         CreateDirectoryA(m_FontsFolder.str(), NULL);
         CreateDirectoryA(m_ExportFolder.str(), NULL);
+        CreateDirectoryA(scenePath.str(), NULL);
 
         string shadersConfig(m_ShadersFolder);
         shadersConfig.append("shaders.fobj");

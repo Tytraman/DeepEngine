@@ -1,0 +1,23 @@
+
+scenes {
+  scn_main {
+    test_lighted_entity {
+      drawable_component {
+      }
+      transformation_component {
+      }
+    }
+    light_source_entity {
+      drawable_component {
+      }
+      transformation_component {
+      }
+    }
+    lighted_entity {
+      drawable_component {
+      }
+      transformation_component {
+      }
+    }
+  }
+}

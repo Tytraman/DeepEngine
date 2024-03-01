@@ -146,7 +146,7 @@ namespace deep
     {
         const auto hs = m_ComponentsType[component];
         if(hs == nullptr)
-            return component_manager::component_type::none;
+            return component_manager::component_type::None;
 
         return hs->value;
     }
@@ -172,7 +172,7 @@ namespace deep
     {
         component_id id = m_ComponentCount;
         drawable_component drawable(vbo, vao, material);
-        component_type type = component_manager::component_type::drawable;
+        component_type type = component_manager::component_type::Drawable;
 
         m_DrawableComponents.insert(id, drawable);
         m_ComponentsType.insert(id, type);
@@ -221,7 +221,7 @@ namespace deep
     {
         component_id id = m_ComponentCount;
         transformation_component transformation(translation, scaling, rotation);
-        component_type type = component_manager::component_type::transformation;
+        component_type type = component_manager::component_type::Transformation;
 
         m_TransformationComponents.insert(id, transformation);
         m_ComponentsType.insert(id, type);
@@ -249,7 +249,7 @@ namespace deep
     {
         component_id id = m_ComponentCount;
         velocity_component velocity;
-        component_type type = component_manager::component_type::velocity;
+        component_type type = component_manager::component_type::Velocity;
 
         m_VelocityComponents.insert(id, velocity);
         m_ComponentsType.insert(id, type);
@@ -265,7 +265,8 @@ namespace deep
     ====================================
     */
     collider_component::collider_component()
-        : contour(fvec2(0.0f, 0.0f), 0.0f, 0.0f)
+        : position(0.0f, 0.0f, 0.0f),
+          size(0.0f, 0.0f, 0.0f)
     { }
 
     /*
@@ -277,7 +278,7 @@ namespace deep
     {
         component_id id = m_ComponentCount;
         collider_component collider;
-        component_type type = component_manager::component_type::collider;
+        component_type type = component_manager::component_type::Collider;
 
         m_ColliderComponents.insert(id, collider);
         m_ComponentsType.insert(id, type);
@@ -305,7 +306,7 @@ namespace deep
     {
         component_id id = m_ComponentCount;
         acceleration_component acc(acceleration);
-        component_type type = component_manager::component_type::acceleration;
+        component_type type = component_manager::component_type::Acceleration;
 
         m_AccelerationComponents.insert(id, acc);
         m_ComponentsType.insert(id, type);
@@ -342,7 +343,7 @@ namespace deep
     {
         component_id id = m_ComponentCount;
         health_component health(pv, max);
-        component_type type = component_manager::component_type::health;
+        component_type type = component_manager::component_type::Health;
 
         m_HealthComponents.insert(id, health);
         m_ComponentsType.insert(id, type);

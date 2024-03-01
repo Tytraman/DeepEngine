@@ -92,14 +92,12 @@ namespace deep
             friend component_manager;
     };
 
-    /// @struct collider_component
-    /// @brief  Composant décrivant qu'une entité possède une boîte de collision de type AABB.
-    /// @remark En utilisant l'AABB, il n'est pas conseillé de tourner les objets car la boîte de collision est rectangulaire.
     struct collider_component
     {
 
         public:
-            rect contour;
+            vec3<float> position;
+            vec3<float> size;
         
         private:
             collider_component();
@@ -139,13 +137,13 @@ namespace deep
         public:
             enum class component_type : uint32_t
             {
-                none           = 0,
-                drawable       = (1 << 0),
-                transformation = (1 << 1),
-                collider       = (1 << 2),
-                velocity       = (1 << 3),
-                acceleration   = (1 << 4),
-                health         = (1 << 5)
+                None           = 0,
+                Drawable       = (1 << 0),
+                Transformation = (1 << 1),
+                Collider       = (1 << 2),
+                Velocity       = (1 << 3),
+                Acceleration   = (1 << 4),
+                Health         = (1 << 5)
             };
             
 

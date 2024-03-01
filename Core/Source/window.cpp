@@ -348,16 +348,16 @@ namespace deep
                     m_UpdateCallback(*this);
 
                 // Exécute les systèmes créés par l'utilisateur.
-                systemManager->executeSystems();
+                systemManager->execute_systems();
 
                 // Applique l'accélération à toutes les entités en possédant.
-                systemManager->accelerationSystem();
+                systemManager->execute_acceleration_system();
 
                 // Applique la vélocité à toutes les entités en possédant.
-                systemManager->velocitySystem();
+                systemManager->execute_velocity_system();
 
                 // Les collisions sont vérifiées après tous les déplacements possibles afin d'éviter les problèmes.
-                systemManager->colliderSystem();
+                systemManager->execute_collider_system();
 
                 lag -= m_TargetMSPerUpdate;
                 updates++;
@@ -366,7 +366,7 @@ namespace deep
             }
 
             // Fait le rendu final de la frame !
-            systemManager->renderSystem(m_Renderer, m_FRB, sceneID);
+            systemManager->execute_render_system(m_Renderer, m_FRB, sceneID);
 
             end = core::get_tick();
 

@@ -64,7 +64,7 @@
 - [x] Créer un format pour stocker des données **hiérarchiques**. ✅ 2024-01-01
 - [ ] Créer un format pour stocker les ressources.
 - [ ] Utiliser `file_object` pour stocker des mondes.
-	- [ ] Se renseigner sur les différentes manières de sauvegarder / charger un monde.
+- [ ] Ajouter les listes dans `file_object`.
 - [x] Sauvegarder une `texture` en tant qu'`image`. ✅ 2024-01-01
 - [x] Pouvoir faire des captures d'écran. ✅ 2024-01-01
 

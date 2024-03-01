@@ -13,7 +13,7 @@ namespace deep
     */
     entity_manager::entity_item::entity_item(const entity &_ent)
         : ent(_ent),
-          componentsType(component_manager::component_type::none)
+          componentsType(component_manager::component_type::None)
     { }
 
     /*
@@ -321,11 +321,11 @@ namespace deep
     {
         hash_entry<hash_table<entity_item>> *hs = m_Collections[collectionID];
         if(hs == nullptr)
-            return component_manager::component_type::none;
+            return component_manager::component_type::None;
 
         hash_entry<entity_item> *h = hs->value[keyName];
         if(h == nullptr)
-            return component_manager::component_type::none;
+            return component_manager::component_type::None;
 
         return h->value.componentsType;
     }

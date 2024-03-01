@@ -50,49 +50,6 @@ namespace deep
 
                 DE_API cube_texture_points();
             };
-
-
-        public:
-            /// @brief                 Crée un rectangle dans la collection spécifiée.
-            /// @param collectionID    ID de la collection dans laquelle créer le rectangle.
-            /// @param position        Position à laquelle se situera le rectangle.
-            /// @param width           Largeur du rectangle.
-            /// @param height          Hauteur du rectangle.
-            /// @param color           Couleur du rectangle.
-            /// @return                L'entité nouvellement créée ou \ref entity::bad() si une erreur est survenue.
-            DE_API static entity_manager::entity createRectangle(
-                const char *name,
-                entity_collection_id collectionID,
-                const vec3<float> &position,
-                float width,
-                float height,
-                const colora &color,
-                bool collidable = false);
-
-            DE_API static entity_manager::entity createRectangleTexture(
-                const char *name,
-                entity_collection_id collectionID,
-                const vec3<float> &position,
-                float width,
-                float height,
-                const colora &color,
-                bool collidable = false);
-
-            DE_API static entity_manager::entity create3DRectangle(
-                const char *name,
-                entity_collection_id collectionID,
-                const vec3<float> &position,
-                float width,
-                float height,
-                float length,
-                const colora &color1,
-                const colora &color2,
-                const colora &color3,
-                const colora &color4,
-                const colora &color5,
-                const colora &color6,
-                bool collidable = false
-            );
             
             DE_API static entity_manager::entity create_3D_rectangle_texture(
                 const char *name,
