@@ -1,13 +1,13 @@
 #ifndef __DEEP_ENGINE_OPENGL_TEXTURE_HPP__
 #define __DEEP_ENGINE_OPENGL_TEXTURE_HPP__
 
-#include "DE/def.hpp"
-#include "DE/types.hpp"
-#include "DE/string.hpp"
-#include "DE/memory/memory.hpp"
-#include "DE/memory/hash_table.hpp"
+#include "DE/core/def.hpp"
+#include "DE/core/types.hpp"
+#include "DE/core/string.hpp"
+#include "DE/core/memory.hpp"
+#include "DE/core/hash_table.hpp"
 #include "DE/image/image.hpp"
-#include "DE/vec.hpp"
+#include "DE/maths/vec.hpp"
 #include "DE/drivers/opengl/def.hpp"
 
 namespace deep

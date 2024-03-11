@@ -1,5 +1,5 @@
 #include "DE/io/stream.hpp"
-#include "DE/string_utils.hpp"
+#include "DE/core/string_utils.hpp"
 
 #include <string.h>
 

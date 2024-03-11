@@ -1,16 +1,15 @@
 #ifndef __DEEP_ENGINE_COMPONENT_HPP__
 #define __DEEP_ENGINE_COMPONENT_HPP__
 
-#include "DE/def.hpp"
-#include "DE/types.hpp"
+#include "DE/core/def.hpp"
+#include "DE/core/types.hpp"
 #include "DE/ecs/ecs.hpp"
-#include "DE/vec.hpp"
-#include "DE/memory/list.hpp"
-#include "DE/graphics/vertex.hpp"
+#include "DE/maths/vec.hpp"
+#include "DE/core/list.hpp"
 #include "DE/graphics/shape.hpp"
 #include "DE/graphics/material.hpp"
-#include "DE/memory/hash_table.hpp"
-#include "DE/memory/ref_counted.hpp"
+#include "DE/core/hash_table.hpp"
+#include "DE/core/ref_counted.hpp"
 #include "DE/drivers/opengl/renderer.hpp"
 
 namespace deep

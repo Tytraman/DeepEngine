@@ -1,11 +1,11 @@
 #ifndef __DEEP_ENGINE_GRAPHIC_HPP__
 #define __DEEP_ENGINE_GRAPHIC_HPP__
 
-#include "DE/def.hpp"
-#include "DE/types.hpp"
+#include "DE/core/def.hpp"
+#include "DE/core/types.hpp"
 #include "DE/ecs/scene.hpp"
-#include "DE/color.hpp"
-#include "DE/vec.hpp"
+#include "DE/core/color.hpp"
+#include "DE/maths/vec.hpp"
 #include "DE/graphics/shape.hpp"
 
 namespace deep

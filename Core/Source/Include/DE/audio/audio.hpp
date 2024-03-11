@@ -1,9 +1,9 @@
 #ifndef __DEEP_ENGINE_AUDIO_HPP__
 #define __DEEP_ENGINE_AUDIO_HPP__
 
-#include <DE/def.hpp>
-#include <DE/types.hpp>
-#include <DE/vec.hpp>
+#include "DE/core/def.hpp"
+#include "DE/core/types.hpp"
+#include "DE/maths/vec.hpp"
 
 #include <AL/al.h>
 #include <AL/alc.h>

@@ -1,12 +1,12 @@
 #ifndef __DEEP_ENGINE_OPENGL_SHADER_HPP__
 #define __DEEP_ENGINE_OPENGL_SHADER_HPP__
 
-#include "DE/def.hpp"
-#include "DE/types.hpp"
-#include "DE/memory/hash_table.hpp"
+#include "DE/core/def.hpp"
+#include "DE/core/types.hpp"
+#include "DE/core/hash_table.hpp"
 #include "DE/memory/pair.hpp"
-#include "DE/vec.hpp"
-#include "DE/mat.hpp"
+#include "DE/maths/vec.hpp"
+#include "DE/maths/mat.hpp"
 #include "DE/drivers/opengl/def.hpp"
 
 namespace deep

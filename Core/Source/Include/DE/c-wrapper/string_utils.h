@@ -1,7 +1,7 @@
 #ifndef __DEEP_ENGINE_STRING_UTILS_H__
 #define __DEEP_ENGINE_STRING_UTILS_H__
 
-#include <DE/def.hpp>
+#include "DE/core/def.hpp"
 
 #include <stddef.h>
 

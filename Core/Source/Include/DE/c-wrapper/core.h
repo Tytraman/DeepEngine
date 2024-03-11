@@ -1,8 +1,8 @@
 #ifndef __DEEP_ENGINE_CORE_H__
 #define __DEEP_ENGINE_CORE_H__
 
-#include <DE/def.hpp>
-#include <DE/c-wrapper/types.h>
+#include "DE/core/def.hpp"
+#include "DE/c-wrapper/types.h"
 
 DE_BEGIN_EXTERN_C
 

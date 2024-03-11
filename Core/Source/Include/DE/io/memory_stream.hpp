@@ -1,10 +1,10 @@
 #ifndef __DEEP_ENGINE_MEMORY_STREAM_HPP__
 #define __DEEP_ENGINE_MEMORY_STREAM_HPP__
 
-#include "DE/def.hpp"
-#include "DE/types.hpp"
+#include "DE/core/def.hpp"
+#include "DE/core/types.hpp"
 #include "DE/io/stream.hpp"
-#include "DE/memory/list.hpp"
+#include "DE/core/list.hpp"
 
 namespace deep
 {

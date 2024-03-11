@@ -1,8 +1,8 @@
 #ifndef __DEEP_ENGINE_OPENGL_CORE_HPP__
 #define __DEEP_ENGINE_OPENGL_CORE_HPP__
 
-#include "DE/def.hpp"
-#include "DE/types.hpp"
+#include "DE/core/def.hpp"
+#include "DE/core/types.hpp"
 #include "DE/drivers/opengl/def.hpp"
 
 namespace deep

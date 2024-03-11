@@ -2,34 +2,20 @@
 #include <math.h>
 #include <string>
 
-#include <DE/def.hpp>
-#include <DE/core.hpp>
-#include <DE/error.hpp>
-#include <DE/window.hpp>
-#include <DE/key.hpp>
-#include <DE/sys_win.hpp>
-#include <DE/logger.hpp>
-#include <DE/debug.hpp>
-#include <DE/vec.hpp>
-#include <DE/mat.hpp>
+#include <DE/core/core.hpp>
+#include <DE/core/window.hpp>
+#include <DE/os/key.hpp>
+#include <DE/maths/vec.hpp>
+#include <DE/maths/mat.hpp>
 #include <DE/ecs/scene.hpp>
 #include <DE/graphics/graphic.hpp>
 #include <DE/image/png.hpp>
 #include <DE/image/bmp.hpp>
-#include <DE/resources.hpp>
-#include <DE/memory/hash_table.hpp>
-#include <DE/memory/memory.hpp>
-#include <DE/string.hpp>
+#include <DE/core/resources.hpp>
+#include <DE/core/memory.hpp>
+#include <DE/core/string.hpp>
 #include <DE/file/file_object.hpp>
 #include <DE/memory/settings.hpp>
-#include <DE/safe_integer.hpp>
-#include <DE/os/COM.hpp>
-#include <DE/hardware/cpu.hpp>
-#include <DE/os/file_dialog.hpp>
-#include <DE/io/stream.hpp>
-#include <DE/io/memory_stream.hpp>
-#include <DE/io/file_stream.hpp>
-#include <DE/io/stream_writer.hpp>
 
 extern "C"
 {
@@ -190,8 +176,6 @@ void update_callback(deep::window & /* win */)
 #undef main
 int main()
 {
-    deep::error_status errorStatus;
-
     switch(deep::core::init("DeepEngine [" DE_VERSION "]", 0, 0, 0))
     {
         default:
@@ -239,13 +223,12 @@ int main()
     deep::window win(TARGET_MS, TARGET_FPS);
     win.set_event_callback(event_callback);
     win.set_update_callback(update_callback);
-    errorStatus = deep::window::create(win, "DeepEngine [" DE_VERSION "]", deep::size(WINDOW_WIDTH, WINDOW_HEIGHT));
 
-    if(errorStatus != deep::error_status::NoError)
+    if(deep::window::create(win, "DeepEngine [" DE_VERSION "]", deep::size(WINDOW_WIDTH, WINDOW_HEIGHT)))
     {
-        deep::error::printError(errorStatus);
         deep::core::shutdown();
-        return 1;
+
+        return EXIT_FAILURE;
     }
 
     deep::engine_settings *engineSettings = deep::engine_settings::get_singleton();

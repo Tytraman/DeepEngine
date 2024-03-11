@@ -3,9 +3,9 @@
 
 #include "DE/io/text_writer.hpp"
 #include "DE/io/stream.hpp"
-#include "DE/string_utils.hpp"
-#include "DE/string.hpp"
-#include "DE/memory/ref_counted.hpp"
+#include "DE/core/string_utils.hpp"
+#include "DE/core/string.hpp"
+#include "DE/core/ref_counted.hpp"
 
 namespace deep
 {

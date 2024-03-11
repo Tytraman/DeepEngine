@@ -1,9 +1,9 @@
 #ifndef __DEEP_ENGINE_PAIR_HPP__
 #define __DEEP_ENGINE_PAIR_HPP__
 
-#include <DE/def.hpp>
-#include <DE/types.hpp>
-#include <DE/memory/memory.hpp>
+#include "DE/core/def.hpp"
+#include "DE/core/types.hpp"
+#include "DE/core/memory.hpp"
 
 namespace deep
 {

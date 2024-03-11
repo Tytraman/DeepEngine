@@ -1,14 +1,14 @@
 #ifndef __DEEP_ENGINE_SCENE_HPP__
 #define __DEEP_ENGINE_SCENE_HPP__
 
-#include "DE/def.hpp"
-#include "DE/types.hpp"
+#include "DE/core/def.hpp"
+#include "DE/core/types.hpp"
 #include "DE/ecs/ecs.hpp"
 #include "DE/ecs/entity.hpp"
-#include "DE/memory/list.hpp"
-#include "DE/vec.hpp"
+#include "DE/core/list.hpp"
+#include "DE/maths/vec.hpp"
 #include "DE/graphics/shape.hpp"
-#include "DE/rendering/camera.hpp"
+#include "DE/core/camera.hpp"
 #include "DE/file/file_object.hpp"
 
 namespace deep

@@ -1,9 +1,9 @@
 #ifndef __DEEP_ENGINE_COM_HPP__
 #define __DEEP_ENGINE_COM_HPP__
 
-#include "DE/def.hpp"
-#include "DE/types.hpp"
-#include "DE/string.hpp"
+#include "DE/core/def.hpp"
+#include "DE/core/types.hpp"
+#include "DE/core/string.hpp"
 
 #if DE_WINDOWS
 // Copié-collé de la doc Microsoft : https://learn.microsoft.com/en-us/windows/win32/wmisdk/creating-a-connection-to-a-wmi-namespace

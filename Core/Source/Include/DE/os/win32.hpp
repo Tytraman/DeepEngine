@@ -1,8 +1,8 @@
 #ifndef __DEEP_ENGINE_WIN32_HPP__
 #define __DEEP_ENGINE_WIN32_HPP__
 
-#include "DE/def.hpp"
-#include "DE/types.hpp"
+#include "DE/core/def.hpp"
+#include "DE/core/types.hpp"
 
 namespace deep
 {
@@ -12,6 +12,7 @@ namespace deep
 #pragma comment(lib, "ntdll")
 
 #include <Windows.h>
+#include <winternl.h>
 
 /*
 
@@ -81,6 +82,8 @@ namespace deep
     );
 
     extern NtQueryObject nt_query_object;
+
+    DE_API PTEB getTEB();
 
 #else
 

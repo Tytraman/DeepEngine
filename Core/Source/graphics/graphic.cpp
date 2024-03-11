@@ -1,5 +1,4 @@
 #include "DE/graphics/graphic.hpp"
-#include "DE/graphics/vertex.hpp"
 #include "DE/ecs/entity.hpp"
 #include "DE/ecs/component.hpp"
 #include "DE/drivers/opengl/vbo.hpp"

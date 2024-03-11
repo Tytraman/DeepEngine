@@ -1,5 +1,5 @@
 #include "DE/file/file_object.hpp"
-#include "DE/memory/stack.hpp"
+#include "DE/core/stack.hpp"
 #include "DE/io/stream_writer.hpp"
 
 #include <stdio.h>

@@ -1,9 +1,9 @@
 #ifndef __DEEP_ENGINE_FILE_STREAM_HPP__
 #define __DEEP_ENGINE_FILE_STREAM_HPP__
 
-#include "DE/def.hpp"
-#include "DE/types.hpp"
-#include "DE/string.hpp"
+#include "DE/core/def.hpp"
+#include "DE/core/types.hpp"
+#include "DE/core/string.hpp"
 #include "DE/io/stream.hpp"
 
 namespace deep

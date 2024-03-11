@@ -1,8 +1,8 @@
 #ifndef __DEEP_ENGINE_MYBMP_HPP__
 #define __DEEP_ENGINE_MYBMP_HPP__
 
-#include <DE/image/image.hpp>
-#include <DE/vec.hpp>
+#include "DE/image/image.hpp"
+#include "DE/maths/vec.hpp"
 
 namespace deep
 {

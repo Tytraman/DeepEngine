@@ -1,12 +1,12 @@
 #ifndef __DEEP_ENGINE_MATERIAL_HPP__
 #define __DEEP_ENGINE_MATERIAL_HPP__
 
-#include "DE/def.hpp"
-#include "DE/types.hpp"
-#include "DE/vec.hpp"
-#include "DE/memory/hash_table.hpp"
-#include "DE/memory/ref_counted.hpp"
-#include "DE/string.hpp"
+#include "DE/core/def.hpp"
+#include "DE/core/types.hpp"
+#include "DE/maths/vec.hpp"
+#include "DE/core/hash_table.hpp"
+#include "DE/core/ref_counted.hpp"
+#include "DE/core/string.hpp"
 
 #include "DE/drivers/opengl/shader.hpp"
 

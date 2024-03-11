@@ -1,6 +1,6 @@
 #include "DE/os/COM.hpp"
-#include "DE/string_utils.hpp"
-#include "DE/memory/list.hpp"
+#include "DE/core/string_utils.hpp"
+#include "DE/core/list.hpp"
 
 namespace deep
 {
