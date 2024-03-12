@@ -1,6 +1,8 @@
 # Indique la version minimum de CMake requise pour exécuter le script.
 cmake_minimum_required(VERSION 3.15)
 
+message(STATUS "=====[ DeepEngine ]=====")
+
 # Indique les versions à utiliser des langages.
 set(CMAKE_CXX_STANDARD 17)
 
@@ -15,11 +17,9 @@ if(MSVC)
     endif()
 endif()
 
-enable_language(C ASM_MASM)
-
 include("variables.cmake")
 
-project(${DE_PROJECT} VERSION 0.0.1)
+project(${DE_PROJECT} VERSION 0.0.1 LANGUAGES C CXX)
 
 set(CORE_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/Core")
 set(CORE_BUILD_DIRECTORY "${CORE_DIRECTORY}/Build")

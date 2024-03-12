@@ -33,8 +33,8 @@ extern "C"
 #include <DE/drivers/opengl/shader.hpp>
 #include <DE/drivers/opengl/uniform.hpp>
 
-#define WINDOW_WIDTH	1745
-#define WINDOW_HEIGHT	980
+#define WINDOW_WIDTH	800
+#define WINDOW_HEIGHT	480
 #define TARGET_MS		16
 #define TARGET_FPS		300
 
@@ -224,7 +224,7 @@ int main()
     win.set_event_callback(event_callback);
     win.set_update_callback(update_callback);
 
-    if(deep::window::create(win, "DeepEngine [" DE_VERSION "]", deep::size(WINDOW_WIDTH, WINDOW_HEIGHT)))
+    if(!deep::window::create(win, "DeepEngine [" DE_VERSION "]", deep::size(WINDOW_WIDTH, WINDOW_HEIGHT)))
     {
         deep::core::shutdown();
 

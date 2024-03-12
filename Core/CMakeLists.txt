@@ -1,14 +1,14 @@
 # Indique la version minimum de CMake requise pour exécuter le script.
 cmake_minimum_required(VERSION 3.15)
 
+message(STATUS "=====[ DeepEngineCore ]=====")
+
 # Indique les versions à utiliser des langages.
 set(CMAKE_CXX_STANDARD 17)
 
 # set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/Build")
 
-enable_language(C ASM_MASM)
-
-project(${CORE_PROJECT} VERSION 0.0.1)
+project(${CORE_PROJECT} VERSION 0.0.1 LANGUAGES C CXX)
 
 if(MSVC)
     # add_compile_options(/fsanitize=address)
@@ -66,57 +66,154 @@ set(LIBPNG_INCLUDE_2 "${LIBPNG_BUILD_DIRECTORY}")
 
 set(OPENAL_INCLUDE "${THIRD_PARTY_LIBS}/openal-soft/include")
 
-file(GLOB CORE_HEADERS
-    "${CORE_INCLUDE}/glad/*.hpp" "${CORE_INCLUDE}/glad/*.h"
-    "${CORE_INCLUDE}/KHR/*.hpp" "${CORE_INCLUDE}/KHR/*.h"
+# add_folders est le nom de la fonction.
+# dest_list est un paramètre qui correspond à la liste dans laquelle ajouter tous les fichiers.
+function(deep_add_folders dest_list)
+    set(options)
+    set(args INCLUDE_DIR)
+    set(list_args FOLDERS EXTENSIONS)
+    cmake_parse_arguments(
+        PARSE_ARGV 0
+        DEEP_FOLDER
+        "${options}"
+        "${args}"
+        "${list_args}"
+    )
 
-    "${IMGUI_INCLUDE}/*.hpp" "${IMGUI_INCLUDE}/*.h"
-    "${IMGUI_INCLUDE}/backends/*.hpp" "${IMGUI_INCLUDE}/backends/*.h"
+    # Affiche un warning pour tous les paramètres qui n'ont pas de nom associé lors de l'appel.
+    # foreach(arg IN LISTS DEEP_FOLDER_UNPARSED_ARGUMENTS)
+        # message(WARNING "Unparsed argument: ${arg}")
+    # endforeach()
 
-    "${CORE_INCLUDE}/*.hpp" "${CORE_INCLUDE}/*.h"
-    "${CORE_INCLUDE}/core/*.hpp" "${CORE_INCLUDE}/core/*.h"
-    "${CORE_INCLUDE}/maths/*.hpp" "${CORE_INCLUDE}/maths/*.h"
-    "${CORE_INCLUDE}/DE/*.hpp" "${CORE_INCLUDE}/DE/*.h"
-    "${CORE_INCLUDE}/DE/os/*.hpp" "${CORE_INCLUDE}/DE/os/*.h"
-    "${CORE_INCLUDE}/DE/hardware/*.hpp" "${CORE_INCLUDE}/DE/hardware/*.h"
-    "${CORE_INCLUDE}/DE/audio/*.hpp" "${CORE_INCLUDE}/DE/audio/*.h"
-    "${CORE_INCLUDE}/DE/c-wrapper/*.hpp" "${CORE_INCLUDE}/DE/c-wrapper/*.h"
-    "${CORE_INCLUDE}/DE/drivers/opengl/*.hpp" "${CORE_INCLUDE}/DE/drivers/opengl/*.h"
-    "${CORE_INCLUDE}/DE/ecs/*.hpp" "${CORE_INCLUDE}/DE/ecs/*.h"
-    "${CORE_INCLUDE}/DE/graphics/*.hpp" "${CORE_INCLUDE}/DE/graphics/*.h"
-    "${CORE_INCLUDE}/DE/image/*.hpp" "${CORE_INCLUDE}/DE/image/*.h"
-    "${CORE_INCLUDE}/DE/gui/*.hpp" "${CORE_INCLUDE}/DE/gui/*.h"
-    "${CORE_INCLUDE}/DE/memory/*.hpp" "${CORE_INCLUDE}/DE/memory/*.h"
-    "${CORE_INCLUDE}/DE/resource/*.hpp" "${CORE_INCLUDE}/DE/resource/*.h"
-    "${CORE_INCLUDE}/DE/file/*.hpp" "${CORE_INCLUDE}/DE/file/*.h"
-    "${CORE_INCLUDE}/DE/io/*.hpp" "${CORE_INCLUDE}/DE/io/*.h"
+    set(files ${${dest_list}})
+    # message(STATUS "current list: ${files}")
+
+    #message(STATUS "Add folders: ${DEEP_FOLDER_FOLDERS} in ${DEEP_FOLDER_INCLUDE_DIR} with extensions: ${DEEP_FOLDER_EXTENSIONS}")
+
+    # Pour chaque dossier que l'on ajoute.
+    foreach(folder IN LISTS DEEP_FOLDER_FOLDERS)
+        if(NOT ${folder} EQUAL "")
+            if("${folder}" MATCHES "[ \t\n]+")
+                set(temp "")
+                set(folder "")
+            else()
+                set(temp "/")
+            endif()
+        endif()
+
+        set(file "${DEEP_FOLDER_INCLUDE_DIR}/${folder}")
+        string(APPEND file ${temp})
+
+        # Pour chaque extension que l'on veut ajouter.
+        foreach(extension IN LISTS DEEP_FOLDER_EXTENSIONS)
+            set(final_file "${file}*${extension}")
+
+            #message(STATUS "Final File: ${final_file}")
+
+            list(APPEND globbing_files "${final_file}")
+        endforeach()
+    endforeach()
+
+    #message(STATUS "globbing_files: ${globbing_files}")
+
+    # Cette fonction n'ajoute pas les fichiers dans la liste mais l'écrase entièrement.
+    file(
+        GLOB new_files
+        ${globbing_files}
+    )
+
+    #message(STATUS "new_files: ${new_files}")
+
+    # Il faut donc itérer chaque fichier trouvé et l'ajouter dans la liste destination.
+    foreach(f IN LISTS new_files)
+        list(APPEND files ${f})
+    endforeach()
+
+    # Il n'est pas possible de modifier la liste référencée autrement que par un 'set', d'où les copies et l'itération précédentes.
+    set(${dest_list} ${files} PARENT_SCOPE)
+endfunction()
+
+function(deep_add_files dest_list)
+    set(options)
+    set(args INCLUDE_DIR)
+    set(list_args FILES)
+    cmake_parse_arguments(
+        PARSE_ARGV 0
+        DEEP_FILE
+        "${options}"
+        "${args}"
+        "${list_args}"
+    )
+
+    set(files ${${dest_list}})
+
+    foreach(file IN LISTS DEEP_FILE_FILES)
+        list(APPEND files "${DEEP_FILE_INCLUDE_DIR}/${file}")
+    endforeach()
+
+    set(${dest_list} ${files} PARENT_SCOPE)
+endfunction()
+
+deep_add_folders(
+    DEEP_HEADER_FILES
+    INCLUDE_DIR ${CORE_INCLUDE}
+    FOLDERS "glad" "KHR"
+    EXTENSIONS ".hpp" ".h"
 )
 
-file(GLOB CORE_SOURCES
-    "${IMGUI_INCLUDE}/*.cpp" "${IMGUI_INCLUDE}/*.c"
-    "${IMGUI_INCLUDE}/backends/imgui_impl_sdl2.cpp"
-    "${IMGUI_INCLUDE}/backends/imgui_impl_opengl3.cpp"
-
-    "${CORE_SOURCE}/*.cpp" "${CORE_SOURCE}/*.c"
-    "${CORE_SOURCE}/core/*.cpp" "${CORE_SOURCE}/core/*.c"
-    "${CORE_SOURCE}/maths/*.cpp" "${CORE_SOURCE}/maths/*.c"
-    "${CORE_SOURCE}/os/*.cpp" "${CORE_SOURCE}/os/*.c" "${CORE_SOURCE}/os/*.asm"
-    "${CORE_SOURCE}/hardware/*.cpp" "${CORE_SOURCE}/hardware/*.c"
-    "${CORE_SOURCE}/audio/*.cpp" "${CORE_SOURCE}/audio/*.c"
-    "${CORE_SOURCE}/drivers/opengl/*.cpp" "${CORE_SOURCE}/drivers/opengl/*.c"
-    "${CORE_SOURCE}/ecs/*.cpp" "${CORE_SOURCE}/ecs/*.c"
-    "${CORE_SOURCE}/glad/*.cpp" "${CORE_SOURCE}/glad/*.c"
-    "${CORE_SOURCE}/graphics/*.cpp" "${CORE_SOURCE}/graphics/*.c"
-    "${CORE_SOURCE}/image/*.cpp" "${CORE_SOURCE}/image/*.c"
-    "${CORE_SOURCE}/gui/*.cpp" "${CORE_SOURCE}/gui/*.c"
-    "${CORE_SOURCE}/memory/*.cpp" "${CORE_SOURCE}/memory/*.c"
-    "${CORE_SOURCE}/resource/*.cpp" "${CORE_SOURCE}/resource/*.c"
-    "${CORE_SOURCE}/file/*.cpp" "${CORE_SOURCE}/file/*.c"
-    "${CORE_SOURCE}/io/*.cpp" "${CORE_SOURCE}/io/*.c"
+deep_add_folders(
+    DEEP_HEADER_FILES
+    INCLUDE_DIR ${IMGUI_INCLUDE}
+    FOLDERS " " "backends"
+    EXTENSIONS ".hpp" ".h"
 )
 
+deep_add_folders(
+    DEEP_HEADER_FILES
+    INCLUDE_DIR ${CORE_INCLUDE}/DE
+    FOLDERS "audio" "core" "ecs" "file" "graphics" "gui" "hardware" "image" "io" "maths" "memory" "os" "resource"
+    EXTENSIONS ".hpp" ".h"
+)
 
-add_library(${CORE_PROJECT} SHARED ${CORE_HEADERS} ${CORE_SOURCES})
+deep_add_folders(
+    DEEP_HEADER_FILES
+    INCLUDE_DIR ${CORE_INCLUDE}/DE/drivers
+    FOLDERS "opengl"
+    EXTENSIONS ".hpp" ".h"
+)
+
+message(STATUS "DEEP_HEADER_FILES: ${DEEP_HEADER_FILES}")
+
+deep_add_folders(
+    DEEP_SOURCE_FILES
+    INCLUDE_DIR ${IMGUI_INCLUDE}
+    FOLDERS " "
+    EXTENSIONS ".c" ".cpp"
+)
+
+deep_add_files(
+    DEEP_SOURCE_FILES
+    INCLUDE_DIR ${IMGUI_INCLUDE}/backends
+    FILES "imgui_impl_sdl2.cpp" "imgui_impl_opengl3.cpp"
+)
+
+deep_add_folders(
+    DEEP_SOURCE_FILES
+    INCLUDE_DIR ${CORE_SOURCE}
+    FOLDERS "" "core" "maths" "os" "hardware" "audio" "ecs" "glad" "graphics" "image" "gui" "memory" "resource" "file" "io"
+    EXTENSIONS ".c" ".cpp"
+)
+
+deep_add_folders(
+    DEEP_SOURCE_FILES
+    INCLUDE_DIR ${CORE_SOURCE}/drivers
+    FOLDERS "opengl"
+    EXTENSIONS ".c" ".cpp"
+)
+
+message(STATUS "DEEP_SOURCE_FILES: ${DEEP_SOURCE_FILES}")
+
+add_library(${CORE_PROJECT} SHARED ${DEEP_HEADER_FILES} ${DEEP_SOURCE_FILES})
 
 if(MSVC)
     target_compile_options(${CORE_PROJECT} PRIVATE /W4 /WX)
@@ -143,7 +240,7 @@ target_link_libraries(${CORE_PROJECT}
     SDL2-static     # Nom de la cible de la SDL2 pour que CMake crée une dépendance.
     zlibstatic      # Nom de la cible de zlib pour que CMake crée une dépendance.
     png_static      # Nom de la cible de libpng pour que CMake crée une dépendance.
-    OpenGL32.lib
+    OpenGL32.lib    # Nom de la cible OpenGL pour que CMake le considère comme une dépendance.
     OpenAL          # Nom de la cible de OpenAL pour que CMake crée une dépendance.
 )
 
