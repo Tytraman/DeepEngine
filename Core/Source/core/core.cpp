@@ -1,13 +1,12 @@
 #include "DE/core/core.hpp"
 #include "DE/core/memory.hpp"
-#include "DE/c-wrapper/core.h"
 #include "DE/gui/deimgui.hpp"
 #include "DE/ecs/scene.hpp"
 #include "DE/core/resources.hpp"
 #include "DE/os/mutex.hpp"
 #include "DE/core/string.hpp"
 #include "DE/core/window.hpp"
-#include "DE/memory/settings.hpp"
+#include "DE/core/settings.hpp"
 #include "DE/os/COM.hpp"
 #include "DE/hardware/cpu.hpp"
 #include "DE/io/file_stream.hpp"
@@ -451,13 +450,4 @@ end:
         
     }
 
-}
-
-/*
-================
-de_core_get_tick
-================
-*/
-de_uint64 de_core_get_tick() {
-    return deep::core::get_tick();
 }

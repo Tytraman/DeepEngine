@@ -1,4 +1,4 @@
-#include "DE/memory/settings.hpp"
+#include "DE/core/settings.hpp"
 #include "DE/file/file_object.hpp"
 #include "DE/core/common.hpp"
 

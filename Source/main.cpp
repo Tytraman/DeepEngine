@@ -15,14 +15,7 @@
 #include <DE/core/memory.hpp>
 #include <DE/core/string.hpp>
 #include <DE/file/file_object.hpp>
-#include <DE/memory/settings.hpp>
-
-extern "C"
-{
-
-#include <DE/memory/windows_internal.h>
-
-}
+#include <DE/core/settings.hpp>
 
 #include <DE/ecs/entity.hpp>
 #include <DE/ecs/component.hpp>

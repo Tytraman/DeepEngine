@@ -2,7 +2,7 @@
 #include "DE/core/core.hpp"
 #include "DE/core/string_utils.hpp"
 #include "DE/core/memory.hpp"
-#include "DE/memory/pair.hpp"
+#include "DE/core/pair.hpp"
 #include "DE/file/file.hpp"
 #include "DE/io/stream.hpp"
 #include "DE/image/png.hpp"

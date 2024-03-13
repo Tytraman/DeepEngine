@@ -6,7 +6,7 @@
 #include "DE/core/string.hpp"
 #include "DE/io/stream.hpp"
 #include "DE/core/hash_table.hpp"
-#include "DE/memory/pair.hpp"
+#include "DE/core/pair.hpp"
 #include "DE/io/stream.hpp"
 
 namespace deep

@@ -3,9 +3,6 @@
 #include "DE/core/memory.hpp"
 #include "DE/core/list.hpp"
 
-#include "DE/c-wrapper/string_utils.h"
-
-#include <string.h>
 #include <stdio.h>
 #include <cmath>
 
@@ -887,6 +884,11 @@ namespace deep
         return number;
     }
 
+    /*
+    ===================================
+    string_utils::is_null_or_whitespace
+    ===================================
+    */
     bool string_utils::is_null_or_whitespace(const char *str)
     {
         if(str == nullptr)
@@ -914,12 +916,4 @@ namespace deep
         return true;
     }
 
-}
-
-size_t de_string_utils_copy(char *dest, size_t destSize, const char *source, size_t sourceLength) {
-    return deep::string_utils::copy(dest, destSize, source, sourceLength);
-}
-
-int de_string_utils_to_upper(int value) {
-    return deep::string_utils::to_upper(value);
 }

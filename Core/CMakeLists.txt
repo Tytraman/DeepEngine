@@ -171,7 +171,7 @@ deep_add_folders(
 deep_add_folders(
     DEEP_HEADER_FILES
     INCLUDE_DIR ${CORE_INCLUDE}/DE
-    FOLDERS "audio" "core" "ecs" "file" "graphics" "gui" "hardware" "image" "io" "maths" "memory" "os" "resource"
+    FOLDERS "audio" "core" "ecs" "file" "graphics" "gui" "hardware" "image" "io" "maths" "os"
     EXTENSIONS ".hpp" ".h"
 )
 
@@ -200,7 +200,7 @@ deep_add_files(
 deep_add_folders(
     DEEP_SOURCE_FILES
     INCLUDE_DIR ${CORE_SOURCE}
-    FOLDERS "" "core" "maths" "os" "hardware" "audio" "ecs" "glad" "graphics" "image" "gui" "memory" "resource" "file" "io"
+    FOLDERS "" "core" "maths" "os" "hardware" "audio" "ecs" "glad" "graphics" "image" "gui" "file" "io"
     EXTENSIONS ".c" ".cpp"
 )
 
