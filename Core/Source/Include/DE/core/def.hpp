@@ -89,8 +89,6 @@
 #define DE_TRUE  1
 #define DE_FALSE 0
 
-#define DE_DEG_RAD(__deg) (__deg * (float) M_PI / 180.0f)
-
 #define DE_TERM_ESC        "\033"
 #define DE_TERM_RESET      DE_TERM_ESC "[39;49m"
 #define DE_TERM_FG_RED     DE_TERM_ESC "[31m"

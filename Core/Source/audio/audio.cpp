@@ -309,7 +309,7 @@ namespace deep
     audio_listener::setPosition
     ==========================
     */
-    bool audio_listener::setPosition(const fvec3 &pos)
+    bool audio_listener::setPosition(const vec3<float> &pos)
     {
         alGetError();
 
@@ -326,7 +326,7 @@ namespace deep
     audio_listener::setVelocity
     ==========================
     */
-    bool audio_listener::setVelocity(const fvec3 &pos)
+    bool audio_listener::setVelocity(const vec3<float> &pos)
     {
         alGetError();
 
@@ -377,7 +377,7 @@ namespace deep
     audio_listener::getPosition
     ==========================
     */
-    fvec3 audio_listener::getPosition() const
+    vec3<float> audio_listener::getPosition() const
     {
         alGetError();
 
@@ -397,7 +397,7 @@ namespace deep
     audio_listener::getVelocity
     ==========================
     */
-    fvec3 audio_listener::getVelocity() const
+    vec3<float> audio_listener::getVelocity() const
     {
         alGetError();
 

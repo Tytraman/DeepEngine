@@ -3,8 +3,8 @@
 
 #include "DE/core/def.hpp"
 #include "DE/core/types.hpp"
-#include "DE/maths/vec.hpp"
 #include "DE/core/common.hpp"
+#include "DE/maths/vec.hpp"
 
 #include <stdint.h>
 #include <math.h>
@@ -12,22 +12,22 @@
 namespace deep
 {
 
-	struct DE_API fmat2x2
+	struct fmat2x2
     {
 		float x1;
 		float x2;
 		float y1;
 		float y2;
 
-		fmat2x2(float x1 = 1.0f, float y1 = 0.0f, float x2 = 0.0f, float y2 = 1.0f);
+		DE_API fmat2x2(float x1 = 1.0f, float y1 = 0.0f, float x2 = 0.0f, float y2 = 1.0f);
 
-		fvec2 operator*(const fvec2 &vec) const;
+		DE_API fvec2 operator*(const fvec2 &vec) const;
 
-		static fvec2 mul(const fmat2x2 &mat, const fvec2 &vec);
+		DE_API static fvec2 mul(const fmat2x2 &mat, const fvec2 &vec);
 
-		static fvec2 scale(const fvec2 &vec, float scale1, float scale2);
-		static fvec2 translate(const fvec2 &vec, float x, float y);
-		static fvec2 rotate(const fvec2 &vec, float degrees);
+		DE_API static fvec2 scale(const fvec2 &vec, float scale1, float scale2);
+		DE_API static fvec2 translate(const fvec2 &vec, float x, float y);
+		DE_API static fvec2 rotate(const fvec2 &vec, float degrees);
 	};
 
 	enum class fmat3x3_index : uint8_t
@@ -37,30 +37,30 @@ namespace deep
 		x3 = 6, y3 = 7, z3 = 8
 	};
 
-	struct DE_API fmat3x3
+	struct fmat3x3
     {
 
-		float data[3*3];
+		float data[3 * 3];
 
-		fmat3x3(
+		DE_API fmat3x3(
 			float x1 = 1.0f, float y1 = 0.0f, float z1 = 0.0f,
 			float x2 = 0.0f, float y2 = 1.0f, float z2 = 0.0f,
 			float x3 = 0.0f, float y3 = 0.0f, float z3 = 1.0f
 		);
 
-		fvec3 operator*(const fvec3 &vec) const;
-		fmat3x3 operator*(const fmat3x3 &mat) const;
-		float operator[](size_t index) const;
+		DE_API fvec3 operator*(const fvec3 &vec) const;
+		DE_API fmat3x3 operator*(const fmat3x3 &mat) const;
+		DE_API float operator[](size_t index) const;
 
 
-		float *ptr();
+		DE_API float *ptr();
 
-		static fvec3 mul(const fmat3x3 &mat, const fvec3 &vec);
-		static fmat3x3 mul(const fmat3x3 &mat1, const fmat3x3 &mat2);
+		DE_API static fvec3 mul(const fmat3x3 &mat, const fvec3 &vec);
+		DE_API static fmat3x3 mul(const fmat3x3 &mat1, const fmat3x3 &mat2);
 
-		static fmat3x3 translate(const fmat3x3 &mat, const fvec2 &vec);
-		static fmat3x3 scale(const fmat3x3 &mat, const fvec2 &vec);
-		static fmat3x3 rotate(const fmat3x3 &mat, float degrees);
+		DE_API static fmat3x3 translate(const fmat3x3 &mat, const fvec2 &vec);
+		DE_API static fmat3x3 scale(const fmat3x3 &mat, const fvec2 &vec);
+		DE_API static fmat3x3 rotate(const fmat3x3 &mat, float degrees);
 
 	};
 
@@ -72,32 +72,32 @@ namespace deep
 		x4 = 12, y4 = 13, z4 = 14, w4 = 15
 	};
 
-	struct DE_API fmat4x4
+	struct fmat4x4
     {
 
-		float data[4*4];
+		float data[4 * 4];
 
-		fmat4x4(
+		DE_API fmat4x4(
 			float x1 = 1.0f, float y1 = 0.0f, float z1 = 0.0f, float w1 = 0.0f,
 			float x2 = 0.0f, float y2 = 1.0f, float z2 = 0.0f, float w2 = 0.0f,
 			float x3 = 0.0f, float y3 = 0.0f, float z3 = 1.0f, float w3 = 0.0f,
 			float x4 = 0.0f, float y4 = 0.0f, float z4 = 0.0f, float w4 = 1.0f
 		);
 
-		static fmat4x4 mul(const fmat4x4 &mat1, const fmat4x4 &mat2);
+		DE_API static fmat4x4 mul(const fmat4x4 &mat1, const fmat4x4 &mat2);
 
-		fmat4x4 operator*(const fmat4x4 &mat) const;
-		float operator[](size_t index) const;
-		float &operator[](size_t index);
+		DE_API fmat4x4 operator*(const fmat4x4 &mat) const;
+		DE_API float operator[](size_t index) const;
+		DE_API float &operator[](size_t index);
 
-		float *ptr();
+		DE_API float *ptr();
 
-		static fmat4x4 translate(const fmat4x4 &mat, const fvec3 &vec);
-		static fmat4x4 scale(const fmat4x4 &mat, const fvec3 &vec);
-		static fmat4x4 rotateX(const fmat4x4 &mat, float degrees);
-		static fmat4x4 rotateY(const fmat4x4 &mat, float degrees);
-		static fmat4x4 rotateZ(const fmat4x4 &mat, float degrees);
-		static fmat4x4 perspective(const fmat4x4 &mat, float fovy, float aspectRatio, float znear, float zfar);
+		DE_API static fmat4x4 translate(const fmat4x4 &mat, const fvec3 &vec);
+		DE_API static fmat4x4 scale(const fmat4x4 &mat, const fvec3 &vec);
+		DE_API static fmat4x4 rotate_x(const fmat4x4 &mat, float degrees);
+		DE_API static fmat4x4 rotate_y(const fmat4x4 &mat, float degrees);
+		DE_API static fmat4x4 rotate_z(const fmat4x4 &mat, float degrees);
+		DE_API static fmat4x4 perspective(const fmat4x4 &mat, float fovy, float aspectRatio, float znear, float zfar);
 
 	};
 	/*
@@ -346,13 +346,13 @@ namespace deep
 	}
 
 	/*
-	================
-	fmat4x4::rotateX
-	================
+	=================
+	fmat4x4::rotate_x
+	=================
 	*/
-	inline fmat4x4 fmat4x4::rotateX(const fmat4x4 &mat, float degrees)
+	inline fmat4x4 fmat4x4::rotate_x(const fmat4x4 &mat, float degrees)
 	{
-		float rad = DE_DEG_RAD(degrees);
+		float rad = deg_to_rad(degrees);
 		return mul(
 			mat,
 			{
@@ -365,13 +365,13 @@ namespace deep
 	}
 
 	/*
-	================
-	fmat4x4::rotateY
-	================
+	=================
+	fmat4x4::rotate_y
+	=================
 	*/
-	inline fmat4x4 fmat4x4::rotateY(const fmat4x4 &mat, float degrees)
+	inline fmat4x4 fmat4x4::rotate_y(const fmat4x4 &mat, float degrees)
 	{
-		float rad = DE_DEG_RAD(degrees);
+		float rad = deg_to_rad(degrees);
 		return mul(
 			mat,
 			{
@@ -384,13 +384,13 @@ namespace deep
 	}
 
 	/*
-	================
-	fmat4x4::rotateZ
-	================
+	=================
+	fmat4x4::rotate_z
+	=================
 	*/
-	inline fmat4x4 fmat4x4::rotateZ(const fmat4x4 &mat, float degrees)
+	inline fmat4x4 fmat4x4::rotate_z(const fmat4x4 &mat, float degrees)
 	{
-		float rad = DE_DEG_RAD(degrees);
+		float rad = deg_to_rad(degrees);
 		return mul(
 			mat,
 			{
@@ -542,7 +542,7 @@ namespace deep
 	*/
 	inline fvec2 fmat2x2::rotate(const fvec2 &vec, float degrees)
 	{
-		float rad = DE_DEG_RAD(degrees);
+		float rad = deg_to_rad(degrees);
 		return fvec2::mul(vec, {
 			cosf(rad), -sinf(rad),
 			sinf(rad), cosf(rad) 
@@ -590,7 +590,7 @@ namespace deep
 	*/
 	inline fmat3x3 fmat3x3::rotate(const fmat3x3 &mat, float degrees)
 	{
-		float rad = DE_DEG_RAD(degrees);
+		float rad = deg_to_rad(degrees);
 		return mul(
 			mat,
 			{

@@ -3,6 +3,9 @@
 
 #include "DE/core/def.hpp"
 
+#define _USE_MATH_DEFINES   // Nécessaire sous plateforme Microsoft pour définir M_PI.
+#include <math.h>
+
 namespace deep
 {
 
@@ -217,12 +220,12 @@ namespace deep
         return oldVal;
     }
 
-
-
-
-
-
     DE_API uint64_t next_bit_number(uint64_t value, uint16_t fromBitNumber);
+
+    inline constexpr float deg_to_rad(float degrees)
+    {
+        return (degrees * static_cast<float>(M_PI) / 180.0f);
+    }
 
 }
 

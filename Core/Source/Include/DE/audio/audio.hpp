@@ -32,7 +32,7 @@ namespace deep
 	
 	DE_PACK(
 		/// @brief Structure décrivant l'en-tête d'un fichier RIFF.
-        struct DE_API riff_master_header
+        struct riff_master_header
         {
 		    uint32_t chunkID;    ///< ID du chunk, doit être égale à \ref RiffChunkID.
 		    uint32_t chunkSize;  ///< La taille du chunk.
@@ -41,7 +41,7 @@ namespace deep
 	);
 
 	DE_PACK(
-        struct DE_API wave_fmt_chunk
+        struct wave_fmt_chunk
         {
 		    uint16_t audioFormat;
 		    uint16_t channelsNumber;
@@ -53,7 +53,7 @@ namespace deep
     );
 
 	DE_PACK(
-        struct DE_API wave_fmt_extend_chunk
+        struct wave_fmt_extend_chunk
         {
 		    wave_fmt_chunk fmtStandardChunk;
 		    uint16_t extensionSize;
@@ -66,7 +66,7 @@ namespace deep
     
 
 	DE_PACK(
-        struct DE_API wave_list_chunk
+        struct wave_list_chunk
         {
 		    uint32_t typeID;
 		    uint32_t size;
@@ -83,7 +83,7 @@ namespace deep
 
 	DE_PACK(
 		/// @brief Structure décrivant l'en-tête d'un fichier WAVE.
-        struct DE_API wave_header
+        struct wave_header
         {
 		    riff_master_header riffHeader;   ///< En-tête RIFF du fichier.
 		    uint32_t subChunkID;           ///< ID du sous chunk numéro 1, doit être égale à \ref FmtSubChunkID.
@@ -91,19 +91,19 @@ namespace deep
 	    }
 	);
 
-	class DE_API audio_buffer
+	class audio_buffer
     {
 
 		public:
-			audio_buffer();
+			DE_API audio_buffer();
 
-			bool create(const char *filename);
-			void destroy();
+			DE_API bool create(const char *filename);
+			DE_API void destroy();
 
-			int getFrequency() const;
-			int getBits() const;
-			int getChannels() const;
-			int getSize() const;
+			DE_API int getFrequency() const;
+			DE_API int getBits() const;
+			DE_API int getChannels() const;
+			DE_API int getSize() const;
 
 		private:
 			ALuint m_Buffer;
@@ -114,16 +114,16 @@ namespace deep
 
 	};
 
-	class DE_API audio_source
+	class audio_source
     {
 
 		public:
-			audio_source();
+			DE_API audio_source();
 
-			bool create();
-			bool attachBuffer(const audio_buffer &buffer);
-			bool play();
-			void destroy();
+			DE_API bool create();
+			DE_API bool attachBuffer(const audio_buffer &buffer);
+			DE_API bool play();
+			DE_API void destroy();
 
 		private:
 			ALuint m_Source;
@@ -134,35 +134,34 @@ namespace deep
 
 	};
 
-	class DE_API audio_listener
+	class audio_listener
     {
 
 		public:
-			bool setGain(float value);
-			bool setPosition(const fvec3 &pos);
-			bool setVelocity(const fvec3 &vel);
+			DE_API bool setGain(float value);
+			DE_API bool setPosition(const vec3<float> &pos);
+			DE_API bool setVelocity(const vec3<float> &vel);
 			// bool setOrientation();
 
-			float getGain() const;
-			fvec3 getPosition() const;
-			fvec3 getVelocity() const;
+			DE_API float getGain() const;
+			DE_API vec3<float> getPosition() const;
+			DE_API vec3<float> getVelocity() const;
 
 		private:
-
 			friend audio_buffer;
 			friend audio_source;
 			friend audio_device;
 
 	};
 
-	class DE_API audio_device
+	class audio_device
     {
 
 		public:
-			static bool init();
-			static void shutdown();
+			DE_API static bool init();
+			DE_API static void shutdown();
 
-			static audio_listener &getListener();
+			DE_API static audio_listener &getListener();
 
 		private:
 			static ALCdevice     *m_ALCDevice;
