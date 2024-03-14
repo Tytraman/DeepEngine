@@ -22,8 +22,8 @@ namespace deep
 
 	using scene_id = de_id;
 
-	using collider_in_callback = void (*)(entity_collection_id collectionID, entity_id entity1, entity_id entity2, const fvec2 &difference, const rect &collision);
-	using collider_out_callback = void (*)(entity_collection_id collectionID, entity_id entity1, entity_id entity2, const fvec2 &difference);
+	using collider_in_callback = void (*)(entity_collection_id collectionID, entity_id entity1, entity_id entity2, const vec2<float> &difference, const rect &collision);
+	using collider_out_callback = void (*)(entity_collection_id collectionID, entity_id entity1, entity_id entity2, const vec2<float> &difference);
 
 }
 

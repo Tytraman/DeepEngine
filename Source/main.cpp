@@ -276,7 +276,7 @@ int main()
         return EXIT_FAILURE;
     }
 
-    if(!mcGrass.add(mcDirt, deep::ivec2(0, mcGrass.get_height())))
+    if(!mcGrass.add(mcDirt, deep::vec2<int32_t>(0, mcGrass.get_height())))
     {
         deep::core::err() << "Unable to add bmp image.\n";
         return EXIT_FAILURE;

@@ -1,4 +1,5 @@
 #include "DE/maths/mat.hpp"
+#include "DE/maths/vec.hpp"
 
 namespace deep 
 {

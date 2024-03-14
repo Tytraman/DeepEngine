@@ -75,7 +75,7 @@ namespace deep
         uniform_manager::send
         =====================
         */
-        void uniform_manager::send(int location, const fvec2 &vec)
+        void uniform_manager::send(int location, const vec2<float> &vec)
         {
             DE_GL_CALL(glUniform2f(location, vec.x, vec.y));
         }

@@ -48,7 +48,7 @@ namespace deep
     /// @brief  Structure représentant un rectangle.
     struct rect
     {
-        fvec2 pos; ///< Position du rectangle.
+        vec2<float> pos; ///< Position du rectangle.
         float w;   ///< Largeur du rectangle.
         float h;   ///< Hauteur du rectangle.
 
@@ -56,12 +56,12 @@ namespace deep
         /// @param position Position du rectangle.
         /// @param width    Largeur du rectangle.
         /// @param height   Hauteur du rectangle.
-        DE_API rect(const fvec2 &position = fvec2(0.0f, 0.0f), float width = 0.0f, float height = 0.0f);
+        DE_API rect(const vec2<float> &position = vec2<float>(0.0f, 0.0f), float width = 0.0f, float height = 0.0f);
 
         /// @brief   Vérifie si un point se situe à l'intérieur du rectangle.
         /// @param v Le vecteur décrivant le point.
         /// @return  \c true si le point se situe à l'intérieur du rectangle.
-        DE_API bool isInside(const fvec2 &v) const;
+        DE_API bool isInside(const vec2<float> &v) const;
 
         DE_API bool isInside(const rect &r) const;
     };
@@ -71,7 +71,7 @@ namespace deep
     rect::isInside
     ==============
     */
-    inline bool rect::isInside(const fvec2 &v) const
+    inline bool rect::isInside(const vec2<float> &v) const
     {
         return (v.x >= pos.x && v.y >= pos.y && v.x < pos.x + w && v.y < pos.y + h);
     }

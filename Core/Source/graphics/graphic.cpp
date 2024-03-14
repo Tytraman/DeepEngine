@@ -45,7 +45,7 @@ namespace deep
     rect::rect
     ==========
     */
-    rect::rect(const fvec2 &position, float width, float height)
+    rect::rect(const vec2<float> &position, float width, float height)
         : pos(position),
           w(width),
           h(height)

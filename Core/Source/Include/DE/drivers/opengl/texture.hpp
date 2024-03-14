@@ -43,8 +43,8 @@ namespace deep
 
                 struct texture_2D_mapping_point
                 {
-                    fvec2 screenPos;
-                    fvec2 texturePos;
+                    vec2<float> screenPos;
+                    vec2<float> texturePos;
                 };
 
                 struct texture_item

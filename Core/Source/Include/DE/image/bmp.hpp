@@ -118,7 +118,7 @@ namespace deep
 
             DE_API bool convert_to_BGR();
 
-            DE_API bool add(bmp &other, const ivec2 &position);
+            DE_API bool add(bmp &other, const vec2<int32_t> &position);
             DE_API bool add(bmp &other);
 
             DE_API bool resize(int32_t width, int32_t height);
@@ -151,7 +151,7 @@ namespace deep
     */
     inline bool bmp::add(bmp &other)
     {
-        return add(other, ivec2(m_Width, 0));
+        return add(other, vec2<int32_t>(m_Width, 0));
     }
 
     /*

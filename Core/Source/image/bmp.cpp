@@ -904,7 +904,7 @@ namespace deep
     bmp::save
     =========
     */
-    bool bmp::add(bmp &other, const ivec2 &position)
+    bool bmp::add(bmp &other, const vec2<int32_t> &position)
     {
         convert_to_BGR();
         other.convert_to_BGR();

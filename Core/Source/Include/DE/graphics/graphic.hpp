@@ -18,35 +18,35 @@ namespace deep
 
             struct cube_texture_points
             {
-                fvec2 frontTopLeft;
-                fvec2 frontBottomRight;
-                fvec2 frontTopRight;
-                fvec2 frontBottomLeft;
+                vec2<float> frontTopLeft;
+                vec2<float> frontBottomRight;
+                vec2<float> frontTopRight;
+                vec2<float> frontBottomLeft;
 
-                fvec2 backTopLeft;
-                fvec2 backBottomRight;
-                fvec2 backTopRight;
-                fvec2 backBottomLeft;
+                vec2<float> backTopLeft;
+                vec2<float> backBottomRight;
+                vec2<float> backTopRight;
+                vec2<float> backBottomLeft;
 
-                fvec2 rightBottomLeft;
-                fvec2 rightBottomRight;
-                fvec2 rightTopRight;
-                fvec2 rightTopLeft;
+                vec2<float> rightBottomLeft;
+                vec2<float> rightBottomRight;
+                vec2<float> rightTopRight;
+                vec2<float> rightTopLeft;
 
-                fvec2 leftBottomRight;
-                fvec2 leftTopLeft;
-                fvec2 leftBottomLeft;
-                fvec2 leftTopRight;
+                vec2<float> leftBottomRight;
+                vec2<float> leftTopLeft;
+                vec2<float> leftBottomLeft;
+                vec2<float> leftTopRight;
 
-                fvec2 bottomBottomRight;
-                fvec2 bottomTopLeft;
-                fvec2 bottomTopRight;
-                fvec2 bottomBottomLeft;
+                vec2<float> bottomBottomRight;
+                vec2<float> bottomTopLeft;
+                vec2<float> bottomTopRight;
+                vec2<float> bottomBottomLeft;
 
-                fvec2 topTopLeft;
-                fvec2 topBottomRight;
-                fvec2 topTopRight;
-                fvec2 topBottomLeft;
+                vec2<float> topTopLeft;
+                vec2<float> topBottomRight;
+                vec2<float> topTopRight;
+                vec2<float> topBottomLeft;
 
                 DE_API cube_texture_points();
             };

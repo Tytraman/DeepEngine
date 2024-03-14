@@ -23,7 +23,7 @@ namespace deep
 
                 DE_API static void send(int location, float value);
                 DE_API static void send(int location, int value);
-                DE_API static void send(int location, const fvec2 &vec);
+                DE_API static void send(int location, const vec2<float> &vec);
                 DE_API static void send(int location, const vec3<float> &vec);
                 DE_API static void send(int location, const vec4<float> &vec);
                 DE_API static void send(int location, fmat3x3 &mat);
