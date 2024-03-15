@@ -38,12 +38,6 @@ file(MAKE_DIRECTORY "${OPENALSOFT_BUILD_DIRECTORY}")
 set(ZLIB_INCLUDE_DIR "${THIRD_PARTY_LIBS}/zlib" CACHE INTERNAL "zlib_include")
 set(ZLIB_LIBRARY "${ZLIB_BUILD_DIRECTORY}/zlibd.lib")
 
-# Indique à CMake qu'un sous projet CMake est présent et doit être compilé.
-add_subdirectory("${THIRD_PARTY_LIBS}/zlib" "${ZLIB_BUILD_DIRECTORY}")
-add_subdirectory("${THIRD_PARTY_LIBS}/libpng" "${LIBPNG_BUILD_DIRECTORY}")
-add_subdirectory("${THIRD_PARTY_LIBS}/SDL" "${SDL_BUILD_DIRECTORY}")
-add_subdirectory("${THIRD_PARTY_LIBS}/openal-soft" "${OPENALSOFT_BUILD_DIRECTORY}")
-
 # Ajoute des constantes au préprocesseur.
 add_compile_definitions(PRIVATE DE_AUTHORS=${DE_AUTHORS})   # Le nom des auteurs stockés dans les variables partagées.
 add_compile_definitions(PRIVATE DE_VERSION=${DE_VERSION})   # Le nom de la version actuelle stockée dans les variables partagées.
@@ -65,6 +59,15 @@ set(LIBPNG_LIB "${LIBPNG_BUILD_DIRECTORY}")
 set(LIBPNG_INCLUDE_2 "${LIBPNG_BUILD_DIRECTORY}")
 
 set(OPENAL_INCLUDE "${THIRD_PARTY_LIBS}/openal-soft/include")
+
+# Indique à CMake qu'un sous projet CMake est présent et doit être compilé.
+add_subdirectory("${THIRD_PARTY_LIBS}/zlib" "${ZLIB_BUILD_DIRECTORY}")
+# zlib génère une config qui est nécessaire par d'autres dépendances.
+file(COPY "${ZLIB_BUILD_DIRECTORY}/zconf.h" DESTINATION "${ZLIB_INCLUDE}")
+
+add_subdirectory("${THIRD_PARTY_LIBS}/libpng" "${LIBPNG_BUILD_DIRECTORY}")
+add_subdirectory("${THIRD_PARTY_LIBS}/SDL" "${SDL_BUILD_DIRECTORY}")
+add_subdirectory("${THIRD_PARTY_LIBS}/openal-soft" "${OPENALSOFT_BUILD_DIRECTORY}")
 
 # add_folders est le nom de la fonction.
 # dest_list est un paramètre qui correspond à la liste dans laquelle ajouter tous les fichiers.
@@ -171,7 +174,7 @@ deep_add_folders(
 deep_add_folders(
     DEEP_HEADER_FILES
     INCLUDE_DIR ${CORE_INCLUDE}/DE
-    FOLDERS "audio" "core" "ecs" "file" "graphics" "gui" "hardware" "image" "io" "maths" "os"
+    FOLDERS "audio" "core" "ecs" "file" "graphics" "gui" "hardware" "image" "io" "maths" "os" "modules"
     EXTENSIONS ".hpp" ".h"
 )
 
@@ -179,6 +182,13 @@ deep_add_folders(
     DEEP_HEADER_FILES
     INCLUDE_DIR ${CORE_INCLUDE}/DE/drivers
     FOLDERS "opengl"
+    EXTENSIONS ".hpp" ".h"
+)
+
+deep_add_folders(
+    DEEP_HEADER_FILES
+    INCLUDE_DIR ${CORE_INCLUDE}/DE/modules
+    FOLDERS "zip"
     EXTENSIONS ".hpp" ".h"
 )
 
@@ -200,7 +210,7 @@ deep_add_files(
 deep_add_folders(
     DEEP_SOURCE_FILES
     INCLUDE_DIR ${CORE_SOURCE}
-    FOLDERS "" "core" "maths" "os" "hardware" "audio" "ecs" "glad" "graphics" "image" "gui" "file" "io"
+    FOLDERS "" "core" "maths" "os" "hardware" "audio" "ecs" "glad" "graphics" "image" "gui" "file" "io" "modules"
     EXTENSIONS ".c" ".cpp"
 )
 
@@ -208,6 +218,13 @@ deep_add_folders(
     DEEP_SOURCE_FILES
     INCLUDE_DIR ${CORE_SOURCE}/drivers
     FOLDERS "opengl"
+    EXTENSIONS ".c" ".cpp"
+)
+
+deep_add_folders(
+    DEEP_SOURCE_FILES
+    INCLUDE_DIR ${CORE_SOURCE}/modules
+    FOLDERS "zip"
     EXTENSIONS ".c" ".cpp"
 )
 
@@ -223,11 +240,12 @@ target_include_directories(${CORE_PROJECT} PRIVATE ${CORE_INCLUDE})
 target_include_directories(${CORE_PROJECT} PUBLIC
     ${SDL_INCLUDE}
     ${IMGUI_INCLUDE}
-    ${ZLIB_INCLUDE_2}
     ${ZLIB_INCLUDE}
+    ${ZLIB_INCLUDE_2}
     ${LIBPNG_INCLUDE}
     ${LIBPNG_INCLUDE_2}
     ${OPENAL_INCLUDE}
+    ${THIRD_PARTY_LIBS}
 )
 
 target_link_directories(${CORE_PROJECT} PUBLIC

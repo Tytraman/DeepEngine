@@ -26,6 +26,9 @@
 #include <DE/drivers/opengl/shader.hpp>
 #include <DE/drivers/opengl/uniform.hpp>
 
+#include <DE/io/file_stream.hpp>
+#include <DE/modules/zip/zip_reader.hpp>
+
 #define WINDOW_WIDTH	800
 #define WINDOW_HEIGHT	480
 #define TARGET_MS		16
@@ -164,8 +167,6 @@ void update_callback(deep::window & /* win */)
     camera.update_angle_of_view();
 }
 
-#include <iostream>
-
 #undef main
 int main()
 {
@@ -212,6 +213,17 @@ int main()
     }
 
     deep::core::out() << "pwd: " << deep::core::get_pwd().str() << "\n";
+
+    {
+        deep::ref<deep::file_stream> fs = deep::mem::alloc_type<deep::file_stream>("C:\\Users\\e.peyrinaud\\Documents\\Autres\\zip_compression.zip", deep::file_stream::file_mode::Open, deep::file_stream::file_access::Read, deep::file_stream::file_share::None);
+
+        deep::zip_reader zipReader(fs.get());
+
+        if(!zipReader.uncompress())
+        {
+            deep::core::err() << "Error in uncompression\n";
+        }
+    }
 
     deep::window win(TARGET_MS, TARGET_FPS);
     win.set_event_callback(event_callback);

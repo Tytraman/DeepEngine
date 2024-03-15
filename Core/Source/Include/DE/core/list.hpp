@@ -465,8 +465,12 @@ namespace deep
     template<typename Type>
     void list<Type>::free()
     {
-        mem::free_no_track(m_Data);
-        m_Data = nullptr;
+        if(m_Data != nullptr)
+        {
+            mem::free_no_track(m_Data);
+            m_Data = nullptr;
+        }
+        
         m_NumberOfElements = 0;
         m_Capacity = 0;
     }

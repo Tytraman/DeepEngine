@@ -413,9 +413,9 @@ namespace deep
     }
 
     /*
-    =================
+    ==================
     audio_device::init
-    =================
+    ==================
     */
     bool audio_device::init()
     {
