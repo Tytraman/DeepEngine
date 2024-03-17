@@ -8,3 +8,6 @@
 [submodule "Third-party/Libs/openal-soft"]
 	path = Third-party/Libs/openal-soft
 	url = https://github.com/kcat/openal-soft
+[submodule "Third-party/Libs/minizip-ng"]
+	path = Third-party/Libs/minizip-ng
+	url = https://github.com/zlib-ng/minizip-ng

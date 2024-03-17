@@ -5,23 +5,57 @@
 #include "DE/core/types.hpp"
 #include "DE/core/list.hpp"
 #include "DE/io/stream.hpp"
+#include "DE/core/string.hpp"
 
 namespace deep
 {
-
-#define DE_ZIP_BUFFER_SIZE 16384
 
     class zip_reader
     {
 
         public:
-            DE_API zip_reader(stream *inputStream);
+            enum class compression_method
+            {
+                Unknown,
+                Store,
+                Deflate,
+                Bzip2,
+                Lzma,
+                XZ,
+                Zstd
+            };
 
-            DE_API bool uncompress();
+            enum class file_attribute : uint16_t
+            {
+                ReadOnly          = 0x0001,     // R
+                Hidden            = 0x0002,     // H
+                System            = 0x0004,     // S
+                Directory         = 0x0008,     // D
+                Archive           = 0x0010,     // A
+                Compressed        = 0x0020,     // C
+                Encrypted         = 0x0040,     // E
+                Offline           = 0x0200,     // O
+                SparseFile        = 0x0400,     // P
+                NotContentIndexed = 0x0800,     // I
+                Temporary         = 0x1000      // T
+            };
+
+            using next_entry_callback = bool (*)(const char *filename, int64_t compressedSize, int64_t uncompressedSize, compression_method method, file_attribute attributes);
+
+        public:
+            DE_API zip_reader(stream *inputStream);
+            DE_API ~zip_reader();
+
+            DE_API bool load();
+
+            DE_API bool enumerate(next_entry_callback callback);
+
+            DE_API static string attributes_str(file_attribute attributes);
 
         private:
             ref<stream> m_InputStream;
-            list<uint8_t> m_Data;
+            mem_ptr m_RawData;
+            void *m_ZipReader;
 
     };
 

@@ -635,6 +635,35 @@ namespace deep
     }
 
     /*
+    ==============================
+    string_utils::uint_to_hex_char
+    ==============================
+    */
+    char string_utils::uint_to_hex_char(uint8_t value)
+    {
+        switch(value)
+        {
+            default: return -1;
+            case 0:  return '0';
+            case 1:  return '1';
+            case 2:  return '2';
+            case 3:  return '3';
+            case 4:  return '4';
+            case 5:  return '5';
+            case 6:  return '6';
+            case 7:  return '7';
+            case 8:  return '8';
+            case 9:  return '9';
+            case 10: return 'A';
+            case 11: return 'B';
+            case 12: return 'C';
+            case 13: return 'D';
+            case 14: return 'E';
+            case 15: return 'F';
+        }
+    }
+
+    /*
     =========================
     string_utils::bool_to_str
     =========================
@@ -677,6 +706,7 @@ namespace deep
         uint8_t len = 0;
         uint64_t copy = value;
 
+        // Récupère le nombre de chiffres du numéro.
         while(copy != 0)
         {
             copy /= 10;
@@ -698,6 +728,58 @@ namespace deep
             str[len] = value % 10 + '0';
             value /= 10;
             len--;
+        }
+
+        return str;
+    }
+
+    /*
+    =============================
+    string_utils::uint_to_hex_str
+    =============================
+    */
+    string string_utils::uint_to_hex_str(uint64_t value)
+    {
+        string str;
+
+        if(value < 16)
+        {
+            str.append(uint_to_hex_char(static_cast<uint8_t>(value)));
+
+            return str;
+        }
+
+        uint8_t len = 0;
+        uint64_t copy = value;
+
+        // Récupère le nombre de chiffres du numéro.
+        while(copy != 0)
+        {
+            copy /= 10;
+            len += 2;
+        }
+
+        if(!str.reserve(len * sizeof(char) + sizeof(char)))
+        {
+            return str;
+        }
+
+        str.set_length(len);
+        str[len] = '\0';
+
+        len--;
+
+        uint8_t digit;
+
+        while(value != 0)
+        {
+            digit = value % 10;
+
+            str[len]     = uint_to_hex_char(digit & 0x0F);
+            str[len - 1] = uint_to_hex_char((digit >> 4) & 0x0F);
+
+            value /= 10;
+            len -= 2;
         }
 
         return str;

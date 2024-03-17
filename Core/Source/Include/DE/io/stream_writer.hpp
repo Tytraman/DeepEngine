@@ -151,7 +151,20 @@ namespace deep
     */
     inline bool stream_writer::write(int64_t value)
     {
-        string str = string_utils::int_to_str(value);
+        string str;
+
+        switch(m_NumberFormat)
+        {
+            default: return false;
+            case number_format::Decimal:
+            {
+                str = string_utils::int_to_str(value);
+            } break;
+            case number_format::Hexadecimal:
+            {
+                str = string_utils::uint_to_hex_str(static_cast<uint64_t>(value));
+            } break;
+        }
         
         return m_OutputStream->write(rm_const<char *>(str.str()), 0, str.length(), nullptr);
     }
@@ -163,7 +176,20 @@ namespace deep
     */
     inline bool stream_writer::write(uint64_t value)
     {
-        string str = string_utils::uint_to_str(value);
+        string str;
+        
+        switch(m_NumberFormat)
+        {
+            default: return false;
+            case number_format::Decimal:
+            {
+                str = string_utils::uint_to_str(value);
+            } break;
+            case number_format::Hexadecimal:
+            {
+                str = string_utils::uint_to_hex_str(value);
+            } break;
+        }
 
         return m_OutputStream->write(rm_const<char *>(str.str()), 0, str.length(), nullptr);
     }

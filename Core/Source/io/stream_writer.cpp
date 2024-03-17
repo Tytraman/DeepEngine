@@ -9,7 +9,8 @@ namespace deep
     ============================
     */
     stream_writer::stream_writer(stream *stream)
-        : m_OutputStream(stream)
+        : m_OutputStream(stream),
+          text_writer()
     { }
 
 }

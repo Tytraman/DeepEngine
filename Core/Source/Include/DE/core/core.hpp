@@ -100,6 +100,8 @@ namespace deep
     */
     inline text_writer &core::out()
     {
+        *m_Stdout << dec;
+
         return *m_Stdout;
     }
 
@@ -110,6 +112,8 @@ namespace deep
     */
     inline text_writer &core::err()
     {
+        *m_Stderr << dec;
+
         return *m_Stderr;
     }
 

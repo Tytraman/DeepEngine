@@ -174,6 +174,50 @@ namespace deep
         this->y = y;
     }
 
+    enum class number_format : uint8_t
+    {
+        Decimal,
+        Hexadecimal
+    };
+
+    class number_format_option
+    {
+
+        public:
+            static number_format_option dec();
+            static number_format_option hex();
+
+            number_format get_format() const;
+
+        private:
+            number_format m_Format;
+
+    };
+
+    inline number_format_option number_format_option::dec()
+    {
+        number_format_option nfo;
+        nfo.m_Format = number_format::Decimal;
+
+        return nfo;
+    }
+
+    inline number_format_option number_format_option::hex()
+    {
+        number_format_option nfo;
+        nfo.m_Format = number_format::Hexadecimal;
+
+        return nfo;
+    }
+
+    inline number_format number_format_option::get_format() const
+    {
+        return m_Format;
+    }
+
+    static constexpr number_format dec = number_format::Decimal;
+    static constexpr number_format hex = number_format::Hexadecimal;
+
 }
 
 #endif

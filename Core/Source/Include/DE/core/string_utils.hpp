@@ -56,8 +56,11 @@ namespace deep
             DE_API static size_t length(const char *str);
             DE_API static size_t length(const wchar_t *str);
 
+            DE_API static char uint_to_hex_char(uint8_t value);
+
             DE_API static string bool_to_str(bool value);
             DE_API static string uint_to_str(uint64_t value);
+            DE_API static string uint_to_hex_str(uint64_t value);
             DE_API static string int_to_str(int64_t value);
             DE_API static string double_to_str(double value);
 

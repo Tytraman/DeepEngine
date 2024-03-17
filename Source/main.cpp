@@ -2,6 +2,7 @@
 #include <math.h>
 #include <string>
 
+#include <DE/core/types.hpp>
 #include <DE/core/core.hpp>
 #include <DE/core/window.hpp>
 #include <DE/os/key.hpp>
@@ -167,6 +168,13 @@ void update_callback(deep::window & /* win */)
     camera.update_angle_of_view();
 }
 
+bool __deep_zip_enum_callback(const char *filename, int64_t compressedSize, int64_t uncompressedSize, deep::zip_reader::compression_method method, deep::zip_reader::file_attribute attributes)
+{
+    deep::core::out() << filename << " Packed size: " << compressedSize << " Unpacked size: " << uncompressedSize << " Method: " << deep::to_utype(method) << " Flags: " << deep::hex << deep::zip_reader::attributes_str(attributes).str() << "\n";
+
+    return true;
+}
+
 #undef main
 int main()
 {
@@ -215,13 +223,18 @@ int main()
     deep::core::out() << "pwd: " << deep::core::get_pwd().str() << "\n";
 
     {
-        deep::ref<deep::file_stream> fs = deep::mem::alloc_type<deep::file_stream>("C:\\Users\\e.peyrinaud\\Documents\\Autres\\zip_compression.zip", deep::file_stream::file_mode::Open, deep::file_stream::file_access::Read, deep::file_stream::file_share::None);
+        deep::ref<deep::file_stream> fs = deep::mem::alloc_type<deep::file_stream>("C:\\Test\\PkgTTC-Iosevka-28.1.0.zip", deep::file_stream::file_mode::Open, deep::file_stream::file_access::Read, deep::file_stream::file_share::Read);
 
         deep::zip_reader zipReader(fs.get());
 
-        if(!zipReader.uncompress())
+        if(!zipReader.load())
         {
-            deep::core::err() << "Error in uncompression\n";
+            deep::core::err() << "Error in loading zip\n";
+        }
+
+        if(!zipReader.enumerate(__deep_zip_enum_callback))
+        {
+            deep::core::err() << "Error when enumerating zip\n";
         }
     }
 

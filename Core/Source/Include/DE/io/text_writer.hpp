@@ -37,6 +37,14 @@ namespace deep
             DE_API text_writer &operator<<(unsigned long value);
             DE_API text_writer &operator<<(double value);
             DE_API text_writer &operator<<(mem_ptr ptr);
+            
+            DE_API text_writer &operator<<(number_format format);
+
+        protected:
+            text_writer();
+
+        protected:
+            number_format m_NumberFormat;
 
     };
 
@@ -156,6 +164,18 @@ namespace deep
     inline text_writer &text_writer::operator<<(mem_ptr ptr)
     {
         write(ptr);
+
+        return *this;
+    }
+
+    /*
+    =======================
+    text_writer::operator<<
+    =======================
+    */
+    inline text_writer &text_writer::operator<<(number_format format)
+    {
+        m_NumberFormat = format;
 
         return *this;
     }

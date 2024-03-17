@@ -333,7 +333,7 @@ namespace deep
     uint64_t string::to_uint64() const
     {
         uint64_t value = 0;
-        uint64_t dec = 1;
+        uint64_t decimal = 1;
         size_t length = m_Length;
         size_t index;
         char *text = m_Chars.get();
@@ -344,7 +344,7 @@ namespace deep
             {
                 uint8_t val = text[index] - '0';
 
-                value += val * dec;
+                value += val * decimal;
 
                 val *= 10;
             }
