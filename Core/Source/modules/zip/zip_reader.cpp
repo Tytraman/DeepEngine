@@ -1,14 +1,114 @@
 #include "DE/modules/zip/zip_reader.hpp"
 #include "DE/core/core.hpp"
+#include "DE/core/hash_table.hpp"
 
 #include <minizip-ng/mz.h>
 #include <minizip-ng/mz_os.h>
 #include <minizip-ng/mz_strm.h>
+#include <minizip-ng/mz_strm_mem.h>
 #include <minizip-ng/mz_zip.h>
 #include <minizip-ng/mz_zip_rw.h>
 
 namespace deep
 {
+
+    static hash_table<stream *> g_Streams;
+
+    int32_t __deep_mz_stream_mem_open(void *s, const char */*path*/, int32_t /*mode*/)
+    {
+        hash_entry<stream *> *entry = g_Streams[(uint64_t) s];
+        if(entry == nullptr)
+        {
+            return MZ_MEM_ERROR;
+        }
+
+        ref<stream> strm(entry->value);
+
+        if(!strm->is_opened())
+        {
+            if(!strm->open())
+            {
+                return MZ_STREAM_ERROR;
+            }
+        }
+
+        return MZ_OK;
+    }
+
+    int32_t __deep_mz_stream_mem_is_open(void *s)
+    {
+        hash_entry<stream *> *entry = g_Streams[(uint64_t) s];
+        if(entry == nullptr)
+        {
+            return MZ_MEM_ERROR;
+        }
+
+        ref<stream> strm(entry->value);
+
+        return strm->is_opened() ? MZ_OK : MZ_STREAM_ERROR;
+    }
+
+    int32_t __deep_mz_stream_mem_read(void *s, void *buf, int32_t size)
+    {
+        hash_entry<stream *> *entry = g_Streams[(uint64_t) s];
+        if(entry == nullptr)
+        {
+            return MZ_MEM_ERROR;
+        }
+
+        ref<stream> strm(entry->value);
+
+        if(!strm->can_write())
+        {
+            return 0;
+        }
+
+        size_t bytesWrite = 0;
+        if(!strm->write(buf, 0, size, &bytesWrite))
+        {
+            return 0;
+        }
+
+        return static_cast<int32_t>(bytesWrite);
+    }
+
+    int32_t __deep_mz_stream_mem_write(void *s, const void *buf, int32_t size)
+    {
+        hash_entry<stream *> *entry = g_Streams[(uint64_t) s];
+        if(entry == nullptr)
+        {
+            return MZ_MEM_ERROR;
+        }
+
+        ref<stream> strm(entry->value);
+
+        if(!strm->can_read())
+        {
+            return 0;
+        }
+
+        size_t bytesRead = 0;
+        if(!strm->read(rm_const<void *>(buf), 0, size, &bytesRead))
+        {
+
+        }
+    }
+
+    static mz_stream_vtbl g_MzStreamMemVtbl =
+    {
+        __deep_mz_stream_mem_open,
+        __deep_mz_stream_mem_is_open,
+        __deep_mz_stream_mem_read,
+        mz_stream_mem_write,
+        mz_stream_mem_tell,
+        mz_stream_mem_seek,
+        mz_stream_mem_close,
+        mz_stream_mem_error,
+        mz_stream_mem_create,
+        mz_stream_mem_delete,
+        nullptr,
+        nullptr
+    };
 
     /*
     ======================
@@ -36,6 +136,11 @@ namespace deep
         {
             mem::free(m_RawData);
         }
+    }
+
+    void *__deep_minizip_stream_create_cb()
+    {
+        
     }
 
     /*
@@ -95,6 +200,8 @@ namespace deep
     {
         int32_t err;
 
+        void *memStream = mz_stream_mem_create();
+
         m_ZipReader = mz_zip_reader_create();
         if(m_ZipReader == nullptr)
         {
@@ -129,7 +236,7 @@ namespace deep
 
         int32_t err = mz_zip_reader_goto_first_entry(m_ZipReader);
         mz_zip_file *fileInfo = nullptr;
-        compression_method method;
+        zip_compression_method method;
 
         if(err != MZ_OK && err != MZ_END_OF_LIST)
         {
@@ -149,92 +256,92 @@ namespace deep
             {
                 default:
                 {
-                    method = compression_method::Unknown;
+                    method = zip_compression_method::Unknown;
                 } break;
                 case MZ_COMPRESS_METHOD_STORE:
                 {
-                    method = compression_method::Store;
+                    method = zip_compression_method::Store;
                 } break;
                 case MZ_COMPRESS_METHOD_DEFLATE:
                 {
-                    method = compression_method::Deflate;
+                    method = zip_compression_method::Deflate;
                 } break;
                 case MZ_COMPRESS_METHOD_BZIP2:
                 {
-                    method = compression_method::Bzip2;
+                    method = zip_compression_method::Bzip2;
                 } break;
                 case MZ_COMPRESS_METHOD_LZMA:
                 {
-                    method = compression_method::Lzma;
+                    method = zip_compression_method::Lzma;
                 } break;
                 case MZ_COMPRESS_METHOD_XZ:
                 {
-                    method = compression_method::XZ;
+                    method = zip_compression_method::XZ;
                 } break;
                 case MZ_COMPRESS_METHOD_ZSTD:
                 {
-                    method = compression_method::Zstd;
+                    method = zip_compression_method::Zstd;
                 } break;
             }
 
-            underlying_type<file_attribute> attributes = 0;
+            underlying_type<zip_file_attribute> attributes = 0;
 
             if(fileInfo->external_fa & 0x1) // Read-only
             {
-                attributes |= to_utype(file_attribute::ReadOnly);
+                attributes |= to_utype(zip_file_attribute::ReadOnly);
             }
 
             if(fileInfo->external_fa & 0x2) // Hidden
             {
-                attributes |= to_utype(file_attribute::Hidden);
+                attributes |= to_utype(zip_file_attribute::Hidden);
             }
 
             if(fileInfo->external_fa & 0x4) // System
             {
-                attributes |= to_utype(file_attribute::System);
+                attributes |= to_utype(zip_file_attribute::System);
             }
 
             if(fileInfo->external_fa & 0x10) // Directory
             {
-                attributes |= to_utype(file_attribute::Directory);
+                attributes |= to_utype(zip_file_attribute::Directory);
             }
 
             if(fileInfo->external_fa & 0x20) // Archive
             {
-                attributes |= to_utype(file_attribute::Archive);
+                attributes |= to_utype(zip_file_attribute::Archive);
             }
 
             if(fileInfo->external_fa & 0x100) // Temporary
             {
-                attributes |= to_utype(file_attribute::Temporary);
+                attributes |= to_utype(zip_file_attribute::Temporary);
             }
 
             if(fileInfo->external_fa & 0x200) // Sparse file
             {
-                attributes |= to_utype(file_attribute::SparseFile);
+                attributes |= to_utype(zip_file_attribute::SparseFile);
             }
 
             if(fileInfo->external_fa & 0x800) // Compressed
             {
-                attributes |= to_utype(file_attribute::Compressed);
+                attributes |= to_utype(zip_file_attribute::Compressed);
             }
 
             if(fileInfo->external_fa & 0x1000) // Offline
             {
-                attributes |= to_utype(file_attribute::Offline);
+                attributes |= to_utype(zip_file_attribute::Offline);
             }
 
             if(fileInfo->external_fa & 0x2000) // Not content indexed
             {
-                attributes |= to_utype(file_attribute::NotContentIndexed);
+                attributes |= to_utype(zip_file_attribute::NotContentIndexed);
             }
 
             if(fileInfo->external_fa & 0x4000) // Encrypted
             {
-                attributes |= to_utype(file_attribute::Encrypted);
+                attributes |= to_utype(zip_file_attribute::Encrypted);
             }
 
-            if(!callback(fileInfo->filename, fileInfo->compressed_size, fileInfo->uncompressed_size, method, static_cast<file_attribute>(attributes), args))
+            if(!callback(fileInfo->filename, fileInfo->compressed_size, fileInfo->uncompressed_size, method, static_cast<zip_file_attribute>(attributes), args))
             {
                 break;
             }
@@ -261,7 +368,7 @@ namespace deep
         bool founded;
     };
 
-    bool __deep_search_file_callback(const char *filename, int64_t /*compressedSize*/, int64_t /*uncompressedSize*/, zip_reader::compression_method /*method*/, zip_reader::file_attribute /*attributes*/, void *args)
+    bool __deep_search_file_callback(const char *filename, int64_t /*compressedSize*/, int64_t /*uncompressedSize*/, zip_compression_method /*method*/, zip_file_attribute /*attributes*/, void *args)
     {
         __deep_search_zip_file *search = static_cast<__deep_search_zip_file *>(args);
 
@@ -330,63 +437,63 @@ namespace deep
     zip_reader::attributes_str
     ==========================
     */
-    string zip_reader::attributes_str(file_attribute attributes)
+    string zip_reader::attributes_str(zip_file_attribute attributes)
     {
         string str;
 
-        underlying_type<file_attribute> attr = to_utype(attributes);
+        underlying_type<zip_file_attribute> attr = to_utype(attributes);
 
-        if((attr & to_utype(file_attribute::ReadOnly)) > 0)
+        if((attr & to_utype(zip_file_attribute::ReadOnly)) > 0)
         {
             str.append("R");
         }
 
-        if((attr & to_utype(file_attribute::Hidden)) > 0)
+        if((attr & to_utype(zip_file_attribute::Hidden)) > 0)
         {
             str.append("H");
         }
 
-        if((attr & to_utype(file_attribute::System)) > 0)
+        if((attr & to_utype(zip_file_attribute::System)) > 0)
         {
             str.append("S");
         }
 
-        if((attr & to_utype(file_attribute::Directory)) > 0)
+        if((attr & to_utype(zip_file_attribute::Directory)) > 0)
         {
             str.append("D");
         }
 
-        if((attr & to_utype(file_attribute::Archive)) > 0)
+        if((attr & to_utype(zip_file_attribute::Archive)) > 0)
         {
             str.append("A");
         }
 
-        if((attr & to_utype(file_attribute::Compressed)) > 0)
+        if((attr & to_utype(zip_file_attribute::Compressed)) > 0)
         {
             str.append("C");
         }
 
-        if((attr & to_utype(file_attribute::Encrypted)) > 0)
+        if((attr & to_utype(zip_file_attribute::Encrypted)) > 0)
         {
             str.append("E");
         }
 
-        if((attr & to_utype(file_attribute::Offline)) > 0)
+        if((attr & to_utype(zip_file_attribute::Offline)) > 0)
         {
             str.append("O");
         }
 
-        if((attr & to_utype(file_attribute::SparseFile)) > 0)
+        if((attr & to_utype(zip_file_attribute::SparseFile)) > 0)
         {
             str.append("P");
         }
 
-        if((attr & to_utype(file_attribute::NotContentIndexed)) > 0)
+        if((attr & to_utype(zip_file_attribute::NotContentIndexed)) > 0)
         {
             str.append("I");
         }
 
-        if((attr & to_utype(file_attribute::Temporary)) > 0)
+        if((attr & to_utype(zip_file_attribute::Temporary)) > 0)
         {
             str.append("T");
         }
@@ -394,18 +501,18 @@ namespace deep
         return str;
     }
 
-    string zip_reader::method_str(compression_method method)
+    string zip_reader::method_str(zip_compression_method method)
     {
         switch(method)
         {
             default: return string();
-            case compression_method::Unknown: return "unknown";
-            case compression_method::Store:   return "store";
-            case compression_method::Deflate: return "deflate";
-            case compression_method::Bzip2:   return "bzip2";
-            case compression_method::Lzma:    return "lzma";
-            case compression_method::XZ:      return "xz";
-            case compression_method::Zstd:    return "zstd";
+            case zip_compression_method::Unknown: return "unknown";
+            case zip_compression_method::Store:   return "store";
+            case zip_compression_method::Deflate: return "deflate";
+            case zip_compression_method::Bzip2:   return "bzip2";
+            case zip_compression_method::Lzma:    return "lzma";
+            case zip_compression_method::XZ:      return "xz";
+            case zip_compression_method::Zstd:    return "zstd";
         }
     }
 
