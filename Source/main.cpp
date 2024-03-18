@@ -168,13 +168,6 @@ void update_callback(deep::window & /* win */)
     camera.update_angle_of_view();
 }
 
-bool __deep_zip_enum_callback(const char *filename, int64_t compressedSize, int64_t uncompressedSize, deep::zip_reader::compression_method method, deep::zip_reader::file_attribute attributes)
-{
-    deep::core::out() << filename << " Packed size: " << compressedSize << " Unpacked size: " << uncompressedSize << " Method: " << deep::to_utype(method) << " Flags: " << deep::hex << deep::zip_reader::attributes_str(attributes).str() << "\n";
-
-    return true;
-}
-
 #undef main
 int main()
 {
@@ -223,18 +216,20 @@ int main()
     deep::core::out() << "pwd: " << deep::core::get_pwd().str() << "\n";
 
     {
-        deep::ref<deep::file_stream> fs = deep::mem::alloc_type<deep::file_stream>("C:\\Test\\PkgTTC-Iosevka-28.1.0.zip", deep::file_stream::file_mode::Open, deep::file_stream::file_access::Read, deep::file_stream::file_share::Read);
+        deep::ref<deep::file_stream> fs = deep::mem::alloc_type<deep::file_stream>("C:\\Test\\Free-Sans-2.zip", deep::file_stream::file_mode::Open, deep::file_stream::file_access::Read, deep::file_stream::file_share::Read);
 
-        deep::zip_reader zipReader(fs.get());
+        deep::zip_reader zipReader;
 
-        if(!zipReader.load())
+        if(!zipReader.load(fs.get()))
         {
             deep::core::err() << "Error in loading zip\n";
         }
 
-        if(!zipReader.enumerate(__deep_zip_enum_callback))
+        deep::ref<deep::file_stream> os = deep::mem::alloc_type<deep::file_stream>("C:\\Test\\output.jpg", deep::file_stream::file_mode::Create, deep::file_stream::file_access::Write, deep::file_stream::file_share::Read);
+
+        if(!zipReader.extract_file("images/5.jpg", os.get()))
         {
-            deep::core::err() << "Error when enumerating zip\n";
+            deep::core::err() << "Error when extracting file\n";
         }
     }
 

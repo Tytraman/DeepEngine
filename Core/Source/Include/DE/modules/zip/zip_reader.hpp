@@ -40,20 +40,22 @@ namespace deep
                 Temporary         = 0x1000      // T
             };
 
-            using next_entry_callback = bool (*)(const char *filename, int64_t compressedSize, int64_t uncompressedSize, compression_method method, file_attribute attributes);
+            using next_entry_callback = bool (*)(const char *filename, int64_t compressedSize, int64_t uncompressedSize, compression_method method, file_attribute attributes, void *args);
 
         public:
-            DE_API zip_reader(stream *inputStream);
+            DE_API zip_reader();
             DE_API ~zip_reader();
 
-            DE_API bool load();
+            DE_API bool load(stream *inputStream);
+            DE_API bool load(mem_ptr rawData, int32_t size);
 
-            DE_API bool enumerate(next_entry_callback callback);
+            DE_API bool enumerate(next_entry_callback callback, void *args);
+            DE_API bool extract_file(const char *filename, stream *outputStream);
 
+            DE_API static string method_str(compression_method method);
             DE_API static string attributes_str(file_attribute attributes);
 
         private:
-            ref<stream> m_InputStream;
             mem_ptr m_RawData;
             void *m_ZipReader;
 

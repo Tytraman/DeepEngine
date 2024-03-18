@@ -15,9 +15,8 @@ namespace deep
     zip_reader::zip_reader
     ======================
     */
-    zip_reader::zip_reader(stream *inputStream)
-        : m_InputStream(inputStream),
-          m_RawData(nullptr),
+    zip_reader::zip_reader()
+        : m_RawData(nullptr),
           m_ZipReader(nullptr)
     { }
 
@@ -44,59 +43,74 @@ namespace deep
     zip_reader::load
     ================
     */
-    bool zip_reader::load()
+    bool zip_reader::load(stream *inputStream)
     {
-        if(!m_InputStream->can_read())
+        ref<stream> s(inputStream);
+
+        if(!s->can_read())
         {
             return false;
         }
 
-        if(!m_InputStream->is_opened())
+        if(!s->is_opened())
         {
-            if(!m_InputStream->open())
+            if(!s->open())
             {
                 return false;
             }
         }
 
-        size_t len = m_InputStream->get_length() - m_InputStream->get_position();
+        size_t len = s->get_length() - s->get_position();
         if(len == 0)
         {
             return false;
         }
 
-        m_RawData = static_cast<uint8_t *>(mem::alloc(len));
+        mem_ptr rawData = static_cast<uint8_t *>(mem::alloc(len));
         size_t bytesRead = 0;
-        int32_t err;
 
-        if(!m_InputStream->read(m_RawData, 0, len, &bytesRead))
+        if(!s->read(rawData, 0, len, &bytesRead))
         {
-            mem::free(m_RawData);
-            m_RawData = nullptr;
+            mem::free(rawData);
 
             return false;
         }
+
+        if(!load(rawData, static_cast<int32_t>(bytesRead)))
+        {
+            mem::free(rawData);
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /*
+    ================
+    zip_reader::load
+    ================
+    */
+    bool zip_reader::load(mem_ptr rawData, int32_t size)
+    {
+        int32_t err;
 
         m_ZipReader = mz_zip_reader_create();
         if(m_ZipReader == nullptr)
         {
-            mem::free(m_RawData);
-            m_RawData = nullptr;
-
             return false;
         }
 
         // Le 0 à la fin indique qu'on ne copie pas le buffer en interne mais qu'on utilise celui passé en paramètre.
-        err = mz_zip_reader_open_buffer(m_ZipReader, static_cast<uint8_t *>(m_RawData), static_cast<int32_t>(bytesRead), 0);
+        err = mz_zip_reader_open_buffer(m_ZipReader, static_cast<uint8_t *>(rawData), size, 0);
         if(err != MZ_OK)
         {
             mz_zip_reader_delete(&m_ZipReader);
 
-            mem::free(m_RawData);
-            m_RawData = nullptr;
-
             return false;
         }
+
+        m_RawData = rawData;
 
         return true;
     }
@@ -106,7 +120,7 @@ namespace deep
     zip_reader::enumerate
     =====================
     */
-    bool zip_reader::enumerate(next_entry_callback callback)
+    bool zip_reader::enumerate(next_entry_callback callback, void *args)
     {
         if(callback == nullptr)
         {
@@ -220,7 +234,7 @@ namespace deep
                 attributes |= to_utype(file_attribute::Encrypted);
             }
 
-            if(!callback(fileInfo->filename, fileInfo->compressed_size, fileInfo->uncompressed_size, method, static_cast<file_attribute>(attributes)))
+            if(!callback(fileInfo->filename, fileInfo->compressed_size, fileInfo->uncompressed_size, method, static_cast<file_attribute>(attributes), args))
             {
                 break;
             }
@@ -239,6 +253,76 @@ namespace deep
         }
 
         return true;
+    }
+
+    struct __deep_search_zip_file
+    {
+        const char *filename;
+        bool founded;
+    };
+
+    bool __deep_search_file_callback(const char *filename, int64_t /*compressedSize*/, int64_t /*uncompressedSize*/, zip_reader::compression_method /*method*/, zip_reader::file_attribute /*attributes*/, void *args)
+    {
+        __deep_search_zip_file *search = static_cast<__deep_search_zip_file *>(args);
+
+        if(string_utils::equals(filename, search->filename))
+        {
+            search->founded = true;
+
+            return false;
+        }
+
+        return true;
+    }
+
+
+    /*
+    ========================
+    zip_reader::extract_file
+    ========================
+    */
+    bool zip_reader::extract_file(const char *filename, stream *outputStream)
+    {
+        if(!outputStream->can_write())
+        {
+            return false;
+        }
+
+        __deep_search_zip_file search;
+        search.filename = filename;
+        search.founded = false;
+
+        if(!enumerate(__deep_search_file_callback, &search) || !search.founded)
+        {
+            return false;
+        }
+
+        int32_t len = mz_zip_reader_entry_save_buffer_length(m_ZipReader);
+        mem_ptr buffer = mem::alloc(len);
+
+        int32_t err = mz_zip_reader_entry_save_buffer(m_ZipReader, buffer, len);
+        if(err != MZ_OK)
+        {
+            mem::free(buffer);
+
+            return false;
+        }
+
+        if(!outputStream->is_opened())
+        {
+            if(!outputStream->open())
+            {
+                mem::free(buffer);
+
+                return false;
+            }
+        }
+
+        bool ok = outputStream->write(buffer, 0, len, nullptr);
+
+        mem::free(buffer);
+
+        return ok;
     }
 
     /*
@@ -308,6 +392,21 @@ namespace deep
         }
 
         return str;
+    }
+
+    string zip_reader::method_str(compression_method method)
+    {
+        switch(method)
+        {
+            default: return string();
+            case compression_method::Unknown: return "unknown";
+            case compression_method::Store:   return "store";
+            case compression_method::Deflate: return "deflate";
+            case compression_method::Bzip2:   return "bzip2";
+            case compression_method::Lzma:    return "lzma";
+            case compression_method::XZ:      return "xz";
+            case compression_method::Zstd:    return "zstd";
+        }
     }
 
 }
