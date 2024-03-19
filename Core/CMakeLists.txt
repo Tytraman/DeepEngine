@@ -24,12 +24,14 @@ include("${CMAKE_CURRENT_LIST_DIR}/../variables.cmake")
 
 set(THIRD_PARTY_LIBS "${CMAKE_CURRENT_LIST_DIR}/../Third-party/Libs")
 set(ZLIB_BUILD_DIRECTORY "${THIRD_PARTY_LIBS}/Build/zlib")
+set(LIBZIP_BUILD_DIRECTORY "${THIRD_PARTY_LIBS}/Build/libzip")
 set(LIBPNG_BUILD_DIRECTORY "${THIRD_PARTY_LIBS}/Build/libpng")
 set(SDL_BUILD_DIRECTORY "${THIRD_PARTY_LIBS}/Build/SDL")
 set(OPENALSOFT_BUILD_DIRECTORY "${THIRD_PARTY_LIBS}/Build/openal-soft")
 
 # Crée un dossier au moment de la génération du projet CMake.
 file(MAKE_DIRECTORY "${ZLIB_BUILD_DIRECTORY}")
+file(MAKE_DIRECTORY "${LIBZIP_BUILD_DIRECTORY}")
 file(MAKE_DIRECTORY "${LIBPNG_BUILD_DIRECTORY}")
 file(MAKE_DIRECTORY "${SDL_BUILD_DIRECTORY}")
 file(MAKE_DIRECTORY "${OPENALSOFT_BUILD_DIRECTORY}")
@@ -54,19 +56,32 @@ set(ZLIB_INCLUDE "${THIRD_PARTY_LIBS}/zlib")
 set(ZLIB_LIB "${ZLIB_BUILD_DIRECTORY}")
 set(ZLIB_INCLUDE_2 "${ZLIB_BUILD_DIRECTORY}")
 
+set(LIBZIP_INCLUDE "${THIRD_PARTY_LIBS}/libzip/lib")
+
 set(LIBPNG_INCLUDE "${THIRD_PARTY_LIBS}/libpng")
 set(LIBPNG_LIB "${LIBPNG_BUILD_DIRECTORY}")
 set(LIBPNG_INCLUDE_2 "${LIBPNG_BUILD_DIRECTORY}")
 
 set(OPENAL_INCLUDE "${THIRD_PARTY_LIBS}/openal-soft/include")
+set(OPENAL_LIB "${OPENALSOFT_BUILD_DIRECTORY}")
 
+message(STATUS "===== Add subdir zlib =====")
 # Indique à CMake qu'un sous projet CMake est présent et doit être compilé.
 add_subdirectory("${THIRD_PARTY_LIBS}/zlib" "${ZLIB_BUILD_DIRECTORY}")
 # zlib génère une config qui est nécessaire par d'autres dépendances.
 file(COPY "${ZLIB_BUILD_DIRECTORY}/zconf.h" DESTINATION "${ZLIB_INCLUDE}")
 
+message(STATUS "===== Add subdir libzip =====")
+add_subdirectory("${THIRD_PARTY_LIBS}/libzip" "${LIBZIP_BUILD_DIRECTORY}")
+file(COPY "${LIBZIP_BUILD_DIRECTORY}/zipconf.h" DESTINATION "${LIBZIP_INCLUDE}")
+
+message(STATUS "===== Add subdir libpng =====")
 add_subdirectory("${THIRD_PARTY_LIBS}/libpng" "${LIBPNG_BUILD_DIRECTORY}")
+
+message(STATUS "===== Add subdir SDL =====")
 add_subdirectory("${THIRD_PARTY_LIBS}/SDL" "${SDL_BUILD_DIRECTORY}")
+
+message(STATUS "===== Add subdir openal-soft =====")
 add_subdirectory("${THIRD_PARTY_LIBS}/openal-soft" "${OPENALSOFT_BUILD_DIRECTORY}")
 
 # add_folders est le nom de la fonction.
@@ -233,7 +248,9 @@ message(STATUS "DEEP_SOURCE_FILES: ${DEEP_SOURCE_FILES}")
 add_library(${CORE_PROJECT} SHARED ${DEEP_HEADER_FILES} ${DEEP_SOURCE_FILES})
 
 if(MSVC)
-    target_compile_options(${CORE_PROJECT} PRIVATE /W4 /WX)
+    # Le problème de cette commande est qu'elle applique le niveau de warning même aux dépendances, ce qui empêche parfois la compilation du projet.
+    # target_compile_options(${CORE_PROJECT} PRIVATE /W4 /WX)
+    set_source_files_properties(${DEEP_SOURCE_FILES} PROPERTIES COMPILE_OPTIONS /W4 COMPILE_OPTIONS /WX)
 endif()
 
 target_include_directories(${CORE_PROJECT} PRIVATE ${CORE_INCLUDE})
@@ -242,6 +259,7 @@ target_include_directories(${CORE_PROJECT} PUBLIC
     ${IMGUI_INCLUDE}
     ${ZLIB_INCLUDE}
     ${ZLIB_INCLUDE_2}
+    ${LIBZIP_INCLUDE}
     ${LIBPNG_INCLUDE}
     ${LIBPNG_INCLUDE_2}
     ${OPENAL_INCLUDE}
@@ -258,6 +276,7 @@ target_link_libraries(${CORE_PROJECT}
     Bcrypt.lib
     SDL2-static     # Nom de la cible de la SDL2 pour que CMake crée une dépendance.
     zlibstatic      # Nom de la cible de zlib pour que CMake crée une dépendance.
+    zip
     png_static      # Nom de la cible de libpng pour que CMake crée une dépendance.
     OpenGL32.lib    # Nom de la cible OpenGL pour que CMake le considère comme une dépendance.
     OpenAL          # Nom de la cible de OpenAL pour que CMake crée une dépendance.

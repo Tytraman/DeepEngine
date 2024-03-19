@@ -14,10 +14,17 @@ namespace deep
     {
 
         public:
+            DE_API zip_reader(stream *inputStream);
 
+            DE_API bool init();
+
+            DE_API int64_t get_number_of_entries() const;
+            DE_API const char *get_archive_comment() const;
 
         private:
-
+            ref<stream> m_InputStream;
+            void *m_Zip;
+            void *m_ZipSource;
 
     };
 

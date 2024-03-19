@@ -206,7 +206,16 @@ int main()
     deep::core::out() << "pwd: " << deep::core::get_pwd().str() << "\n";
 
     {
-        
+        deep::ref<deep::file_stream> is = deep::mem::alloc_type<deep::file_stream>("C:\\Test\\test.zip", deep::file_stream::file_mode::Open, deep::file_stream::file_access::Read, deep::file_stream::file_share::Read);
+
+        deep::zip_reader reader(is.get());
+
+        if(!reader.init())
+        {
+            deep::core::err() << "Error when initializing zip reader\n";
+        }
+
+        deep::core::out() << "zip number of entries: " << reader.get_number_of_entries() << " zip comment: " << reader.get_archive_comment() << "\n";
     }
 
     deep::window win(TARGET_MS, TARGET_FPS);

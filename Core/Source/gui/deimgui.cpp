@@ -147,6 +147,7 @@ namespace deep
     {
         if(m_Initialized)
         {
+            ImGui_ImplOpenGL3_Shutdown();
             ImGui_ImplSDL2_Shutdown();
             ImGui::DestroyContext();
 
