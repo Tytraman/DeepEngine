@@ -44,6 +44,7 @@ namespace deep
         public:
             DE_API file_stream(const char *filename, file_mode mode, file_access access, file_share share);
             DE_API file_stream(const char *filename, os_fd fd);
+            DE_API ~file_stream();
 
             DE_API virtual bool open() override;
             DE_API virtual bool close() override;

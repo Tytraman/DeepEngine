@@ -29,22 +29,12 @@
 
 #include <DE/io/file_stream.hpp>
 #include <DE/modules/zip/zip_reader.hpp>
+#include <DE/modules/zip/zip_writer.hpp>
 
 #define WINDOW_WIDTH	800
 #define WINDOW_HEIGHT	480
 #define TARGET_MS		16
 #define TARGET_FPS		300
-
-#define SCROLL_SCALE_FACTOR_UP   1.10f
-#define SCROLL_SCALE_FACTOR_DOWN 0.90f
-#define SCROLL_ROTATE_FACTOR 3.0f
-
-#define PLAYER_SPAWN_X 200.0f
-#define PLAYER_SPAWN_Y 200.0f
-#define PLAYER_GRAVITY 0.30f
-
-#define RECT1_SPAWN_X  400.0f
-#define RECT1_SPAWN_Y  200.0f
 
 void event_callback(deep::window &window, deep::devent e)
 {
@@ -216,21 +206,7 @@ int main()
     deep::core::out() << "pwd: " << deep::core::get_pwd().str() << "\n";
 
     {
-        deep::ref<deep::file_stream> fs = deep::mem::alloc_type<deep::file_stream>("C:\\Test\\Free-Sans-2.zip", deep::file_stream::file_mode::Open, deep::file_stream::file_access::Read, deep::file_stream::file_share::Read);
-
-        deep::zip_reader zipReader;
-
-        if(!zipReader.load(fs.get()))
-        {
-            deep::core::err() << "Error in loading zip\n";
-        }
-
-        deep::ref<deep::file_stream> os = deep::mem::alloc_type<deep::file_stream>("C:\\Test\\output.jpg", deep::file_stream::file_mode::Create, deep::file_stream::file_access::Write, deep::file_stream::file_share::Read);
-
-        if(!zipReader.extract_file("images/5.jpg", os.get()))
-        {
-            deep::core::err() << "Error when extracting file\n";
-        }
+        
     }
 
     deep::window win(TARGET_MS, TARGET_FPS);

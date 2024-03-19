@@ -27,14 +27,12 @@ set(ZLIB_BUILD_DIRECTORY "${THIRD_PARTY_LIBS}/Build/zlib")
 set(LIBPNG_BUILD_DIRECTORY "${THIRD_PARTY_LIBS}/Build/libpng")
 set(SDL_BUILD_DIRECTORY "${THIRD_PARTY_LIBS}/Build/SDL")
 set(OPENALSOFT_BUILD_DIRECTORY "${THIRD_PARTY_LIBS}/Build/openal-soft")
-set(MINIZIP_NG_BUILD_DIRECTORY "${THIRD_PARTY_LIBS}/Build/minizip-ng")
 
 # Crée un dossier au moment de la génération du projet CMake.
 file(MAKE_DIRECTORY "${ZLIB_BUILD_DIRECTORY}")
 file(MAKE_DIRECTORY "${LIBPNG_BUILD_DIRECTORY}")
 file(MAKE_DIRECTORY "${SDL_BUILD_DIRECTORY}")
 file(MAKE_DIRECTORY "${OPENALSOFT_BUILD_DIRECTORY}")
-file(MAKE_DIRECTORY "${MINIZIP_NG_BUILD_DIRECTORY}")
 
 # Certaines dépendances ont besion de zlib, généralement ce sont ces 2 variables qui sont utilisées.
 set(ZLIB_INCLUDE_DIR "${THIRD_PARTY_LIBS}/zlib" CACHE INTERNAL "zlib_include" FORCE)
@@ -56,9 +54,6 @@ set(ZLIB_INCLUDE "${THIRD_PARTY_LIBS}/zlib")
 set(ZLIB_LIB "${ZLIB_BUILD_DIRECTORY}")
 set(ZLIB_INCLUDE_2 "${ZLIB_BUILD_DIRECTORY}")
 
-set(MINIZIP_NG_INCLUDE "${THIRD_PARTY_LIBS}/minizip-ng")
-set(MINIZIP_NG_LIB "${MINIZIP_NG_BUILD_DIRECTORY}")
-
 set(LIBPNG_INCLUDE "${THIRD_PARTY_LIBS}/libpng")
 set(LIBPNG_LIB "${LIBPNG_BUILD_DIRECTORY}")
 set(LIBPNG_INCLUDE_2 "${LIBPNG_BUILD_DIRECTORY}")
@@ -69,11 +64,6 @@ set(OPENAL_INCLUDE "${THIRD_PARTY_LIBS}/openal-soft/include")
 add_subdirectory("${THIRD_PARTY_LIBS}/zlib" "${ZLIB_BUILD_DIRECTORY}")
 # zlib génère une config qui est nécessaire par d'autres dépendances.
 file(COPY "${ZLIB_BUILD_DIRECTORY}/zconf.h" DESTINATION "${ZLIB_INCLUDE}")
-
-set(MZ_BZIP2 OFF CACHE INTERNAL "" FORCE)
-set(MZ_LZMA OFF CACHE INTERNAL "" FORCE)
-set(MZ_ZSTD OFF CACHE INTERNAL "" FORCE)
-add_subdirectory("${THIRD_PARTY_LIBS}/minizip-ng" "${MINIZIP_NG_BUILD_DIRECTORY}")
 
 add_subdirectory("${THIRD_PARTY_LIBS}/libpng" "${LIBPNG_BUILD_DIRECTORY}")
 add_subdirectory("${THIRD_PARTY_LIBS}/SDL" "${SDL_BUILD_DIRECTORY}")
@@ -252,7 +242,6 @@ target_include_directories(${CORE_PROJECT} PUBLIC
     ${IMGUI_INCLUDE}
     ${ZLIB_INCLUDE}
     ${ZLIB_INCLUDE_2}
-    ${MINIZIP_NG_INCLUDE}
     ${LIBPNG_INCLUDE}
     ${LIBPNG_INCLUDE_2}
     ${OPENAL_INCLUDE}
@@ -261,7 +250,6 @@ target_include_directories(${CORE_PROJECT} PUBLIC
 
 target_link_directories(${CORE_PROJECT} PUBLIC
     ${ZLIB_LIB}
-    ${MINIZIP_NG_LIB}
     ${LIBPNG_LIB}
     ${OPENAL_LIB}
 )
@@ -270,7 +258,6 @@ target_link_libraries(${CORE_PROJECT}
     Bcrypt.lib
     SDL2-static     # Nom de la cible de la SDL2 pour que CMake crée une dépendance.
     zlibstatic      # Nom de la cible de zlib pour que CMake crée une dépendance.
-    libminizip.lib
     png_static      # Nom de la cible de libpng pour que CMake crée une dépendance.
     OpenGL32.lib    # Nom de la cible OpenGL pour que CMake le considère comme une dépendance.
     OpenAL          # Nom de la cible de OpenAL pour que CMake crée une dépendance.

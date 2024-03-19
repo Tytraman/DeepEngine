@@ -93,6 +93,11 @@ namespace deep
 #endif
     }
 
+    file_stream::~file_stream()
+    {
+        close();
+    }
+
     /*
     =================
     file_stream::open
@@ -211,7 +216,11 @@ ignore_access:
             return false;
         }
 
-        return CloseHandle(m_FD);
+        bool ret = CloseHandle(m_FD);
+
+        m_FD = os_invalid_fd;
+
+        return ret;
 
 #else
 #error Need implementation
