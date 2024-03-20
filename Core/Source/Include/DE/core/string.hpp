@@ -49,6 +49,7 @@ namespace deep
             DE_API uint64_t hash() const;
 
             DE_API bool equals(const char *str) const;
+            DE_API bool ends_with(const char *str) const;
 
             DE_API void set_ptr(char *ptr);
             DE_API void set_length(size_t len);
@@ -151,6 +152,16 @@ namespace deep
     inline bool string::equals(const char *str) const
     {
         return string_utils::equals(m_Chars.get(), str);
+    }
+
+    /*
+    =================
+    string::ends_with
+    =================
+    */
+    inline bool string::ends_with(const char *str) const
+    {
+        return string_utils::ends_with(m_Chars.get(), str);
     }
 
     /*

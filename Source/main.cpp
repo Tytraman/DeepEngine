@@ -158,6 +158,13 @@ void update_callback(deep::window & /* win */)
     camera.update_angle_of_view();
 }
 
+bool zip_enum_entries_callback(deep::zip *archive, int64_t index, const char *filename, uint64_t uncompressedSize, uint64_t compressedSize, deep::zip_compression_method compressionMethod, void */*args*/)
+{
+    deep::core::out() << "[" DE_TERM_FG_YELLOW << index << DE_TERM_RESET "] " << (archive->is_directory(filename) ? "* " : "") << filename << ": " << uncompressedSize << ' ' << compressedSize << ' ' << deep::zip::get_compression_method_str(compressionMethod) << '\n';
+
+    return true;
+}
+
 #undef main
 int main()
 {
@@ -207,6 +214,7 @@ int main()
 
     {
         deep::ref<deep::file_stream> is = deep::mem::alloc_type<deep::file_stream>("C:\\Test\\test.zip", deep::file_stream::file_mode::Open, deep::file_stream::file_access::Read, deep::file_stream::file_share::Read);
+        deep::ref<deep::file_stream> ros = deep::mem::alloc_type<deep::file_stream>("C:\\Test\\2.jpg", deep::file_stream::file_mode::Create, deep::file_stream::file_access::Write, deep::file_stream::file_share::Read);
 
         deep::zip_reader reader(is.get());
 
@@ -216,6 +224,30 @@ int main()
         }
 
         deep::core::out() << "zip number of entries: " << reader.get_number_of_entries() << " zip comment: " << reader.get_archive_comment() << "\n";
+
+        int64_t file1Index = reader.get_file_index("images/2.jpg");
+        deep::core::out() <<
+             "zip file index: " << file1Index <<
+            " README uncompressed size: " << reader.get_file_uncompressed_size(file1Index) << " compressed size: " << reader.get_file_compressed_size(file1Index) <<
+            " compression method: " << deep::zip::get_compression_method_str(reader.get_file_compression_method(file1Index)) <<
+            "\n";
+
+        if(!reader.read_file(file1Index, ros.get()))
+        {
+            deep::core::err() << "Unable to read file in zip\n";
+        }
+
+        deep::core::out() << "Enumerate entries in zip file:\n";
+        reader.enumerate(zip_enum_entries_callback, nullptr);
+
+        deep::ref<deep::file_stream> os = deep::mem::alloc_type<deep::file_stream>("C:\\Test\\test2.zip", deep::file_stream::file_mode::Open, deep::file_stream::file_access::ReadWrite, deep::file_stream::file_share::Read);
+    
+        deep::zip_writer writer(os.get());
+
+        if(!writer.init())
+        {
+            deep::core::err() << "Error when initializing zip writer\n";
+        }
     }
 
     deep::window win(TARGET_MS, TARGET_FPS);

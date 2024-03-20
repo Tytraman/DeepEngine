@@ -1,22 +1,18 @@
 #ifndef __DEEP_ENGINE_ZIP_WRITER_HPP__
 #define __DEEP_ENGINE_ZIP_WRITER_HPP__
 
-#include "DE/core/def.hpp"
-#include "DE/core/types.hpp"
-#include "DE/io/stream.hpp"
-#include "DE/modules/zip/zip_types.hpp"
+#include "DE/modules/zip/zip.hpp"
 
 namespace deep
 {
 
-    class zip_writer
+    class zip_writer : public zip
     {
 
         public:
+            DE_API zip_writer(stream *outputStream);
 
-
-        private:
-
+            DE_API bool init();
 
     };
 
