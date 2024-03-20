@@ -8,19 +8,20 @@ namespace deep
     zip_int64_t __deep_zip_source_callback(void *userdata, void *data, zip_uint64_t len, zip_source_cmd_t cmd)
     {
         // 'userdata' est un pointeur spécifié par l'utilisateur au moment de la création du zip_source.
-        ref<stream> strm = static_cast<stream *>(userdata);
+        zip::stream_context *ctx = static_cast<zip::stream_context *>(userdata);
+        
 
         // cmd correspond à la commande envoyée par libzip.
         // Il faut retourner -1 en cas d'erreur, 0 en cas de succès ou autre si la doc le spécifie.
         switch(cmd)
         {
             default: return -1;
-            case ZIP_SOURCE_SUPPORTS: return zip_source_make_command_bitmap(ZIP_SOURCE_OPEN, ZIP_SOURCE_CLOSE, ZIP_SOURCE_FREE, ZIP_SOURCE_READ, ZIP_SOURCE_WRITE, ZIP_SOURCE_STAT, ZIP_SOURCE_ERROR, ZIP_SOURCE_SEEK, ZIP_SOURCE_TELL);
+            case ZIP_SOURCE_SUPPORTS: return zip_source_make_command_bitmap(ZIP_SOURCE_OPEN, ZIP_SOURCE_CLOSE, ZIP_SOURCE_FREE, ZIP_SOURCE_READ, ZIP_SOURCE_BEGIN_WRITE, ZIP_SOURCE_WRITE, ZIP_SOURCE_COMMIT_WRITE, ZIP_SOURCE_ROLLBACK_WRITE, ZIP_SOURCE_STAT, ZIP_SOURCE_ERROR, ZIP_SOURCE_SEEK_WRITE, ZIP_SOURCE_SEEK, ZIP_SOURCE_TELL_WRITE, ZIP_SOURCE_TELL, ZIP_SOURCE_REMOVE);
             case ZIP_SOURCE_OPEN:
             {
-                if(!strm->is_opened())
+                if(!ctx->original->is_opened())
                 {
-                    if(!strm->open())
+                    if(!ctx->original->open())
                     {
                         return -1;
                     }
@@ -34,29 +35,32 @@ namespace deep
                 // Doit retourner le nombre d'octets lus ou 0 en cas d'EOF.
                 size_t bytesRead = 0;
 
-                if(strm->read(data, 0, static_cast<size_t>(len), &bytesRead))
+                if(ctx->original->read(data, 0, static_cast<size_t>(len), &bytesRead))
                 {
                     return static_cast<zip_int64_t>(bytesRead);
                 }
             } return -1;
+            case ZIP_SOURCE_BEGIN_WRITE: return 0;
             case ZIP_SOURCE_WRITE:
             {
                 // Écrit dans le stream 'len' octets depuis le buffer 'data'.
                 // Retourne le nombre d'octets écris.
                 size_t bytesWrite = 0;
 
-                if(strm->write(data, 0, static_cast<size_t>(len), &bytesWrite))
+                if(ctx->temp->write(data, 0, static_cast<size_t>(len), &bytesWrite))
                 {
                     return static_cast<zip_int64_t>(bytesWrite);
                 }
             } return -1;
+            case ZIP_SOURCE_COMMIT_WRITE: return 0;
+            case ZIP_SOURCE_ROLLBACK_WRITE: return 0;
             case ZIP_SOURCE_STAT:
             {
                 zip_stat_t *zipStat = static_cast<zip_stat_t *>(data);
 
                 zip_stat_init(zipStat);
 
-                zipStat->size = static_cast<zip_uint64_t>(strm->get_length());
+                zipStat->size = static_cast<zip_uint64_t>(ctx->original->get_length());
                 zipStat->valid |= ZIP_STAT_SIZE;
             } return sizeof(zip_stat_t);
             case ZIP_SOURCE_ERROR:
@@ -65,11 +69,17 @@ namespace deep
                 errs[0] = ZIP_ER_OPNOTSUPP;
                 errs[1] = EINVAL;
             } return 2 * sizeof(int);
+            case ZIP_SOURCE_SEEK_WRITE:
             case ZIP_SOURCE_SEEK:
             {
                 zip_source_args_seek *argsSeek = static_cast<zip_source_args_seek *>(data);
 
                 stream::seek_origin or;
+
+                if(!ctx->original->can_seek())
+                {
+                    return -1;
+                }
 
                 switch(argsSeek->whence)
                 {
@@ -88,12 +98,11 @@ namespace deep
                     } break;
                 }
 
-                if(!strm->seek(static_cast<ssize_t>(argsSeek->offset), or))
-                {
-                    return -1;
-                }
+                ctx->original->seek(static_cast<ssize_t>(argsSeek->offset), or);
             } return 0;
-            case ZIP_SOURCE_TELL: return static_cast<zip_int64_t>(strm->get_position());
+            case ZIP_SOURCE_TELL_WRITE:
+            case ZIP_SOURCE_TELL: return static_cast<zip_int64_t>(ctx->original->get_position());
+            case ZIP_SOURCE_REMOVE: return 0;
         }
     }
 
@@ -103,10 +112,12 @@ namespace deep
     ========
     */
     zip::zip(stream *strm)
-        : m_Stream(strm),
-          m_Zip(nullptr),
+        : m_Zip(nullptr),
           m_ZipSource(nullptr)
-    { }
+    {
+        m_Context.original = strm;
+        m_Context.temp = mem::alloc_type<memory_stream>();
+    }
 
     /*
     =========
@@ -117,11 +128,6 @@ namespace deep
     {
         zip_source_t *source = static_cast<zip_source_t *>(m_ZipSource);
         zip_t *zip = static_cast<zip_t *>(m_Zip);
-
-        if(source != nullptr)
-        {
-            zip_source_close(source);
-        }
 
         if(zip != nullptr)
         {
@@ -301,10 +307,10 @@ namespace deep
     zip::create_source_function
     ===========================
     */
-    void *zip::create_source_function()
+    void *zip::create_source_function(stream_context *context)
     {
         zip_error_t err;
-        return zip_source_function_create(__deep_zip_source_callback, m_Stream.get(), &err);
+        return zip_source_function_create(__deep_zip_source_callback, context, &err);
     }
 
 }

@@ -24,7 +24,7 @@ namespace deep
         zip_error_t err;
         zip_t *zip;
 
-        zip_source_t *source = static_cast<zip_source_t *>(create_source_function());
+        zip_source_t *source = static_cast<zip_source_t *>(create_source_function(&m_Context));
 
         if(source == nullptr)
         {

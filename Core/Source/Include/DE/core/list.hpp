@@ -538,6 +538,8 @@ namespace deep
     template<typename Type>
     bool list<Type>::grow_if_needed()
     {
+        // TODO: refaire cette fonction car elle n'attribue pas assez de mémoire quand il faut une grosse capacité.
+
         // Si le nombre d'éléments présents dans la liste est supérieur à la capacité,
         // on augmente celle-ci du pas attribué.
         if(m_NumberOfElements >= m_Capacity)

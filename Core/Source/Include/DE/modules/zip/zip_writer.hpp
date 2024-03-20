@@ -14,6 +14,8 @@ namespace deep
 
             DE_API bool init();
 
+            DE_API bool write_file(const char *filename, stream *is, int64_t *index = nullptr);
+
     };
 
 }

@@ -214,7 +214,7 @@ int main()
 
     {
         deep::ref<deep::file_stream> is = deep::mem::alloc_type<deep::file_stream>("C:\\Test\\test.zip", deep::file_stream::file_mode::Open, deep::file_stream::file_access::Read, deep::file_stream::file_share::Read);
-        deep::ref<deep::file_stream> ros = deep::mem::alloc_type<deep::file_stream>("C:\\Test\\2.jpg", deep::file_stream::file_mode::Create, deep::file_stream::file_access::Write, deep::file_stream::file_share::Read);
+        deep::ref<deep::file_stream> ros = deep::mem::alloc_type<deep::file_stream>("C:\\Test\\gamecube.png", deep::file_stream::file_mode::Create, deep::file_stream::file_access::Write, deep::file_stream::file_share::Read);
 
         deep::zip_reader reader(is.get());
 
@@ -225,7 +225,7 @@ int main()
 
         deep::core::out() << "zip number of entries: " << reader.get_number_of_entries() << " zip comment: " << reader.get_archive_comment() << "\n";
 
-        int64_t file1Index = reader.get_file_index("images/2.jpg");
+        int64_t file1Index = reader.get_file_index("media\\wii icons\\gamecube.png");
         deep::core::out() <<
              "zip file index: " << file1Index <<
             " README uncompressed size: " << reader.get_file_uncompressed_size(file1Index) << " compressed size: " << reader.get_file_compressed_size(file1Index) <<
@@ -244,9 +244,16 @@ int main()
     
         deep::zip_writer writer(os.get());
 
+        deep::ref<deep::file_stream> ris = deep::mem::alloc_type<deep::file_stream>("C:\\Test\\d.jpg", deep::file_stream::file_mode::Open, deep::file_stream::file_access::Read, deep::file_stream::file_share::Read);
+
         if(!writer.init())
         {
             deep::core::err() << "Error when initializing zip writer\n";
+        }
+
+        if(!writer.write_file("2.jpg", ris.get()))
+        {
+            deep::core::err() << "Error when writting with zip writer\n";
         }
     }
 

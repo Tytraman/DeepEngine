@@ -5,6 +5,7 @@
 #include "DE/core/types.hpp"
 #include "DE/core/string.hpp"
 #include "DE/io/stream.hpp"
+#include "DE/io/memory_stream.hpp"
 #include "DE/modules/zip/zip_types.hpp"
 
 namespace deep
@@ -15,6 +16,12 @@ namespace deep
 
         public:
             using enum_entries_callback = bool (*)(zip *archive, int64_t index, const char *filename, uint64_t uncompressedSize, uint64_t compressedSize, zip_compression_method compressionMethod, void *args);
+
+            struct stream_context
+            {
+                ref<stream> original;
+                ref<memory_stream> temp;
+            };
 
         public:
             DE_API zip(stream *strm);
@@ -39,12 +46,12 @@ namespace deep
             DE_API static const char *get_compression_method_str(zip_compression_method method);
 
         protected:
-            ref<stream> m_Stream;
+            stream_context m_Context;
             void *m_Zip;
             void *m_ZipSource;
 
         protected:
-            DE_API void *create_source_function();
+            DE_API static void *create_source_function(stream_context *context);
 
     };
 
