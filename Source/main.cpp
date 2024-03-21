@@ -244,7 +244,7 @@ int main()
     
         deep::zip_writer writer(os.get());
 
-        deep::ref<deep::file_stream> ris = deep::mem::alloc_type<deep::file_stream>("C:\\Test\\d.jpg", deep::file_stream::file_mode::Open, deep::file_stream::file_access::Read, deep::file_stream::file_share::Read);
+        deep::ref<deep::file_stream> ris = deep::mem::alloc_type<deep::file_stream>("C:\\Test\\2.jpg", deep::file_stream::file_mode::Open, deep::file_stream::file_access::Read, deep::file_stream::file_share::Read);
 
         if(!writer.init())
         {

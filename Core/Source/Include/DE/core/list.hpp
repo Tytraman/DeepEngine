@@ -538,13 +538,13 @@ namespace deep
     template<typename Type>
     bool list<Type>::grow_if_needed()
     {
-        // TODO: refaire cette fonction car elle n'attribue pas assez de mémoire quand il faut une grosse capacité.
-
         // Si le nombre d'éléments présents dans la liste est supérieur à la capacité,
         // on augmente celle-ci du pas attribué.
         if(m_NumberOfElements >= m_Capacity)
         {
-            size_t newCapacity = m_Capacity + m_CapacityStep;
+            size_t newCapacity = m_NumberOfElements + m_Capacity;
+            size_t mul = (newCapacity / m_CapacityStep) + 1;
+            newCapacity = mul * m_CapacityStep;
             mem_ptr ptr = mem::realloc_no_track(m_Data, newCapacity * sizeof(Type));
 
             if(ptr == nullptr)

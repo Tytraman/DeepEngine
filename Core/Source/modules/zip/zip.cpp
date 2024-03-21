@@ -52,7 +52,20 @@ namespace deep
                     return static_cast<zip_int64_t>(bytesWrite);
                 }
             } return -1;
-            case ZIP_SOURCE_COMMIT_WRITE: return 0;
+            case ZIP_SOURCE_COMMIT_WRITE:
+            {
+                size_t bytesWrite = 0;
+
+                ctx->temp->seek(0, stream::seek_origin::Begin);
+                ctx->original->seek(0, stream::seek_origin::Begin);
+
+                ctx->original->set_length(0);
+
+                if(ctx->temp->copy_to(*ctx->original.get()))
+                {
+                    return static_cast<zip_int64_t>(ctx->original->get_length());
+                }
+            } return -1;
             case ZIP_SOURCE_ROLLBACK_WRITE: return 0;
             case ZIP_SOURCE_STAT:
             {

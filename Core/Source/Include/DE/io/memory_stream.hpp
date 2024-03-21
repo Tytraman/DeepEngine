@@ -25,6 +25,7 @@ namespace deep
             DE_API virtual bool can_seek() const override;
 
             DE_API virtual size_t get_length() const override;
+            DE_API virtual bool set_length(size_t length) override;
 
             DE_API virtual size_t get_position() const override;
 
@@ -130,6 +131,16 @@ namespace deep
     inline size_t memory_stream::get_length() const
     {
         return m_Data.count();
+    }
+
+    /*
+    =========================
+    memory_stream::set_length
+    =========================
+    */
+    inline bool memory_stream::set_length(size_t length)
+    {
+        return m_Data.reserve(length);
     }
 
     /*

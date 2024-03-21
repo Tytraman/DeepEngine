@@ -256,6 +256,35 @@ ignore_access:
     }
 
     /*
+    =======================
+    file_stream::set_length
+    =======================
+    */
+    bool file_stream::set_length(size_t length)
+    {
+        if(m_FD == os_invalid_fd)
+        {
+            return false;
+        }
+
+#if DE_WINDOWS
+
+        size_t position = get_position();
+
+        seek(static_cast<ssize_t>(length), seek_origin::Begin);
+
+        bool ret = SetEndOfFile(m_FD);
+
+        seek(static_cast<ssize_t>(position), seek_origin::Begin);
+
+        return ret;
+
+#else
+#error Need implementation
+#endif
+    }
+
+    /*
     =================
     file_stream::read
     =================

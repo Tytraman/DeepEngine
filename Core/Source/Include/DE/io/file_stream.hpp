@@ -56,6 +56,7 @@ namespace deep
             DE_API virtual bool can_seek() const override;
 
             DE_API virtual size_t get_length() const override;
+            DE_API virtual bool set_length(size_t length) override;
 
             DE_API virtual size_t get_position() const override;
 

@@ -49,6 +49,7 @@ namespace deep
             virtual bool can_seek() const = 0;
 
             virtual size_t get_length() const = 0;
+            virtual bool set_length(size_t length) = 0;
 
             virtual size_t get_position() const = 0;
 
