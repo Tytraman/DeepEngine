@@ -14,7 +14,7 @@ namespace deep
 
             DE_API bool init();
 
-            DE_API bool write_file(const char *filename, stream *is, int64_t *index = nullptr);
+            DE_API bool write_file(const char *filename, stream *is, zip_compression_method method = zip_compression_method::Store, uint8_t compressionLevel = 0, int64_t *index = nullptr);
 
     };
 

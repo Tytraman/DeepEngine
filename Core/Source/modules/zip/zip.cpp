@@ -5,11 +5,44 @@
 namespace deep
 {
 
+    zip_int64_t __deep_zip_seek(stream *s, void *data)
+    {
+        zip_source_args_seek *argsSeek = static_cast<zip_source_args_seek *>(data);
+        ref<stream> strm = s;
+
+        stream::seek_origin or;
+
+        if(!strm->can_seek())
+        {
+            return -1;
+        }
+
+        switch(argsSeek->whence)
+        {
+            default: return -1;
+            case SEEK_SET:
+            {
+                or = stream::seek_origin::Begin;
+            } break;
+            case SEEK_CUR:
+            {
+                or = stream::seek_origin::Current;
+            } break;
+            case SEEK_END:
+            {
+                or = stream::seek_origin::End;
+            } break;
+        }
+
+        strm->seek(static_cast<ssize_t>(argsSeek->offset), or);
+
+        return 0;
+    }
+
     zip_int64_t __deep_zip_source_callback(void *userdata, void *data, zip_uint64_t len, zip_source_cmd_t cmd)
     {
         // 'userdata' est un pointeur spécifié par l'utilisateur au moment de la création du zip_source.
         zip::stream_context *ctx = static_cast<zip::stream_context *>(userdata);
-        
 
         // cmd correspond à la commande envoyée par libzip.
         // Il faut retourner -1 en cas d'erreur, 0 en cas de succès ou autre si la doc le spécifie.
@@ -28,7 +61,7 @@ namespace deep
                 }
             } return 0;
             case ZIP_SOURCE_CLOSE: return 0;    // Ce n'est pas libzip qui doit s'occuper de la fermeture des streams.
-            case ZIP_SOURCE_FREE: return 0;
+            case ZIP_SOURCE_FREE:  return 0;
             case ZIP_SOURCE_READ:
             {
                 // Lit le stream de 'len' octets et les stocks dans 'data'.
@@ -82,40 +115,11 @@ namespace deep
                 errs[0] = ZIP_ER_OPNOTSUPP;
                 errs[1] = EINVAL;
             } return 2 * sizeof(int);
-            case ZIP_SOURCE_SEEK_WRITE:
-            case ZIP_SOURCE_SEEK:
-            {
-                zip_source_args_seek *argsSeek = static_cast<zip_source_args_seek *>(data);
-
-                stream::seek_origin or;
-
-                if(!ctx->original->can_seek())
-                {
-                    return -1;
-                }
-
-                switch(argsSeek->whence)
-                {
-                    default: return -1;
-                    case SEEK_SET:
-                    {
-                        or = stream::seek_origin::Begin;
-                    } break;
-                    case SEEK_CUR:
-                    {
-                        or = stream::seek_origin::Current;
-                    } break;
-                    case SEEK_END:
-                    {
-                        or = stream::seek_origin::End;
-                    } break;
-                }
-
-                ctx->original->seek(static_cast<ssize_t>(argsSeek->offset), or);
-            } return 0;
-            case ZIP_SOURCE_TELL_WRITE:
-            case ZIP_SOURCE_TELL: return static_cast<zip_int64_t>(ctx->original->get_position());
-            case ZIP_SOURCE_REMOVE: return 0;
+            case ZIP_SOURCE_SEEK_WRITE: return __deep_zip_seek(ctx->temp.get(), data);
+            case ZIP_SOURCE_SEEK:       return __deep_zip_seek(ctx->original.get(), data);
+            case ZIP_SOURCE_TELL_WRITE: return static_cast<zip_int64_t>(ctx->temp->get_position());
+            case ZIP_SOURCE_TELL:       return static_cast<zip_int64_t>(ctx->original->get_position());
+            case ZIP_SOURCE_REMOVE:     return 0;
         }
     }
 

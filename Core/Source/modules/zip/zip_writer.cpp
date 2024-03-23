@@ -52,7 +52,7 @@ namespace deep
     zip_writer::write_file
     ======================
     */
-    bool zip_writer::write_file(const char *filename, stream *is, int64_t *index)
+    bool zip_writer::write_file(const char *filename, stream *is, zip_compression_method method, uint8_t compressionLevel, int64_t *index)
     {
         ref<stream> strm = is;
         zip_t *zip = static_cast<zip_t *>(m_Zip);
@@ -71,6 +71,37 @@ namespace deep
             {
                 return false;
             }
+        }
+
+        zip_int32_t m;
+
+        switch(method)
+        {
+            default: return false;
+            case zip_compression_method::Store:
+            {
+                m = ZIP_CM_STORE;
+            } break;
+            case zip_compression_method::Deflate:
+            {
+                m = ZIP_CM_DEFLATE;
+            } break;
+            case zip_compression_method::Bzip2:
+            {
+                m = ZIP_CM_BZIP2;
+            } break;
+            case zip_compression_method::Lzma:
+            {
+                m = ZIP_CM_LZMA;
+            } break;
+            case zip_compression_method::XZ:
+            {
+                m = ZIP_CM_XZ;
+            } break;
+            case zip_compression_method::Zstd:
+            {
+                m = ZIP_CM_ZSTD;
+            } break;
         }
 
         size_t len = strm->get_length() - strm->get_position();
@@ -103,7 +134,7 @@ namespace deep
             *index = static_cast<int64_t>(idx);
         }
 
-        /*if(zip_set_file_compression(zip, idx, ZIP_CM_DEFLATE, 9) == -1)
+        if(zip_set_file_compression(zip, idx, m, static_cast<zip_uint32_t>(compressionLevel)) == -1)
         {
             err = zip_get_error(zip);
 
@@ -112,14 +143,14 @@ namespace deep
             return false;
         }
 
-        if(zip_file_set_external_attributes(zip, idx, 0, ZIP_OPSYS_VFAT, 0) == -1)
+        if(zip_file_set_external_attributes(zip, idx, 0, ZIP_OPSYS_DOS, 0) == -1)
         {
             err = zip_get_error(zip);
 
             zip_source_close(source);
 
             return false;
-        }*/
+        }
 
         return true;
     }
