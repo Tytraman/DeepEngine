@@ -1,4 +1,4 @@
-#include "DE/modules/zip/zip_writer.hpp"
+#include "modules/zip/zip_writer.hpp"
 
 #include <zip.h>
 

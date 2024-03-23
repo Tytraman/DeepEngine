@@ -1,5 +1,5 @@
-#include "DE/drivers/opengl/renderer.hpp"
-#include "DE/core/window.hpp"
+#include "drivers/opengl/renderer.hpp"
+#include "core/window.hpp"
 
 #include <imgui.h>
 #include <backends/imgui_impl_sdl2.h>

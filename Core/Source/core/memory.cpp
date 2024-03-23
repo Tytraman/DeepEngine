@@ -1,6 +1,6 @@
-#include "DE/core/memory.hpp"
-#include "DE/core/list.hpp"
-#include "DE/core/core.hpp"
+#include "core/memory.hpp"
+#include "core/list.hpp"
+#include "core/core.hpp"
 
 #include <stdio.h>
 

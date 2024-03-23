@@ -1,4 +1,4 @@
-#include "DE/drivers/opengl/texture.hpp"
+#include "drivers/opengl/texture.hpp"
 
 
 namespace deep

@@ -1,4 +1,4 @@
-#include "DE/core/color.hpp"
+#include "core/color.hpp"
 
 /*
 ============

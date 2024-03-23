@@ -1,4 +1,4 @@
-#include "DE/io/text_writer.hpp"
+#include "io/text_writer.hpp"
 
 namespace deep
 {

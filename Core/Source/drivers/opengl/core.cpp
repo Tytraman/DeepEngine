@@ -1,4 +1,4 @@
-#include "DE/drivers/opengl/core.hpp"
+#include "drivers/opengl/core.hpp"
 
 namespace deep
 {

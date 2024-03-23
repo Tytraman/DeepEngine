@@ -1,9 +1,9 @@
-#include "DE/drivers/opengl/framerenderbuffer.hpp"
-#include "DE/drivers/opengl/framebuffer.hpp"
-#include "DE/drivers/opengl/renderbuffer.hpp"
-#include "DE/drivers/opengl/vbo.hpp"
-#include "DE/drivers/opengl/vao.hpp"
-#include "DE/drivers/opengl/texture.hpp"
+#include "drivers/opengl/framerenderbuffer.hpp"
+#include "drivers/opengl/framebuffer.hpp"
+#include "drivers/opengl/renderbuffer.hpp"
+#include "drivers/opengl/vbo.hpp"
+#include "drivers/opengl/vao.hpp"
+#include "drivers/opengl/texture.hpp"
 
 namespace deep
 {

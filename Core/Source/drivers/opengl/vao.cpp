@@ -1,4 +1,4 @@
-#include "DE/drivers/opengl/vao.hpp"
+#include "drivers/opengl/vao.hpp"
 
 namespace deep
 {

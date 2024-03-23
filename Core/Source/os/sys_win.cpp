@@ -1,8 +1,8 @@
-#include "DE/core/def.hpp"
+#include "core/def.hpp"
 
 #if DE_WINDOWS
 
-#include "DE/os/sys_win.hpp"
+#include "os/sys_win.hpp"
 
 namespace deep
 {

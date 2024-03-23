@@ -2,34 +2,34 @@
 #include <math.h>
 #include <string>
 
-#include <DE/core/types.hpp>
-#include <DE/core/core.hpp>
-#include <DE/core/window.hpp>
-#include <DE/os/key.hpp>
-#include <DE/maths/vec.hpp>
-#include <DE/maths/mat.hpp>
-#include <DE/ecs/scene.hpp>
-#include <DE/graphics/graphic.hpp>
-#include <DE/image/png.hpp>
-#include <DE/image/bmp.hpp>
-#include <DE/core/resources.hpp>
-#include <DE/core/memory.hpp>
-#include <DE/core/string.hpp>
-#include <DE/file/file_object.hpp>
-#include <DE/core/settings.hpp>
+#include <core/types.hpp>
+#include <core/core.hpp>
+#include <core/window.hpp>
+#include <os/key.hpp>
+#include <maths/vec.hpp>
+#include <maths/mat.hpp>
+#include <ecs/scene.hpp>
+#include <graphics/graphic.hpp>
+#include <image/png.hpp>
+#include <image/bmp.hpp>
+#include <core/resources.hpp>
+#include <core/memory.hpp>
+#include <core/string.hpp>
+#include <file/file_object.hpp>
+#include <core/settings.hpp>
 
-#include <DE/ecs/entity.hpp>
-#include <DE/ecs/component.hpp>
+#include <ecs/entity.hpp>
+#include <ecs/component.hpp>
 
-#include <DE/gui/deimgui.hpp>
+#include <gui/deimgui.hpp>
 
-#include <DE/drivers/opengl/core.hpp>
-#include <DE/drivers/opengl/shader.hpp>
-#include <DE/drivers/opengl/uniform.hpp>
+#include <drivers/opengl/core.hpp>
+#include <drivers/opengl/shader.hpp>
+#include <drivers/opengl/uniform.hpp>
 
-#include <DE/io/file_stream.hpp>
-#include <DE/modules/zip/zip_reader.hpp>
-#include <DE/modules/zip/zip_writer.hpp>
+#include <io/file_stream.hpp>
+#include <modules/zip/zip_reader.hpp>
+#include <modules/zip/zip_writer.hpp>
 
 #define WINDOW_WIDTH	800
 #define WINDOW_HEIGHT	480
@@ -211,51 +211,6 @@ int main()
     }
 
     deep::core::out() << "pwd: " << deep::core::get_pwd().str() << "\n";
-
-    {
-        deep::ref<deep::file_stream> is = deep::mem::alloc_type<deep::file_stream>("C:\\Test\\test.zip", deep::file_stream::file_mode::Open, deep::file_stream::file_access::Read, deep::file_stream::file_share::Read);
-        deep::ref<deep::file_stream> ros = deep::mem::alloc_type<deep::file_stream>("C:\\Test\\gamecube.png", deep::file_stream::file_mode::Create, deep::file_stream::file_access::Write, deep::file_stream::file_share::Read);
-
-        deep::zip_reader reader(is.get());
-
-        if(!reader.init())
-        {
-            deep::core::err() << "Error when initializing zip reader\n";
-        }
-
-        deep::core::out() << "zip number of entries: " << reader.get_number_of_entries() << " zip comment: " << reader.get_archive_comment() << "\n";
-
-        int64_t file1Index = reader.get_file_index("media\\wii icons\\gamecube.png");
-        deep::core::out() <<
-             "zip file index: " << file1Index <<
-            " README uncompressed size: " << reader.get_file_uncompressed_size(file1Index) << " compressed size: " << reader.get_file_compressed_size(file1Index) <<
-            " compression method: " << deep::zip::get_compression_method_str(reader.get_file_compression_method(file1Index)) <<
-            "\n";
-
-        if(!reader.read_file(file1Index, ros.get()))
-        {
-            deep::core::err() << "Unable to read file in zip\n";
-        }
-
-        deep::core::out() << "Enumerate entries in zip file:\n";
-        reader.enumerate(zip_enum_entries_callback, nullptr);
-
-        deep::ref<deep::file_stream> os = deep::mem::alloc_type<deep::file_stream>("C:\\Test\\test2.zip", deep::file_stream::file_mode::Open, deep::file_stream::file_access::ReadWrite, deep::file_stream::file_share::Read);
-    
-        deep::zip_writer writer(os.get());
-
-        deep::ref<deep::file_stream> ris = deep::mem::alloc_type<deep::file_stream>("C:\\Test\\2.jpg", deep::file_stream::file_mode::Open, deep::file_stream::file_access::Read, deep::file_stream::file_share::Read);
-
-        if(!writer.init())
-        {
-            deep::core::err() << "Error when initializing zip writer\n";
-        }
-
-        if(!writer.write_file("2.jpg", ris.get()))
-        {
-            deep::core::err() << "Error when writting with zip writer\n";
-        }
-    }
 
     deep::window win(TARGET_MS, TARGET_FPS);
     win.set_event_callback(event_callback);

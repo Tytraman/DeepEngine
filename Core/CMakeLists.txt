@@ -45,7 +45,7 @@ add_compile_definitions(PRIVATE DE_AUTHORS=${DE_AUTHORS})   # Le nom des auteurs
 add_compile_definitions(PRIVATE DE_VERSION=${DE_VERSION})   # Le nom de la version actuelle stockée dans les variables partagées.
 
 set(CORE_SOURCE "${CMAKE_CURRENT_LIST_DIR}/Source" CACHE INTERNAL "")
-set(CORE_INCLUDE "${CORE_SOURCE}/Include" CACHE INTERNAL "")
+set(CORE_INCLUDE "${CORE_SOURCE}" CACHE INTERNAL "")
 
 # Variables qui stockent les chemins des différentes librairies utilisées.
 set(SDL_INCLUDE "${THIRD_PARTY_LIBS}/SDL/include")
@@ -225,7 +225,7 @@ deep_add_files(
 deep_add_folders(
     DEEP_SOURCE_FILES
     INCLUDE_DIR ${CORE_SOURCE}
-    FOLDERS "" "core" "maths" "os" "hardware" "audio" "ecs" "glad" "graphics" "image" "gui" "file" "io" "modules"
+    FOLDERS "" "core" "maths" "os" "hardware" "audio" "ecs" "graphics" "image" "gui" "file" "io" "modules"
     EXTENSIONS ".c" ".cpp"
 )
 
@@ -240,6 +240,13 @@ deep_add_folders(
     DEEP_SOURCE_FILES
     INCLUDE_DIR ${CORE_SOURCE}/modules
     FOLDERS "zip"
+    EXTENSIONS ".c" ".cpp"
+)
+
+deep_add_folders(
+    DEEP_SOURCE_FILES
+    INCLUDE_DIR ${THIRD_PARTY_LIBS}
+    FOLDERS "glad"
     EXTENSIONS ".c" ".cpp"
 )
 

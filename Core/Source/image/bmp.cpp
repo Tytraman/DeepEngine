@@ -1,6 +1,6 @@
-#include "DE/image/bmp.hpp"
-#include "DE/image/png.hpp"
-#include "DE/io/stream.hpp"
+#include "image/bmp.hpp"
+#include "image/png.hpp"
+#include "io/stream.hpp"
 
 #include <string.h>
 #include <math.h>

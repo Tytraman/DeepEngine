@@ -1,4 +1,4 @@
-#include "DE/io/memory_stream.hpp"
+#include "io/memory_stream.hpp"
 
 namespace deep
 {

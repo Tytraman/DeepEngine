@@ -1,4 +1,4 @@
-#include "DE/modules/zip/zip_reader.hpp"
+#include "modules/zip/zip_reader.hpp"
 
 #include <zip.h>
 

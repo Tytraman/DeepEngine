@@ -1,6 +1,6 @@
-#include "DE/core/settings.hpp"
-#include "DE/file/file_object.hpp"
-#include "DE/core/common.hpp"
+#include "core/settings.hpp"
+#include "file/file_object.hpp"
+#include "core/common.hpp"
 
 #include <stdio.h>
 

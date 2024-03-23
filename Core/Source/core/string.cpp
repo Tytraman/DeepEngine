@@ -1,5 +1,5 @@
-#include "DE/core/string.hpp"
-#include "DE/core/common.hpp"
+#include "core/string.hpp"
+#include "core/common.hpp"
 
 namespace deep
 {

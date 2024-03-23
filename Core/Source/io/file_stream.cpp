@@ -1,5 +1,5 @@
-#include "DE/io/file_stream.hpp"
-#include "DE/os/win32.hpp"
+#include "io/file_stream.hpp"
+#include "os/win32.hpp"
 
 namespace deep
 {

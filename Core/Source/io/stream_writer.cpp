@@ -1,4 +1,4 @@
-#include "DE/io/stream_writer.hpp"
+#include "io/stream_writer.hpp"
 
 namespace deep
 {

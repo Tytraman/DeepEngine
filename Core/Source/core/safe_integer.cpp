@@ -1,4 +1,4 @@
-#include "DE/core/safe_integer.hpp"
+#include "core/safe_integer.hpp"
 
 namespace deep
 {

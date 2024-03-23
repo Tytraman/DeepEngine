@@ -1,9 +1,9 @@
-#include "DE/graphics/graphic.hpp"
-#include "DE/ecs/entity.hpp"
-#include "DE/ecs/component.hpp"
-#include "DE/drivers/opengl/vbo.hpp"
-#include "DE/drivers/opengl/vao.hpp"
-#include "DE/drivers/opengl/texture.hpp"
+#include "graphics/graphic.hpp"
+#include "ecs/entity.hpp"
+#include "ecs/component.hpp"
+#include "drivers/opengl/vbo.hpp"
+#include "drivers/opengl/vao.hpp"
+#include "drivers/opengl/texture.hpp"
 
 namespace deep
 {

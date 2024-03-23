@@ -1,5 +1,5 @@
-#include "DE/ecs/entity.hpp"
-#include "DE/ecs/component.hpp"
+#include "ecs/entity.hpp"
+#include "ecs/component.hpp"
 
 namespace deep
 {

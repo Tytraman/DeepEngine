@@ -1,5 +1,5 @@
-#include "DE/audio/audio.hpp"
-#include "DE/io/stream.hpp"
+#include "audio/audio.hpp"
+#include "io/stream.hpp"
 
 #include <stdio.h>
 

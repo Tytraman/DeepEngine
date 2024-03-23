@@ -1,11 +1,11 @@
-#include "DE/ecs/component.hpp"
-#include "DE/graphics/graphic.hpp"
-#include "DE/maths/mat.hpp"
-#include "DE/core/window.hpp"
-#include "DE/drivers/opengl/core.hpp"
-#include "DE/drivers/opengl/vbo.hpp"
-#include "DE/drivers/opengl/vao.hpp"
-#include "DE/drivers/opengl/shader.hpp"
+#include "ecs/component.hpp"
+#include "graphics/graphic.hpp"
+#include "maths/mat.hpp"
+#include "core/window.hpp"
+#include "drivers/opengl/core.hpp"
+#include "drivers/opengl/vbo.hpp"
+#include "drivers/opengl/vao.hpp"
+#include "drivers/opengl/shader.hpp"
 
 #include <vector>
 

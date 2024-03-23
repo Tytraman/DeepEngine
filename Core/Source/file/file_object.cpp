@@ -1,6 +1,6 @@
-#include "DE/file/file_object.hpp"
-#include "DE/core/stack.hpp"
-#include "DE/io/stream_writer.hpp"
+#include "file/file_object.hpp"
+#include "core/stack.hpp"
+#include "io/stream_writer.hpp"
 
 #include <stdio.h>
 

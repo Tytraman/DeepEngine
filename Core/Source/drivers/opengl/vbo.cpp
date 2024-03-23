@@ -1,4 +1,4 @@
-#include "DE/drivers/opengl/vbo.hpp"
+#include "drivers/opengl/vbo.hpp"
 
 namespace deep
 {

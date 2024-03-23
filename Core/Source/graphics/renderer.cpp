@@ -1,5 +1,5 @@
-#include "DE/graphics/renderer.hpp"
-#include "DE/core/window.hpp"
+#include "graphics/renderer.hpp"
+#include "core/window.hpp"
 
 #include <glad/glad.h>
 

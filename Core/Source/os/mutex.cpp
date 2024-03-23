@@ -1,4 +1,4 @@
-#include "DE/os/mutex.hpp"
+#include "os/mutex.hpp"
 
 namespace deep
 {

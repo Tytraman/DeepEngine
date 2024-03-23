@@ -1,4 +1,4 @@
-#include "DE/drivers/opengl/renderbuffer.hpp"
+#include "drivers/opengl/renderbuffer.hpp"
 
 namespace deep
 {

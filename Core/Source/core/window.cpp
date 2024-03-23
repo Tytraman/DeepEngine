@@ -1,11 +1,11 @@
-#include "DE/core/window.hpp"
-#include "DE/core/def.hpp"
-#include "DE/core/core.hpp"
-#include "DE/os/key.hpp"
-#include "DE/ecs/scene.hpp"
-#include "DE/ecs/system.hpp"
-#include "DE/core/resources.hpp"
-#include "DE/drivers/opengl/core.hpp"
+#include "core/window.hpp"
+#include "core/def.hpp"
+#include "core/core.hpp"
+#include "os/key.hpp"
+#include "ecs/scene.hpp"
+#include "ecs/system.hpp"
+#include "core/resources.hpp"
+#include "drivers/opengl/core.hpp"
 
 #include <glad/glad.h>
 

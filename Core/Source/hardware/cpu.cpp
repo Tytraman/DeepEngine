@@ -1,5 +1,5 @@
-#include "DE/hardware/cpu.hpp"
-#include "DE/os/COM.hpp"
+#include "hardware/cpu.hpp"
+#include "os/COM.hpp"
 
 #include <stdio.h>
 

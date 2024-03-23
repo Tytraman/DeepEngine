@@ -1,6 +1,6 @@
-#include "DE/graphics/material.hpp"
-#include "DE/drivers/opengl/uniform.hpp"
-#include "DE/drivers/opengl/texture.hpp"
+#include "graphics/material.hpp"
+#include "drivers/opengl/uniform.hpp"
+#include "drivers/opengl/texture.hpp"
 
 namespace deep
 {

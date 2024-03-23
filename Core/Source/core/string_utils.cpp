@@ -1,7 +1,7 @@
-#include "DE/core/string_utils.hpp"
-#include "DE/core/string.hpp"
-#include "DE/core/memory.hpp"
-#include "DE/core/list.hpp"
+#include "core/string_utils.hpp"
+#include "core/string.hpp"
+#include "core/memory.hpp"
+#include "core/list.hpp"
 
 #include <stdio.h>
 #include <cmath>

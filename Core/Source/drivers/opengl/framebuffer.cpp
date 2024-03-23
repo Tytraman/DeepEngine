@@ -1,7 +1,7 @@
-#include "DE/drivers/opengl/framebuffer.hpp"
-#include "DE/drivers/opengl/texture.hpp"
-#include "DE/drivers/opengl/renderbuffer.hpp"
-#include "DE/image/bmp.hpp"
+#include "drivers/opengl/framebuffer.hpp"
+#include "drivers/opengl/texture.hpp"
+#include "drivers/opengl/renderbuffer.hpp"
+#include "image/bmp.hpp"
 
 namespace deep
 {

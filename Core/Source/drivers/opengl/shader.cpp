@@ -1,5 +1,5 @@
-#include "DE/drivers/opengl/shader.hpp"
-#include "DE/drivers/opengl/uniform.hpp"
+#include "drivers/opengl/shader.hpp"
+#include "drivers/opengl/uniform.hpp"
 
 #include <stdio.h>
 

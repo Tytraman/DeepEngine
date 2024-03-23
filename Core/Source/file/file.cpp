@@ -1,6 +1,6 @@
-#include "DE/file/file.hpp"
-#include "DE/core/string.hpp"
-#include "DE/core/string_utils.hpp"
+#include "file/file.hpp"
+#include "core/string.hpp"
+#include "core/string_utils.hpp"
 
 #include <stdio.h>
 
