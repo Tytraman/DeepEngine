@@ -3,26 +3,27 @@
 
 #include "core/def.hpp"
 #include "core/types.hpp"
-#include "core/string.hpp"
+#include "core/string/string.hpp"
 #include "core/ref_counted.hpp"
 #include "io/text_writer.hpp"
 
 namespace deep
 {
 
-    enum class core_init_status : uint8_t
+    enum class core_init_status
     {
         OK,
         CannotInstantiateObjects,
-        InstanceAlreadyExists,    
-        NoEnoughDiskSpace,        
-        NoEnoughMemory,           
-        CannotLoadEngineSettings, 
-        CannotLoadResources,      
-        CannotInitCOM,            
-        CannotQueryCpuInfo,       
-        CannotInitNtDll,          
-        CannotLoadStdStream,      
+        InstanceAlreadyExists,
+        NoEnoughDiskSpace,
+        NoEnoughMemory,
+        CannotLoadEngineSettings,
+        CannotLoadResources,
+        CannotInitCOM,
+        CannotQueryCpuInfo,
+        CannotInitNtDll,
+        CannotLoadStdStream,
+        CannotInitResources,
 
         Unknown
     };

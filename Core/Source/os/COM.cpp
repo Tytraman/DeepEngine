@@ -1,6 +1,6 @@
 #include "os/COM.hpp"
-#include "core/string_utils.hpp"
-#include "core/list.hpp"
+#include "core/string/string_utils.hpp"
+#include "core/templates/list.hpp"
 
 namespace deep
 {

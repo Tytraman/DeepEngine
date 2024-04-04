@@ -232,25 +232,24 @@ namespace deep
         texture_manager::transmit_texture
         =================================
         */
-        void texture_manager::transmit_texture(mem_ptr data, int width, int height, image_color_space colorType)
+        void texture_manager::transmit_texture(mem_ptr data, int width, int height, image::color_model colorModel)
         {
             GLenum internalFormat;
             GLenum format;
-            switch(colorType)
+            switch(colorModel)
             {
-                default:
-                    return;
-                case image_color_space::RGB:
+                default: return;
+                case image::color_model::RGB:
                 {
                     internalFormat = GL_RGB8;
                     format = GL_RGB;
                 } break;
-                case image_color_space::RGBA:
+                case image::color_model::RGBA:
                 {
                     internalFormat = GL_RGBA8;
                     format = GL_RGBA;
                 } break;
-                case image_color_space::BGR:
+                case image::color_model::BGR:
                 {
                     internalFormat = GL_RGB8;
                     format = GL_BGR;
@@ -265,25 +264,25 @@ namespace deep
         texture_manager::transmit_texture_cubemaps
         ==========================================
         */
-        void texture_manager::transmit_texture_cubemaps(mem_ptr left, mem_ptr front, mem_ptr right, mem_ptr back, mem_ptr bottom, mem_ptr top, int width, int height, image_color_space colorType)
+        void texture_manager::transmit_texture_cubemaps(mem_ptr left, mem_ptr front, mem_ptr right, mem_ptr back, mem_ptr bottom, mem_ptr top, int width, int height, image::color_model colorModel)
         {
             GLenum internalFormat;
             GLenum format;
-            switch(colorType)
+            switch(colorModel)
             {
                 default:
                     return;
-                case image_color_space::RGB:
+                case image::color_model::RGB:
                 {
                     internalFormat = GL_RGB8;
                     format = GL_RGB;
                 } break;
-                case image_color_space::BGR:
+                case image::color_model::BGR:
                 {
                     internalFormat = GL_RGB8;
                     format = GL_BGR;
                 } break;
-                case image_color_space::RGBA:
+                case image::color_model::RGBA:
                 {
                     internalFormat = GL_RGBA8;
                     format = GL_RGBA;

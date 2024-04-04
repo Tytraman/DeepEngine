@@ -1,0 +1,17 @@
+textures {
+    type : folder
+
+    files {
+        dirt {
+            type : bmp
+        }
+
+        grass_block_side {
+            type : bmp
+        }
+
+        grass_block_top {
+            type : bmp
+        }
+    }
+}

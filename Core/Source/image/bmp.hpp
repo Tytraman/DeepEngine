@@ -1,8 +1,10 @@
 #ifndef __DEEP_ENGINE_MYBMP_HPP__
 #define __DEEP_ENGINE_MYBMP_HPP__
 
+#include "io/stream.hpp"
 #include "image/image.hpp"
 #include "maths/vec.hpp"
+#include "core/resources/image.hpp"
 
 namespace deep
 {
@@ -12,7 +14,7 @@ namespace deep
     class png;
 
     DE_PACK(
-        struct DE_API bmp_file_header
+        struct bmp_file_header
         {
             uint16_t signature;          // 2
             uint32_t size;               // 4
@@ -23,7 +25,7 @@ namespace deep
     );
 
     DE_PACK(
-        struct DE_API bmp_core_header
+        struct bmp_core_header
         {
             uint32_t size;
             int16_t width;
@@ -34,7 +36,7 @@ namespace deep
     );
 
     DE_PACK(
-        struct DE_API bmp_info_header
+        struct bmp_info_header
         {
             uint32_t size;
             int32_t width;
@@ -51,7 +53,7 @@ namespace deep
     );
 
     DE_PACK(
-        struct DE_API bmp_v4_header
+        struct bmp_v4_header
         {
             bmp_info_header infoHeader;
             uint32_t redChannelBitmask;
@@ -79,6 +81,8 @@ namespace deep
             DE_API bmp(const bmp &other);
 
             DE_API bool create(int32_t width, int32_t height, uint16_t colorDepth, image_color_space colorType);
+
+            DE_API static bool create_from_stream(ref<stream> inputStream, image &dest);
 
             /// @brief Crée une image bmp en l'ouvrant depuis un fichier.
             /// @param filename Le chemin du fichier à ouvrir.

@@ -1,7 +1,7 @@
 #include "ecs/component.hpp"
 #include "graphics/graphic.hpp"
 #include "maths/mat.hpp"
-#include "core/window.hpp"
+#include "os/window.hpp"
 #include "drivers/opengl/core.hpp"
 #include "drivers/opengl/vbo.hpp"
 #include "drivers/opengl/vao.hpp"

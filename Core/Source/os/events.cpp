@@ -1,5 +1,5 @@
 #include "os/events.hpp"
-#include "core/window.hpp"
+#include "os/window.hpp"
 #include "core/memory.hpp"
 
 #include <imgui.h>

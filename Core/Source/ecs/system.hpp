@@ -3,7 +3,7 @@
 
 #include "core/def.hpp"
 #include "core/types.hpp"
-#include "core/list.hpp"
+#include "core/templates/list.hpp"
 #include "ecs/ecs.hpp"
 #include "ecs/component.hpp"
 #include "graphics/renderer.hpp"

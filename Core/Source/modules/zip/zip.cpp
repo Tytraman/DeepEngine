@@ -128,6 +128,19 @@ namespace deep
     zip::zip
     ========
     */
+    zip::zip()
+        : m_Zip(nullptr),
+          m_ZipSource(nullptr)
+    {
+        m_Context.original = nullptr;
+        m_Context.temp = nullptr;
+    }
+
+    /*
+    ========
+    zip::zip
+    ========
+    */
     zip::zip(stream *strm)
         : m_Zip(nullptr),
           m_ZipSource(nullptr)
@@ -162,6 +175,26 @@ namespace deep
 
     /*
     ==============
+    zip::init_base
+    ==============
+    */
+    bool zip::init_base(ref<stream> strm)
+    {
+        memory_stream *mStrm = mem::alloc_type<memory_stream>();
+
+        if(mStrm == nullptr)
+        {
+            return false;
+        }
+
+        m_Context.original = strm;
+        m_Context.temp = mStrm;
+
+        return true;
+    }
+
+    /*
+    ==============
     zip::enumerate
     ==============
     */
@@ -186,6 +219,146 @@ namespace deep
         }
 
         return true;
+    }
+
+    /*
+    =====================
+    zip_reader::read_file
+    =====================
+    */
+    bool zip::read_file(int64_t index, mem_ptr buffer, size_t size)
+    {
+        zip_t *zip = static_cast<zip_t *>(m_Zip);
+        zip_file_t *file;
+        zip_int64_t bytesRead;
+
+        file = zip_fopen_index(zip, static_cast<zip_uint64_t>(index), 0);
+        if(file == nullptr)
+        {
+            return false;
+        }
+
+        bytesRead = zip_fread(file, buffer, size);
+
+        zip_fclose(file);
+
+        return bytesRead > 0;
+    }
+
+    /*
+    =====================
+    zip_reader::read_file
+    =====================
+    */
+    bool zip::read_file(int64_t index, stream *os)
+    {
+        ref<stream> strm = os;
+        zip_t *zip = static_cast<zip_t *>(m_Zip);
+        zip_file_t *file;
+        bool ret = true;
+
+        if(!strm->can_write())
+        {
+            return false;
+        }
+
+        if(!strm->is_opened())
+        {
+            if(!strm->open())
+            {
+                return false;
+            }
+        }
+
+        file = zip_fopen_index(zip, static_cast<zip_uint64_t>(index), 0);
+        if(file == nullptr)
+        {
+            return false;
+        }
+
+        uint8_t buffer[4096];
+        zip_int64_t bytesRead;
+
+        while(true)
+        {
+            bytesRead = zip_fread(file, buffer, sizeof(buffer));
+
+            if(bytesRead == 0)
+            {
+                break;
+            }
+
+            if(bytesRead == -1)
+            {
+                ret = false;
+                break;
+            }
+
+            if(!strm->write(buffer, 0, static_cast<size_t>(bytesRead), nullptr))
+            {
+                ret = false;
+                break;
+            }
+        }
+
+        zip_fclose(file);
+
+        return ret;
+    }
+
+    /*
+    =====================
+    zip_reader::read_file
+    =====================
+    */
+    bool zip::read_file(int64_t index, ref<text_writer> ow)
+    {
+        zip_t *zip = static_cast<zip_t *>(m_Zip);
+        zip_file_t *file;
+        bool ret = true;
+
+        if(!ow->is_opened())
+        {
+            if(!ow->open())
+            {
+                return false;
+            }
+        }
+
+        file = zip_fopen_index(zip, static_cast<zip_uint64_t>(index), 0);
+        if(file == nullptr)
+        {
+            return false;
+        }
+
+        uint8_t buffer[4096];
+        zip_int64_t bytesRead;
+
+        while(true)
+        {
+            bytesRead = zip_fread(file, buffer, sizeof(buffer));
+
+            if(bytesRead == 0)
+            {
+                break;
+            }
+
+            if(bytesRead == -1)
+            {
+                ret = false;
+                break;
+            }
+
+            if(!ow->write(add_const<char *>(buffer), 0, static_cast<size_t>(bytesRead)))
+            {
+                ret = false;
+                break;
+            }
+        }
+
+        zip_fclose(file);
+
+        return ret;
     }
 
     /*

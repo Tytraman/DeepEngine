@@ -131,6 +131,141 @@ namespace deep
     }
 
     /*
+    =======================
+    bmp::create_from_stream
+    =======================
+    */
+    bool bmp::create_from_stream(ref<stream> inputStream, image &dest)
+    {
+        if(!inputStream->can_read())
+        {
+            return false;
+        }
+
+        if(!inputStream->is_opened())
+        {
+            if(!inputStream->open())
+            {
+                return false;
+            }
+        }
+
+        uint8_t headerBuffer[sizeof(bmp_file_header) + sizeof(bmp_info_header)];
+        size_t bytesRead = 0;
+
+        // Lit l'en-tête du fichier.
+        if(!inputStream->read(headerBuffer, 0, sizeof(headerBuffer), &bytesRead))
+        {
+            return false;
+        }
+
+        bmp_file_header *bmpFileHeader = (bmp_file_header *) headerBuffer;
+        bmp_info_header *bmpInfoHeader = (bmp_info_header *) (headerBuffer + sizeof(*bmpFileHeader));
+
+        uint32_t infoHeaderSize = bmpInfoHeader->size;
+        uint32_t imageDataOffset = bmpFileHeader->imageDataOffset;
+        uint8_t bytes;
+
+        uint64_t width  = bmpInfoHeader->width;
+        uint64_t height = bmpInfoHeader->height;
+        image::color_model model;
+
+        uint32_t colorTableOffset = sizeof(bmp_file_header) + infoHeaderSize;
+
+        bool colorTable = false;
+
+        switch(bmpInfoHeader->colorDepth)
+        {
+            default: return false;
+            case 1:
+            case 4:
+            case 8:
+            {
+                // La présence d'une table de couleurs est obligatoire quand le nombre de bits par pixel est <= 8.
+
+                if(infoHeaderSize == sizeof(bmp_core_header))
+                {
+                    bytes = 3;
+                }
+                else
+                {
+                    bytes = 4;
+                }
+
+                model = image::color_model::BGR;
+
+                colorTable = true;
+            } break;
+            case 24:
+            {
+                model = image::color_model::BGR;
+
+                bytes = 3;
+            } break;
+            case 32:
+            {
+                model = image::color_model::BGRA;
+
+                bytes = 4;
+            } break;
+        }
+
+        uint32_t rowSize = ((bmpInfoHeader->colorDepth * bmpInfoHeader->width + 31) / 32) * 4;
+
+        mem_ptr data = mem::alloc(dest.m_Width * dest.m_Height * bytes);
+
+        if(data == nullptr)
+        {
+            return false;
+        }
+
+        if(dest.m_ColorData != nullptr)
+        {
+            mem::free(dest.m_ColorData);
+        }
+
+        uint32_t empty = rowSize % bytes;
+
+        // Pointeurs vers le premier pixel, qui se trouve en bas à gauche.
+        uint8_t *pixels = static_cast<uint8_t*>(data) + bmpFileHeader->imageDataOffset;
+
+        if(colorTable)
+        {
+
+        }
+        else
+        {
+            // La classe image doit stocker les pixels en partant de en haut à gauche.
+            uint64_t h = height - 1;
+            size_t pos;
+            size_t destPos = 0;
+
+            while(true)
+            {
+                pos = rowSize * h;
+
+                memcpy(static_cast<uint8_t *>(data) + destPos, pixels + pos, rowSize - empty);
+
+                destPos += width * bytes;
+
+                if(h == 0)
+                {
+                    break;
+                }
+
+                h--;
+            }
+        }
+
+        dest.m_Width = width;
+        dest.m_Height = height;
+        dest.m_ColorModel = model;
+        dest.m_ColorData = data;
+
+        return true;
+    }
+
+    /*
     =====================
     bmp::create_from_file
     =====================

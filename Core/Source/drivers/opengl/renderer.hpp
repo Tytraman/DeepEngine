@@ -3,6 +3,7 @@
 
 #include "core/def.hpp"
 #include "core/types.hpp"
+#include "maths/vec.hpp"
 #include "drivers/opengl/def.hpp"
 
 namespace deep
@@ -28,14 +29,14 @@ namespace deep
                 DE_API SDL_GLContext get_context();
                 DE_API window *get_window();
 
-                DE_API colora get_clear_color() const;
-                DE_API void set_clear_color(const colora color);
+                DE_API vec4<uint8_t> get_clear_color() const;
+                DE_API void set_clear_color(const vec4<uint8_t> &color);
 
             private:
                 SDL_GLContext m_Context;
                 window *m_Window;
 
-                colora m_ClearColor;
+                vec4<uint8_t> m_ClearColor;
 
         };
 
@@ -64,7 +65,7 @@ namespace deep
         gl_renderer::get_clear_color
         ============================
         */
-        inline colora gl_renderer::get_clear_color() const
+        inline vec4<uint8_t> gl_renderer::get_clear_color() const
         {
             return m_ClearColor;
         }

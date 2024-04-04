@@ -2,9 +2,9 @@
 #define __DEEP_ENGINE_SYS_WIN_HPP__
 
 #include "core/def.hpp"
-#include "core/hash_table.hpp"
-#include "core/list.hpp"
-#include "core/string.hpp"
+#include "core/templates/hash_table.hpp"
+#include "core/templates/list.hpp"
+#include "core/string/string.hpp"
 
 #if DE_WINDOWS
 

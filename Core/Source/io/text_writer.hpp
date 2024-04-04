@@ -27,6 +27,8 @@ namespace deep
             virtual bool write(double value) = 0;
             virtual bool write(mem_ptr ptr) = 0;
 
+            virtual bool is_opened() const = 0;
+
             DE_API text_writer &operator<<(bool value);
             DE_API text_writer &operator<<(char value);
             DE_API text_writer &operator<<(const char *str);

@@ -1,5 +1,5 @@
 #include "file/file_object.hpp"
-#include "core/stack.hpp"
+#include "core/templates/stack.hpp"
 #include "io/stream_writer.hpp"
 
 #include <stdio.h>
@@ -80,7 +80,7 @@ rread:
 
                 finder.skipWhiteChars();
 
-                if(finder.position() == text.length())
+                if(finder.position() == text.get_length())
                 {
                     goto rread;
                 }
@@ -175,7 +175,7 @@ rread:
             }
 
             // Vérifie s'il faut lire de nouveaux octets.
-            if(finder.position() >= text.length())
+            if(finder.position() >= text.get_length())
             {
                 processing = false;
             }
@@ -311,7 +311,7 @@ rread:
                     hash_table_iterator<pair<string, string>> itemsIterator  = currentContainer->items.begin();
                     hash_table_iterator<pair<string, string>> itemsEndIterator = currentContainer->items.end();
 
-                    size_t currentPathLength = currentPath.length();
+                    size_t currentPathLength = currentPath.get_length();
                     if(currentPathLength > 0)
                     {
                         currentPath.append(".");
@@ -391,7 +391,7 @@ rread:
                 }
 
                 // Ajoute la clé du conteneur dans le chemin total.
-                if(currentPath.length() > 0)
+                if(currentPath.get_length() > 0)
                 {
                     currentPath.append(".");
                 }

@@ -1,5 +1,5 @@
-#ifndef __DEEP_ENGINE_IMAGE_HPP__
-#define __DEEP_ENGINE_IMAGE_HPP__
+#ifndef __DEEP_ENGINE_OLD_IMAGE_HPP__
+#define __DEEP_ENGINE_OLD_IMAGE_HPP__
 
 #include "core/def.hpp"
 #include "core/types.hpp"

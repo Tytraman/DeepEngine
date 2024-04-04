@@ -4,7 +4,6 @@
 #include "core/def.hpp"
 #include "core/types.hpp"
 #include "ecs/scene.hpp"
-#include "core/color.hpp"
 #include "maths/vec.hpp"
 #include "graphics/shape.hpp"
 
@@ -58,12 +57,12 @@ namespace deep
                 float width,
                 float height,
                 float length,
-                const colora &color1,
-                const colora &color2,
-                const colora &color3,
-                const colora &color4,
-                const colora &color5,
-                const colora &color6,
+                const vec4<uint8_t> &color1,
+                const vec4<uint8_t> &color2,
+                const vec4<uint8_t> &color3,
+                const vec4<uint8_t> &color4,
+                const vec4<uint8_t> &color5,
+                const vec4<uint8_t> &color6,
                 bool collidable = false
             );
 

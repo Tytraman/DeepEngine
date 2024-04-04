@@ -5,8 +5,8 @@
 #include "core/types.hpp"
 #include "ecs/ecs.hpp"
 #include "ecs/component.hpp"
-#include "core/list.hpp"
-#include "core/hash_table.hpp"
+#include "core/templates/list.hpp"
+#include "core/templates/hash_table.hpp"
 #include "drivers/opengl/texture.hpp"
 
 namespace deep

@@ -3,7 +3,7 @@
 
 #include "core/def.hpp"
 #include "core/types.hpp"
-#include "core/string.hpp"
+#include "core/string/string.hpp"
 
 #if DE_WINDOWS
 // Copié-collé de la doc Microsoft : https://learn.microsoft.com/en-us/windows/win32/wmisdk/creating-a-connection-to-a-wmi-namespace

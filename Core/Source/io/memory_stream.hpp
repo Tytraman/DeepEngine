@@ -4,7 +4,7 @@
 #include "core/def.hpp"
 #include "core/types.hpp"
 #include "io/stream.hpp"
-#include "core/list.hpp"
+#include "core/templates/list.hpp"
 
 namespace deep
 {
@@ -14,6 +14,8 @@ namespace deep
 
         public:
             DE_API memory_stream();
+
+            DE_API uint8_t *get_raw_data() const;
 
             DE_API virtual bool open() override;
             DE_API virtual bool close() override;
@@ -49,6 +51,16 @@ namespace deep
             size_t m_Position;
 
     };
+
+    /*
+    ===========================
+    memory_stream::get_raw_data
+    ===========================
+    */
+    inline uint8_t *memory_stream::get_raw_data() const
+    {
+        return m_Data.get_data();
+    }
 
     /*
     ===================

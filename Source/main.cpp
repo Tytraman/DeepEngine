@@ -1,35 +1,7 @@
 #include <stdio.h>
-#include <math.h>
-#include <string>
 
-#include <core/types.hpp>
-#include <core/core.hpp>
-#include <core/window.hpp>
-#include <os/key.hpp>
-#include <maths/vec.hpp>
-#include <maths/mat.hpp>
-#include <ecs/scene.hpp>
-#include <graphics/graphic.hpp>
-#include <image/png.hpp>
-#include <image/bmp.hpp>
-#include <core/resources.hpp>
-#include <core/memory.hpp>
-#include <core/string.hpp>
-#include <file/file_object.hpp>
-#include <core/settings.hpp>
-
-#include <ecs/entity.hpp>
-#include <ecs/component.hpp>
-
-#include <gui/deimgui.hpp>
-
-#include <drivers/opengl/core.hpp>
-#include <drivers/opengl/shader.hpp>
-#include <drivers/opengl/uniform.hpp>
-
-#include <io/file_stream.hpp>
-#include <modules/zip/zip_reader.hpp>
-#include <modules/zip/zip_writer.hpp>
+#include <deep_engine.hpp>
+#include <drivers/gl3.hpp>
 
 #define WINDOW_WIDTH	800
 #define WINDOW_HEIGHT	480
@@ -158,11 +130,41 @@ void update_callback(deep::window & /* win */)
     camera.update_angle_of_view();
 }
 
-bool zip_enum_entries_callback(deep::zip *archive, int64_t index, const char *filename, uint64_t uncompressedSize, uint64_t compressedSize, deep::zip_compression_method compressionMethod, void */*args*/)
+deep::GL3::gl_id compile_program(const char *programName, deep::ref<deep::text> vertex, deep::ref<deep::text> fragment)
 {
-    deep::core::out() << "[" DE_TERM_FG_YELLOW << index << DE_TERM_RESET "] " << (archive->is_directory(filename) ? "* " : "") << filename << ": " << uncompressedSize << ' ' << compressedSize << ' ' << deep::zip::get_compression_method_str(compressionMethod) << '\n';
+    deep::GL3::program_manager *programManager = deep::GL3::program_manager::get_singleton();
+    deep::GL3::shader_manager *shaderManager = deep::GL3::shader_manager::get_singleton();
 
-    return true;
+    deep::GL3::gl_id vertexShader = shaderManager->create("vertex_shader", deep::GL3::shader_manager::gl_shader_type::Vertex);
+    deep::GL3::gl_id fragmentShader = shaderManager->create("fragment_shader", deep::GL3::shader_manager::gl_shader_type::Fragment);
+
+    shaderManager->load(vertexShader, vertex->get_resource_data(), vertex->get_resource_size());
+    shaderManager->load(fragmentShader, fragment->get_resource_data(), fragment->get_resource_size());
+
+    if(!shaderManager->compile(vertexShader))
+    {
+        deep::core::err() << "Unable to compile default_vert shader\n";
+    }
+
+    if(!shaderManager->compile(fragmentShader))
+    {
+        deep::core::err() << "Unable to compile default_frag shader\n";
+    }
+
+    deep::GL3::gl_id program = programManager->create(programName);
+
+    programManager->attach_shader(program, vertexShader);
+    programManager->attach_shader(program, fragmentShader);
+
+    if(!programManager->link(program))
+    {
+        deep::core::err() << "Unable to link shader\n";
+    }
+    
+    shaderManager->destroy(vertexShader);
+    shaderManager->destroy(fragmentShader);
+
+    return program;
 }
 
 #undef main
@@ -208,6 +210,10 @@ int main()
         {
             fprintf(stderr, "Cannot load engine settings.\n");
         } return EXIT_FAILURE;
+        case deep::core_init_status::CannotInitResources:
+        {
+            fprintf(stderr, "Cannot initialize resources.\n");
+        } return EXIT_FAILURE;
     }
 
     deep::core::out() << "pwd: " << deep::core::get_pwd().str() << "\n";
@@ -223,16 +229,8 @@ int main()
         return EXIT_FAILURE;
     }
 
-    deep::engine_settings *engineSettings = deep::engine_settings::get_singleton();
-    deep::resource_manager *resourcesManager = deep::resource_manager::get_singleton();
+    deep::resource_manager *resourceManager = deep::resource_manager::get_singleton();
     deep::GL3::texture_manager *textureManager = deep::GL3::texture_manager::get_singleton();
-
-    // Charge les ressources nécessaires au jeu.
-    if(!resourcesManager->init(engineSettings->get_resources_directory().str()))
-    {
-        deep::core::shutdown();
-        return 1;
-    }
 
     deep::im_gui_window::init(win);
 
@@ -250,91 +248,41 @@ int main()
         "Max array texture layers: " << deep::GL3::core::query_max_array_texture_layers() << "\n"
         DE_TERM_FG_YELLOW "====================================================\n" DE_TERM_RESET;
 
-    deep::bmp mcGrass, mcGrassTop, mcDirt;
-    if(!resourcesManager->load_bmp("grass_block_side.bmp", mcGrass))
-    {
-        deep::core::err() << "Unable to load resource:" << GetLastError() << "\n";
-        return EXIT_FAILURE;
-    }
+    
+    deep::ref<deep::image> dirtRes = deep::ref_cast<deep::image>(resourceManager->get_resource("textures.dirt"));
+    deep::ref<deep::image> grassBlockSideRes = deep::ref_cast<deep::image>(resourceManager->get_resource("textures.grass_block_side"));
+    deep::ref<deep::image> grassBlockTopRes = deep::ref_cast<deep::image>(resourceManager->get_resource("textures.grass_block_top"));
 
-    if(!resourcesManager->load_bmp("grass_block_top.bmp", mcGrassTop))
-    {
-        deep::core::err() << "Unable to load resource.\n";
-        return EXIT_FAILURE;
-    }
-
-    if(!resourcesManager->load_bmp("dirt.bmp", mcDirt))
-    {
-        deep::core::err() << "Unable to load resource.\n";
-        return EXIT_FAILURE;
-    }
-
-    if(!mcGrass.add(mcGrassTop))
-    {
-        deep::core::err() << "Unable to add bmp image.\n";
-        return EXIT_FAILURE;
-    }
-
-    if(!mcGrass.add(mcDirt, deep::vec2<int32_t>(0, mcGrass.get_height())))
-    {
-        deep::core::err() << "Unable to add bmp image.\n";
-        return EXIT_FAILURE;
-    }
+    deep::ref<deep::text> defaultShaderFragRes = deep::ref_cast<deep::text>(resourceManager->get_resource("shaders.default_frag"));
+    deep::ref<deep::text> defaultShaderVertRes = deep::ref_cast<deep::text>(resourceManager->get_resource("shaders.default_vert"));
+    deep::ref<deep::text> lightedColoredObjectShaderFragRes = deep::ref_cast<deep::text>(resourceManager->get_resource("shaders.lighted_colored_object_frag"));
+    deep::ref<deep::text> lightedObjectShaderVertRes = deep::ref_cast<deep::text>(resourceManager->get_resource("shaders.lighted_object_vert"));
+    deep::ref<deep::text> lightedTexturedObjectShaderFragRes = deep::ref_cast<deep::text>(resourceManager->get_resource("shaders.lighted_textured_object_frag"));
+    deep::ref<deep::text> lightSourceObjectShaderFragRes = deep::ref_cast<deep::text>(resourceManager->get_resource("shaders.light_source_object_frag"));
+    deep::ref<deep::text> postProcessingShaderFragRes = deep::ref_cast<deep::text>(resourceManager->get_resource("shaders.post_processing_frag"));
+    deep::ref<deep::text> postProcessingShaderVertRes = deep::ref_cast<deep::text>(resourceManager->get_resource("shaders.post_processing_vert"));
+    deep::ref<deep::text> skyboxShaderFragRes = deep::ref_cast<deep::text>(resourceManager->get_resource("shaders.skybox_frag"));
+    deep::ref<deep::text> skyboxShaderVertRes = deep::ref_cast<deep::text>(resourceManager->get_resource("shaders.skybox_vert"));
 
     deep::GL3::gl_id mcTexture = textureManager->create_2D("mc_texture");
     textureManager->bind(mcTexture, 0);
     textureManager->set_texture_wrapping_s(deep::GL3::texture_manager::gl_texture_wrap::ClampToEdge);
     textureManager->set_texture_wrapping_t(deep::GL3::texture_manager::gl_texture_wrap::ClampToEdge);
     textureManager->set_texture_filtering(deep::GL3::texture_manager::gl_texture_filter::Nearest);
-    textureManager->transmit_texture(mcGrass.get_image(), mcGrass.get_width(), mcGrass.get_height(), mcGrass.get_color_type());
-
-    deep::bmp skyboxLeft;
-    skyboxLeft.create_from_file("..\\resources\\textures\\skybox_left.bmp");
-    skyboxLeft.vertical_flip();
-    skyboxLeft.horizontal_flip();
-
-    deep::bmp skyboxFront;
-    skyboxFront.create_from_file("..\\resources\\textures\\skybox_front.bmp");
-    skyboxFront.vertical_flip();
-    skyboxFront.horizontal_flip();
-
-    deep::bmp skyboxRight;
-    skyboxRight.create_from_file("..\\resources\\textures\\skybox_right.bmp");
-    skyboxRight.vertical_flip();
-    skyboxRight.horizontal_flip();
-
-    deep::bmp skyboxBack;
-    skyboxBack.create_from_file("..\\resources\\textures\\skybox_back.bmp");
-    skyboxBack.vertical_flip();
-    skyboxBack.horizontal_flip();
-
-    deep::bmp skyboxBottom;
-    skyboxBottom.create_from_file("..\\resources\\textures\\skybox_bottom.bmp");
-
-    deep::bmp skyboxTop;
-    skyboxTop.create_from_file("..\\resources\\textures\\skybox_top.bmp");
+    textureManager->transmit_texture(grassBlockSideRes->get_resource_data(), static_cast<int>(grassBlockSideRes->get_width()), static_cast<int>(grassBlockSideRes->get_height()), grassBlockSideRes->get_color_model());
 
     deep::vec4<float> black(0.0f, 0.0f, 0.0f, 1.0);
     deep::vec4<float> lightCubeColor(1.0f, 1.0f, 1.0f, 1.0);
     deep::vec4<float> lightedCubeColor(1.0f, 0.5f, 0.31f, 1.0f);
 
-    deep::GL3::gl_id skybox = textureManager->create_2D("skybox", deep::GL3::texture_manager::gl_texture_type::texture_cubemap);
-    textureManager->bind(skybox);
-    textureManager->set_texture_wrapping_s_cubemaps(deep::GL3::texture_manager::gl_texture_wrap::ClampToEdge);
-    textureManager->set_texture_wrapping_t_cubemaps(deep::GL3::texture_manager::gl_texture_wrap::ClampToEdge);
-    textureManager->set_texture_wrapping_r_cubemaps(deep::GL3::texture_manager::gl_texture_wrap::ClampToEdge);
-    textureManager->set_texture_filtering_cubemaps(deep::GL3::texture_manager::gl_texture_filter::Linear);
-    textureManager->transmit_texture_cubemaps(skyboxLeft.get_image(), skyboxFront.get_image(), skyboxRight.get_image(), skyboxBack.get_image(), skyboxBottom.get_image(), skyboxTop.get_image(), skyboxTop.get_width(), skyboxTop.get_height(), skyboxTop.get_color_type());
+    deep::GL3::gl_id defaultProgram = compile_program("default", defaultShaderVertRes, defaultShaderFragRes);
+    deep::GL3::gl_id skyboxProgram  = compile_program("skybox", skyboxShaderVertRes, skyboxShaderFragRes);
+    deep::GL3::gl_id postProcessProgram = compile_program("post_processing", postProcessingShaderVertRes, postProcessingShaderFragRes);
+    deep::GL3::gl_id lightedObjectProgram = compile_program("lighted_colored_object", lightedObjectShaderVertRes, lightedColoredObjectShaderFragRes);
+    deep::GL3::gl_id lightSourceObjectProgram = compile_program("light_source_object", lightedObjectShaderVertRes, lightSourceObjectShaderFragRes);
+    deep::GL3::gl_id lightedTexturedObjectProgram = compile_program("lighted_textured_object", lightedObjectShaderVertRes, lightedTexturedObjectShaderFragRes);
 
     deep::GL3::program_manager *programManager = deep::GL3::program_manager::get_singleton();
-
-    deep::hash_function hash = programManager->get_hash_function();
-    deep::GL3::gl_id defaultProgram = hash("default");
-    deep::GL3::gl_id skyboxProgram  = hash("skybox");
-    deep::GL3::gl_id postProcessProgram = hash("post_processing");
-    deep::GL3::gl_id lightedObjectProgram = hash("lighted_colored_object");
-    deep::GL3::gl_id lightSourceObjectProgram = hash("light_source_object");
-    deep::GL3::gl_id lightedTexturedObjectProgram = hash("lighted_textured_object");
 
     programManager->use(defaultProgram);
 
@@ -523,31 +471,31 @@ int main()
 
     programManager->use(lightSourceObjectProgram);
 
-    mTrs = deep::GL3::uniform_manager::find(defaultProgram, "mTrs");
+    mTrs = deep::GL3::uniform_manager::find(lightSourceObjectProgram, "mTrs");
     if(mTrs != -1)
         programManager->add_uniform("mTrs", mTrs, deep::vec3<float>(0.0f, 0.0f, 0.0f));
 
-    mRotX = deep::GL3::uniform_manager::find(defaultProgram, "mRotX");
+    mRotX = deep::GL3::uniform_manager::find(lightSourceObjectProgram, "mRotX");
     if(mRotX != -1)
         programManager->add_uniform("mRotX", mRotX, 0.0f);
 
-    mRotY = deep::GL3::uniform_manager::find(defaultProgram, "mRotY");
+    mRotY = deep::GL3::uniform_manager::find(lightSourceObjectProgram, "mRotY");
     if(mRotY != -1)
         programManager->add_uniform("mRotY", mRotY, 0.0f);
 
-    mRotZ = deep::GL3::uniform_manager::find(defaultProgram, "mRotZ");
+    mRotZ = deep::GL3::uniform_manager::find(lightSourceObjectProgram, "mRotZ");
     if(mRotZ != -1)
         programManager->add_uniform("mRotZ", mRotZ, 0.0f);
 
-    mScl = deep::GL3::uniform_manager::find(defaultProgram, "mScl");
+    mScl = deep::GL3::uniform_manager::find(lightSourceObjectProgram, "mScl");
     if(mScl != -1)
         programManager->add_uniform("mScl", mScl, deep::vec3<float>(0.0f, 0.0f, 0.0f));
 
-    view = deep::GL3::uniform_manager::find(defaultProgram, "view");
+    view = deep::GL3::uniform_manager::find(lightSourceObjectProgram, "view");
     if(view != -1)
         programManager->add_uniform("view", view, deep::fmat4x4(0.0f));
 
-    proj = deep::GL3::uniform_manager::find(defaultProgram, "proj");
+    proj = deep::GL3::uniform_manager::find(lightSourceObjectProgram, "proj");
     if(proj != -1)
         programManager->add_uniform("proj", proj, deep::fmat4x4(0.0f));
 
@@ -611,10 +559,8 @@ int main()
     // Lance la boucle du jeu, bloquant.
     win.run();
 
-    deep::core::out() << DE_TERM_FG_RED "~Good-bye~" DE_TERM_RESET "\n";
-
     programManager->destroy_all_programs();
-    resourcesManager->shutdown();
+    resourceManager->shutdown();
     deep::core::shutdown();
 
     win.destroy();

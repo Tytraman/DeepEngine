@@ -5,7 +5,7 @@
 #include "core/types.hpp"
 #include "maths/vec.hpp"
 #include "graphics/shape.hpp"
-#include "core/list.hpp"
+#include "core/templates/list.hpp"
 
 namespace deep
 {

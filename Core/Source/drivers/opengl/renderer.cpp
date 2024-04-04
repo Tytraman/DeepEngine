@@ -1,5 +1,5 @@
 #include "drivers/opengl/renderer.hpp"
-#include "core/window.hpp"
+#include "os/window.hpp"
 
 #include <imgui.h>
 #include <backends/imgui_impl_sdl2.h>
@@ -57,10 +57,10 @@ namespace deep
             SDL_GL_SwapWindow(m_Window->get_window());
         }
 
-        void gl_renderer::set_clear_color(const colora color)
+        void gl_renderer::set_clear_color(const vec4<uint8_t> &color)
         {
             m_ClearColor = color;
-            DE_GL_CALL(glClearColor(color.R / 255.0f, color.G / 255.0f, color.B / 255.0f, color.A / 255.0f));
+            DE_GL_CALL(glClearColor(color.x / 255.0f, color.y / 255.0f, color.z / 255.0f, color.w / 255.0f));
         }
 
     }

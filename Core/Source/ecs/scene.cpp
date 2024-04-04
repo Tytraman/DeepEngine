@@ -1,8 +1,8 @@
 #include "ecs/scene.hpp"
 #include "ecs/entity.hpp"
 #include "ecs/component.hpp"
-#include "core/string_utils.hpp"
-#include "core/hash_table.hpp"
+#include "core/string/string_utils.hpp"
+#include "core/templates/hash_table.hpp"
 
 namespace deep
 {

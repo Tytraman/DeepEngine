@@ -2,16 +2,16 @@
 #include "core/memory.hpp"
 #include "gui/deimgui.hpp"
 #include "ecs/scene.hpp"
-#include "core/resources.hpp"
+#include "core/resources/resource_manager.hpp"
 #include "os/mutex.hpp"
-#include "core/string.hpp"
-#include "core/window.hpp"
-#include "core/settings.hpp"
+#include "core/string/string.hpp"
+#include "os/window.hpp"
+#include "core/config/settings.hpp"
 #include "os/COM.hpp"
 #include "hardware/cpu.hpp"
 #include "io/file_stream.hpp"
 #include "io/stream_writer.hpp"
-#include "core/list.hpp"
+#include "core/templates/list.hpp"
 #include "os/win32.hpp"
 
 #include <SDL.h>
@@ -68,6 +68,7 @@ namespace deep
             SetConsoleMode(stderrHandle, consoleMode);
         }
 
+        // TODO: ne pas allouer les singletons ici.
         // Allocation des singletons.
 
         list<mem_ptr> *memoryTrack = mem::alloc_type_no_track<list<mem_ptr>>();
@@ -78,20 +79,9 @@ namespace deep
 
         mem::set_memory_track(memoryTrack);
 
-        resource_manager *resourceManager = mem::alloc_type_no_track<resource_manager>();
-        if(resourceManager == nullptr)
-        {
-            mem::free_type_no_track(memoryTrack);
-
-            return core_init_status::CannotInstantiateObjects;
-        }
-
-        resource_manager::set_singleton(resourceManager);
-
         CPU *ccpu = mem::alloc_type_no_track<CPU>();
         if(ccpu == nullptr)
         {
-            mem::free_type_no_track(resourceManager);
             mem::free_type_no_track(memoryTrack);
             
 
@@ -104,7 +94,6 @@ namespace deep
         if(sset == nullptr)
         {
             mem::free_type_no_track(ccpu);
-            mem::free_type_no_track(resourceManager);
             mem::free_type_no_track(memoryTrack);
 
             return core_init_status::CannotInstantiateObjects;
@@ -173,6 +162,14 @@ namespace deep
         if(!engineSettings->init(ifs.get()))
         {
             return core_init_status::CannotLoadEngineSettings;
+        }
+
+        ref<file_stream> resFs = mem::alloc_type<file_stream>("resources.deep", file_stream::file_mode::OpenOrCreate, file_stream::file_access::ReadWrite, file_stream::file_share::Read);
+
+        resource_manager *resManager = resource_manager::get_singleton();
+        if(!resManager->init(resFs.get()))
+        {
+            return core_init_status::CannotInitResources;
         }
 
         if(SDL_Init(SDL_INIT_VIDEO) != 0)
@@ -332,6 +329,8 @@ end:
     */
     void core::shutdown()
     {
+        core::out() << DE_TERM_RESET DE_TERM_FG_GREEN "core::shutdown" DE_TERM_FG_RED " this is where it all ends" DE_TERM_RESET "\n";
+
         COM *com = COM::get_singleton();
         com->shutdown();
 
@@ -345,10 +344,11 @@ end:
 
         engine_settings::set_singleton(nullptr);
         CPU::set_singleton(nullptr);
-        resource_manager::set_singleton(nullptr);
         mem::set_memory_track(nullptr);
 
         SDL_Quit();
+
+        core::out() << DE_TERM_RESET DE_TERM_FG_RED "~Good-bye~" DE_TERM_RESET "\n";
     }
 
     /*

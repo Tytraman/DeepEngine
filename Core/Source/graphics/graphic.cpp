@@ -73,12 +73,12 @@ namespace deep
         float width,
         float height,
         float length,
-        const colora &color1,
-        const colora &color2,
-        const colora &color3,
-        const colora &color4,
-        const colora &color5,
-        const colora &color6,
+        const vec4<uint8_t> &color1,
+        const vec4<uint8_t> &color2,
+        const vec4<uint8_t> &color3,
+        const vec4<uint8_t> &color4,
+        const vec4<uint8_t> &color5,
+        const vec4<uint8_t> &color6,
         bool /*collidable*/)
     {
         component_manager *componentManager = component_manager::get_singleton();
@@ -95,62 +95,62 @@ namespace deep
         {
 
             // Face avant
-            -0.5f, -0.5f, -0.5f, static_cast<float>(color1.R), static_cast<float>(color1.G), static_cast<float>(color1.B), static_cast<float>(color1.A), 1.0f, 1.0f,  // Haut gauche
-             0.5f,  0.5f, -0.5f, static_cast<float>(color1.R), static_cast<float>(color1.G), static_cast<float>(color1.B), static_cast<float>(color1.A), 0.0f, 0.0f,  // Bas droite
-             0.5f, -0.5f, -0.5f, static_cast<float>(color1.R), static_cast<float>(color1.G), static_cast<float>(color1.B), static_cast<float>(color1.A), 0.0f, 1.0f,  // Haut droite
+            -0.5f, -0.5f, -0.5f, static_cast<float>(color1.x), static_cast<float>(color1.y), static_cast<float>(color1.z), static_cast<float>(color1.w), 1.0f, 1.0f,  // Haut gauche
+             0.5f,  0.5f, -0.5f, static_cast<float>(color1.x), static_cast<float>(color1.y), static_cast<float>(color1.z), static_cast<float>(color1.w), 0.0f, 0.0f,  // Bas droite
+             0.5f, -0.5f, -0.5f, static_cast<float>(color1.x), static_cast<float>(color1.y), static_cast<float>(color1.z), static_cast<float>(color1.w), 0.0f, 1.0f,  // Haut droite
              
-            -0.5f, -0.5f, -0.5f, static_cast<float>(color1.R), static_cast<float>(color1.G), static_cast<float>(color1.B), static_cast<float>(color1.A), 1.0f, 1.0f,  // Haut gauche
-            -0.5f,  0.5f, -0.5f, static_cast<float>(color1.R), static_cast<float>(color1.G), static_cast<float>(color1.B), static_cast<float>(color1.A), 1.0f, 0.0f,  // Bas gauche
-             0.5f,  0.5f, -0.5f, static_cast<float>(color1.R), static_cast<float>(color1.G), static_cast<float>(color1.B), static_cast<float>(color1.A), 0.0f, 0.0f,  // Bas droite
+            -0.5f, -0.5f, -0.5f, static_cast<float>(color1.x), static_cast<float>(color1.y), static_cast<float>(color1.z), static_cast<float>(color1.w), 1.0f, 1.0f,  // Haut gauche
+            -0.5f,  0.5f, -0.5f, static_cast<float>(color1.x), static_cast<float>(color1.y), static_cast<float>(color1.z), static_cast<float>(color1.w), 1.0f, 0.0f,  // Bas gauche
+             0.5f,  0.5f, -0.5f, static_cast<float>(color1.x), static_cast<float>(color1.y), static_cast<float>(color1.z), static_cast<float>(color1.w), 0.0f, 0.0f,  // Bas droite
             
             // Face arrière
-             0.5f, -0.5f,  0.5f, static_cast<float>(color2.R), static_cast<float>(color2.G), static_cast<float>(color2.B), static_cast<float>(color2.A), 1.0f, 1.0f,  // Haut gauche
-            -0.5f,  0.5f,  0.5f, static_cast<float>(color2.R), static_cast<float>(color2.G), static_cast<float>(color2.B), static_cast<float>(color2.A), 0.0f, 0.0f,  // Bas droite
-            -0.5f, -0.5f,  0.5f, static_cast<float>(color2.R), static_cast<float>(color2.G), static_cast<float>(color2.B), static_cast<float>(color2.A), 0.0f, 1.0f,  // Haut droite
+             0.5f, -0.5f,  0.5f, static_cast<float>(color2.x), static_cast<float>(color2.y), static_cast<float>(color2.z), static_cast<float>(color2.w), 1.0f, 1.0f,  // Haut gauche
+            -0.5f,  0.5f,  0.5f, static_cast<float>(color2.x), static_cast<float>(color2.y), static_cast<float>(color2.z), static_cast<float>(color2.w), 0.0f, 0.0f,  // Bas droite
+            -0.5f, -0.5f,  0.5f, static_cast<float>(color2.x), static_cast<float>(color2.y), static_cast<float>(color2.z), static_cast<float>(color2.w), 0.0f, 1.0f,  // Haut droite
 
-             0.5f, -0.5f,  0.5f, static_cast<float>(color2.R), static_cast<float>(color2.G), static_cast<float>(color2.B), static_cast<float>(color2.A), 1.0f, 1.0f,  // Haut gauche
-             0.5f,  0.5f,  0.5f, static_cast<float>(color2.R), static_cast<float>(color2.G), static_cast<float>(color2.B), static_cast<float>(color2.A), 1.0f, 0.0f,  // Bas gauche
-            -0.5f,  0.5f,  0.5f, static_cast<float>(color2.R), static_cast<float>(color2.G), static_cast<float>(color2.B), static_cast<float>(color2.A), 0.0f, 0.0f,  // Bas droite
+             0.5f, -0.5f,  0.5f, static_cast<float>(color2.x), static_cast<float>(color2.y), static_cast<float>(color2.z), static_cast<float>(color2.w), 1.0f, 1.0f,  // Haut gauche
+             0.5f,  0.5f,  0.5f, static_cast<float>(color2.x), static_cast<float>(color2.y), static_cast<float>(color2.z), static_cast<float>(color2.w), 1.0f, 0.0f,  // Bas gauche
+            -0.5f,  0.5f,  0.5f, static_cast<float>(color2.x), static_cast<float>(color2.y), static_cast<float>(color2.z), static_cast<float>(color2.w), 0.0f, 0.0f,  // Bas droite
             
 
             // Face droite
-            -0.5f,  0.5f,  0.5f, static_cast<float>(color3.R), static_cast<float>(color3.G), static_cast<float>(color3.B), static_cast<float>(color3.A), 1.0f, 0.0f,  // Bas gauche
-            -0.5f,  0.5f, -0.5f, static_cast<float>(color3.R), static_cast<float>(color3.G), static_cast<float>(color3.B), static_cast<float>(color3.A), 0.0f, 0.0f,  // Bas droite
-            -0.5f, -0.5f, -0.5f, static_cast<float>(color3.R), static_cast<float>(color3.G), static_cast<float>(color3.B), static_cast<float>(color3.A), 0.0f, 1.0f,  // Haut droite
+            -0.5f,  0.5f,  0.5f, static_cast<float>(color3.x), static_cast<float>(color3.y), static_cast<float>(color3.z), static_cast<float>(color3.w), 1.0f, 0.0f,  // Bas gauche
+            -0.5f,  0.5f, -0.5f, static_cast<float>(color3.x), static_cast<float>(color3.y), static_cast<float>(color3.z), static_cast<float>(color3.w), 0.0f, 0.0f,  // Bas droite
+            -0.5f, -0.5f, -0.5f, static_cast<float>(color3.x), static_cast<float>(color3.y), static_cast<float>(color3.z), static_cast<float>(color3.w), 0.0f, 1.0f,  // Haut droite
 
-            -0.5f, -0.5f, -0.5f, static_cast<float>(color3.R), static_cast<float>(color3.G), static_cast<float>(color3.B), static_cast<float>(color3.A), 0.0f, 1.0f,  // Haut droite
-            -0.5f, -0.5f,  0.5f, static_cast<float>(color3.R), static_cast<float>(color3.G), static_cast<float>(color3.B), static_cast<float>(color3.A), 1.0f, 1.0f,  // Haut gauche
-            -0.5f,  0.5f,  0.5f, static_cast<float>(color3.R), static_cast<float>(color3.G), static_cast<float>(color3.B), static_cast<float>(color3.A), 1.0f, 0.0f,  // Bas gauche
+            -0.5f, -0.5f, -0.5f, static_cast<float>(color3.x), static_cast<float>(color3.y), static_cast<float>(color3.z), static_cast<float>(color3.w), 0.0f, 1.0f,  // Haut droite
+            -0.5f, -0.5f,  0.5f, static_cast<float>(color3.x), static_cast<float>(color3.y), static_cast<float>(color3.z), static_cast<float>(color3.w), 1.0f, 1.0f,  // Haut gauche
+            -0.5f,  0.5f,  0.5f, static_cast<float>(color3.x), static_cast<float>(color3.y), static_cast<float>(color3.z), static_cast<float>(color3.w), 1.0f, 0.0f,  // Bas gauche
 
 
             // Face gauche
-             0.5f,  0.5f,  0.5f, static_cast<float>(color4.R), static_cast<float>(color4.G), static_cast<float>(color4.B), static_cast<float>(color4.A), 0.0f, 0.0f,  // Bas droite
-             0.5f, -0.5f, -0.5f, static_cast<float>(color4.R), static_cast<float>(color4.G), static_cast<float>(color4.B), static_cast<float>(color4.A), 1.0f, 1.0f,  // Haut gauche
-             0.5f,  0.5f, -0.5f, static_cast<float>(color4.R), static_cast<float>(color4.G), static_cast<float>(color4.B), static_cast<float>(color4.A), 1.0f, 0.0f,  // Bas gauche
+             0.5f,  0.5f,  0.5f, static_cast<float>(color4.x), static_cast<float>(color4.y), static_cast<float>(color4.z), static_cast<float>(color4.w), 0.0f, 0.0f,  // Bas droite
+             0.5f, -0.5f, -0.5f, static_cast<float>(color4.x), static_cast<float>(color4.y), static_cast<float>(color4.z), static_cast<float>(color4.w), 1.0f, 1.0f,  // Haut gauche
+             0.5f,  0.5f, -0.5f, static_cast<float>(color4.x), static_cast<float>(color4.y), static_cast<float>(color4.z), static_cast<float>(color4.w), 1.0f, 0.0f,  // Bas gauche
 
-             0.5f, -0.5f, -0.5f, static_cast<float>(color4.R), static_cast<float>(color4.G), static_cast<float>(color4.B), static_cast<float>(color4.A), 1.0f, 1.0f,  // Haut gauche
-             0.5f,  0.5f,  0.5f, static_cast<float>(color4.R), static_cast<float>(color4.G), static_cast<float>(color4.B), static_cast<float>(color4.A), 0.0f, 0.0f,  // Bas droite
-             0.5f, -0.5f,  0.5f, static_cast<float>(color4.R), static_cast<float>(color4.G), static_cast<float>(color4.B), static_cast<float>(color4.A), 0.0f, 1.0f,  // Haut droite
+             0.5f, -0.5f, -0.5f, static_cast<float>(color4.x), static_cast<float>(color4.y), static_cast<float>(color4.z), static_cast<float>(color4.w), 1.0f, 1.0f,  // Haut gauche
+             0.5f,  0.5f,  0.5f, static_cast<float>(color4.x), static_cast<float>(color4.y), static_cast<float>(color4.z), static_cast<float>(color4.w), 0.0f, 0.0f,  // Bas droite
+             0.5f, -0.5f,  0.5f, static_cast<float>(color4.x), static_cast<float>(color4.y), static_cast<float>(color4.z), static_cast<float>(color4.w), 0.0f, 1.0f,  // Haut droite
 
 
             // Face bas
-             0.5f, -0.5f,  0.5f, static_cast<float>(color5.R), static_cast<float>(color5.G), static_cast<float>(color5.B), static_cast<float>(color5.A), 1.0f, 0.0f,  // Bas droite
-            -0.5f, -0.5f, -0.5f, static_cast<float>(color5.R), static_cast<float>(color5.G), static_cast<float>(color5.B), static_cast<float>(color5.A), 0.0f, 1.0f,  // Haut gauche
-             0.5f, -0.5f, -0.5f, static_cast<float>(color5.R), static_cast<float>(color5.G), static_cast<float>(color5.B), static_cast<float>(color5.A), 1.0f, 1.0f,  // Haut droite
+             0.5f, -0.5f,  0.5f, static_cast<float>(color5.x), static_cast<float>(color5.y), static_cast<float>(color5.z), static_cast<float>(color5.w), 1.0f, 0.0f,  // Bas droite
+            -0.5f, -0.5f, -0.5f, static_cast<float>(color5.x), static_cast<float>(color5.y), static_cast<float>(color5.z), static_cast<float>(color5.w), 0.0f, 1.0f,  // Haut gauche
+             0.5f, -0.5f, -0.5f, static_cast<float>(color5.x), static_cast<float>(color5.y), static_cast<float>(color5.z), static_cast<float>(color5.w), 1.0f, 1.0f,  // Haut droite
 
-            -0.5f, -0.5f, -0.5f, static_cast<float>(color5.R), static_cast<float>(color5.G), static_cast<float>(color5.B), static_cast<float>(color5.A), 0.0f, 1.0f,  // Haut gauche
-             0.5f, -0.5f,  0.5f, static_cast<float>(color5.R), static_cast<float>(color5.G), static_cast<float>(color5.B), static_cast<float>(color5.A), 1.0f, 0.0f,  // Bas droite
-            -0.5f, -0.5f,  0.5f, static_cast<float>(color5.R), static_cast<float>(color5.G), static_cast<float>(color5.B), static_cast<float>(color5.A), 0.0f, 0.0f,  // Bas gauche
+            -0.5f, -0.5f, -0.5f, static_cast<float>(color5.x), static_cast<float>(color5.y), static_cast<float>(color5.z), static_cast<float>(color5.w), 0.0f, 1.0f,  // Haut gauche
+             0.5f, -0.5f,  0.5f, static_cast<float>(color5.x), static_cast<float>(color5.y), static_cast<float>(color5.z), static_cast<float>(color5.w), 1.0f, 0.0f,  // Bas droite
+            -0.5f, -0.5f,  0.5f, static_cast<float>(color5.x), static_cast<float>(color5.y), static_cast<float>(color5.z), static_cast<float>(color5.w), 0.0f, 0.0f,  // Bas gauche
             
 
             // Face haut
-            -0.5f,  0.5f, -0.5f, static_cast<float>(color6.R), static_cast<float>(color6.G), static_cast<float>(color6.B), static_cast<float>(color6.A), 1.0f, 1.0f,  // Haut gauche
-             0.5f,  0.5f,  0.5f, static_cast<float>(color6.R), static_cast<float>(color6.G), static_cast<float>(color6.B), static_cast<float>(color6.A), 0.0f, 0.0f,  // Bas droite
-             0.5f,  0.5f, -0.5f, static_cast<float>(color6.R), static_cast<float>(color6.G), static_cast<float>(color6.B), static_cast<float>(color6.A), 0.0f, 1.0f,  // Haut droite
+            -0.5f,  0.5f, -0.5f, static_cast<float>(color6.x), static_cast<float>(color6.y), static_cast<float>(color6.z), static_cast<float>(color6.w), 1.0f, 1.0f,  // Haut gauche
+             0.5f,  0.5f,  0.5f, static_cast<float>(color6.x), static_cast<float>(color6.y), static_cast<float>(color6.z), static_cast<float>(color6.w), 0.0f, 0.0f,  // Bas droite
+             0.5f,  0.5f, -0.5f, static_cast<float>(color6.x), static_cast<float>(color6.y), static_cast<float>(color6.z), static_cast<float>(color6.w), 0.0f, 1.0f,  // Haut droite
 
-             0.5f,  0.5f,  0.5f, static_cast<float>(color6.R), static_cast<float>(color6.G), static_cast<float>(color6.B), static_cast<float>(color6.A), 0.0f, 0.0f,  // Bas droite
-            -0.5f,  0.5f, -0.5f, static_cast<float>(color6.R), static_cast<float>(color6.G), static_cast<float>(color6.B), static_cast<float>(color6.A), 1.0f, 1.0f,  // Haut gauche
-            -0.5f,  0.5f,  0.5f, static_cast<float>(color6.R), static_cast<float>(color6.G), static_cast<float>(color6.B), static_cast<float>(color6.A), 1.0f, 0.0f   // Bas gauche
+             0.5f,  0.5f,  0.5f, static_cast<float>(color6.x), static_cast<float>(color6.y), static_cast<float>(color6.z), static_cast<float>(color6.w), 0.0f, 0.0f,  // Bas droite
+            -0.5f,  0.5f, -0.5f, static_cast<float>(color6.x), static_cast<float>(color6.y), static_cast<float>(color6.z), static_cast<float>(color6.w), 1.0f, 1.0f,  // Haut gauche
+            -0.5f,  0.5f,  0.5f, static_cast<float>(color6.x), static_cast<float>(color6.y), static_cast<float>(color6.z), static_cast<float>(color6.w), 1.0f, 0.0f   // Bas gauche
             
         };
 

@@ -1,6 +1,6 @@
 #include "file/file.hpp"
-#include "core/string.hpp"
-#include "core/string_utils.hpp"
+#include "core/string/string.hpp"
+#include "core/string/string_utils.hpp"
 
 #include <stdio.h>
 
@@ -68,9 +68,9 @@ namespace deep
 
         string p(path);
 
-        if(p[p.length() - 1] != L'\\')
+        if(p[p.get_length() - 1] != L'\\')
             p.append("\\*");
-        else if(p[p.length() - 1] != L'*')
+        else if(p[p.get_length() - 1] != L'*')
             p.append("*");
 
         WIN32_FIND_DATAA data;

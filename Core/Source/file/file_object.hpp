@@ -3,10 +3,10 @@
 
 #include "core/def.hpp"
 #include "core/types.hpp"
-#include "core/string.hpp"
+#include "core/string/string.hpp"
 #include "io/stream.hpp"
-#include "core/hash_table.hpp"
-#include "core/pair.hpp"
+#include "core/templates/hash_table.hpp"
+#include "core/templates/pair.hpp"
 #include "io/stream.hpp"
 
 namespace deep

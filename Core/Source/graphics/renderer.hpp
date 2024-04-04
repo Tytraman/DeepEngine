@@ -3,7 +3,6 @@
 
 #include "core/def.hpp"
 #include "core/types.hpp"
-#include "core/color.hpp"
 #include "maths/vec.hpp"
 
 #include <SDL.h>

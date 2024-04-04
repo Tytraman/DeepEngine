@@ -3,7 +3,7 @@
 
 #include "core/def.hpp"
 #include "core/types.hpp"
-#include "core/string.hpp"
+#include "core/string/string.hpp"
 #include "io/stream.hpp"
 
 namespace deep

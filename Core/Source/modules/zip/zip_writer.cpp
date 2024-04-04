@@ -10,6 +10,15 @@ namespace deep
     zip_writer::zip_writer
     ======================
     */
+    zip_writer::zip_writer()
+        : zip()
+    { }
+
+    /*
+    ======================
+    zip_writer::zip_writer
+    ======================
+    */
     zip_writer::zip_writer(stream *outputStream)
         : zip(outputStream)
     { }

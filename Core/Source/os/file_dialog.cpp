@@ -1,6 +1,6 @@
 #include "os/file_dialog.hpp"
 #include "core/core.hpp"
-#include "core/string_utils.hpp"
+#include "core/string/string_utils.hpp"
 
 #include <SDL2/SDL_syswm.h>
 

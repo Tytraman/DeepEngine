@@ -3,8 +3,8 @@
 
 #include "core/def.hpp"
 #include "core/types.hpp"
-#include "core/string.hpp"
-#include "core/hash_table.hpp"
+#include "core/string/string.hpp"
+#include "core/templates/hash_table.hpp"
 #include "drivers/opengl/def.hpp"
 
 namespace deep

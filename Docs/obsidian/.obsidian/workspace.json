@@ -8,31 +8,18 @@
         "type": "tabs",
         "children": [
           {
-            "id": "4b79483f98b98cfc",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "C++/Allocation dynamique.md",
-                "mode": "source",
-                "source": false
-              }
-            }
-          },
-          {
             "id": "e0e4d8676e1accfa",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Analyses/Godot/Materials.md",
+                "file": "C++/Assertion.md",
                 "mode": "source",
                 "source": false
               }
             }
           }
-        ],
-        "currentTab": 1
+        ]
       }
     ],
     "direction": "vertical"
@@ -106,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "Analyses/Godot/Materials.md",
+                "file": "C++/Assertion.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -123,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "Analyses/Godot/Materials.md",
+                "file": "C++/Assertion.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -146,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "Analyses/Godot/Materials.md"
+                "file": "C++/Assertion.md"
               }
             }
           }
@@ -170,21 +157,24 @@
   },
   "active": "e0e4d8676e1accfa",
   "lastOpenFiles": [
+    "DeepEngine/Ressources/Ressource.md",
+    "C++/Allocation dynamique.md",
+    "DeepEngine/TODO list.md",
+    "DeepEngine/Ressources/Image.md",
+    "DeepEngine/Ressources",
+    "Analyses/Godot/Materials.md",
     "DeepEngine/File Object.md",
     "DeepEngine/Materials.md",
     "DeepEngine/Sauvegarde du monde.md",
-    "DeepEngine/TODO list.md",
     "Analyses/Godot/Compteur de références.md",
     "DeepEngine/Difficultés.md",
     "Untitled.canvas",
-    "C++/Allocation dynamique.md",
     "Analyses/Godot/Object.md",
     "C++/Parallélisme.md",
     "C++/Paterne de conception.md",
     "C++/Smart pointers.md",
     "C++/Assertion.md",
     "C++/Alignement des données.md",
-    "Analyses/Godot/Materials.md",
     "OpenGL/Lumières.md",
     "Maths/dot product.md",
     "res/img/dot_negative.png",

@@ -3,10 +3,10 @@
 
 #include "core/def.hpp"
 #include "core/types.hpp"
-#include "core/string.hpp"
+#include "core/string/string.hpp"
 #include "core/memory.hpp"
-#include "core/hash_table.hpp"
-#include "image/image.hpp"
+#include "core/templates/hash_table.hpp"
+#include "core/resources/image.hpp"
 #include "maths/vec.hpp"
 #include "drivers/opengl/def.hpp"
 
@@ -83,8 +83,8 @@ namespace deep
 
                 DE_API void alloc_space(int width, int height);
 
-                DE_API void transmit_texture(mem_ptr data, int width, int height, image_color_space colorType);
-                DE_API void transmit_texture_cubemaps(mem_ptr left, mem_ptr front, mem_ptr right, mem_ptr back, mem_ptr bottom, mem_ptr top, int width, int height, image_color_space colorType);
+                DE_API void transmit_texture(mem_ptr data, int width, int height, image::color_model colorModel);
+                DE_API void transmit_texture_cubemaps(mem_ptr left, mem_ptr front, mem_ptr right, mem_ptr back, mem_ptr bottom, mem_ptr top, int width, int height, image::color_model colorModel);
 
                 DE_API gl_id get_white_texture();
                 DE_API void set_white_texture(gl_id texture);

@@ -2,16 +2,16 @@
 # Technique
 - [ ] Se renseigner sur tout ce qui est thread-safe.
 
-# Gestion des ressources
+# Ressources
+- [ ] Faire un gestionnaire de ressources.
+- [ ] Supporter les ressources de type `bmp`.
+- [ ] Supporter les ressources de type `png`.
+- [ ] Supporter les ressources de type `txt`.
+- [ ] Supporter les ressources de type [[File Object]].
+- [ ] Supporter les ressources de type `wav`.
 - [ ] Utiliser une classe **RID** pour identifier chaque ressource.
-
-# Structuration du code
-- [ ] **Séparer** chaque concept et chaque notion dans des classes biens spécifiques.
-	- Arrêter de vouloir tout mettre dans une seule et unique classe.
-- [ ] Faire une classe `image` dans laquelle se trouve un tableau de pixels et les informations concernant le format.
-- [ ] Les `struct` ne doivent plus être utilisées comme des classes.
-	- Arrêter d'utiliser `private`, `public` et de déclarer des méthodes.
-		- Sauf exceptions.
+- [x] Faire une classe `image` dans laquelle se trouve un tableau de pixels et les informations concernant le format. ✅ 2024-04-03
+- [ ] Faire une classe `text` dans laquelle se trouve une chaîne de caractères.
 
 # Mémoire
 - [ ] Gestion des données par `queue`.
@@ -37,6 +37,7 @@
 - [ ] Ajouter le fait de pouvoir recharger un `shader` dynamiquement.
 	- Si la compilation du shader échoue, garder l'ancien `shader` actif.
 - [ ] Se renseigner sur l'étape **specular** de la lumière [[Lumières#Specular]].
+
 ## Rendu
 - [ ] Ajouter le rendu de textes.
 - [ ] Ajouter le rendu de segments allant d'un point **A** à un point **B**.

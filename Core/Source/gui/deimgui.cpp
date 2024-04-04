@@ -1,15 +1,15 @@
 #include "gui/deimgui.hpp"
 #include "core/memory.hpp"
-#include "core/list.hpp"
-#include "core/pair.hpp"
-#include "core/settings.hpp"
-#include "core/string_utils.hpp"
+#include "core/templates/list.hpp"
+#include "core/templates/pair.hpp"
+#include "core/config/settings.hpp"
+#include "core/string/string_utils.hpp"
 #include "maths/vec.hpp"
-#include "core/window.hpp"
+#include "os/window.hpp"
 #include "ecs/scene.hpp"
 #include "ecs/component.hpp"
 #include "hardware/cpu.hpp"
-#include "core/resources.hpp"
+#include "core/resources/resource_manager.hpp"
 #include "drivers/opengl/vao.hpp"
 #include "drivers/opengl/shader.hpp"
 #include "drivers/opengl/texture.hpp"
@@ -126,14 +126,15 @@ namespace deep
         engine_settings *settings = engine_settings::get_singleton();
         resource_manager *resources = resource_manager::get_singleton();
 
-        string font = resources->get_fonts_folder();
-        font.append(settings->get_imgui_font_filename().str());
+        /*string font = resources->get_fonts_folder();
+        font.append(settings->get_imgui_font_filename().str());*/
 
         ImGuiIO &io = ImGui::GetIO();
 
+        // TODO: ajouter la police depuis la mémoire plutôt qu'un fichier.
         io.Fonts->AddFontDefault();
-        g_TitleFont = io.Fonts->AddFontFromFileTTF(font.str(), 32.0f);
-        g_NormalFont = io.Fonts->AddFontFromFileTTF(font.str(), 17.5f);
+        //===== g_TitleFont = io.Fonts->AddFontFromFileTTF(font.str(), 32.0f);
+        //===== g_NormalFont = io.Fonts->AddFontFromFileTTF(font.str(), 17.5f);
 
         m_Initialized = true;
     }
@@ -804,7 +805,7 @@ cancel_component: ;
                         ImGui::Text("Nom:");
                         ImGui::SameLine();
                         
-                        ImGui::InputText("##", rm_const<char *>(name.str()), name.length(), ImGuiInputTextFlags_::ImGuiInputTextFlags_ReadOnly);
+                        ImGui::InputText("##", rm_const<char *>(name.str()), name.get_length(), ImGuiInputTextFlags_::ImGuiInputTextFlags_ReadOnly);
                         ImGui::Text(numberOfCores.str());
                         ImGui::Text(numberOfLogicalProcessors.str());
                         ImGui::Text(architecture.str());

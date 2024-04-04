@@ -3,9 +3,10 @@
 
 #include "core/def.hpp"
 #include "core/types.hpp"
-#include "core/string.hpp"
+#include "core/string/string.hpp"
 #include "io/stream.hpp"
 #include "io/memory_stream.hpp"
+#include "io/text_writer.hpp"
 #include "modules/zip/zip_types.hpp"
 
 namespace deep
@@ -24,12 +25,19 @@ namespace deep
             };
 
         public:
+            DE_API zip();
             DE_API zip(stream *strm);
             DE_API virtual ~zip();
 
             virtual bool init() = 0;
 
+            DE_API bool init_base(ref<stream> strm);
+
             DE_API bool enumerate(enum_entries_callback callback, void *args);
+
+            DE_API bool read_file(int64_t index, mem_ptr buffer, size_t size);
+            DE_API bool read_file(int64_t index, stream *os);
+            DE_API bool read_file(int64_t index, ref<text_writer> ow);
 
             DE_API int64_t get_number_of_entries() const;
             DE_API const char *get_archive_comment() const;

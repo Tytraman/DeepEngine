@@ -3,8 +3,8 @@
 
 #include "io/text_writer.hpp"
 #include "io/stream.hpp"
-#include "core/string_utils.hpp"
-#include "core/string.hpp"
+#include "core/string/string_utils.hpp"
+#include "core/string/string.hpp"
 #include "core/ref_counted.hpp"
 
 namespace deep
@@ -32,6 +32,8 @@ namespace deep
             DE_API virtual bool write(unsigned long value) override;
             DE_API virtual bool write(double value) override;
             DE_API virtual bool write(mem_ptr ptr) override;
+
+            DE_API virtual bool is_opened() const override;
 
         protected:
             ref<stream> m_OutputStream;
@@ -89,7 +91,7 @@ namespace deep
     {
         string str = string_utils::bool_to_str(value);
 
-        return m_OutputStream->write(rm_const<char *>(str.str()), 0, str.length(), nullptr);
+        return m_OutputStream->write(rm_const<char *>(str.str()), 0, str.get_length(), nullptr);
     }
 
     /*
@@ -166,7 +168,7 @@ namespace deep
             } break;
         }
         
-        return m_OutputStream->write(rm_const<char *>(str.str()), 0, str.length(), nullptr);
+        return m_OutputStream->write(rm_const<char *>(str.str()), 0, str.get_length(), nullptr);
     }
 
     /*
@@ -191,7 +193,7 @@ namespace deep
             } break;
         }
 
-        return m_OutputStream->write(rm_const<char *>(str.str()), 0, str.length(), nullptr);
+        return m_OutputStream->write(rm_const<char *>(str.str()), 0, str.get_length(), nullptr);
     }
 
     /*
@@ -213,7 +215,7 @@ namespace deep
     {
         string str = string_utils::double_to_str(value);
 
-        return m_OutputStream->write(rm_const<char *>(str.str()), 0, str.length(), nullptr);
+        return m_OutputStream->write(rm_const<char *>(str.str()), 0, str.get_length(), nullptr);
     }
 
     /*
@@ -224,6 +226,16 @@ namespace deep
     inline bool stream_writer::write(mem_ptr ptr)
     {
         return write(reinterpret_cast<uint64_t>(ptr));
+    }
+
+    /*
+    ========================
+    stream_writer::is_opened
+    ========================
+    */
+    inline bool stream_writer::is_opened() const
+    {
+        return m_OutputStream->is_opened();
     }
 
 }

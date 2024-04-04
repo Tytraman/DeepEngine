@@ -3,8 +3,8 @@
 
 #include "core/def.hpp"
 #include "core/types.hpp"
-#include "core/hash_table.hpp"
-#include "core/pair.hpp"
+#include "core/templates/hash_table.hpp"
+#include "core/templates/pair.hpp"
 #include "maths/vec.hpp"
 #include "maths/mat.hpp"
 #include "drivers/opengl/def.hpp"
@@ -33,8 +33,11 @@ namespace deep
                 DE_API gl_id create(const char *name, gl_shader_type shaderType);
 
                 DE_API void raw_load(GLuint shader, memory_chunk &program);
+                DE_API void raw_load(GLuint shader, mem_ptr buffer, size_t size);
+
                 DE_API bool load(gl_id shader, memory_chunk &program);
                 DE_API bool load(const char *name, memory_chunk &program);
+                DE_API bool load(gl_id shader, mem_ptr buffer, size_t size);
 
                 DE_API bool raw_compile(GLuint shader);
                 DE_API bool compile(gl_id shader);

@@ -3,8 +3,8 @@
 
 #include "core/def.hpp"
 #include "core/types.hpp"
-#include "core/window.hpp"
-#include "core/string.hpp"
+#include "os/window.hpp"
+#include "core/string/string.hpp"
 
 namespace deep
 {

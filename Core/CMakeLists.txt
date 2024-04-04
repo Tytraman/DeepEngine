@@ -173,43 +173,6 @@ function(deep_add_files dest_list)
 endfunction()
 
 deep_add_folders(
-    DEEP_HEADER_FILES
-    INCLUDE_DIR ${CORE_INCLUDE}
-    FOLDERS "glad" "KHR"
-    EXTENSIONS ".hpp" ".h"
-)
-
-deep_add_folders(
-    DEEP_HEADER_FILES
-    INCLUDE_DIR ${IMGUI_INCLUDE}
-    FOLDERS " " "backends"
-    EXTENSIONS ".hpp" ".h"
-)
-
-deep_add_folders(
-    DEEP_HEADER_FILES
-    INCLUDE_DIR ${CORE_INCLUDE}/DE
-    FOLDERS "audio" "core" "ecs" "file" "graphics" "gui" "hardware" "image" "io" "maths" "os" "modules"
-    EXTENSIONS ".hpp" ".h"
-)
-
-deep_add_folders(
-    DEEP_HEADER_FILES
-    INCLUDE_DIR ${CORE_INCLUDE}/DE/drivers
-    FOLDERS "opengl"
-    EXTENSIONS ".hpp" ".h"
-)
-
-deep_add_folders(
-    DEEP_HEADER_FILES
-    INCLUDE_DIR ${CORE_INCLUDE}/DE/modules
-    FOLDERS "zip"
-    EXTENSIONS ".hpp" ".h"
-)
-
-message(STATUS "DEEP_HEADER_FILES: ${DEEP_HEADER_FILES}")
-
-deep_add_folders(
     DEEP_SOURCE_FILES
     INCLUDE_DIR ${IMGUI_INCLUDE}
     FOLDERS " "
@@ -226,6 +189,13 @@ deep_add_folders(
     DEEP_SOURCE_FILES
     INCLUDE_DIR ${CORE_SOURCE}
     FOLDERS "" "core" "maths" "os" "hardware" "audio" "ecs" "graphics" "image" "gui" "file" "io" "modules"
+    EXTENSIONS ".c" ".cpp"
+)
+
+deep_add_folders(
+    DEEP_SOURCE_FILES
+    INCLUDE_DIR ${CORE_SOURCE}/core
+    FOLDERS "resources" "string" "config" "templates"
     EXTENSIONS ".c" ".cpp"
 )
 
@@ -252,7 +222,7 @@ deep_add_folders(
 
 message(STATUS "DEEP_SOURCE_FILES: ${DEEP_SOURCE_FILES}")
 
-add_library(${CORE_PROJECT} SHARED ${DEEP_HEADER_FILES} ${DEEP_SOURCE_FILES})
+add_library(${CORE_PROJECT} SHARED ${DEEP_SOURCE_FILES})
 
 if(MSVC)
     # Le problème de cette commande est qu'elle applique le niveau de warning même aux dépendances, ce qui empêche parfois la compilation du projet.
@@ -280,7 +250,6 @@ target_link_directories(${CORE_PROJECT} PUBLIC
 )
 
 target_link_libraries(${CORE_PROJECT}
-    Bcrypt.lib
     SDL2-static     # Nom de la cible de la SDL2 pour que CMake crée une dépendance.
     zlibstatic      # Nom de la cible de zlib pour que CMake crée une dépendance.
     zip

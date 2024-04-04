@@ -38,7 +38,7 @@ namespace deep
         {
             GLuint shader = DE_GL_CALLV(glCreateShader(static_cast<GLenum>(shaderType)));
 
-            auto &el = m_Shaders.insert(name, shader);
+            hash_entry<GLuint> &el = m_Shaders.insert(name, shader);
 
             return el.key;
         }
@@ -51,7 +51,21 @@ namespace deep
         void shader_manager::raw_load(GLuint shader, memory_chunk &program)
         {
             char *source = (char *) program.data();
+
             DE_GL_CALL(glShaderSource(shader, 1, &source, NULL));
+        }
+
+        /*
+        ========================
+        shader_manager::raw_load
+        ========================
+        */
+        void shader_manager::raw_load(GLuint shader, mem_ptr buffer, size_t size)
+        {
+            const GLchar *source = static_cast<GLchar *>(buffer);
+            const GLint *length = static_cast<GLint *>(add_const<GLint *>(&size));
+
+            DE_GL_CALL(glShaderSource(shader, 1, &source, length));
         }
 
         /*
@@ -61,11 +75,33 @@ namespace deep
         */
         bool shader_manager::load(gl_id shader, memory_chunk &program)
         {
-            auto el = m_Shaders[shader];
+            hash_entry<GLuint> *el = m_Shaders[shader];
+
             if(el == nullptr)
+            {
                 return false;
+            }
         
             raw_load(el->value, program);
+
+            return true;
+        }
+
+        /*
+        ====================
+        shader_manager::load
+        ====================
+        */
+        bool shader_manager::load(gl_id shader, mem_ptr buffer, size_t size)
+        {
+            hash_entry<GLuint> *el = m_Shaders[shader];
+
+            if(el == nullptr)
+            {
+                return false;
+            }
+        
+            raw_load(el->value, buffer, size);
 
             return true;
         }

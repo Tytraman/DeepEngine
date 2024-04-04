@@ -14,7 +14,7 @@ namespace deep
 
             DE_API bool init();
 
-            DE_API bool read_file(int64_t index, stream *os);
+            
 
     };
 

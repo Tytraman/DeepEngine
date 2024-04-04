@@ -190,6 +190,9 @@ ignore_access:
 
         if(m_FD == os_invalid_fd)
         {
+            DWORD err = GetLastError();
+            (void) err;
+
             return false;
         }
 

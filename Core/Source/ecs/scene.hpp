@@ -5,7 +5,7 @@
 #include "core/types.hpp"
 #include "ecs/ecs.hpp"
 #include "ecs/entity.hpp"
-#include "core/list.hpp"
+#include "core/templates/list.hpp"
 #include "maths/vec.hpp"
 #include "graphics/shape.hpp"
 #include "core/camera.hpp"

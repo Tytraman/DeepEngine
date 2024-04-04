@@ -2,7 +2,6 @@
 #define __DEEP_ENGINE_TYPES_HPP__
 
 #include "core/def.hpp"
-#include "core/color.hpp"
 #include "core/common.hpp"
 
 #include <SDL.h>

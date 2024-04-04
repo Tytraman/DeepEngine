@@ -10,6 +10,7 @@ namespace deep
     {
 
         public:
+            DE_API zip_writer();
             DE_API zip_writer(stream *outputStream);
 
             DE_API bool init();

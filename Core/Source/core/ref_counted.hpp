@@ -10,6 +10,8 @@
 namespace deep
 {
 
+    class resource;
+
     /// @brief  Compte le nombre de référence faite à l'objet.
     /// @remark Pour compter les références d'une classe, celle-ci doit hériter de cette classe.
     class ref_counted
@@ -73,6 +75,9 @@ namespace deep
     {
 
         public:
+            using type = Type;
+
+        public:
             ref();
             ref(Type *ptr);
             ref(const ref<Type> &other);
@@ -100,6 +105,12 @@ namespace deep
             Type *m_Ptr;
 
     };
+
+    template<typename Type, typename Kype>
+    inline Type *ref_cast(const Kype &toCast)
+    {
+        return reinterpret_cast<Type *>(toCast.get());
+    }
 
     /*
     ==============

@@ -5,10 +5,10 @@
 #include "core/types.hpp"
 #include "ecs/ecs.hpp"
 #include "maths/vec.hpp"
-#include "core/list.hpp"
+#include "core/templates/list.hpp"
 #include "graphics/shape.hpp"
 #include "graphics/material.hpp"
-#include "core/hash_table.hpp"
+#include "core/templates/hash_table.hpp"
 #include "core/ref_counted.hpp"
 #include "drivers/opengl/renderer.hpp"
 
