@@ -105,3 +105,6 @@ De la classe `image`, décrite dans la page [[Image]], cette ressource représen
 
 De la classe `text`, cette ressource contient en interne un `string` *(chaîne de caractères)*.
 
+- ### File Object
+
+De la classe `fobj`, cette ressource contient en interne un `file_object`.

@@ -254,6 +254,11 @@ namespace deep
                     internalFormat = GL_RGB8;
                     format = GL_BGR;
                 } break;
+                case image::color_model::BGRA:
+                {
+                    internalFormat = GL_RGBA8;
+                    format = GL_BGRA;
+                } break;
             }
 
             DE_GL_CALL(glTexImage2D(GL_TEXTURE_2D, 0, internalFormat, width, height, 0, format, GL_UNSIGNED_BYTE, data));

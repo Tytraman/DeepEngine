@@ -150,17 +150,21 @@ namespace deep
             }
         }
 
-        uint8_t headerBuffer[sizeof(bmp_file_header) + sizeof(bmp_info_header)];
+        size_t fileSize = inputStream->get_length();
+        uint8_t *rawFile = static_cast<uint8_t *>(mem::alloc(fileSize));
+
         size_t bytesRead = 0;
 
         // Lit l'en-tête du fichier.
-        if(!inputStream->read(headerBuffer, 0, sizeof(headerBuffer), &bytesRead))
+        if(!inputStream->read(rawFile, 0, fileSize, &bytesRead))
         {
+            mem::free(rawFile);
+
             return false;
         }
 
-        bmp_file_header *bmpFileHeader = (bmp_file_header *) headerBuffer;
-        bmp_info_header *bmpInfoHeader = (bmp_info_header *) (headerBuffer + sizeof(*bmpFileHeader));
+        bmp_file_header *bmpFileHeader = (bmp_file_header *) rawFile;
+        bmp_info_header *bmpInfoHeader = (bmp_info_header *) (rawFile + sizeof(*bmpFileHeader));
 
         uint32_t infoHeaderSize = bmpInfoHeader->size;
         uint32_t imageDataOffset = bmpFileHeader->imageDataOffset;
@@ -186,13 +190,15 @@ namespace deep
                 if(infoHeaderSize == sizeof(bmp_core_header))
                 {
                     bytes = 3;
+
+                    model = image::color_model::BGR;
                 }
                 else
                 {
                     bytes = 4;
-                }
 
-                model = image::color_model::BGR;
+                    model = image::color_model::BGRA;
+                }
 
                 colorTable = true;
             } break;
@@ -210,12 +216,15 @@ namespace deep
             } break;
         }
 
-        uint32_t rowSize = ((bmpInfoHeader->colorDepth * bmpInfoHeader->width + 31) / 32) * 4;
+        uint32_t rowSize = ((bmpInfoHeader->colorDepth * width + 31) / 32) * 4;
 
-        mem_ptr data = mem::alloc(dest.m_Width * dest.m_Height * bytes);
+        size_t imageSize = width * height * bytes;
+        mem_ptr destData = mem::alloc(imageSize);
 
-        if(data == nullptr)
+        if(destData == nullptr)
         {
+            mem::free(rawFile);
+
             return false;
         }
 
@@ -225,42 +234,67 @@ namespace deep
         }
 
         uint32_t empty = rowSize % bytes;
+        uint32_t trueRowSize = rowSize - empty;
 
         // Pointeurs vers le premier pixel, qui se trouve en bas à gauche.
-        uint8_t *pixels = static_cast<uint8_t*>(data) + bmpFileHeader->imageDataOffset;
+        uint8_t *pixels = rawFile + bmpFileHeader->imageDataOffset;
+
+        // La classe image doit stocker les pixels en partant de en haut à gauche.
+        uint64_t h = 0;
+        size_t pos;
+        size_t destPos = 0;
 
         if(colorTable)
         {
-
-        }
-        else
-        {
-            // La classe image doit stocker les pixels en partant de en haut à gauche.
-            uint64_t h = height - 1;
-            size_t pos;
-            size_t destPos = 0;
+            uint32_t *table = (uint32_t *) (rawFile + colorTableOffset);
+            uint64_t destIndex = 0;
 
             while(true)
             {
                 pos = rowSize * h;
 
-                memcpy(static_cast<uint8_t *>(data) + destPos, pixels + pos, rowSize - empty);
+                uint32_t fromIndex;
 
-                destPos += width * bytes;
+                for(fromIndex = 0; fromIndex < trueRowSize; ++fromIndex)
+                {
+                    *(static_cast<uint32_t *>(destData) + destIndex) = table[pixels[pos + fromIndex]];
 
-                if(h == 0)
+                    destIndex++;
+                }
+
+                if(h >= height - 1)
                 {
                     break;
                 }
 
-                h--;
+                h++;
+            }
+        }
+        else
+        {
+            while(true)
+            {
+                pos = rowSize * h;
+
+                memcpy(static_cast<uint8_t *>(destData) + destPos, pixels + pos, trueRowSize);
+
+                destPos += width * bytes;
+
+                if(h >= height - 1)
+                {
+                    break;
+                }
+
+                h++;
             }
         }
 
         dest.m_Width = width;
         dest.m_Height = height;
         dest.m_ColorModel = model;
-        dest.m_ColorData = data;
+        dest.m_ColorData = destData;
+
+        mem::free(rawFile);
 
         return true;
     }
