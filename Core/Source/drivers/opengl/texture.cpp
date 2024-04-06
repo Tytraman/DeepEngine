@@ -234,8 +234,9 @@ namespace deep
         */
         void texture_manager::transmit_texture(mem_ptr data, int width, int height, image::color_model colorModel)
         {
-            GLenum internalFormat;
-            GLenum format;
+            GLenum internalFormat;      // Correspond à la façon dont chaque composant de la couleur est interprétée. GL_RGB8 signifie qu'il y a 3 composantes de 8 bits chacun.
+            GLenum format;              // Correspond à l'ordre dans lequel sont positionnés les composants, il faut que le format est le même nombre de composants que internalFormat.
+
             switch(colorModel)
             {
                 default: return;

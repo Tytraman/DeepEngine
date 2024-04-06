@@ -253,6 +253,9 @@ int main()
     deep::ref<deep::image> grassBlockSideRes = deep::ref_cast<deep::image>(resourceManager->get_resource("textures.grass_block_side"));
     deep::ref<deep::image> grassBlockTopRes = deep::ref_cast<deep::image>(resourceManager->get_resource("textures.grass_block_top"));
 
+    grassBlockSideRes->add(dirtRes, deep::vec2<uint64_t>(16, 0));
+    grassBlockSideRes->add(grassBlockTopRes, deep::vec2<uint64_t>(0, 16));
+
     deep::ref<deep::text> defaultShaderFragRes = deep::ref_cast<deep::text>(resourceManager->get_resource("shaders.default_frag"));
     deep::ref<deep::text> defaultShaderVertRes = deep::ref_cast<deep::text>(resourceManager->get_resource("shaders.default_vert"));
     deep::ref<deep::text> lightedColoredObjectShaderFragRes = deep::ref_cast<deep::text>(resourceManager->get_resource("shaders.lighted_colored_object_frag"));

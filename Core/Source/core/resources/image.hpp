@@ -5,6 +5,7 @@
 #include "core/types.hpp"
 #include "core/resources/resource.hpp"
 #include "maths/vec.hpp"
+#include "core/templates/list.hpp"
 
 namespace deep
 {
@@ -32,12 +33,35 @@ namespace deep
             DE_API mem_ptr get_resource_data() const override;
             DE_API size_t get_resource_size() const override;
 
+            /// @brief Copie une colonne de l'image vers une autre colonne.
+            /// @param columnToCopy L'index de la colonne à copier.
+            /// @param destColumn L'index de la colonne destination.
+            /// @return \c false si l'index d'une des deux colonnes dépasse la largeur de l'image.
+            DE_API bool copy_column(uint64_t columnToCopy, uint64_t destColumn);
+
+            DE_API bool copy_row(const vec2<uint64_t> &fromRowPosition, const vec2<uint64_t> &toRowPosition, uint64_t rowLength, ref<image> from);
+
+            /// @brief Copie une ligne de l'image vers une autre ligne.
+            /// @param rowToCopy L'index de la ligne à copier.
+            /// @param destRow L'index de la ligne destination.
+            /// @return \c false si l'index d'une des deux lignes dépasse la hauteur de l'image.
+            DE_API bool copy_row(const vec2<uint64_t> &fromRowPosition, const vec2<uint64_t> &toRowPosition);
+
+            DE_API bool resize(uint64_t width, uint64_t height);
+
+            DE_API bool add(ref<image> other, const vec2<uint64_t> &position);
+
             DE_API uint64_t get_width() const;
             DE_API uint64_t get_height() const;
             DE_API color_model get_color_model() const;
 
             DE_API bool get(vec3<uint8_t> &dest, uint64_t row, uint64_t column) const;
             DE_API bool get(vec4<uint8_t> &dest, uint64_t row, uint64_t column) const;
+
+        protected:
+            DE_API uint8_t get_components_number() const;
+
+            DE_API bool copy_row(const vec2<uint64_t> &fromRowPosition, const vec2<uint64_t> &toRowPosition, uint64_t rowLength, uint64_t fromWidth, uint64_t toWidth, uint8_t bytes, mem_ptr from, mem_ptr to);
 
         protected:
             mem_ptr m_ColorData;
@@ -50,6 +74,26 @@ namespace deep
             friend png;
 
     };
+
+    /*
+    ===============
+    image::copy_row
+    ===============
+    */
+    inline bool image::copy_row(const vec2<uint64_t> &fromRowPosition, const vec2<uint64_t> &toRowPosition, uint64_t rowLength, ref<image> from)
+    {
+        return copy_row(fromRowPosition, toRowPosition, rowLength, from->get_width(), m_Width, get_components_number(), from->get_resource_data(), m_ColorData);
+    }
+
+    /*
+    ===============
+    image::copy_row
+    ===============
+    */
+    inline bool image::copy_row(const vec2<uint64_t> &fromRowPosition, const vec2<uint64_t> &toRowPosition)
+    {
+        return copy_row(fromRowPosition, toRowPosition, m_Width, this);
+    }
 
     /*
     =====================
@@ -113,81 +157,21 @@ namespace deep
     }
 
     /*
-    ==========
-    image::get
-    ==========
+    ============================
+    image::get_components_number
+    ============================
     */
-    inline bool image::get(vec3<uint8_t> &dest, uint64_t row, uint64_t column) const
+    inline uint8_t image::get_components_number() const
     {
-        if(column > m_Width || row > m_Height)
-        {
-            return false;
-        }
-
-        uint64_t index = row * column;
-        uint8_t *ptr = static_cast<uint8_t *>(m_ColorData);
-
         switch(m_ColorModel)
         {
-            default: return false;
+            default:                return 0;
             case color_model::RGB:
-            case color_model::BGR:
+            case color_model::BGR:  return 3;
             case color_model::RGBA:
-            case color_model::BGRA:
-            {
-                dest.x = ptr[index];
-                dest.y = ptr[index + 1];
-                dest.z = ptr[index + 2];
-            } break;
             case color_model::ARGB:
-            {
-                dest.x = ptr[index + 1];
-                dest.y = ptr[index + 2];
-                dest.z = ptr[index + 3];
-            } break;
+            case color_model::BGRA: return 4;
         }
-
-        return true;
-    }
-
-    /*
-    ==========
-    image::get
-    ==========
-    */
-    inline bool image::get(vec4<uint8_t> &dest, uint64_t row, uint64_t column) const
-    {
-        if(column > m_Width || row > m_Height)
-        {
-            return false;
-        }
-
-        uint64_t index = row * column;
-        uint8_t *ptr = static_cast<uint8_t *>(m_ColorData);
-
-        switch(m_ColorModel)
-        {
-            default: return false;
-            case color_model::RGB:
-            case color_model::BGR:
-            {
-                dest.x = ptr[index];
-                dest.y = ptr[index + 1];
-                dest.z = ptr[index + 2];
-                dest.w = 255;
-            } break;
-            case color_model::RGBA:
-            case color_model::BGRA:
-            case color_model::ARGB:
-            {
-                dest.x = ptr[index];
-                dest.y = ptr[index + 1];
-                dest.z = ptr[index + 2];
-                dest.w = ptr[index + 3];
-            } break;
-        }
-
-        return true;
     }
 
 }

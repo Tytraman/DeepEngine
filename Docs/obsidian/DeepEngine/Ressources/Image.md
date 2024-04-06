@@ -16,3 +16,6 @@ Cette classe permet une uniformisation de tous les formats d'images supportés c
 Les pixels sont ordonnées dans un tableau continu en partant du pixel **haut gauche** pour finir sur le pixel **bas droite**.
 La classe `image` stock en interne la largeur et la hauteur de l'image ainsi que son modèle de couleur.
 
+L'image doit être interprétée avec ce modèle en tête :
+![[row-vs-column-2048x1152.png|800]]
+

@@ -130,6 +130,29 @@ namespace deep
         return true;
     }
 
+    uint8_t __deep_color_table_4(uint8_t index, uint8_t *table, uint8_t *dest)
+    {
+        uint8_t index1 = index & 0xF;
+        uint8_t index2 = (index >> 4) & 0xF;
+
+        uint32_t entry1 = *((uint32_t *) ((uint32_t *) table + index1));
+        uint32_t entry2 = *((uint32_t *) ((uint32_t *) table + index2));
+
+        *((uint32_t *) dest)     = entry1;
+        *((uint32_t *) dest + 1) = entry2;
+
+        return 8;
+    }
+
+    uint8_t __deep_color_table_8(uint8_t index, uint8_t *table, uint8_t *dest)
+    {
+        uint32_t entry = *((uint32_t *) ((uint32_t *) table + index));
+
+        *((uint32_t *) dest) = entry;
+
+        return 4;
+    }
+
     /*
     =======================
     bmp::create_from_stream
@@ -178,15 +201,21 @@ namespace deep
 
         bool colorTable = false;
 
+        uint8_t (*callback)(uint8_t, uint8_t *, uint8_t *);
+
         switch(bmpInfoHeader->colorDepth)
         {
             default: return false;
+            // La présence d'une table de couleurs est obligatoire quand le nombre de bits par pixel est <= 8.
             case 1:
             case 4:
+            {
+                callback = __deep_color_table_4;
+            } goto case_8;
             case 8:
             {
-                // La présence d'une table de couleurs est obligatoire quand le nombre de bits par pixel est <= 8.
-
+                callback = __deep_color_table_8;
+case_8:
                 if(infoHeaderSize == sizeof(bmp_core_header))
                 {
                     bytes = 3;
@@ -246,7 +275,7 @@ namespace deep
 
         if(colorTable)
         {
-            uint32_t *table = (uint32_t *) (rawFile + colorTableOffset);
+            uint8_t *table = rawFile + colorTableOffset;
             uint64_t destIndex = 0;
 
             while(true)
@@ -257,9 +286,7 @@ namespace deep
 
                 for(fromIndex = 0; fromIndex < trueRowSize; ++fromIndex)
                 {
-                    *(static_cast<uint32_t *>(destData) + destIndex) = table[pixels[pos + fromIndex]];
-
-                    destIndex++;
+                    destIndex += callback(pixels[pos + fromIndex], table, static_cast<uint8_t *>(destData) + destIndex);
                 }
 
                 if(h >= height - 1)
