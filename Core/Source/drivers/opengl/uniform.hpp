@@ -26,8 +26,8 @@ namespace deep
                 DE_API static void send(int location, const vec2<float> &vec);
                 DE_API static void send(int location, const vec3<float> &vec);
                 DE_API static void send(int location, const vec4<float> &vec);
-                DE_API static void send(int location, fmat3x3 &mat);
-                DE_API static void send(int location, fmat4x4 &mat);
+                DE_API static void send(int location, const mat3x3<float> &mat);
+                DE_API static void send(int location, const mat4x4<float> &mat);
 
             public:
                 uniform_manager() = delete;

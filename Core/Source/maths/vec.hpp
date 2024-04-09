@@ -8,9 +8,14 @@
 namespace deep
 {
 
-    struct fmat2x2;
-    struct fmat3x3;
-    struct fmat4x4;
+    template<typename Type>
+    struct mat2x2;
+
+    template<typename Type>
+    struct mat3x3;
+
+    template<typename Type>
+    struct mat4x4;
 
     template<typename Type>
     struct vec2
@@ -41,7 +46,7 @@ namespace deep
         static vec2 add(const vec2 &vec, const Type &value);
         static vec2 add(const vec2 &vec1, const vec2 &vec2);
         static vec2 mul(const vec2 &vec, const Type &value);
-        static vec2 mul(const vec2 &vec, const fmat2x2 &mat);
+        static vec2 mul(const vec2 &vec, const mat2x2<Type> &mat);
         static vec2 div(const vec2 &vec, const Type &value);
 
         static vec2 scale(const vec2 &v, const Type &scalar);
@@ -95,7 +100,7 @@ namespace deep
         static vec3 add(const vec3 &vec, const Type &value);
         static vec3 add(const vec3 &vec1, const vec3 &vec2);
         static vec3 mul(const vec3 &vec, const Type &value);
-        static vec3 mul(const vec3 &vec, const fmat3x3 &mat);
+        static vec3 mul(const vec3 &vec, const mat3x3<Type> &mat);
         static vec3 div(const vec3 &vec, const Type &value);
 
         static vec3 scale(const vec3 &vec, const Type &scalar);

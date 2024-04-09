@@ -195,7 +195,7 @@ deep_add_folders(
 deep_add_folders(
     DEEP_SOURCE_FILES
     INCLUDE_DIR ${CORE_SOURCE}/core
-    FOLDERS "resources" "string" "config" "templates"
+    FOLDERS "resources" "string" "config" "templates" "nodes"
     EXTENSIONS ".c" ".cpp"
 )
 

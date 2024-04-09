@@ -54,7 +54,7 @@ namespace deep
 			DE_API void move_up(float value);
 			DE_API void move_down(float value);
 
-			DE_API fmat4x4 get_look_at() const;
+			DE_API mat4x4<float> get_look_at() const;
 
 		private:
 			vec3<float> m_Position;    ///< Position de la caméra.

@@ -8,505 +8,752 @@ namespace deep
 {
 
     /*
-    ============
-    fmat4x4::mul
-    ============
+    ==============
+    mat2x2::mat2x2
+    ==============
     */
-    inline fmat4x4 fmat4x4::mul(const fmat4x4 &mat1, const fmat4x4 &mat2)
+    template<typename Type>
+    inline mat2x2<Type>::mat2x2(const Type &x1, const Type &y1, const Type &x2, const Type &y2)
     {
+        data[to_utype(index::x1)] = x1; data[to_utype(index::y1)] = y1;
+        data[to_utype(index::x2)] = x2; data[to_utype(index::y2)] = y2;
+    }
 
+    /*
+    ==================
+    mat2x2::operator[]
+    ==================
+    */
+    template<typename Type>
+    inline Type mat2x2<Type>::operator[](size_t index) const
+    {
+        return data[index];
+    }
+
+    /*
+    ==================
+    mat2x2::operator[]
+    ==================
+    */
+    template<typename Type>
+    inline Type &mat2x2<Type>::operator[](size_t index)
+    {
+        return data[index];
+    }
+
+    /*
+    =================
+    mat2x2::operator*
+    =================
+    */
+    template<typename Type>
+    inline vec2<Type> mat2x2<Type>::operator*(const vec2<Type> &vec) const
+    {
+        return mul(*this, vec);
+    }
+
+    /*
+    ===========
+    mat2x2::mul
+    ===========
+    */
+    template<typename Type>
+    inline vec2<Type> mat2x2<Type>::mul(const mat2x2 &mat, const vec2<Type> &vec)
+    {
+        return vec2<Type>::mul(vec, mat);
+    }
+
+    /*
+    =============
+    mat2x2::scale
+    =============
+    */
+    template<typename Type>
+    inline vec2<Type> mat2x2<Type>::scale(const vec2<Type> &vec, const Type &scale1, const Type &scale2)
+    {
+        return vec2<Type>::mul(vec, {
+                                        scale1,               static_cast<Type>(0),
+                                        static_cast<Type>(0), scale2 
+                                    } );
+    }
+
+    /*
+    =================
+    mat2x2::translate
+    =================
+    */
+    template<typename Type>
+    inline vec2<Type> mat2x2<Type>::translate(const vec2<Type> &vec, const Type &x, const Type &y)
+    {
+        return
+        {
+            vec.x + x, vec.y + y
+        };
+    }
+
+    /*
+    ==============
+    mat2x2::rotate
+    ==============
+    */
+    template<typename Type>
+    inline vec2<Type> mat2x2<Type>::rotate(const vec2<Type> &vec, const Type &degrees)
+    {
+        float rad = deg_to_rad(static_cast<float>(degrees));
+
+        return vec2<Type>::mul(vec, {
+            cosf(rad), -sinf(rad),
+            sinf(rad), cosf(rad) 
+        } );
+    }
+
+    /*
+    ===================
+    mat2x2::determinant
+    ===================
+    */
+    template<typename Type>
+    inline Type mat2x2<Type>::determinant(const mat2x2 &mat)
+    {
+        return mat[0] * mat[3] - mat[1] * mat[2];
+    }
+
+    /*
+    ==============
+    mat3x3::mat3x3
+    ==============
+    */
+    template<typename Type>
+    mat3x3<Type>::mat3x3(
+            const Type &x1, const Type &y1, const Type &z1,
+            const Type &x2, const Type &y2, const Type &z2,
+            const Type &x3, const Type &y3, const Type &z3
+    )
+    { 
+        data[0] = x1; data[1] = y1; data[2] = z1;
+        data[3] = x2; data[4] = y2; data[5] = z2;
+        data[6] = x3; data[7] = y3; data[8] = z3;
+    }
+
+    /*
+    =================
+    mat3x3::operator*
+    =================
+    */
+    template<typename Type>
+    inline vec3<Type> mat3x3<Type>::operator*(const vec3<Type> &vec) const
+    {
+        return mul(*this, vec);
+    }
+
+    /*
+    =================
+    mat3x3::operator*
+    =================
+    */
+    template<typename Type>
+    inline mat3x3<Type> mat3x3<Type>::operator*(const mat3x3 &mat) const
+    {
+        return mul(*this, mat);
+    }
+
+    /*
+    ==================
+    mat3x3::operator[]
+    ==================
+    */
+    template<typename Type>
+    inline Type mat3x3<Type>::operator[](size_t index) const
+    {
+        return data[index];
+    }
+
+    /*
+    ===========
+    mat3x3::ptr
+    ===========
+    */
+    template<typename Type>
+    inline Type *mat3x3<Type>::ptr() const
+    {
+        return rm_const<Type *>(data);
+    }
+
+    /*
+    ===========
+    mat3x3::mul
+    ===========
+    */
+    template<typename Type>
+    inline mat3x3<Type> mat3x3<Type>::mul(const mat3x3 &mat, const Type &value)
+    {
+        return
+        {
+            value * mat[to_utype(index::x1)], value * mat[to_utype(index::y1)], value * mat[to_utype(index::z1)],
+            value * mat[to_utype(index::x2)], value * mat[to_utype(index::y2)], value * mat[to_utype(index::z2)],
+            value * mat[to_utype(index::x3)], value * mat[to_utype(index::y3)], value * mat[to_utype(index::z3)]
+        };
+    }
+
+    /*
+    ===========
+    mat3x3::mul
+    ===========
+    */
+    template<typename Type>
+    inline vec3<Type> mat3x3<Type>::mul(const mat3x3 &mat, const vec3<Type> &vec)
+    {
+        return vec3<Type>::mul(vec, mat);
+    }
+
+    /*
+    ===========
+    mat3x3::mul
+    ===========
+    */
+    template<typename Type>
+    inline mat3x3<Type> mat3x3<Type>::mul(const mat3x3 &mat1, const mat3x3 &mat2)
+    {
+        return
+        {
+            (mat1[to_utype(index::x1)] * mat2[to_utype(index::x1)]) + 
+            (mat1[to_utype(index::y1)] * mat2[to_utype(index::x2)]) + 
+            (mat1[to_utype(index::z1)] * mat2[to_utype(index::x3)]), 
+            (mat1[to_utype(index::x1)] * mat2[to_utype(index::y1)]) + 
+            (mat1[to_utype(index::y1)] * mat2[to_utype(index::y2)]) + 
+            (mat1[to_utype(index::z1)] * mat2[to_utype(index::y3)]), 
+            (mat1[to_utype(index::x1)] * mat2[to_utype(index::z1)]) + 
+            (mat1[to_utype(index::y1)] * mat2[to_utype(index::z2)]) + 
+            (mat1[to_utype(index::z1)] * mat2[to_utype(index::z3)]),
+            (mat1[to_utype(index::x2)] * mat2[to_utype(index::x1)]) + 
+            (mat1[to_utype(index::y2)] * mat2[to_utype(index::x2)]) + 
+            (mat1[to_utype(index::z2)] * mat2[to_utype(index::x3)]), 
+            (mat1[to_utype(index::x2)] * mat2[to_utype(index::y1)]) + 
+            (mat1[to_utype(index::y2)] * mat2[to_utype(index::y2)]) + 
+            (mat1[to_utype(index::z2)] * mat2[to_utype(index::y3)]), 
+            (mat1[to_utype(index::x2)] * mat2[to_utype(index::z1)]) + 
+            (mat1[to_utype(index::y2)] * mat2[to_utype(index::z2)]) + 
+            (mat1[to_utype(index::z2)] * mat2[to_utype(index::z3)]),
+            (mat1[to_utype(index::x3)] * mat2[to_utype(index::x1)]) + 
+            (mat1[to_utype(index::y3)] * mat2[to_utype(index::x2)]) + 
+            (mat1[to_utype(index::z3)] * mat2[to_utype(index::x3)]), 
+            (mat1[to_utype(index::x3)] * mat2[to_utype(index::y1)]) + 
+            (mat1[to_utype(index::y3)] * mat2[to_utype(index::y2)]) + 
+            (mat1[to_utype(index::z3)] * mat2[to_utype(index::y3)]), 
+            (mat1[to_utype(index::x3)] * mat2[to_utype(index::z1)]) + 
+            (mat1[to_utype(index::y3)] * mat2[to_utype(index::z2)]) + 
+            (mat1[to_utype(index::z3)] * mat2[to_utype(index::z3)])
+        };
+    }
+
+    /*
+    ===========
+    mat3x3::add
+    ===========
+    */
+    template<typename Type>
+    inline mat3x3<Type> mat3x3<Type>::add(const mat3x3 &mat1, const mat3x3 &mat2)
+    {
+        return
+        {
+            mat1[to_utype(index::x1)] + mat2[to_utype(index::x1)], mat1[to_utype(index::y1)] + mat2[to_utype(index::y1)], mat1[to_utype(index::z1)] + mat2[to_utype(index::z1)],
+            mat1[to_utype(index::x2)] + mat2[to_utype(index::x2)], mat1[to_utype(index::y2)] + mat2[to_utype(index::y2)], mat1[to_utype(index::z2)] + mat2[to_utype(index::z2)],
+            mat1[to_utype(index::x3)] + mat2[to_utype(index::x3)], mat1[to_utype(index::y3)] + mat2[to_utype(index::y3)], mat1[to_utype(index::z3)] + mat2[to_utype(index::z3)]
+        };
+    }
+
+    /*
+    ===================
+    mat3x3::determinant
+    ===================
+    */
+    template<typename Type>
+    inline Type mat3x3<Type>::determinant(const mat3x3 &mat)
+    {
+        mat2x2<Type> a = mat2x2(
+            mat[to_utype(index::y2)], mat[to_utype(index::z2)],
+            mat[to_utype(index::y3)], mat[to_utype(index::z3)]
+        );
+
+        mat2x2<Type> b = mat2x2(
+            mat[to_utype(index::x2)], mat[to_utype(index::z2)],
+            mat[to_utype(index::x3)], mat[to_utype(index::z3)]
+        );
+
+        mat2x2<Type> c = mat2x2(
+            mat[to_utype(index::x2)], mat[to_utype(index::y2)],
+            mat[to_utype(index::x3)], mat[to_utype(index::y3)]
+        );
+
+        return
+            mat[to_utype(index::x1)] * mat2x2<Type>::determinant(a) -
+            mat[to_utype(index::y1)] * mat2x2<Type>::determinant(b) +
+            mat[to_utype(index::z1)] * mat2x2<Type>::determinant(c);
+    }
+
+    /*
+    =================
+    mat3x3::translate
+    =================
+    */
+    template<typename Type>
+    inline mat3x3<Type> mat3x3<Type>::translate(const mat3x3 &mat, const vec2<Type> &vec)
+    {
+        return mul(
+            mat,
+            {
+                static_cast<Type>(1), static_cast<Type>(0), vec.x,
+                static_cast<Type>(0), static_cast<Type>(1), vec.y,
+                static_cast<Type>(0), static_cast<Type>(0), static_cast<Type>(1)
+            }
+        );
+    }
+
+    /*
+    =============
+    mat3x3::scale
+    =============
+    */
+    template<typename Type>
+    inline mat3x3<Type> mat3x3<Type>::scale(const mat3x3 &mat, const vec2<Type> &vec)
+    {
+        return mul(
+            mat,
+            {
+                vec.x,                static_cast<Type>(0), static_cast<Type>(0),
+                static_cast<Type>(0), vec.y,                static_cast<Type>(0),
+                static_cast<Type>(0), static_cast<Type>(0), static_cast<Type>(1)
+            }
+        );
+    }
+
+    /*
+    =============
+    mat3x3::scale
+    =============
+    */
+    template<typename Type>
+    inline mat3x3<Type> mat3x3<Type>::scale(const mat3x3 &mat, const Type &value)
+    {
+        return mul(mat, value);
+    }
+
+    /*
+    ==============
+    mat3x3::rotate
+    ==============
+    */
+    template<typename Type>
+    inline mat3x3<Type> mat3x3<Type>::rotate(const mat3x3 &mat, const Type &degrees)
+    {
+        float rad = deg_to_rad(static_cast<float>(degrees));
+
+        return mul(
+            mat,
+            {
+                cosf(rad),            -sinf(rad),            static_cast<Type>(0),
+                sinf(rad),             cosf(rad),            static_cast<Type>(0),
+                static_cast<Type>(0),  static_cast<Type>(0), static_cast<Type>(1)
+            }
+        );
+    }
+
+    /*
+    ==============
+    mat4x4::mat4x4
+    ==============
+    */
+    template<typename Type>
+    inline mat4x4<Type>::mat4x4(
+            const Type &x1, const Type &y1, const Type &z1, const Type &w1,
+            const Type &x2, const Type &y2, const Type &z2, const Type &w2,
+            const Type &x3, const Type &y3, const Type &z3, const Type &w3,
+            const Type &x4, const Type &y4, const Type &z4, const Type &w4
+    )
+    {
+        data[to_utype(index::x1)] = x1; data[to_utype(index::y1)] = y1; data[to_utype(index::z1)] = z1; data[to_utype(index::w1)] = w1;
+        data[to_utype(index::x2)] = x2; data[to_utype(index::y2)] = y2; data[to_utype(index::z2)] = z2; data[to_utype(index::w2)] = w2;
+        data[to_utype(index::x3)] = x3; data[to_utype(index::y3)] = y3; data[to_utype(index::z3)] = z3; data[to_utype(index::w3)] = w3;
+        data[to_utype(index::x4)] = x4; data[to_utype(index::y4)] = y4; data[to_utype(index::z4)] = z4; data[to_utype(index::w4)] = w4;
+    }
+
+    /*
+    ===========
+    mat4x4::mul
+    ===========
+    */
+    template<typename Type>
+    inline mat4x4<Type> mat4x4<Type>::mul(const mat4x4 &mat1, const mat4x4 &mat2)
+    {
         return
         {
             (
-                mat1[to_utype(fmat4x4_index::x1)] * 
-                mat2[to_utype(fmat4x4_index::x1)] + 
-                mat1[to_utype(fmat4x4_index::y1)] * 
-                mat2[to_utype(fmat4x4_index::x2)] + 
-                mat1[to_utype(fmat4x4_index::z1)] * 
-                mat2[to_utype(fmat4x4_index::x3)] + 
-                mat1[to_utype(fmat4x4_index::w1)] * 
-                mat2[to_utype(fmat4x4_index::x4)]
+                mat1[to_utype(index::x1)] * 
+                mat2[to_utype(index::x1)] + 
+                mat1[to_utype(index::y1)] * 
+                mat2[to_utype(index::x2)] + 
+                mat1[to_utype(index::z1)] * 
+                mat2[to_utype(index::x3)] + 
+                mat1[to_utype(index::w1)] * 
+                mat2[to_utype(index::x4)]
             ),
             (
-                mat1[to_utype(fmat4x4_index::x1)] * 
-                mat2[to_utype(fmat4x4_index::y1)] + 
-                mat1[to_utype(fmat4x4_index::y1)] * 
-                mat2[to_utype(fmat4x4_index::y2)] + 
-                mat1[to_utype(fmat4x4_index::z1)] * 
-                mat2[to_utype(fmat4x4_index::y3)] + 
-                mat1[to_utype(fmat4x4_index::w1)] * 
-                mat2[to_utype(fmat4x4_index::y4)]
+                mat1[to_utype(index::x1)] * 
+                mat2[to_utype(index::y1)] + 
+                mat1[to_utype(index::y1)] * 
+                mat2[to_utype(index::y2)] + 
+                mat1[to_utype(index::z1)] * 
+                mat2[to_utype(index::y3)] + 
+                mat1[to_utype(index::w1)] * 
+                mat2[to_utype(index::y4)]
             ), 
             (
-                mat1[to_utype(fmat4x4_index::x1)] * 
-                mat2[to_utype(fmat4x4_index::z1)] + 
-                mat1[to_utype(fmat4x4_index::y1)] * 
-                mat2[to_utype(fmat4x4_index::z2)] + 
-                mat1[to_utype(fmat4x4_index::z1)] * 
-                mat2[to_utype(fmat4x4_index::z3)] + 
-                mat1[to_utype(fmat4x4_index::w1)] * 
-                mat2[to_utype(fmat4x4_index::z4)]
+                mat1[to_utype(index::x1)] * 
+                mat2[to_utype(index::z1)] + 
+                mat1[to_utype(index::y1)] * 
+                mat2[to_utype(index::z2)] + 
+                mat1[to_utype(index::z1)] * 
+                mat2[to_utype(index::z3)] + 
+                mat1[to_utype(index::w1)] * 
+                mat2[to_utype(index::z4)]
             ), 
             (
-                mat1[to_utype(fmat4x4_index::x1)] * 
-                mat2[to_utype(fmat4x4_index::w1)] + 
-                mat1[to_utype(fmat4x4_index::y1)] * 
-                mat2[to_utype(fmat4x4_index::w2)] + 
-                mat1[to_utype(fmat4x4_index::z1)] * 
-                mat2[to_utype(fmat4x4_index::w3)] + 
-                mat1[to_utype(fmat4x4_index::w1)] * 
-                mat2[to_utype(fmat4x4_index::w4)]
+                mat1[to_utype(index::x1)] * 
+                mat2[to_utype(index::w1)] + 
+                mat1[to_utype(index::y1)] * 
+                mat2[to_utype(index::w2)] + 
+                mat1[to_utype(index::z1)] * 
+                mat2[to_utype(index::w3)] + 
+                mat1[to_utype(index::w1)] * 
+                mat2[to_utype(index::w4)]
             ),
 
             (
-                mat1[to_utype(fmat4x4_index::x2)] * 
-                mat2[to_utype(fmat4x4_index::x1)] + 
-                mat1[to_utype(fmat4x4_index::y2)] * 
-                mat2[to_utype(fmat4x4_index::x2)] + 
-                mat1[to_utype(fmat4x4_index::z2)] * 
-                mat2[to_utype(fmat4x4_index::x3)] + 
-                mat1[to_utype(fmat4x4_index::w2)] * 
-                mat2[to_utype(fmat4x4_index::x4)]
+                mat1[to_utype(index::x2)] * 
+                mat2[to_utype(index::x1)] + 
+                mat1[to_utype(index::y2)] * 
+                mat2[to_utype(index::x2)] + 
+                mat1[to_utype(index::z2)] * 
+                mat2[to_utype(index::x3)] + 
+                mat1[to_utype(index::w2)] * 
+                mat2[to_utype(index::x4)]
             ), 
             (
-                mat1[to_utype(fmat4x4_index::x2)] * 
-                mat2[to_utype(fmat4x4_index::y1)] + 
-                mat1[to_utype(fmat4x4_index::y2)] * 
-                mat2[to_utype(fmat4x4_index::y2)] + 
-                mat1[to_utype(fmat4x4_index::z2)] * 
-                mat2[to_utype(fmat4x4_index::y3)] + 
-                mat1[to_utype(fmat4x4_index::w2)] * 
-                mat2[to_utype(fmat4x4_index::y4)]
+                mat1[to_utype(index::x2)] * 
+                mat2[to_utype(index::y1)] + 
+                mat1[to_utype(index::y2)] * 
+                mat2[to_utype(index::y2)] + 
+                mat1[to_utype(index::z2)] * 
+                mat2[to_utype(index::y3)] + 
+                mat1[to_utype(index::w2)] * 
+                mat2[to_utype(index::y4)]
             ), 
             (
-                mat1[to_utype(fmat4x4_index::x2)] * 
-                mat2[to_utype(fmat4x4_index::z1)] + 
-                mat1[to_utype(fmat4x4_index::y2)] * 
-                mat2[to_utype(fmat4x4_index::z2)] + 
-                mat1[to_utype(fmat4x4_index::z2)] * 
-                mat2[to_utype(fmat4x4_index::z3)] + 
-                mat1[to_utype(fmat4x4_index::w2)] * 
-                mat2[to_utype(fmat4x4_index::z4)]
+                mat1[to_utype(index::x2)] * 
+                mat2[to_utype(index::z1)] + 
+                mat1[to_utype(index::y2)] * 
+                mat2[to_utype(index::z2)] + 
+                mat1[to_utype(index::z2)] * 
+                mat2[to_utype(index::z3)] + 
+                mat1[to_utype(index::w2)] * 
+                mat2[to_utype(index::z4)]
             ), 
             (
-                mat1[to_utype(fmat4x4_index::x2)] * 
-                mat2[to_utype(fmat4x4_index::w1)] + 
-                mat1[to_utype(fmat4x4_index::y2)] * 
-                mat2[to_utype(fmat4x4_index::w2)] + 
-                mat1[to_utype(fmat4x4_index::z2)] * 
-                mat2[to_utype(fmat4x4_index::w3)] + 
-                mat1[to_utype(fmat4x4_index::w2)] * 
-                mat2[to_utype(fmat4x4_index::w4)]
+                mat1[to_utype(index::x2)] * 
+                mat2[to_utype(index::w1)] + 
+                mat1[to_utype(index::y2)] * 
+                mat2[to_utype(index::w2)] + 
+                mat1[to_utype(index::z2)] * 
+                mat2[to_utype(index::w3)] + 
+                mat1[to_utype(index::w2)] * 
+                mat2[to_utype(index::w4)]
             ),
             (
-                mat1[to_utype(fmat4x4_index::x3)] * 
-                mat2[to_utype(fmat4x4_index::x1)] + 
-                mat1[to_utype(fmat4x4_index::y3)] * 
-                mat2[to_utype(fmat4x4_index::x2)] + 
-                mat1[to_utype(fmat4x4_index::z3)] * 
-                mat2[to_utype(fmat4x4_index::x3)] + 
-                mat1[to_utype(fmat4x4_index::w3)] * 
-                mat2[to_utype(fmat4x4_index::x4)]
+                mat1[to_utype(index::x3)] * 
+                mat2[to_utype(index::x1)] + 
+                mat1[to_utype(index::y3)] * 
+                mat2[to_utype(index::x2)] + 
+                mat1[to_utype(index::z3)] * 
+                mat2[to_utype(index::x3)] + 
+                mat1[to_utype(index::w3)] * 
+                mat2[to_utype(index::x4)]
             ), 
             (
-                mat1[to_utype(fmat4x4_index::x3)] * 
-                mat2[to_utype(fmat4x4_index::y1)] + 
-                mat1[to_utype(fmat4x4_index::y3)] * 
-                mat2[to_utype(fmat4x4_index::y2)] + 
-                mat1[to_utype(fmat4x4_index::z3)] * 
-                mat2[to_utype(fmat4x4_index::y3)] + 
-                mat1[to_utype(fmat4x4_index::w3)] * 
-                mat2[to_utype(fmat4x4_index::y4)]
+                mat1[to_utype(index::x3)] * 
+                mat2[to_utype(index::y1)] + 
+                mat1[to_utype(index::y3)] * 
+                mat2[to_utype(index::y2)] + 
+                mat1[to_utype(index::z3)] * 
+                mat2[to_utype(index::y3)] + 
+                mat1[to_utype(index::w3)] * 
+                mat2[to_utype(index::y4)]
             ), 
             (
-                mat1[to_utype(fmat4x4_index::x3)] * 
-                mat2[to_utype(fmat4x4_index::z1)] + 
-                mat1[to_utype(fmat4x4_index::y3)] * 
-                mat2[to_utype(fmat4x4_index::z2)] + 
-                mat1[to_utype(fmat4x4_index::z3)] * 
-                mat2[to_utype(fmat4x4_index::z3)] + 
-                mat1[to_utype(fmat4x4_index::w3)] * 
-                mat2[to_utype(fmat4x4_index::z4)]
+                mat1[to_utype(index::x3)] * 
+                mat2[to_utype(index::z1)] + 
+                mat1[to_utype(index::y3)] * 
+                mat2[to_utype(index::z2)] + 
+                mat1[to_utype(index::z3)] * 
+                mat2[to_utype(index::z3)] + 
+                mat1[to_utype(index::w3)] * 
+                mat2[to_utype(index::z4)]
             ), 
             (
-                mat1[to_utype(fmat4x4_index::x3)] * 
-                mat2[to_utype(fmat4x4_index::w1)] + 
-                mat1[to_utype(fmat4x4_index::y3)] * 
-                mat2[to_utype(fmat4x4_index::w2)] + 
-                mat1[to_utype(fmat4x4_index::z3)] * 
-                mat2[to_utype(fmat4x4_index::w3)] + 
-                mat1[to_utype(fmat4x4_index::w3)] * 
-                mat2[to_utype(fmat4x4_index::w4)]
+                mat1[to_utype(index::x3)] * 
+                mat2[to_utype(index::w1)] + 
+                mat1[to_utype(index::y3)] * 
+                mat2[to_utype(index::w2)] + 
+                mat1[to_utype(index::z3)] * 
+                mat2[to_utype(index::w3)] + 
+                mat1[to_utype(index::w3)] * 
+                mat2[to_utype(index::w4)]
             ),
             (
-                mat1[to_utype(fmat4x4_index::x4)] * 
-                mat2[to_utype(fmat4x4_index::x1)] + 
-                mat1[to_utype(fmat4x4_index::y4)] * 
-                mat2[to_utype(fmat4x4_index::x2)] + 
-                mat1[to_utype(fmat4x4_index::z4)] * 
-                mat2[to_utype(fmat4x4_index::x3)] + 
-                mat1[to_utype(fmat4x4_index::w4)] * 
-                mat2[to_utype(fmat4x4_index::x4)]
+                mat1[to_utype(index::x4)] * 
+                mat2[to_utype(index::x1)] + 
+                mat1[to_utype(index::y4)] * 
+                mat2[to_utype(index::x2)] + 
+                mat1[to_utype(index::z4)] * 
+                mat2[to_utype(index::x3)] + 
+                mat1[to_utype(index::w4)] * 
+                mat2[to_utype(index::x4)]
             ), 
             (
-                mat1[to_utype(fmat4x4_index::x4)] * 
-                mat2[to_utype(fmat4x4_index::y1)] + 
-                mat1[to_utype(fmat4x4_index::y4)] * 
-                mat2[to_utype(fmat4x4_index::y2)] + 
-                mat1[to_utype(fmat4x4_index::z4)] * 
-                mat2[to_utype(fmat4x4_index::y3)] + 
-                mat1[to_utype(fmat4x4_index::w4)] * 
-                mat2[to_utype(fmat4x4_index::y4)]
+                mat1[to_utype(index::x4)] * 
+                mat2[to_utype(index::y1)] + 
+                mat1[to_utype(index::y4)] * 
+                mat2[to_utype(index::y2)] + 
+                mat1[to_utype(index::z4)] * 
+                mat2[to_utype(index::y3)] + 
+                mat1[to_utype(index::w4)] * 
+                mat2[to_utype(index::y4)]
             ),
             (
-                mat1[to_utype(fmat4x4_index::x4)] * 
-                mat2[to_utype(fmat4x4_index::z1)] + 
-                mat1[to_utype(fmat4x4_index::y4)] * 
-                mat2[to_utype(fmat4x4_index::z2)] + 
-                mat1[to_utype(fmat4x4_index::z4)] * 
-                mat2[to_utype(fmat4x4_index::z3)] + 
-                mat1[to_utype(fmat4x4_index::w4)] * 
-                mat2[to_utype(fmat4x4_index::z4)]
+                mat1[to_utype(index::x4)] * 
+                mat2[to_utype(index::z1)] + 
+                mat1[to_utype(index::y4)] * 
+                mat2[to_utype(index::z2)] + 
+                mat1[to_utype(index::z4)] * 
+                mat2[to_utype(index::z3)] + 
+                mat1[to_utype(index::w4)] * 
+                mat2[to_utype(index::z4)]
             ), 
             (
-                mat1[to_utype(fmat4x4_index::x4)] *
-                mat2[to_utype(fmat4x4_index::w1)] + 
-                mat1[to_utype(fmat4x4_index::y4)] * 
-                mat2[to_utype(fmat4x4_index::w2)] + 
-                mat1[to_utype(fmat4x4_index::z4)] * 
-                mat2[to_utype(fmat4x4_index::w3)] + 
-                mat1[to_utype(fmat4x4_index::w4)] * 
-                mat2[to_utype(fmat4x4_index::w4)]
+                mat1[to_utype(index::x4)] *
+                mat2[to_utype(index::w1)] + 
+                mat1[to_utype(index::y4)] * 
+                mat2[to_utype(index::w2)] + 
+                mat1[to_utype(index::z4)] * 
+                mat2[to_utype(index::w3)] + 
+                mat1[to_utype(index::w4)] * 
+                mat2[to_utype(index::w4)]
             )
         };
     }
 
     /*
-    ==================
-    fmat4x4::operator*
-    ==================
+    =================
+    mat4x4::operator*
+    =================
     */
-    inline fmat4x4 fmat4x4::operator*(const fmat4x4 &mat) const
+    template<typename Type>
+    inline mat4x4<Type> mat4x4<Type>::operator*(const mat4x4 &mat) const
     {
         return mul(*this, mat);
     }
 
     /*
-    ===================
-    fmat4x4::operator[]
-    ===================
+    ==================
+    mat4x4::operator[]
+    ==================
     */
-    inline float fmat4x4::operator[](size_t index) const
-    {
-        return data[index];
-    }
-
-    inline float &fmat4x4::operator[](size_t index)
+    template<typename Type>
+    inline Type mat4x4<Type>::operator[](size_t index) const
     {
         return data[index];
     }
 
     /*
-    ============
-    fmat4x4::ptr
-    ============
-    */
-    inline float *fmat4x4::ptr()
-    {
-        return data;
-    }
-
-    /*
     ==================
-    fmat4x4::translate
+    mat4x4::operator[]
     ==================
     */
-    inline fmat4x4 fmat4x4::translate(const fmat4x4 &mat, const vec3<float> &vec)
+    template<typename Type>
+    inline Type &mat4x4<Type>::operator[](size_t index)
+    {
+        return data[index];
+    }
+
+    /*
+    ===========
+    mat4x4::ptr
+    ===========
+    */
+    template<typename Type>
+    inline Type *mat4x4<Type>::ptr() const
+    {
+        return rm_const<Type *>(data);
+    }
+
+    /*
+    =================
+    mat4x4::translate
+    =================
+    */
+    template<typename Type>
+    inline mat4x4<Type> mat4x4<Type>::translate(const mat4x4 &mat, const vec3<Type> &vec)
     {
         return mul(
             mat,
             {
-                1.0f, 0.0f, 0.0f, vec.x,
-                0.0f, 1.0f, 0.0f, vec.y,
-                0.0f, 0.0f, 1.0f, vec.z,
-                0.0f, 0.0f, 0.0f, 1.0f
+                static_cast<Type>(1), static_cast<Type>(0), static_cast<Type>(0), vec.x,
+                static_cast<Type>(0), static_cast<Type>(1), static_cast<Type>(0), vec.y,
+                static_cast<Type>(0), static_cast<Type>(0), static_cast<Type>(1), vec.z,
+                static_cast<Type>(0), static_cast<Type>(0), static_cast<Type>(0), static_cast<Type>(1)
             }
         );
     }
 
     /*
-    ==============
-    fmat4x4::scale
-    ==============
+    =============
+    mat4x4::scale
+    =============
     */
-    inline fmat4x4 fmat4x4::scale(const fmat4x4 &mat, const vec3<float> &vec)
+    template<typename Type>
+    inline mat4x4<Type> mat4x4<Type>::scale(const mat4x4 &mat, const vec3<Type> &vec)
     {
         return mul(
             mat,
             {
-                vec.x, 0.0f,  0.0f,  0.0f,
-                0.0f,  vec.y, 0.0f,  0.0f,
-                0.0f,  0.0f,  vec.z, 0.0f,
-                0.0f,  0.0f,  0.0f,  1.0f
+                vec.x,                 static_cast<Type>(0), static_cast<Type>(0), static_cast<Type>(0),
+                static_cast<Type>(0),  vec.y,                static_cast<Type>(0), static_cast<Type>(0),
+                static_cast<Type>(0),  static_cast<Type>(0), vec.z,                static_cast<Type>(0),
+                static_cast<Type>(0),  static_cast<Type>(0), static_cast<Type>(0), static_cast<Type>(1)
             }
         );
     }
 
     /*
-    =================
-    fmat4x4::rotate_x
-    =================
+    ================
+    mat4x4::rotate_x
+    ================
     */
-    inline fmat4x4 fmat4x4::rotate_x(const fmat4x4 &mat, float degrees)
+    template<typename Type>
+    inline mat4x4<Type> mat4x4<Type>::rotate_x(const mat4x4 &mat, const Type &degrees)
     {
-        float rad = deg_to_rad(degrees);
+        float rad = deg_to_rad(static_cast<float>(degrees));
+
         return mul(
             mat,
             {
-                1.0f,  0.0f,       0.0f,      0.0f,
-                0.0f,  cosf(rad), -sinf(rad), 0.0f,
-                0.0f,  sinf(rad),  cosf(rad), 0.0f,
-                0.0f,  0.0f,       0.0f,      1.0f
+                static_cast<Type>(1), static_cast<Type>(0), static_cast<Type>(0), static_cast<Type>(0),
+                static_cast<Type>(0), cosf(rad),           -sinf(rad),            static_cast<Type>(0),
+                static_cast<Type>(0), sinf(rad),            cosf(rad),            static_cast<Type>(0),
+                static_cast<Type>(0), static_cast<Type>(0), static_cast<Type>(0), static_cast<Type>(1)
             }
         );
     }
 
     /*
-    =================
-    fmat4x4::rotate_y
-    =================
+    ================
+    mat4x4::rotate_y
+    ================
     */
-    inline fmat4x4 fmat4x4::rotate_y(const fmat4x4 &mat, float degrees)
+    template<typename Type>
+    inline mat4x4<Type> mat4x4<Type>::rotate_y(const mat4x4 &mat, const Type &degrees)
     {
-        float rad = deg_to_rad(degrees);
+        float rad = deg_to_rad(static_cast<float>(degrees));
+
         return mul(
             mat,
             {
-                 cosf(rad), 0.0f, sinf(rad), 0.0f,
-                 0.0f,      1.0f, 0.0f,      0.0f,
-                -sinf(rad), 0.0f, cosf(rad), 0.0f,
-                 0.0f,      0.0f, 0.0f,      1.0f
+                 cosf(rad),            static_cast<Type>(0), sinf(rad),            static_cast<Type>(0),
+                 static_cast<Type>(0), static_cast<Type>(1), static_cast<Type>(0), static_cast<Type>(0),
+                -sinf(rad),            static_cast<Type>(0), cosf(rad),            static_cast<Type>(0),
+                 static_cast<Type>(0), static_cast<Type>(0), static_cast<Type>(0), static_cast<Type>(1)
             }
         );
     }
 
     /*
-    =================
-    fmat4x4::rotate_z
-    =================
+    ================
+    mat4x4::rotate_z
+    ================
     */
-    inline fmat4x4 fmat4x4::rotate_z(const fmat4x4 &mat, float degrees)
+    template<typename Type>
+    inline mat4x4<Type> mat4x4<Type>::rotate_z(const mat4x4 &mat, const Type &degrees)
     {
-        float rad = deg_to_rad(degrees);
+        float rad = deg_to_rad(static_cast<float>(degrees));
+
         return mul(
             mat,
             {
-                cosf(rad), -sinf(rad), 0.0f, 0.0f,
-                sinf(rad),  cosf(rad), 0.0f, 0.0f,
-                0.0f,       0.0f,      1.0f, 0.0f,
-                0.0f,       0.0f,      0.0f, 1.0f
+                cosf(rad),           -sinf(rad),            static_cast<Type>(0), static_cast<Type>(0),
+                sinf(rad),            cosf(rad),            static_cast<Type>(0), static_cast<Type>(0),
+                static_cast<Type>(0), static_cast<Type>(0), static_cast<Type>(1), static_cast<Type>(0),
+                static_cast<Type>(0), static_cast<Type>(0), static_cast<Type>(0), static_cast<Type>(1)
             }
         );
     }
 
     /*
-    ====================
-    fmat4x4::perspective
-    ====================
+    ===================
+    mat4x4::perspective
+    ===================
     */
-    inline fmat4x4 fmat4x4::perspective(const fmat4x4 &mat, float fovy, float aspectRatio, float znear, float zfar)
+    template<typename Type>
+    inline mat4x4<Type> mat4x4<Type>::perspective(const mat4x4 &mat, const Type &fovy, const Type &aspectRatio, const Type &znear, const Type &zfar)
     {
-        float tanHalfFovy = tanf(fovy / 2.0f);
-        float zr = zfar - znear;
+        Type tanHalfFovy = tanf(static_cast<float>(fovy / static_cast<Type>(2)));
+        Type zr = zfar - znear;
 
         return
         {
-            mat[to_utype(fmat4x4_index::x1)] / (aspectRatio * tanHalfFovy), 0.0f,                                   0.0f,                 0.0f,
-            0.0f,                                                 mat[to_utype(fmat4x4_index::y2)] / tanHalfFovy,   0.0f,                 0.0f,
-            0.0f,                                                 0.0f,                                 -(zfar + znear) / zr, -(2.0f * zfar * znear) / zr,
-            0.0f,                                                 0.0f,                                   -1.0f,                0.0f
+            mat[to_utype(index::x1)] / (aspectRatio * tanHalfFovy), static_cast<Type>(0),                   static_cast<Type>(0),  static_cast<Type>(0),
+            static_cast<Type>(0),                                   mat[to_utype(index::y2)] / tanHalfFovy, static_cast<Type>(0),  static_cast<Type>(0),
+            static_cast<Type>(0),                                   static_cast<Type>(0),                 -(zfar + znear) / zr,  -(static_cast<Type>(2) * zfar * znear) / zr,
+            static_cast<Type>(0),                                   static_cast<Type>(0),                   static_cast<Type>(-1), static_cast<Type>(0)
         };
     }
+    
 
     /*
-    ==================
-    fmat2x2::operator*
-    ==================
+    ===================
+    mat4x4::determinant
+    ===================
     */
-    inline vec2<float> fmat2x2::operator*(const vec2<float> &vec) const
+    template<typename Type>
+    inline Type mat4x4<Type>::determinant(const mat4x4 &mat)
     {
-        return mul(*this, vec);
-    }
+        mat3x3<Type> a = mat3x3(
+            mat[to_utype(index::y2)], mat[to_utype(index::z2)], mat[to_utype(index::w2)], 
+            mat[to_utype(index::y3)], mat[to_utype(index::z3)], mat[to_utype(index::w3)], 
+            mat[to_utype(index::y4)], mat[to_utype(index::z4)], mat[to_utype(index::w4)]
+        );
 
-    /*
-    ==================
-    fmat3x3::operator*
-    ==================
-    */
-    inline vec3<float> fmat3x3::operator*(const vec3<float> &vec) const
-    {
-        return mul(*this, vec);
-    }
+        mat3x3<Type> b = mat3x3(
+            mat[to_utype(index::x2)], mat[to_utype(index::z2)], mat[to_utype(index::w2)], 
+            mat[to_utype(index::x3)], mat[to_utype(index::z3)], mat[to_utype(index::w3)], 
+            mat[to_utype(index::x4)], mat[to_utype(index::z4)], mat[to_utype(index::w4)]
+        );
 
-    /*
-    ==================
-    fmat3x3::operator*
-    ==================
-    */
-    inline fmat3x3 fmat3x3::operator*(const fmat3x3 &mat) const
-    {
-        return mul(*this, mat);
-    }
+        mat3x3<Type> c = mat3x3(
+            mat[to_utype(index::x2)], mat[to_utype(index::y2)], mat[to_utype(index::w2)], 
+            mat[to_utype(index::x3)], mat[to_utype(index::y3)], mat[to_utype(index::w3)], 
+            mat[to_utype(index::x4)], mat[to_utype(index::y4)], mat[to_utype(index::w4)]
+        );
 
-    inline float fmat3x3::operator[](size_t index) const
-    {
-        return data[index];
-    }
+        mat3x3<float> d = mat3x3(
+            mat[to_utype(index::x2)], mat[to_utype(index::y2)], mat[to_utype(index::z2)], 
+            mat[to_utype(index::x3)], mat[to_utype(index::y3)], mat[to_utype(index::z3)], 
+            mat[to_utype(index::x4)], mat[to_utype(index::y4)], mat[to_utype(index::z4)]
+        );
 
-    inline float *fmat3x3::ptr()
-    {
-        return data;
-    }
-
-    /*
-    ============
-    fmat2x2::mul
-    ============
-    */
-    inline vec2<float> fmat2x2::mul(const fmat2x2 &mat, const vec2<float> &vec)
-    {
-        return vec2<float>::mul(vec, mat);
-    }
-
-    /*
-    ============
-    fmat3x3::mul
-    ============
-    */
-    inline vec3<float> fmat3x3::mul(const fmat3x3 &mat, const vec3<float> &vec)
-    {
-        return vec3<float>::mul(vec, mat);
-    }
-
-    /*
-    ============
-    fmat3x3::mul
-    ============
-    */
-    inline fmat3x3 fmat3x3::mul(const fmat3x3 &mat1, const fmat3x3 &mat2)
-    {
         return
-        {
-            (mat1[to_utype(fmat3x3_index::x1)] * mat2[to_utype(fmat3x3_index::x1)]) + 
-            (mat1[to_utype(fmat3x3_index::y1)] * mat2[to_utype(fmat3x3_index::x2)]) + 
-            (mat1[to_utype(fmat3x3_index::z1)] * mat2[to_utype(fmat3x3_index::x3)]), 
-            (mat1[to_utype(fmat3x3_index::x1)] * mat2[to_utype(fmat3x3_index::y1)]) + 
-            (mat1[to_utype(fmat3x3_index::y1)] * mat2[to_utype(fmat3x3_index::y2)]) + 
-            (mat1[to_utype(fmat3x3_index::z1)] * mat2[to_utype(fmat3x3_index::y3)]), 
-            (mat1[to_utype(fmat3x3_index::x1)] * mat2[to_utype(fmat3x3_index::z1)]) + 
-            (mat1[to_utype(fmat3x3_index::y1)] * mat2[to_utype(fmat3x3_index::z2)]) + 
-            (mat1[to_utype(fmat3x3_index::z1)] * mat2[to_utype(fmat3x3_index::z3)]),
-            (mat1[to_utype(fmat3x3_index::x2)] * mat2[to_utype(fmat3x3_index::x1)]) + 
-            (mat1[to_utype(fmat3x3_index::y2)] * mat2[to_utype(fmat3x3_index::x2)]) + 
-            (mat1[to_utype(fmat3x3_index::z2)] * mat2[to_utype(fmat3x3_index::x3)]), 
-            (mat1[to_utype(fmat3x3_index::x2)] * mat2[to_utype(fmat3x3_index::y1)]) + 
-            (mat1[to_utype(fmat3x3_index::y2)] * mat2[to_utype(fmat3x3_index::y2)]) + 
-            (mat1[to_utype(fmat3x3_index::z2)] * mat2[to_utype(fmat3x3_index::y3)]), 
-            (mat1[to_utype(fmat3x3_index::x2)] * mat2[to_utype(fmat3x3_index::z1)]) + 
-            (mat1[to_utype(fmat3x3_index::y2)] * mat2[to_utype(fmat3x3_index::z2)]) + 
-            (mat1[to_utype(fmat3x3_index::z2)] * mat2[to_utype(fmat3x3_index::z3)]),
-            (mat1[to_utype(fmat3x3_index::x3)] * mat2[to_utype(fmat3x3_index::x1)]) + 
-            (mat1[to_utype(fmat3x3_index::y3)] * mat2[to_utype(fmat3x3_index::x2)]) + 
-            (mat1[to_utype(fmat3x3_index::z3)] * mat2[to_utype(fmat3x3_index::x3)]), 
-            (mat1[to_utype(fmat3x3_index::x3)] * mat2[to_utype(fmat3x3_index::y1)]) + 
-            (mat1[to_utype(fmat3x3_index::y3)] * mat2[to_utype(fmat3x3_index::y2)]) + 
-            (mat1[to_utype(fmat3x3_index::z3)] * mat2[to_utype(fmat3x3_index::y3)]), 
-            (mat1[to_utype(fmat3x3_index::x3)] * mat2[to_utype(fmat3x3_index::z1)]) + 
-            (mat1[to_utype(fmat3x3_index::y3)] * mat2[to_utype(fmat3x3_index::z2)]) + 
-            (mat1[to_utype(fmat3x3_index::z3)] * mat2[to_utype(fmat3x3_index::z3)])
-        };
-    }
-
-    /*
-    ==============
-    fmat2x2::scale
-    ==============
-    */
-    inline vec2<float> fmat2x2::scale(const vec2<float> &vec, float scale1, float scale2)
-    {
-        return vec2<float>::mul(vec, { scale1, 0.0f, 0.0f, scale2 } );
-    }
-
-    inline vec2<float> fmat2x2::translate(const vec2<float> &vec, float x, float y)
-    {
-        return { vec.x + x, vec.y + y };
-    }
-
-    /*
-    ===============
-    fmat2x2::rotate
-    ===============
-    */
-    inline vec2<float> fmat2x2::rotate(const vec2<float> &vec, float degrees)
-    {
-        float rad = deg_to_rad(degrees);
-
-        return vec2<float>::mul(vec, {
-            cosf(rad), -sinf(rad),
-            sinf(rad), cosf(rad) 
-        });
-    }
-
-    /*
-    ==================
-    fmat3x3::translate
-    ==================
-    */
-    inline fmat3x3 fmat3x3::translate(const fmat3x3 &mat, const vec2<float> &vec)
-    {
-        return mul(
-            mat,
-            {
-                1.0f, 0.0f, vec.x,
-                0.0f, 1.0f, vec.y,
-                0.0f, 0.0f, 1.0f
-            }
-        );
-    }
-
-    /*
-    ==============
-    fmat3x3::scale
-    ==============
-    */
-    inline fmat3x3 fmat3x3::scale(const fmat3x3 &mat, const vec2<float> &vec)
-    {
-        return mul(
-            mat,
-            {
-                vec.x, 0.0f,  0.0f,
-                0.0f,  vec.y, 0.0f,
-                0.0f,  0.0f,  1.0f
-            }
-        );
-    }
-
-    /*
-    ===============
-    fmat3x3::rotate
-    ===============
-    */
-    inline fmat3x3 fmat3x3::rotate(const fmat3x3 &mat, float degrees)
-    {
-        float rad = deg_to_rad(degrees);
-        return mul(
-            mat,
-            {
-                cosf(rad), -sinf(rad), 0.0f,
-                sinf(rad),  cosf(rad), 0.0f,
-                0.0f,       0.0f,      1.0f
-            }
-        );
+            mat[to_utype(index::x1)] * mat3x3<Type>::determinant(a) -
+            mat[to_utype(index::y1)] * mat3x3<Type>::determinant(b) +
+            mat[to_utype(index::z1)] * mat3x3<Type>::determinant(c) -
+            mat[to_utype(index::w1)] * mat3x3<Type>::determinant(d);
     }
 
 }

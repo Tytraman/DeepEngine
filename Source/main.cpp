@@ -311,11 +311,11 @@ int main()
 
     int view = deep::GL3::uniform_manager::find(defaultProgram, "view");
     if(view != -1)
-        programManager->add_uniform("view", view, deep::fmat4x4(0.0f));
+        programManager->add_uniform("view", view, deep::mat4x4(0.0f));
 
     int proj = deep::GL3::uniform_manager::find(defaultProgram, "proj");
     if(proj != -1)
-        programManager->add_uniform("proj", proj, deep::fmat4x4(0.0f));
+        programManager->add_uniform("proj", proj, deep::mat4x4(0.0f));
 
     int myTex = deep::GL3::uniform_manager::find(defaultProgram, "myTex");
     if(myTex != -1)
@@ -325,11 +325,11 @@ int main()
 
     int skyboxView = deep::GL3::uniform_manager::find(skyboxProgram, "view");
     if(skyboxView != -1)
-        programManager->add_uniform("view", skyboxView, deep::fmat4x4(0.0f));
+        programManager->add_uniform("view", skyboxView, deep::mat4x4(0.0f));
 
     int skyboxProj = deep::GL3::uniform_manager::find(skyboxProgram, "proj");
     if(skyboxProj != -1)
-        programManager->add_uniform("proj", skyboxProj, deep::fmat4x4(0.0f));
+        programManager->add_uniform("proj", skyboxProj, deep::mat4x4(0.0f));
 
     int skyboxCube = deep::GL3::uniform_manager::find(skyboxProgram, "skybox");
     if(skyboxCube != -1)
@@ -363,11 +363,11 @@ int main()
 
     view = deep::GL3::uniform_manager::find(lightedObjectProgram, "view");
     if(view != -1)
-        programManager->add_uniform("view", view, deep::fmat4x4(0.0f));
+        programManager->add_uniform("view", view, deep::mat4x4(0.0f));
 
     proj = deep::GL3::uniform_manager::find(lightedObjectProgram, "proj");
     if(proj != -1)
-        programManager->add_uniform("proj", proj, deep::fmat4x4(0.0f));
+        programManager->add_uniform("proj", proj, deep::mat4x4(0.0f));
 
     int objectColorLoc = deep::GL3::uniform_manager::find(lightedObjectProgram, "deMaterial.ambient");
     if(objectColorLoc != -1)
@@ -431,11 +431,11 @@ int main()
 
     view = deep::GL3::uniform_manager::find(lightedTexturedObjectProgram, "view");
     if(view != -1)
-        programManager->add_uniform("view", view, deep::fmat4x4(0.0f));
+        programManager->add_uniform("view", view, deep::mat4x4(0.0f));
 
     proj = deep::GL3::uniform_manager::find(lightedTexturedObjectProgram, "proj");
     if(proj != -1)
-        programManager->add_uniform("proj", proj, deep::fmat4x4(0.0f));
+        programManager->add_uniform("proj", proj, deep::mat4x4(0.0f));
 
     objectColorLoc = deep::GL3::uniform_manager::find(lightedTexturedObjectProgram, "deMaterial.diffuse");
     if(objectColorLoc != -1)
@@ -496,11 +496,11 @@ int main()
 
     view = deep::GL3::uniform_manager::find(lightSourceObjectProgram, "view");
     if(view != -1)
-        programManager->add_uniform("view", view, deep::fmat4x4(0.0f));
+        programManager->add_uniform("view", view, deep::mat4x4(0.0f));
 
     proj = deep::GL3::uniform_manager::find(lightSourceObjectProgram, "proj");
     if(proj != -1)
-        programManager->add_uniform("proj", proj, deep::fmat4x4(0.0f));
+        programManager->add_uniform("proj", proj, deep::mat4x4(0.0f));
 
     programManager->use(postProcessProgram);
 

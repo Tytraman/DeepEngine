@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "DeepEngine/Ressources/Image.md",
+                "file": "DeepEngine/Structuration/Objets du jeu.md",
                 "mode": "source",
                 "source": false
               }
@@ -93,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "DeepEngine/Ressources/Image.md",
+                "file": "DeepEngine/Structuration/Objets du jeu.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "DeepEngine/Ressources/Image.md",
+                "file": "DeepEngine/Structuration/Objets du jeu.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "DeepEngine/Ressources/Image.md"
+                "file": "DeepEngine/Structuration/Objets du jeu.md"
               }
             }
           }
@@ -155,10 +155,14 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "e0e4d8676e1accfa",
+  "active": "bb2f43f72b8547d4",
   "lastOpenFiles": [
-    "res/img/screenshot_2024_1_19_9_33_47.bmp",
+    "res/img/scene_graph02.png",
+    "res/img/scene_graph01.png",
     "DeepEngine/Ressources/Image.md",
+    "DeepEngine/Structuration/Objets du jeu.md",
+    "DeepEngine/Structuration",
+    "res/img/screenshot_2024_1_19_9_33_47.bmp",
     "DeepEngine/Ressources/Ressource.md",
     "OpenGL/Lumières.md",
     "OpenGL/Objects.md",
@@ -191,7 +195,6 @@
     "OpenGL/GLSL/OpenGL Shading Language.md",
     "OpenGL/Textures.md",
     "OpenGL/GLSL",
-    "res/img/basic_lighting_specular_shininess.png",
     "Maths",
     "res/img",
     "res",
@@ -199,7 +202,6 @@
     "DeepEngine",
     "Analyses/Godot",
     "Analyses",
-    "C++",
     "Welcome.md"
   ]
 }

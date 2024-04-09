@@ -407,7 +407,7 @@ namespace deep
         program_manager::add_uniform
         ============================
         */
-        bool program_manager::add_uniform(const char *uniformName, int location, const fmat4x4 &value)
+        bool program_manager::add_uniform(const char *uniformName, int location, const mat4x4<float> &value)
         {
             hash_entry<program_item> *prog = m_Programs[m_CurrentID];
             if(prog == nullptr)
@@ -505,13 +505,13 @@ namespace deep
         program_manager::set_uniform
         ============================
         */
-        bool program_manager::set_uniform(const char *uniformName, const fmat4x4 &value)
+        bool program_manager::set_uniform(const char *uniformName, const mat4x4<float> &value)
         {
             hash_entry<program_item> *prog = m_Programs[m_CurrentID];
             if(prog == nullptr)
                 return false;
 
-            hash_entry<pair<int, fmat4x4>> *uni = prog->value.fm4Uniforms[uniformName];
+            hash_entry<pair<int, mat4x4<float>>> *uni = prog->value.fm4Uniforms[uniformName];
             if(uni == nullptr)
                 return false;
 
@@ -747,8 +747,8 @@ namespace deep
             for(; fv3UniBeg != fv3UniEnd; ++fv3UniBeg)
                 uniform_manager::send(fv3UniBeg->value.value1(), fv3UniBeg->value.value2());
 
-            hash_table_iterator<pair<int, fmat4x4>> fm4UniBeg = prog->value.fm4Uniforms.begin();
-            hash_table_iterator<pair<int, fmat4x4>> fm4UniEnd = prog->value.fm4Uniforms.end();
+            hash_table_iterator<pair<int, mat4x4<float>>> fm4UniBeg = prog->value.fm4Uniforms.begin();
+            hash_table_iterator<pair<int, mat4x4<float>>> fm4UniEnd = prog->value.fm4Uniforms.end();
             for(; fm4UniBeg != fm4UniEnd; ++fm4UniBeg)
                 uniform_manager::send(fm4UniBeg->value.value1(), fm4UniBeg->value.value2());
 

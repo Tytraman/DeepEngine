@@ -162,12 +162,12 @@ namespace deep
     }
 
     template<typename Type>
-    vec2<Type> vec2<Type>::mul(const vec2 &vec, const fmat2x2 &mat)
+    vec2<Type> vec2<Type>::mul(const vec2 &vec, const mat2x2<Type> &mat)
     {
         return
         {
-            vec.x * mat.x1 + vec.y * mat.x2,
-            vec.x * mat.y1 + vec.y * mat.y2
+            vec.x * mat[0] + vec.y * mat[2],
+            vec.x * mat[1] + vec.y * mat[3]
         };
     }
 
@@ -236,12 +236,12 @@ namespace deep
     { }
 
     template<typename Type>
-    vec3<Type> vec3<Type>::mul(const vec3 &vec, const fmat3x3 &mat)
+    vec3<Type> vec3<Type>::mul(const vec3 &vec, const mat3x3<Type> &mat)
     {
         return {
-            (vec.x * mat[static_cast<uint8_t>(fmat3x3_index::x1)]) + (vec.y * mat[static_cast<uint8_t>(fmat3x3_index::y1)]) + (vec.z * mat[static_cast<uint8_t>(fmat3x3_index::z1)]),
-            (vec.x * mat[static_cast<uint8_t>(fmat3x3_index::x2)]) + (vec.y * mat[static_cast<uint8_t>(fmat3x3_index::y2)]) + (vec.z * mat[static_cast<uint8_t>(fmat3x3_index::z2)]),
-            (vec.x * mat[static_cast<uint8_t>(fmat3x3_index::x3)]) + (vec.y * mat[static_cast<uint8_t>(fmat3x3_index::y3)]) + (vec.z * mat[static_cast<uint8_t>(fmat3x3_index::z3)])
+            (vec.x * mat[static_cast<uint8_t>(index::x1)]) + (vec.y * mat[static_cast<uint8_t>(index::y1)]) + (vec.z * mat[static_cast<uint8_t>(index::z1)]),
+            (vec.x * mat[static_cast<uint8_t>(index::x2)]) + (vec.y * mat[static_cast<uint8_t>(index::y2)]) + (vec.z * mat[static_cast<uint8_t>(index::z2)]),
+            (vec.x * mat[static_cast<uint8_t>(index::x3)]) + (vec.y * mat[static_cast<uint8_t>(index::y3)]) + (vec.z * mat[static_cast<uint8_t>(index::z3)])
         };
     }
 

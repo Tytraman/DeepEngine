@@ -62,7 +62,6 @@ namespace deep
 
         class program_manager
         {
-
             public:
                 struct program_item
                 {
@@ -72,7 +71,7 @@ namespace deep
                     hash_table<pair<int, int>> iUniforms;
                     hash_table<pair<int, vec3<float>>> fv3Uniforms;
                     hash_table<pair<int, vec4<float>>> fv4Uniforms;
-                    hash_table<pair<int, fmat4x4>> fm4Uniforms;
+                    hash_table<pair<int, mat4x4<float>>> fm4Uniforms;
 
                     DE_API program_item(const char *name, GLuint program);
                 };
@@ -107,7 +106,7 @@ namespace deep
                 /// @param location La localisation de l'uniforme dans le programme du shader.
                 /// @param value La valeur à attribuer.
                 /// @return \c true en cas de succès, \c dans le cas inverse.
-                DE_API bool add_uniform(const char *uniformName, int location, const fmat4x4 &value);
+                DE_API bool add_uniform(const char *uniformName, int location, const mat4x4<float> &value);
                 /// @brief Ajoute une entrée d'uniforme dans la liste interne liée au programme actuellement attaché.
                 /// @param uniformName Le nom de l'uniforme à ajouter.
                 /// @param location La localisation de l'uniforme dans le programme du shader.
@@ -146,7 +145,7 @@ namespace deep
                 /// @param uniformName Le nom de l'uniforme à modifier.
                 /// @param value La valeur à attribuer.
                 /// @return \c true en cas de succès, \c false dans le cas inverse.
-                DE_API bool set_uniform(const char *uniformName, const fmat4x4 &value);
+                DE_API bool set_uniform(const char *uniformName, const mat4x4<float> &value);
 
                 DE_API bool set_uniform(gl_id program, const char *uniformName, float value);
                 DE_API bool set_uniform(gl_id program, const char *uniformName, const vec3<float> &value);

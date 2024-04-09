@@ -61,7 +61,7 @@ namespace deep
         programManager->set_uniform("mScl", transformation->get_scaling());
         programManager->set_uniform("view", camera->get_look_at());
         programManager->set_uniform("deViewPos", camera->get_position());
-        programManager->set_uniform("proj", fmat4x4::perspective(fmat4x4(), 45.0f, (float) window->get_width() / (float) window->get_height(), 0.1f, 1000.0f));
+        programManager->set_uniform("proj", mat4x4<float>::perspective(mat4x4<float>(), 45.0f, (float) window->get_width() / (float) window->get_height(), 0.1f, 1000.0f));
         
         if(drawable->mat.get() != nullptr)
             drawable->mat->send_data();
@@ -90,14 +90,14 @@ namespace deep
 
         vaoManager->bind(drawable->vao);
 
-        fmat4x4 view = camera->get_look_at();
-        view[static_cast<uint8_t>(fmat4x4_index::w1)] = 0.0f;
-        view[static_cast<uint8_t>(fmat4x4_index::w2)] = 0.0f;
-        view[static_cast<uint8_t>(fmat4x4_index::w3)] = 0.0f;
+        mat4x4 view = camera->get_look_at();
+        view[static_cast<uint8_t>(mat4x4<float>::index::w1)] = 0.0f;
+        view[static_cast<uint8_t>(mat4x4<float>::index::w2)] = 0.0f;
+        view[static_cast<uint8_t>(mat4x4<float>::index::w3)] = 0.0f;
 
         programManager->set_uniform("skybox", 0);
         programManager->set_uniform("view", view);
-        programManager->set_uniform("proj", fmat4x4::perspective(fmat4x4(), 45.0f, (float) window->get_width() / (float) window->get_height(), 0.1f, 1000.0f));
+        programManager->set_uniform("proj", mat4x4<float>::perspective(mat4x4<float>(), 45.0f, (float) window->get_width() / (float) window->get_height(), 0.1f, 1000.0f));
 
         if(drawable->mat.get() != nullptr)
             drawable->mat->send_data();

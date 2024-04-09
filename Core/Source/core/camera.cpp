@@ -45,11 +45,11 @@ namespace deep
 	}
 
 	/*
-	==============
+	===================
 	camera::get_look_at
-	==============
+	===================
 	*/
-	fmat4x4 camera::get_look_at() const
+	mat4x4<float> camera::get_look_at() const
 	{
 		vec3<float> direction = vec3<float>::normalize(m_Position - (m_Position + m_Front));
 		vec3<float> right     = vec3<float>::normalize(vec3<float>::cross(m_Front, m_BaseUp));
