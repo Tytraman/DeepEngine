@@ -218,6 +218,23 @@ int main()
 
     deep::core::out() << "pwd: " << deep::core::get_pwd().str() << "\n";
 
+    {
+        deep::mat4x4<float> inv;
+        deep::mat4x4<float> f =
+        {
+            -3, 2, -1, 5,
+            6, -6, 7, 2,
+            3, -4, 4, 8,
+            1, 5, -7, 4
+        };
+
+        deep::mat4x4<float>::inverse(f, inv);
+
+        int a = 0; (void) a;
+
+        (void) inv;
+    }
+
     deep::window win(TARGET_MS, TARGET_FPS);
     win.set_event_callback(event_callback);
     win.set_update_callback(update_callback);

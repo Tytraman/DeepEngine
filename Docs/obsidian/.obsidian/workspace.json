@@ -13,7 +13,7 @@
             "state": {
               "type": "markdown",
               "state": {
-                "file": "DeepEngine/Structuration/Objets du jeu.md",
+                "file": "Maths/Matrice.md",
                 "mode": "source",
                 "source": false
               }
@@ -93,7 +93,7 @@
             "state": {
               "type": "backlink",
               "state": {
-                "file": "DeepEngine/Structuration/Objets du jeu.md",
+                "file": "Maths/Matrice.md",
                 "collapseAll": false,
                 "extraContext": false,
                 "sortOrder": "alphabetical",
@@ -110,7 +110,7 @@
             "state": {
               "type": "outgoing-link",
               "state": {
-                "file": "DeepEngine/Structuration/Objets du jeu.md",
+                "file": "Maths/Matrice.md",
                 "linksCollapsed": false,
                 "unlinkedCollapsed": true
               }
@@ -133,7 +133,7 @@
             "state": {
               "type": "outline",
               "state": {
-                "file": "DeepEngine/Structuration/Objets du jeu.md"
+                "file": "Maths/Matrice.md"
               }
             }
           }
@@ -155,12 +155,13 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "bb2f43f72b8547d4",
+  "active": "e0e4d8676e1accfa",
   "lastOpenFiles": [
+    "DeepEngine/Structuration/Objets du jeu.md",
+    "Maths/Matrice.md",
     "res/img/scene_graph02.png",
     "res/img/scene_graph01.png",
     "DeepEngine/Ressources/Image.md",
-    "DeepEngine/Structuration/Objets du jeu.md",
     "DeepEngine/Structuration",
     "res/img/screenshot_2024_1_19_9_33_47.bmp",
     "DeepEngine/Ressources/Ressource.md",
@@ -191,7 +192,6 @@
     "res/img/normal_mapping.png",
     "res/img/dot_positive.png",
     "res/img/OpenGL_Anatomy_of_a_Texture.png",
-    "res/img/phong_reflection_model.png",
     "OpenGL/GLSL/OpenGL Shading Language.md",
     "OpenGL/Textures.md",
     "OpenGL/GLSL",

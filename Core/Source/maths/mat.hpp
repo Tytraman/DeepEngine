@@ -28,11 +28,17 @@ namespace deep
 
         mat2x2(const Type &x1 = 1, const Type &y1 = 0, const Type &x2 = 0, const Type &y2 = 1);
 
+        mat2x2 &operator=(const mat2x2 &other);
+
         Type operator[](size_t index) const;
         Type &operator[](size_t index);
 
         vec2<Type> operator*(const vec2<Type> &vec) const;
+        mat2x2 operator*(const Type &value) const;
 
+        bool operator==(const mat2x2 &other) const;
+
+        static mat2x2 mul(const mat2x2 &mat, const Type &value);
         static vec2<Type> mul(const mat2x2 &mat, const vec2<Type> &vec);
 
         static vec2<Type> scale(const vec2<Type> &vec, const Type &scale1, const Type &scale2);
@@ -40,6 +46,9 @@ namespace deep
         static vec2<Type> rotate(const vec2<Type> &vec, const Type &degrees);
 
         static Type determinant(const mat2x2 &mat);
+
+        static bool inverse(const mat2x2 &mat, mat2x2 &dest);
+        static mat2x2 transpose(const mat2x2 &mat);
     };
 
     template<typename Type>
@@ -60,9 +69,15 @@ namespace deep
             const Type &x3 = 0, const Type &y3 = 0, const Type &z3 = 1
         );
 
+        mat3x3 &operator=(const mat3x3 &other);
+
+        mat3x3 operator*(const Type &value) const;
         vec3<Type> operator*(const vec3<Type> &vec) const;
         mat3x3 operator*(const mat3x3 &mat) const;
+
         Type operator[](size_t index) const;
+
+        bool operator==(const mat3x3 &other) const;
 
         Type *ptr() const;
 
@@ -78,6 +93,40 @@ namespace deep
         static mat3x3 rotate(const mat3x3 &mat, const Type &degrees);
 
         static Type determinant(const mat3x3 &mat);
+
+        static bool inverse(const mat3x3 &mat, mat3x3 &dest);
+        static mat3x3 transpose(const mat3x3 &mat);
+
+    };
+
+    template<typename Type>
+    struct mat4x4_row
+    {
+        enum class index : uint8_t
+        {
+            x = 0,
+            y = 1,
+            z = 2,
+            w = 3
+        };
+
+        Type data[4];
+
+        mat4x4_row(const Type &x = 0, const Type &y = 0, const Type &z = 0, const Type &w = 0);
+        mat4x4_row(const mat4x4_row &other);
+
+        mat4x4_row &operator=(const mat4x4_row &other);
+
+        Type &operator[](size_t index) const;
+
+        mat4x4_row &operator*=(const Type &value);
+        mat4x4_row &operator*=(const mat4x4_row &other);
+        mat4x4_row &operator/=(const Type &value);
+        mat4x4_row &operator/=(const mat4x4_row &other);
+        mat4x4_row &operator+=(const Type &value);
+        mat4x4_row &operator+=(const mat4x4_row &other);
+        mat4x4_row &operator-=(const Type &value);
+        mat4x4_row &operator-=(const mat4x4_row &other);
 
     };
 
@@ -101,11 +150,30 @@ namespace deep
             const Type &x4 = 0, const Type &y4 = 0, const Type &z4 = 0, const Type &w4 = 1
         );
 
-        static mat4x4 mul(const mat4x4 &mat1, const mat4x4 &mat2);
+        mat4x4(const mat4x4_row<Type> &row);
+        mat4x4(
+            const mat4x4_row<Type> &row1,
+            const mat4x4_row<Type> &row2,
+            const mat4x4_row<Type> &row3,
+            const mat4x4_row<Type> &row4
+        );
 
         mat4x4 operator*(const mat4x4 &mat) const;
+
         Type operator[](size_t index) const;
         Type &operator[](size_t index);
+
+        bool operator==(const mat4x4 &other) const;
+
+        static void make_pivot_row(uint8_t pivotIndex, mat4x4_row<Type> &leftRow, mat4x4_row<Type> &rightRow);
+        static void calc_inverse_row(uint8_t pivotIndex, mat4x4_row<Type> fromLeftRow, mat4x4_row<Type> fromRightRow, mat4x4_row<Type> &toLeftRow, mat4x4_row<Type> &toRightRow);
+
+        mat4x4_row<Type> get_row_1() const;
+        mat4x4_row<Type> get_row_2() const;
+        mat4x4_row<Type> get_row_3() const;
+        mat4x4_row<Type> get_row_4() const;
+
+        static mat4x4 mul(const mat4x4 &mat1, const mat4x4 &mat2);
 
         Type *ptr() const;
 
@@ -117,6 +185,9 @@ namespace deep
         static mat4x4 perspective(const mat4x4 &mat, const Type &fovy, const Type &aspectRatio, const Type &znear, const Type &zfar);
 
         static Type determinant(const mat4x4 &mat);
+
+        static bool inverse(const mat4x4 &mat, mat4x4 &dest);
+        static mat4x4 transpose(const mat4x4 &mat);
 
     };
 
