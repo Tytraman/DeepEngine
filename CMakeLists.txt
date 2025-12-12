@@ -1,12 +1,22 @@
-﻿# Indique la version minimum de CMake requise pour exécuter le script.
-cmake_minimum_required(VERSION 3.15)
-
-message(STATUS "=====[ DeepEngine ]=====")
-
-# Indique les versions à utiliser des langages.
-set(CMAKE_CXX_STANDARD 17)
+﻿cmake_minimum_required(VERSION 3.15.7)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/Build")
+
+project(DeepEngineProject
+    VERSION 0.0.1
+    LANGUAGES C CXX)
+
+set(CMAKE_CXX_STANDARD 17) # Utilise le standard C++17.
+set(CMAKE_EXPORT_COMPILE_COMMANDS ON) # Génère un fichier 'compile_commands.json'.
+
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+
+add_executable(DeepEngineEditor
+    "${CMAKE_CURRENT_LIST_DIR}/Editor/main.cpp")
+
+message(STATUS "Compiler ID: ${CMAKE_CXX_COMPILER_ID}")
 
 if(MSVC)
     #add_compile_options(/fsanitize=address)
@@ -17,37 +27,24 @@ if(MSVC)
     endif()
 endif()
 
-include("variables.cmake")
+find_package(DeepLib REQUIRED)
 
-project(${DE_PROJECT} VERSION 0.0.1 LANGUAGES C CXX)
+include("cmake/variables.cmake")
 
-set(CORE_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/Core")
-set(CORE_BUILD_DIRECTORY "${CORE_DIRECTORY}/Build")
-
-# Crée un dossier au moment de la génération du projet CMake.
-file(MAKE_DIRECTORY "${CORE_BUILD_DIRECTORY}")
-add_subdirectory("${CORE_DIRECTORY}" "${CORE_BUILD_DIRECTORY}")
+add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Engine")
 
 add_compile_definitions(PRIVATE DE_AUTHORS=${DE_AUTHORS})
 add_compile_definitions(PRIVATE DE_VERSION=${DE_VERSION})
 
-file(GLOB DE_SOURCES
-    "${CMAKE_CURRENT_LIST_DIR}/Source/*.cpp" "${CMAKE_CURRENT_LIST_DIR}/Source/*.c"
-)
+target_link_libraries(DeepEngineEditor
+    PUBLIC
+        Deep::Core
+        Deep::Lib
+        Deep::Engine)
 
-add_executable(${DE_PROJECT} ${DE_SOURCES})
-
-if(MSVC)
-    target_compile_options(${DE_PROJECT} PRIVATE /W4 /WX)
-endif()
-
-
-target_include_directories(${DE_PROJECT} PUBLIC
-    ${CORE_INCLUDE}
-)
-
-target_link_directories(${DE_PROJECT} PUBLIC "${CMAKE_CURRENT_LIST_DIR}/out/build/x64-Debug")
-
-target_link_libraries(${DE_PROJECT}
-    ${CORE_PROJECT}
-)
+# Crée un lien symbolique vers 'compile_commands.json' généré dans le dossier de Build.
+file(CREATE_LINK
+    ${CMAKE_CURRENT_BINARY_DIR}/compile_commands.json   # Fichier pointé.
+    ${CMAKE_CURRENT_LIST_DIR}/compile_commands.json     # Destination.
+    COPY_ON_ERROR   # S'il n'est pas possible de créer de lien symbolique, fait une copie du fichier à la place.
+    SYMBOLIC)
