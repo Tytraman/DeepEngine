@@ -1,9 +1,9 @@
-# Indique la version minimum de CMake requise pour exécuter le script.
+ï»¿# Indique la version minimum de CMake requise pour exÃ©cuter le script.
 cmake_minimum_required(VERSION 3.15)
 
 message(STATUS "=====[ DeepEngine ]=====")
 
-# Indique les versions à utiliser des langages.
+# Indique les versions Ã  utiliser des langages.
 set(CMAKE_CXX_STANDARD 17)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/Build")
@@ -24,7 +24,7 @@ project(${DE_PROJECT} VERSION 0.0.1 LANGUAGES C CXX)
 set(CORE_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/Core")
 set(CORE_BUILD_DIRECTORY "${CORE_DIRECTORY}/Build")
 
-# Crée un dossier au moment de la génération du projet CMake.
+# CrÃ©e un dossier au moment de la gÃ©nÃ©ration du projet CMake.
 file(MAKE_DIRECTORY "${CORE_BUILD_DIRECTORY}")
 add_subdirectory("${CORE_DIRECTORY}" "${CORE_BUILD_DIRECTORY}")
 

@@ -1,4 +1,4 @@
-#include "core/core.hpp"
+ï»¿#include "core/core.hpp"
 #include "core/memory.hpp"
 #include "gui/deimgui.hpp"
 #include "ecs/scene.hpp"
@@ -14,7 +14,7 @@
 #include "core/templates/list.hpp"
 #include "os/win32.hpp"
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 #include <io.h>
 #include <fcntl.h>
 #include <sys/stat.h>
@@ -22,11 +22,11 @@
 namespace deep
 {
 
-    #ifdef DE_WINDOWS
+#ifdef DE_WINDOWS
     uint64_t core::m_InitTime = GetTickCount64();
-    #else
-    #error Need implementation
-    #endif
+#else
+#error Need implementation
+#endif
 
     ref<text_writer> core::m_Stderr;
     ref<text_writer> core::m_Stdout;
@@ -52,7 +52,7 @@ namespace deep
         HANDLE stdoutHandle = GetStdHandle(STD_OUTPUT_HANDLE);
         HANDLE stderrHandle = GetStdHandle(STD_ERROR_HANDLE);
 
-        if(stdoutHandle != INVALID_HANDLE_VALUE)
+        if (stdoutHandle != INVALID_HANDLE_VALUE)
         {
             DWORD consoleMode;
             GetConsoleMode(stdoutHandle, &consoleMode);
@@ -60,7 +60,7 @@ namespace deep
             SetConsoleMode(stdoutHandle, consoleMode);
         }
 
-        if(stderrHandle != INVALID_HANDLE_VALUE)
+        if (stderrHandle != INVALID_HANDLE_VALUE)
         {
             DWORD consoleMode;
             GetConsoleMode(stderrHandle, &consoleMode);
@@ -72,7 +72,7 @@ namespace deep
         // Allocation des singletons.
 
         list<mem_ptr> *memoryTrack = mem::alloc_type_no_track<list<mem_ptr>>();
-        if(memoryTrack == nullptr)
+        if (memoryTrack == nullptr)
         {
             return core_init_status::CannotInstantiateObjects;
         }
@@ -80,10 +80,10 @@ namespace deep
         mem::set_memory_track(memoryTrack);
 
         CPU *ccpu = mem::alloc_type_no_track<CPU>();
-        if(ccpu == nullptr)
+        if (ccpu == nullptr)
         {
             mem::free_type_no_track(memoryTrack);
-            
+
 
             return core_init_status::CannotInstantiateObjects;
         }
@@ -91,7 +91,7 @@ namespace deep
         CPU::set_singleton(ccpu);
 
         engine_settings *sset = mem::alloc_type_no_track<engine_settings>();
-        if(sset == nullptr)
+        if (sset == nullptr)
         {
             mem::free_type_no_track(ccpu);
             mem::free_type_no_track(memoryTrack);
@@ -102,13 +102,13 @@ namespace deep
         engine_settings::set_singleton(sset);
 
         HMODULE hModule = GetModuleHandleA("NTDLL");
-        if(hModule == nullptr)
+        if (hModule == nullptr)
         {
             return core_init_status::CannotInitNtDll;
         }
 
         nt_query_object = (NtQueryObject) GetProcAddress(hModule, "NtQueryObject");
-        if(nt_query_object == nullptr)
+        if (nt_query_object == nullptr)
         {
             return core_init_status::CannotInitNtDll;
         }
@@ -119,12 +119,12 @@ namespace deep
         ref<file_stream> stderrStream = mem::alloc_type<file_stream>("stderr", stderrHandle);
         ref<stream_writer> stderrWriter = mem::alloc_type<stream_writer>(stderrStream.get());
 
-        if(!stdoutWriter->open())
+        if (!stdoutWriter->open())
         {
             return core_init_status::CannotLoadStdStream;
         }
 
-        if(!stderrWriter->open())
+        if (!stderrWriter->open())
         {
             return core_init_status::CannotLoadStdStream;
         }
@@ -135,21 +135,21 @@ namespace deep
 
         *m_Stdout << DE_TERM_FG_GREEN "core::init" DE_TERM_RESET " " DE_VERSION " - " DE_TERM_FG_RED "this is where it all begins" DE_TERM_RESET "\n";
 
-        // Vérifie s'il y a une autre instance du programme et
+        // VÃ©rifie s'il y a une autre instance du programme et
         // si c'est le cas, lui donne le focus.
-        if(focus_instance(gameTitle))
+        if (focus_instance(gameTitle))
         {
             return core_init_status::InstanceAlreadyExists;
         }
 
-        // Vérifie qu'il y a suffisamment de place dans le disque.
-        if(!check_available_disk_space(diskSpaceRequired))
+        // VÃ©rifie qu'il y a suffisamment de place dans le disque.
+        if (!check_available_disk_space(diskSpaceRequired))
         {
             return core_init_status::NoEnoughDiskSpace;
         }
 
-        // Vérifie qu'il y a suffisamment de mémoire.
-        if(!check_memory(physicalRamNeeded, virtualRamNeeded))
+        // VÃ©rifie qu'il y a suffisamment de mÃ©moire.
+        if (!check_memory(physicalRamNeeded, virtualRamNeeded))
         {
             return core_init_status::NoEnoughMemory;
         }
@@ -158,8 +158,8 @@ namespace deep
 
         ref<file_stream> ifs(mem::alloc_type<file_stream>("engine_settings.fobj", file_stream::file_mode::Open, file_stream::file_access::Read, file_stream::file_share::Read));
 
-        // Charge les paramètres liés au moteur.
-        if(!engineSettings->init(ifs.get()))
+        // Charge les paramÃ¨tres liÃ©s au moteur.
+        if (!engineSettings->init(ifs.get()))
         {
             return core_init_status::CannotLoadEngineSettings;
         }
@@ -167,18 +167,18 @@ namespace deep
         ref<file_stream> resFs = mem::alloc_type<file_stream>("resources.deep", file_stream::file_mode::OpenOrCreate, file_stream::file_access::ReadWrite, file_stream::file_share::Read);
 
         resource_manager *resManager = resource_manager::get_singleton();
-        if(!resManager->init(resFs.get()))
+        if (!resManager->init(resFs.get()))
         {
             return core_init_status::CannotInitResources;
         }
 
-        if(SDL_Init(SDL_INIT_VIDEO) != 0)
+        if (SDL_Init(SDL_INIT_VIDEO) != 0)
         {
             return core_init_status::Unknown;
         }
 
         COM *com = COM::get_singleton();
-        if(!com->init())
+        if (!com->init())
         {
             return core_init_status::CannotInitCOM;
         }
@@ -186,7 +186,7 @@ namespace deep
         *m_Stdout << DE_TERM_FG_YELLOW "====================[ " DE_TERM_FG_RED "CPU" DE_TERM_FG_YELLOW " ]====================\n" DE_TERM_RESET;
 
         CPU *cpu = CPU::get_singleton();
-        if(!cpu->query_info())
+        if (!cpu->query_info())
         {
             return core_init_status::CannotQueryCpuInfo;
         }
@@ -214,13 +214,13 @@ namespace deep
 #if DE_WINDOWS
         ULARGE_INTEGER space;
 
-        if(!GetDiskFreeSpaceExA(nullptr, &space, nullptr, nullptr))
+        if (!GetDiskFreeSpaceExA(nullptr, &space, nullptr, nullptr))
         {
             *m_Stdout << "BAD\n";
             return false;
         }
 
-        if(space.QuadPart >= diskSpaceRequired)
+        if (space.QuadPart >= diskSpaceRequired)
         {
             *m_Stdout << "OK\n";
             return true;
@@ -247,23 +247,23 @@ namespace deep
         MEMORYSTATUSEX status;
         status.dwLength = sizeof(status);
 
-        if(!GlobalMemoryStatusEx(&status))
+        if (!GlobalMemoryStatusEx(&status))
         {
             *m_Stdout << "BAD\n";
             return false;
         }
 
-        if(physicalRamNeeded > status.ullTotalPhys || virtualRamNeeded > status.ullAvailVirtual)
+        if (physicalRamNeeded > status.ullTotalPhys || virtualRamNeeded > status.ullAvailVirtual)
         {
             *m_Stdout << "BAD\n";
             return false;
         }
 
-        // Vérifie qu'il est possible de réserver une plage continue d'octets.
-        if(virtualRamNeeded > 0)
+        // VÃ©rifie qu'il est possible de rÃ©server une plage continue d'octets.
+        if (virtualRamNeeded > 0)
         {
             mem_ptr ptr = mem::alloc_no_track(virtualRamNeeded);
-            if(ptr == nullptr)
+            if (ptr == nullptr)
             {
                 *m_Stdout << "BAD\n";
                 return false;
@@ -271,7 +271,7 @@ namespace deep
 
             mem::free_no_track(ptr);
         }
-        
+
 #else
 #error Need implementation
 #endif
@@ -294,7 +294,7 @@ namespace deep
         mutex_handle mutexHandle = mutex::create(gameTitle);
         bool ret = false;
 
-        if(mutexHandle == invalid_mutex_handle)
+        if (mutexHandle == invalid_mutex_handle)
         {
             retText = "BAD";
             ret = true;
@@ -303,7 +303,7 @@ namespace deep
         }
 
         window_handle win = window::find(gameTitle);
-        if(win != invalid_window_handle)
+        if (win != invalid_window_handle)
         {
             window::show(win);
             window::focus(win);
@@ -387,25 +387,25 @@ end:
         SYSTEMTIME st;
         GetLocalTime(&st);
 
-        if(year != nullptr)
+        if (year != nullptr)
             *year = st.wYear;
 
-        if(month != nullptr)
+        if (month != nullptr)
             *month = st.wMonth;
 
-        if(day != nullptr)
+        if (day != nullptr)
             *day = st.wDay;
 
-        if(hour != nullptr)
+        if (hour != nullptr)
             *hour = st.wHour;
 
-        if(minute != nullptr)
+        if (minute != nullptr)
             *minute = st.wMinute;
 
-        if(second != nullptr)
+        if (second != nullptr)
             *second = st.wSecond;
 
-        if(millis != nullptr)
+        if (millis != nullptr)
             *millis = st.wMilliseconds;
 #else
 #error Need implementation.
@@ -446,7 +446,7 @@ end:
 #error Need implementation.
 #endif
 
-        
+
     }
 
 }

@@ -1,10 +1,9 @@
-#include "os/events.hpp"
+﻿#include "os/events.hpp"
 #include "os/window.hpp"
 #include "core/memory.hpp"
 
 #include <imgui.h>
-#include <backends/imgui_impl_sdl2.h>
-#include <backends/imgui_impl_sdlrenderer2.h>
+#include <imgui_impl_sdl2.h>
 
 namespace deep
 {
@@ -23,7 +22,7 @@ namespace deep
 
     bool devent_s::pollEvent()
     {
-        if(SDL_PollEvent(&((devent_internal *) this)->e))
+        if (SDL_PollEvent(&((devent_internal *) this)->e))
             return ImGui_ImplSDL2_ProcessEvent(&((devent_internal *) this)->e);
         else
             return false;

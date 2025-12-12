@@ -1,4 +1,4 @@
-#ifndef __DEEP_ENGINE_EVENTS_HPP__
+﻿#ifndef __DEEP_ENGINE_EVENTS_HPP__
 #define __DEEP_ENGINE_EVENTS_HPP__
 
 #include "core/def.hpp"
@@ -7,7 +7,7 @@
 
 #include <stdint.h>
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 namespace deep
 {
@@ -16,29 +16,29 @@ namespace deep
 
     enum class event_type : uint32_t
     {
-        Window          = SDL_WINDOWEVENT,
-        KeyDown			= SDL_KEYDOWN,
-        KeyUp			= SDL_KEYUP,
-        MouseMotion     = SDL_MOUSEMOTION,
+        Window = SDL_WINDOWEVENT,
+        KeyDown = SDL_KEYDOWN,
+        KeyUp = SDL_KEYUP,
+        MouseMotion = SDL_MOUSEMOTION,
         MouseButtonDown = SDL_MOUSEBUTTONDOWN,
-        MouseButtonUp   = SDL_MOUSEBUTTONUP,
-        MouseWheel      = SDL_MOUSEWHEEL,
-        Quit			= SDL_QUIT
+        MouseButtonUp = SDL_MOUSEBUTTONUP,
+        MouseWheel = SDL_MOUSEWHEEL,
+        Quit = SDL_QUIT
     };
 
     enum class events : uint32_t
     {
-        WindowResized	= SDL_WINDOWEVENT_RESIZED,
-        WindowClosed    = SDL_WINDOWEVENT_CLOSE
+        WindowResized = SDL_WINDOWEVENT_RESIZED,
+        WindowClosed = SDL_WINDOWEVENT_CLOSE
     };
 
     enum class mouse_button
     {
-        Left   = SDL_BUTTON_LEFT,
+        Left = SDL_BUTTON_LEFT,
         Middle = SDL_BUTTON_MIDDLE,
-        Right  = SDL_BUTTON_RIGHT
+        Right = SDL_BUTTON_RIGHT
     };
-    
+
     /// @struct devent_s
     /// @brief Permet la gestion des évènements système et des fenêtres.
     struct DE_API devent_s
@@ -66,7 +66,7 @@ namespace deep
         events getWindowEventType() const;
 
         size getWindowSize() const;
-        
+
 
     };
 

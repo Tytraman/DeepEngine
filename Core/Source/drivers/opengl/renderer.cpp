@@ -1,9 +1,9 @@
-#include "drivers/opengl/renderer.hpp"
+ï»¿#include "drivers/opengl/renderer.hpp"
 #include "os/window.hpp"
 
 #include <imgui.h>
-#include <backends/imgui_impl_sdl2.h>
-#include <backends/imgui_impl_opengl3.h>
+#include <imgui_impl_sdl2.h>
+#include <imgui_impl_opengl3.h>
 
 namespace deep
 {
@@ -13,21 +13,21 @@ namespace deep
 
         gl_renderer::gl_renderer()
             : m_Context(NULL),
-              m_Window(NULL)
-            { }
+            m_Window(NULL)
+        { }
 
         bool gl_renderer::create(gl_renderer &dest, window *window)
         {
-            // Spécifie le profil "Core" d'OpenGL.
+            // SpÃ©cifie le profil "Core" d'OpenGL.
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_CORE);
 
-            // Spécifie l'utilisation de la version 3.3 d'OpenGL.
+            // SpÃ©cifie l'utilisation de la version 3.3 d'OpenGL.
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_MAJOR_VERSION, 3);
             SDL_GL_SetAttribute(SDL_GL_CONTEXT_MINOR_VERSION, 3);
 
             dest.m_Context = SDL_GL_CreateContext(window->get_window());
 
-            if(dest.m_Context == NULL)
+            if (dest.m_Context == NULL)
                 return false;
 
             dest.m_Window = window;

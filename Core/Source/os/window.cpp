@@ -1,4 +1,4 @@
-#include "os/window.hpp"
+ï»¿#include "os/window.hpp"
 #include "core/def.hpp"
 #include "core/core.hpp"
 #include "os/key.hpp"
@@ -11,8 +11,8 @@
 #include <glad/glad.h>
 
 #include <imgui.h>
-#include <backends/imgui_impl_sdl2.h>
-#include <backends/imgui_impl_opengl3.h>
+#include <imgui_impl_sdl2.h>
+#include <imgui_impl_opengl3.h>
 
 #include <string>
 
@@ -27,26 +27,26 @@ namespace deep
     void window::internalEventCallback(devent e)
     {
         static bool insertPressed = false;
-        static bool f2Pressed     = false;
-        static bool f11Pressed    = false;
-        static int lastWindowWidth  = get_width();
+        static bool f2Pressed = false;
+        static bool f11Pressed = false;
+        static int lastWindowWidth = get_width();
         static int lastWindowHeight = get_height();
 
-        // Vérifie le type d'évènement qui vient de se produire.
-        switch(e->getType())
+        // VÃ©rifie le type d'Ã©vÃ¨nement qui vient de se produire.
+        switch (e->getType())
         {
             default:
                 break;
             case event_type::KeyDown:
             {
-                switch(e->getKeysym())
+                switch (e->getKeysym())
                 {
                     default:
                         break;
-                    // Debug menu toggle.
+                        // Debug menu toggle.
                     case dkey::Insert:
                     {
-                        if(!insertPressed)
+                        if (!insertPressed)
                         {
                             m_ShowDebugPanel = !m_ShowDebugPanel;
                             SDL_SetRelativeMouseMode((SDL_bool) !m_ShowDebugPanel);
@@ -57,7 +57,7 @@ namespace deep
                     // Screenshot.
                     case dkey::F2:
                     {
-                        if(!f2Pressed)
+                        if (!f2Pressed)
                         {
                             resource_manager *resourcesManager = resource_manager::get_singleton();
 
@@ -81,7 +81,7 @@ namespace deep
                             destpath.append(std::to_string(second).c_str());
                             destpath.append(".bmp");
 
-                            if(m_FRB.saveTextureAsImage(destpath.str()))
+                            if (m_FRB.saveTextureAsImage(destpath.str()))
                             {
                                 printf(DE_TERM_FG_GREEN "Screenshot saved" DE_TERM_RESET ": %s\n", destpath.str());
                             }
@@ -90,9 +90,9 @@ namespace deep
                     // Fullscreen toggle.
                     case dkey::F11:
                     {
-                        if(!f11Pressed)
+                        if (!f11Pressed)
                         {
-                            if(SDL_GetWindowFlags(m_Window) & SDL_WINDOW_FULLSCREEN)
+                            if (SDL_GetWindowFlags(m_Window) & SDL_WINDOW_FULLSCREEN)
                             {
                                 SDL_SetWindowFullscreen(m_Window, 0);
                                 SDL_SetWindowSize(m_Window, lastWindowWidth, lastWindowHeight);
@@ -106,9 +106,9 @@ namespace deep
                                 SDL_DisplayMode DM;
                                 SDL_GetCurrentDisplayMode(0, &DM);
 
-                                lastWindowWidth  = get_width();
+                                lastWindowWidth = get_width();
                                 lastWindowHeight = get_height();
-                                
+
                                 SDL_SetWindowSize(m_Window, DM.w, DM.h);
                                 GL3::core::update_viewport(DM.w, DM.h);
                                 SDL_SetWindowFullscreen(m_Window, SDL_WINDOW_FULLSCREEN);
@@ -123,7 +123,7 @@ namespace deep
             } break;
             case event_type::KeyUp:
             {
-                switch(e->getKeysym())
+                switch (e->getKeysym())
                 {
                     default:
                         break;
@@ -137,20 +137,20 @@ namespace deep
                     } break;
                     case dkey::F11:
                     {
-                        
+
                         f11Pressed = false;
                     } break;
                 }
             } break;
             case event_type::Window:
             {
-                // Vérifie le type d'évènement de fenêtre qui vient de se produire
-                switch(e->getWindowEventType())
+                // VÃ©rifie le type d'Ã©vÃ¨nement de fenÃªtre qui vient de se produire
+                switch (e->getWindowEventType())
                 {
                     default:
                         break;
                     case events::WindowResized:
-                    {	// Redimension de la fenêtre
+                    {	// Redimension de la fenÃªtre
                         size newSize = e->getWindowSize();
                         GL3::core::update_viewport(newSize.width, newSize.height);
                         //printf("window resized: %dx%d\n", newSize.width, newSize.height);
@@ -167,15 +167,15 @@ namespace deep
     */
     window::window(uint16_t targetMS, uint16_t targetFPS)
         : m_Window(NULL),
-          m_EventCallback(default_input_callback),
-          m_UpdateCallback(nullptr),
-          m_TargetMSPerUpdate(targetMS),
-          m_TargetFPS(targetFPS),
-          m_FPS(0),
-          m_UPS(0),
-          m_Running(false),
-          m_ShowDebugPanel(false),
-          m_FRB()
+        m_EventCallback(default_input_callback),
+        m_UpdateCallback(nullptr),
+        m_TargetMSPerUpdate(targetMS),
+        m_TargetFPS(targetFPS),
+        m_FPS(0),
+        m_UPS(0),
+        m_Running(false),
+        m_ShowDebugPanel(false),
+        m_FRB()
     { }
 
     /*
@@ -189,28 +189,29 @@ namespace deep
         SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 32);
 
         win.m_Window = SDL_CreateWindow(title, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, size.width, size.height, SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE);
-        if(win.m_Window == NULL)
+        if (win.m_Window == NULL)
         {
             return false;
         }
 
         SDL_SetRelativeMouseMode(SDL_TRUE);
         win.set_cursor_position(win.get_width() / 2, win.get_height() / 2);
-        
-        if(!GL3::gl_renderer::create(win.m_Renderer, &win)) {
+
+        if (!GL3::gl_renderer::create(win.m_Renderer, &win))
+        {
             win.destroy();
             return false;
         }
 
         gladLoadGL();
-        
+
         glViewport(0, 0, size.width, size.height);
 
         // Permet de tester la profondeur lors du rendu afin de ne pas superposer les triangles.
         DE_GL_CALL(glEnable(GL_DEPTH_TEST));
         DE_GL_CALL(glEnable(GL_MULTISAMPLE));
 
-        // Active la fonctionnalité d'OpenGL qui permet de gérer la transparence des couleurs lorsque nécessaire.
+        // Active la fonctionnalitÃ© d'OpenGL qui permet de gÃ©rer la transparence des couleurs lorsque nÃ©cessaire.
         DE_GL_CALL(glEnable(GL_BLEND));
         DE_GL_CALL(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
@@ -220,8 +221,8 @@ namespace deep
 
         GL3::texture_manager *textureManager = GL3::texture_manager::get_singleton();
 
-        // Une fois qu'OpenGL a bien été initialisé,
-        // on crée une texture blanche de 1x1 par défaut.
+        // Une fois qu'OpenGL a bien Ã©tÃ© initialisÃ©,
+        // on crÃ©e une texture blanche de 1x1 par dÃ©faut.
 
         uint8_t colors[] =
         {
@@ -239,7 +240,7 @@ namespace deep
 
         textureManager->set_white_texture(whiteTex);
 
-        if(!win.m_FRB.create("primary_frb", win.get_width(), win.get_height()))
+        if (!win.m_FRB.create("primary_frb", win.get_width(), win.get_height()))
         {
             fprintf(stderr, "Unable to create the Frame Render Buffer.\n");
         }
@@ -256,7 +257,7 @@ namespace deep
     {
         m_PreEventCallbacks.free();
 
-        // Détruit la fenêtre
+        // DÃ©truit la fenÃªtre
         SDL_DestroyWindow(m_Window);
         m_Window = NULL;
     }
@@ -267,11 +268,11 @@ namespace deep
         size_t i;
         window::pre_event_callback callback;
 
-        for(i = 0; i < length; ++i)
+        for (i = 0; i < length; ++i)
         {
             callback = preEventCallbacks[i];
-            
-            if(callback != nullptr)
+
+            if (callback != nullptr)
                 callback(window);
         }
     }
@@ -297,20 +298,20 @@ namespace deep
 
         m_Running = true;
 
-        // Met à jour l'état du clavier.
+        // Met Ã  jour l'Ã©tat du clavier.
         key::update();
 
         // Boucle infinie du jeu.
         uint64_t startTime = core::get_current_time_millis(), endTime;
-        while(m_Running)
+        while (m_Running)
         {
             scene_id sceneID = scene::get_active_scene_id();
 
-            // Calcule le temps passé à faire la boucle
-            current = core::get_tick();		// Récupère le tick actuel.
-            elapsed = current - previous;	// Compte combien de temps s'est écoulé entre la dernière itération et maintenant.
-            previous = current;				// Sauvegarde le temps actuel pour qu'il devienne le temps précédent à la prochaine itération.
-            lag += elapsed;					// Plus le système est lent, et plus le lag sera élevé.
+            // Calcule le temps passÃ© Ã  faire la boucle
+            current = core::get_tick();		// RÃ©cupÃ¨re le tick actuel.
+            elapsed = current - previous;	// Compte combien de temps s'est Ã©coulÃ© entre la derniÃ¨re itÃ©ration et maintenant.
+            previous = current;				// Sauvegarde le temps actuel pour qu'il devienne le temps prÃ©cÃ©dent Ã  la prochaine itÃ©ration.
+            lag += elapsed;					// Plus le systÃ¨me est lent, et plus le lag sera Ã©levÃ©.
 
             __executePreEventCallbacks(m_PreEventCallbacks, *this);
 
@@ -320,52 +321,52 @@ namespace deep
 
             im_gui_debug_menu::render_info(this);
 
-            if(m_ShowDebugPanel)
+            if (m_ShowDebugPanel)
             {
                 im_gui_debug_menu::render(this);
                 //ImGui::ShowDemoWindow();
             }
-                
 
-            // Récupère les évènements système, les entrées utilisateurs etc...
-            // et exécute un callback s'il y en a un.
-            while((e = poll_event()) != nullptr)
+
+            // RÃ©cupÃ¨re les Ã©vÃ¨nements systÃ¨me, les entrÃ©es utilisateurs etc...
+            // et exÃ©cute un callback s'il y en a un.
+            while ((e = poll_event()) != nullptr)
             {
-                // Gère les évènements internes.
+                // GÃ¨re les Ã©vÃ¨nements internes.
                 internalEventCallback(e);
 
                 // Appelle le callback utilisateur.
-                if(m_EventCallback != nullptr)
+                if (m_EventCallback != nullptr)
                     m_EventCallback(*this, e);
 
                 mem::free(e);
             }
 
-            // Ne met à jour l'état du jeu que si le lag est supérieur au ms visé.
+            // Ne met Ã  jour l'Ã©tat du jeu que si le lag est supÃ©rieur au ms visÃ©.
             // m_TargetMSPerUpdate est une constante qui ne doit jamais changer car elle impacte directement
-            // la vitesse du jeu et l'entièreté de la physique.
-            while(lag >= m_TargetMSPerUpdate)
+            // la vitesse du jeu et l'entiÃ¨retÃ© de la physique.
+            while (lag >= m_TargetMSPerUpdate)
             {
-                // Exécute la fonction update callback de l'utilisateur.
-                if(m_UpdateCallback != nullptr)
+                // ExÃ©cute la fonction update callback de l'utilisateur.
+                if (m_UpdateCallback != nullptr)
                     m_UpdateCallback(*this);
 
-                // Exécute les systèmes créés par l'utilisateur.
+                // ExÃ©cute les systÃ¨mes crÃ©Ã©s par l'utilisateur.
                 systemManager->execute_systems();
 
-                // Applique l'accélération à toutes les entités en possédant.
+                // Applique l'accÃ©lÃ©ration Ã  toutes les entitÃ©s en possÃ©dant.
                 systemManager->execute_acceleration_system();
 
-                // Applique la vélocité à toutes les entités en possédant.
+                // Applique la vÃ©locitÃ© Ã  toutes les entitÃ©s en possÃ©dant.
                 systemManager->execute_velocity_system();
 
-                // Les collisions sont vérifiées après tous les déplacements possibles afin d'éviter les problèmes.
+                // Les collisions sont vÃ©rifiÃ©es aprÃ¨s tous les dÃ©placements possibles afin d'Ã©viter les problÃ¨mes.
                 systemManager->execute_collider_system();
 
                 lag -= m_TargetMSPerUpdate;
                 updates++;
 
-                // Note: plus on reste longtemps dans cette boucle, et plus le lag sera élevé
+                // Note: plus on reste longtemps dans cette boucle, et plus le lag sera Ã©levÃ©
             }
 
             // Fait le rendu final de la frame !
@@ -377,7 +378,7 @@ namespace deep
             endTime = core::get_current_time_millis();
             elapsed = endTime - startTime;
 
-            if(elapsed >= 1000)
+            if (elapsed >= 1000)
             {
                 m_FPS = cn;
                 m_UPS = updates;
@@ -397,7 +398,7 @@ namespace deep
     devent window::poll_event() const
     {
         devent e = devent_s::create();
-        if(!e->pollEvent())
+        if (!e->pollEvent())
         {
             mem::free(e);
             return nullptr;
@@ -413,12 +414,12 @@ namespace deep
     */
     void window::default_input_callback(window &window, devent e)
     {
-        switch(e->getType())
+        switch (e->getType())
         {
             default: break;
             case event_type::Window:
             {
-                switch(e->getWindowEventType())
+                switch (e->getWindowEventType())
                 {
                     default:
                         break;
@@ -430,7 +431,7 @@ namespace deep
             } break;
             case event_type::KeyDown:
             {
-                switch(e->getKeysym())
+                switch (e->getKeysym())
                 {
                     default:
                         break;

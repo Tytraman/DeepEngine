@@ -1,4 +1,4 @@
-#include "gui/deimgui.hpp"
+﻿#include "gui/deimgui.hpp"
 #include "core/memory.hpp"
 #include "core/templates/list.hpp"
 #include "core/templates/pair.hpp"
@@ -19,8 +19,8 @@
 #include <string>
 
 #include <imgui.h>
-#include <backends/imgui_impl_sdl2.h>
-#include <backends/imgui_impl_opengl3.h>
+#include <imgui_impl_sdl2.h>
+#include <imgui_impl_opengl3.h>
 
 namespace deep
 {
@@ -36,8 +36,8 @@ namespace deep
 
     vao_selection::vao_selection()
         : currentVao(nullptr),
-          currentVaoID(0),
-          selection(0, static_cast<size_t>(-1))
+        currentVaoID(0),
+        selection(0, static_cast<size_t>(-1))
     { }
 
     struct shader_selection
@@ -51,8 +51,8 @@ namespace deep
 
     shader_selection::shader_selection()
         : currentProgram(nullptr),
-          currentProgramID(0),
-          selection(0, static_cast<size_t>(-1))
+        currentProgramID(0),
+        selection(0, static_cast<size_t>(-1))
     { }
 
     struct texture_selection
@@ -66,8 +66,8 @@ namespace deep
 
     texture_selection::texture_selection()
         : currentTexture(nullptr),
-          currentTextureID(0),
-          selection(0, static_cast<size_t>(-1))
+        currentTextureID(0),
+        selection(0, static_cast<size_t>(-1))
     { }
 
     struct edit_vao
@@ -80,7 +80,7 @@ namespace deep
 
     edit_vao::edit_vao()
         : vboID(0),
-          vaoID(0)
+        vaoID(0)
     { }
 
     struct edit_texture
@@ -146,7 +146,7 @@ namespace deep
     */
     void im_gui_window::shutdown()
     {
-        if(m_Initialized)
+        if (m_Initialized)
         {
             ImGui_ImplOpenGL3_Shutdown();
             ImGui_ImplSDL2_Shutdown();
@@ -159,18 +159,20 @@ namespace deep
     void __deep_scenes_enum_callback(scene_id id, scene &scene)
     {
         std::string text("[" + std::to_string(id) + std::string("] ") + scene.get_name());
-        if(id == scene::get_active_scene_id())
+        if (id == scene::get_active_scene_id())
         {
             text += " (active)";
         }
 
         ImGui::AlignTextToFramePadding();
         ImGui::Text(text.c_str()); ImGui::SameLine();
-        if(ImGui::Button(std::string("Supprimer##" + std::to_string(id)).c_str())) {
+        if (ImGui::Button(std::string("Supprimer##" + std::to_string(id)).c_str()))
+        {
             scene::must_be_deleted(id);
         }
         ImGui::SameLine();
-        if(ImGui::Button(std::string("Rendre active##" + std::to_string(id)).c_str())) {
+        if (ImGui::Button(std::string("Rendre active##" + std::to_string(id)).c_str()))
+        {
             scene::set_active_scene(id);
         }
     }
@@ -179,7 +181,7 @@ namespace deep
     {
         edit_vao *edit = (edit_vao *) args;
 
-        if(ImGui::Selectable(vao->name.str(), edit->vaoID == vaoID))
+        if (ImGui::Selectable(vao->name.str(), edit->vaoID == vaoID))
         {
             edit->vaoID = vaoID;
             edit->vboID = vao->attachedVbo;
@@ -190,7 +192,7 @@ namespace deep
     {
         edit_texture *edit = (edit_texture *) args;
 
-        if(ImGui::Selectable(texture->name.str(), edit->textureID == textureID))
+        if (ImGui::Selectable(texture->name.str(), edit->textureID == textureID))
         {
             edit->textureID = textureID;
             edit->item = texture;
@@ -201,7 +203,7 @@ namespace deep
     {
         GL3::gl_id *id = (GL3::gl_id *) args;
 
-        if(ImGui::Selectable(program->name.str(), *id == programID))
+        if (ImGui::Selectable(program->name.str(), *id == programID))
         {
             *id = programID;
         }
@@ -228,12 +230,12 @@ namespace deep
         buttonText.append(std::to_string(ent.get_entity_id()).c_str());
 
         ImGui::SetCursorPosX(ImGui::GetCursorPosX() + ImGui::GetColumnWidth() - textSize.x - ImGui::GetScrollX() - 2 * ImGui::GetStyle().ItemSpacing.x);
-        if(ImGui::Button(buttonText.str(), textSize))
+        if (ImGui::Button(buttonText.str(), textSize))
         {
             entityManager->must_be_deleted(ent.get_entity_id(), ent.get_collection_id());
         }
 
-        if(attribMenuOpened)
+        if (attribMenuOpened)
         {
             string entityID("ID: ");
             entityID.append(std::to_string(ent.get_entity_id()).c_str());
@@ -248,23 +250,23 @@ namespace deep
             ImGui::Text(entityID.str());
             ImGui::Text("Liste des composants attachés:");
 
-            if((to_utype(componentTypes) & to_utype(component_manager::component_type::Drawable)) > 0)
+            if ((to_utype(componentTypes) & to_utype(component_manager::component_type::Drawable)) > 0)
             {
-                if(ImGui::TreeNode("drawable_component"))
+                if (ImGui::TreeNode("drawable_component"))
                 {
                     component_id id = entityManager->get_component_id(ent.get_entity_id(), ent.get_collection_id(), component_manager::component_type::Drawable);
                     drawable_component *drawable = componentManager->get_drawable_component(id);
 
-                    if(drawable != nullptr)
+                    if (drawable != nullptr)
                     {
                         GL3::program_manager::program_item *program;
                         GL3::vao_manager::vao_item *vao = vaoManager->get(drawable->vao);
                         GL3::texture_manager::texture_item *texture;
 
-                        if(drawable->mat.get() != nullptr)
+                        if (drawable->mat.get() != nullptr)
                         {
                             program = programManager->get(drawable->mat->get_program());
-                            if(drawable->mat->get_type() == material_type::Textured)
+                            if (drawable->mat->get_type() == material_type::Textured)
                                 texture = textureManager->get(((texture_material *) drawable->mat.get())->get_diffuse_texture());
                             else
                                 texture = nullptr;
@@ -275,7 +277,7 @@ namespace deep
                             texture = nullptr;
                         }
 
-                        if(ImGui::BeginCombo("VAO", vao != nullptr ? vao->name.str() : ""))
+                        if (ImGui::BeginCombo("VAO", vao != nullptr ? vao->name.str() : ""))
                         {
                             edit_vao edit;
                             edit.vboID = drawable->vbo;
@@ -289,12 +291,12 @@ namespace deep
                             ImGui::EndCombo();
                         }
 
-                        if(ImGui::BeginCombo("Texture", texture != nullptr ? texture->name.str() : ""))
+                        if (ImGui::BeginCombo("Texture", texture != nullptr ? texture->name.str() : ""))
                         {
                             edit_texture edit;
-                            if(drawable->mat.get() != nullptr)
+                            if (drawable->mat.get() != nullptr)
                             {
-                                if(drawable->mat->get_type() == material_type::Textured)
+                                if (drawable->mat->get_type() == material_type::Textured)
                                 {
                                     texture = textureManager->get(((texture_material *) drawable->mat.get())->get_diffuse_texture());
                                 }
@@ -308,7 +310,7 @@ namespace deep
                                 edit.textureID = static_cast<GL3::gl_id>(-1);
                             }
 
-                            if(texture != nullptr)
+                            if (texture != nullptr)
                             {
                                 edit.item = texture;
                             }
@@ -319,9 +321,9 @@ namespace deep
 
                             textureManager->enum_textures(__deep_edit_texture_enum_callback, &edit);
 
-                            if(drawable->mat.get() != nullptr)
+                            if (drawable->mat.get() != nullptr)
                             {
-                                if(drawable->mat->get_type() == material_type::Textured)
+                                if (drawable->mat->get_type() == material_type::Textured)
                                 {
                                     ((texture_material *) drawable->mat.get())->set_diffuse_texture(edit.textureID);
                                 }
@@ -330,12 +332,12 @@ namespace deep
                             ImGui::EndCombo();
                         }
 
-                        if(ImGui::BeginCombo("Shader", program != nullptr ? program->name.str() : ""))
+                        if (ImGui::BeginCombo("Shader", program != nullptr ? program->name.str() : ""))
                         {
                             GL3::gl_id prog;
                             programManager->enum_programs(__deep_edit_program_enum_callback, &prog);
 
-                            if(drawable->mat.get() != nullptr)
+                            if (drawable->mat.get() != nullptr)
                             {
                                 drawable->mat->set_program(prog);
                             }
@@ -347,15 +349,15 @@ namespace deep
                     ImGui::TreePop();
                 }
             }
-                
-            if((to_utype(componentTypes) & to_utype(component_manager::component_type::Transformation)) > 0)
+
+            if ((to_utype(componentTypes) & to_utype(component_manager::component_type::Transformation)) > 0)
             {
-                if(ImGui::TreeNode("transformation_component"))
+                if (ImGui::TreeNode("transformation_component"))
                 {
                     component_id id = entityManager->get_component_id(ent.get_entity_id(), ent.get_collection_id(), component_manager::component_type::Transformation);
                     transformation_component *transformation = componentManager->get_transformation_component(id);
 
-                    if(transformation != nullptr)
+                    if (transformation != nullptr)
                     {
                         vec3<float> translation = transformation->get_translation();
                         vec3<float> scaling = transformation->get_scaling();
@@ -395,22 +397,22 @@ namespace deep
                 }
             }
 
-            if((to_utype(componentTypes) & to_utype(component_manager::component_type::Velocity)) > 0)
+            if ((to_utype(componentTypes) & to_utype(component_manager::component_type::Velocity)) > 0)
             {
                 ImGui::BulletText("velocity_component");
             }
-                
-            if((to_utype(componentTypes) & to_utype(component_manager::component_type::Collider)) > 0)
+
+            if ((to_utype(componentTypes) & to_utype(component_manager::component_type::Collider)) > 0)
             {
                 ImGui::BulletText("collider_component");
             }
-                
-            if((to_utype(componentTypes) & to_utype(component_manager::component_type::Acceleration)) > 0)
+
+            if ((to_utype(componentTypes) & to_utype(component_manager::component_type::Acceleration)) > 0)
             {
                 ImGui::BulletText("acceleration_component");
             }
-                
-            if((to_utype(componentTypes) & to_utype(component_manager::component_type::Health)) > 0)
+
+            if ((to_utype(componentTypes) & to_utype(component_manager::component_type::Health)) > 0)
             {
                 ImGui::BulletText("health_component");
             }
@@ -423,7 +425,7 @@ namespace deep
     {
         vao_selection *sel = (vao_selection *) args;
 
-        if(ImGui::Selectable(_vao->name.str(), sel->selection.value1() == sel->selection.value2()))
+        if (ImGui::Selectable(_vao->name.str(), sel->selection.value1() == sel->selection.value2()))
         {
             sel->selection.value2() = sel->selection.value1();
             sel->currentVao = _vao;
@@ -439,7 +441,7 @@ namespace deep
 
         const char *name = program->name.str();
 
-        if(ImGui::Selectable((name != nullptr ? name : ""), sel->selection.value1() == sel->selection.value2()))
+        if (ImGui::Selectable((name != nullptr ? name : ""), sel->selection.value1() == sel->selection.value2()))
         {
             sel->selection.value2() = sel->selection.value1();
             sel->currentProgram = program;
@@ -455,7 +457,7 @@ namespace deep
 
         const char *name = texture->name.str();
 
-        if(ImGui::Selectable((name != nullptr ? name : ""), sel->selection.value1() == sel->selection.value2()))
+        if (ImGui::Selectable((name != nullptr ? name : ""), sel->selection.value1() == sel->selection.value2()))
         {
             sel->selection.value2() = sel->selection.value1();
             sel->currentTexture = texture;
@@ -473,7 +475,7 @@ namespace deep
     void im_gui_debug_menu::render(const window *window)
     {
         const auto &it = m_DebugPanelOptions.find(window);
-        if(it == m_DebugPanelOptions.end())
+        if (it == m_DebugPanelOptions.end())
         {
             return;
         }
@@ -489,25 +491,25 @@ namespace deep
 
         ImGui::SetNextWindowPos({ 0, 0 });
         ImGui::SetNextWindowSize({ 500, 700 });
-        if(ImGui::Begin("DeepEngine Debug Menu", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_MenuBar))
+        if (ImGui::Begin("DeepEngine Debug Menu", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_MenuBar))
         {
-            if(ImGui::BeginMenuBar())
+            if (ImGui::BeginMenuBar())
             {
-                if(ImGui::BeginMenu("Vue"))
+                if (ImGui::BeginMenu("Vue"))
                 {
-                    if(ImGui::MenuItem("Accueil", nullptr, false, true))
+                    if (ImGui::MenuItem("Accueil", nullptr, false, true))
                     {
                         options.view = ImGuiDebugMenuHomeView;
                     }
-                    if(ImGui::MenuItem("Scènes", nullptr, false, true))
+                    if (ImGui::MenuItem("Scènes", nullptr, false, true))
                     {
                         options.view = ImGuiDebugMenuScenesView;
                     }
-                    if(ImGui::MenuItem("Entités", nullptr, false, true))
+                    if (ImGui::MenuItem("Entités", nullptr, false, true))
                     {
                         options.view = ImGuiDebugMenuEntitiesView;
                     }
-                    if(ImGui::MenuItem("CPU", nullptr, false, true))
+                    if (ImGui::MenuItem("CPU", nullptr, false, true))
                     {
                         options.view = ImGuiDebugMenuCPUView;
                     }
@@ -517,10 +519,10 @@ namespace deep
                 ImGui::EndMenuBar();
 
                 // Affiche un panel différent selon la vue sélectionnée.
-                switch(options.view)
+                switch (options.view)
                 {
                     default: break;
-                    // Accueil.
+                        // Accueil.
                     case ImGuiDebugMenuHomeView:
                     {
                         ImGui::PushFont(g_TitleFont);
@@ -531,7 +533,7 @@ namespace deep
                         ImGui::Text("Bienvenue dans le moteur profond !");
                         ImGui::Spacing();
 
-                        if(ImGui::CollapsingHeader("Utilisation"))
+                        if (ImGui::CollapsingHeader("Utilisation"))
                         {
                             ImGui::SeparatorText("Menu debug :");
                             ImGui::BulletText("Insert : afficher / cacher le menu debug.");
@@ -553,9 +555,9 @@ namespace deep
                         // Création d'une scène.
                         ImGui::AlignTextToFramePadding();
                         ImGui::Text("Nom:"); ImGui::SameLine(); ImGui::InputText("##0", nameBuffer, sizeof(nameBuffer)); ImGui::SameLine();
-                        if(ImGui::Button("Créer une scène"))
+                        if (ImGui::Button("Créer une scène"))
                         {
-                            if(string_utils::length(nameBuffer) == 0)
+                            if (string_utils::length(nameBuffer) == 0)
                             {
                                 emptyNameBuffer = true;
                             }
@@ -567,7 +569,7 @@ namespace deep
                             }
                         }
 
-                        if(emptyNameBuffer)
+                        if (emptyNameBuffer)
                         {
                             ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), "Le nom de la scène ne peut pas être vide.");
                         }
@@ -576,9 +578,9 @@ namespace deep
 
                         // Exportation d'une scène.
                         ImGui::Text("Nom:"); ImGui::SameLine(); ImGui::InputText("##1", exportBuffer, sizeof(exportBuffer)); ImGui::SameLine();
-                        if(ImGui::Button("Exporter"))
+                        if (ImGui::Button("Exporter"))
                         {
-                            if(string_utils::length(exportBuffer) == 0)
+                            if (string_utils::length(exportBuffer) == 0)
                             {
                                 emptyExportBuffer = true;
                             }
@@ -587,14 +589,14 @@ namespace deep
                                 emptyExportBuffer = false;
 
                                 resource_manager *resourcesManager = resource_manager::get_singleton();
-                                
+
                                 string destPath = resourcesManager->get_export_folder();
                                 destPath.append("scenes\\");
                                 destPath.append(exportBuffer);
                                 destPath.append(".fobj");
 
                                 ref<file_stream> fs = mem::alloc_type<file_stream>(destPath.str(), file_stream::file_mode::Create, file_stream::file_access::Write, file_stream::file_share::Read);
-                                if(fs->open())
+                                if (fs->open())
                                 {
                                     file_object fobj(exportBuffer);
 
@@ -612,7 +614,7 @@ namespace deep
                         ImGui::Spacing();
 
                         // Affiche toutes les scènes existantes.
-                        if(ImGui::CollapsingHeader("Liste des scènes"))
+                        if (ImGui::CollapsingHeader("Liste des scènes"))
                         {
                             scene::enum_scenes(__deep_scenes_enum_callback);
                         }
@@ -628,7 +630,7 @@ namespace deep
                         ImGui::Spacing();
 
                         // Menu pour ajouter une entité.
-                        if(ImGui::CollapsingHeader("Ajouter une entité"))
+                        if (ImGui::CollapsingHeader("Ajouter une entité"))
                         {
                             static char nameBuffer[128] = "";
                             static float x = 0.0f, y = 0.0f, z = 0.0f;
@@ -642,11 +644,11 @@ namespace deep
                             static shader_selection shaderSel;
                             static texture_selection textureSel;
 
-                            if(ImGui::TreeNode("drawable_component"))
+                            if (ImGui::TreeNode("drawable_component"))
                             {
                                 ImGui::Checkbox("Attacher le composant", &addDrawableComponent);
 
-                                if(ImGui::BeginCombo("VAO", vaoSel.currentVao != nullptr ? vaoSel.currentVao->name.str() : ""))
+                                if (ImGui::BeginCombo("VAO", vaoSel.currentVao != nullptr ? vaoSel.currentVao->name.str() : ""))
                                 {
                                     GL3::vao_manager *vaoManager = GL3::vao_manager::get_singleton();
                                     vaoSel.selection.value1() = 0;
@@ -656,7 +658,7 @@ namespace deep
                                     ImGui::EndCombo();
                                 }
 
-                                if(ImGui::BeginCombo("Texture", textureSel.currentTexture != nullptr ? textureSel.currentTexture->name.str() : ""))
+                                if (ImGui::BeginCombo("Texture", textureSel.currentTexture != nullptr ? textureSel.currentTexture->name.str() : ""))
                                 {
                                     GL3::texture_manager *textureManager = GL3::texture_manager::get_singleton();
                                     textureSel.selection.value1() = 0;
@@ -666,7 +668,7 @@ namespace deep
                                     ImGui::EndCombo();
                                 }
 
-                                if(ImGui::BeginCombo("Shader", shaderSel.currentProgram != nullptr ? shaderSel.currentProgram->name.str() : ""))
+                                if (ImGui::BeginCombo("Shader", shaderSel.currentProgram != nullptr ? shaderSel.currentProgram->name.str() : ""))
                                 {
                                     GL3::program_manager *programManager = GL3::program_manager::get_singleton();
                                     shaderSel.selection.value1() = 0;
@@ -679,7 +681,7 @@ namespace deep
                                 ImGui::TreePop();
                             }
 
-                            if(ImGui::TreeNode("transformation_component"))
+                            if (ImGui::TreeNode("transformation_component"))
                             {
                                 ImGui::Checkbox("Attacher le composant", &addTransformationComponent);
 
@@ -706,15 +708,15 @@ namespace deep
 
                             ImGui::AlignTextToFramePadding();
                             ImGui::Text("Nom:"); ImGui::SameLine(); ImGui::InputText("##", nameBuffer, sizeof(nameBuffer)); ImGui::SameLine();
-                            if(ImGui::Button("Créer"))
+                            if (ImGui::Button("Créer"))
                             {
                                 component_manager *componentManager = component_manager::get_singleton();
 
                                 entity_manager::entity ent = entityManager->create_entity(nameBuffer, scene::get_entity_collection(scene::get_active_scene_id()));
 
-                                if(addDrawableComponent)
+                                if (addDrawableComponent)
                                 {
-                                    if(vaoSel.currentVao == nullptr || shaderSel.currentProgram == nullptr)
+                                    if (vaoSel.currentVao == nullptr || shaderSel.currentProgram == nullptr)
                                         goto cancel_component;
 
                                     component_id id = componentManager->create_drawable_component(vaoSel.currentVao->attachedVbo, vaoSel.currentVaoID, nullptr);
@@ -725,7 +727,7 @@ namespace deep
                                     entityManager->attach_component(ent.get_entity_id(), ent.get_collection_id(), id);
                                 }
 
-                                if(addTransformationComponent)
+                                if (addTransformationComponent)
                                 {
                                     component_id id = componentManager->create_transformation_component(vec3<float>(x, y, z), vec3<float>(sx, sy, sz), rotation);
 
@@ -733,14 +735,14 @@ namespace deep
                                 }
 
                                 nameBuffer[0] = '\0';
-cancel_component: ;
+cancel_component:;
                             }
                         }
 
                         ImGui::Spacing();
 
                         // Affiche toutes les entités de la scène.
-                        if(ImGui::CollapsingHeader("Liste des entités de la scène"))
+                        if (ImGui::CollapsingHeader("Liste des entités de la scène"))
                         {
                             const char *textButton = "Tout supprimer";
 
@@ -752,9 +754,9 @@ cancel_component: ;
 
                             // Affiche le nombre d'entités de la scène.
                             ImGui::Text(std::string("Nombre d'entités: " + std::to_string(entityManager->get_number_of_entities(collection))).c_str()); ImGui::SameLine();
-                            
+
                             ImGui::SetCursorPosX(ImGui::GetCursorPosX() + ImGui::GetColumnWidth() - textSize.x - ImGui::GetScrollX() - 2 * ImGui::GetStyle().ItemSpacing.x);
-                            if(ImGui::Button(textButton, textSize))
+                            if (ImGui::Button(textButton, textSize))
                             {
                                 entityManager->destroy_all_entities(collection);
                             }
@@ -773,7 +775,7 @@ cancel_component: ;
 
                         string numberOfCores("Nombre de coeurs: ");
                         numberOfCores.append(std::to_string(cpu->get_number_of_cores()).c_str());
-                        if(numberOfEfficiencyCores > 0)
+                        if (numberOfEfficiencyCores > 0)
                         {
                             numberOfCores.append(" (");
                             numberOfCores.append(std::to_string(numberOfPerformanceCores).c_str());
@@ -804,14 +806,14 @@ cancel_component: ;
                         ImGui::AlignTextToFramePadding();
                         ImGui::Text("Nom:");
                         ImGui::SameLine();
-                        
+
                         ImGui::InputText("##", rm_const<char *>(name.str()), name.get_length(), ImGuiInputTextFlags_::ImGuiInputTextFlags_ReadOnly);
                         ImGui::Text(numberOfCores.str());
                         ImGui::Text(numberOfLogicalProcessors.str());
                         ImGui::Text(architecture.str());
                         ImGui::Text(addressWidth.str());
 
-                        if(ImGui::CollapsingHeader("Caches"))
+                        if (ImGui::CollapsingHeader("Caches"))
                         {
                             string numberOfL1Caches("Nombre de caches L1: ");
                             numberOfL1Caches.append(std::to_string(cpu->get_number_of_L1_caches()).c_str());
@@ -828,7 +830,7 @@ cancel_component: ;
 
                             ImGuiTableFlags flags = ImGuiTableFlags_Borders | ImGuiTableFlags_RowBg;
 
-                            if(ImGui::BeginTable("cpu_caches", 2, flags))
+                            if (ImGui::BeginTable("cpu_caches", 2, flags))
                             {
                                 list<CPU::cache_entry> &cacheEntries = cpu->get_cache_entries();
                                 size_t i;
@@ -836,11 +838,11 @@ cancel_component: ;
                                 ImGui::TableSetupColumn("Niveau");
                                 ImGui::TableSetupColumn("Taille");
                                 ImGui::TableHeadersRow();
-                                for(i = 0; i < cacheEntries.count(); ++i)
+                                for (i = 0; i < cacheEntries.count(); ++i)
                                 {
                                     ImGui::TableNextRow();
                                     ImGui::TableNextColumn();
-                                    switch(cacheEntries[i].level)
+                                    switch (cacheEntries[i].level)
                                     {
                                         default:
                                         {
@@ -848,7 +850,7 @@ cancel_component: ;
                                         } break;
                                         case CPU::cache_level::L1:
                                         {
-                                            ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f) , "L1");
+                                            ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "L1");
                                         } break;
                                         case CPU::cache_level::L2:
                                         {
@@ -862,11 +864,11 @@ cancel_component: ;
 
                                     ImGui::TableNextColumn();
                                     uint64_t size = cacheEntries[i].size;
-                                    if(size > 999 && size < 1000000)
+                                    if (size > 999 && size < 1000000)
                                     {
                                         ImGui::Text("%.2f ko", size / 1000.0f);
                                     }
-                                    else if(size > 999999)
+                                    else if (size > 999999)
                                     {
                                         ImGui::Text("%.2f mo", size / 1000000.0f);
                                     }
@@ -874,21 +876,21 @@ cancel_component: ;
                                     {
                                         ImGui::Text("%llu o", size);
                                     }
-                                
+
                                 }
 
                                 ImGui::EndTable();
                             }
                         }
 
-                        
 
-                        
+
+
                     } break;
                 }
             }
 
-            
+
             ImGui::End();
         }
 
@@ -910,11 +912,11 @@ cancel_component: ;
             0
         );
 
-        
+
 
         ImGui::SetNextWindowPos(windowPos);
         ImGui::SetNextWindowSize(windowSize);
-        if(ImGui::Begin("##", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize))
+        if (ImGui::Begin("##", nullptr, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize))
         {
             string frames("UPS: ");
             frames.append(std::to_string(window->get_UPS()).c_str());

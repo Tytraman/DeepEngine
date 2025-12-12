@@ -1,14 +1,14 @@
-# Indique la version minimum de CMake requise pour exécuter le script.
-cmake_minimum_required(VERSION 3.15)
+ï»¿cmake_minimum_required(VERSION 3.15.7)
 
 message(STATUS "=====[ DeepEngineCore ]=====")
 
-# Indique les versions à utiliser des langages.
-set(CMAKE_CXX_STANDARD 17)
-
 # set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/Build")
 
-project(${CORE_PROJECT} VERSION 0.0.1 LANGUAGES C CXX)
+project(${CORE_PROJECT}
+    VERSION 0.0.1
+    LANGUAGES C CXX)
+
+set(CMAKE_CXX_STANDARD 17)
 
 if(MSVC)
     # add_compile_options(/fsanitize=address)
@@ -19,73 +19,25 @@ if(MSVC)
     endif()
 endif()
 
-# Inclue les variables partagées.
+# Inclue les variables partagÃ©es.
 include("${CMAKE_CURRENT_LIST_DIR}/../variables.cmake")
 
-set(THIRD_PARTY_LIBS "${CMAKE_CURRENT_LIST_DIR}/../Third-party/Libs")
-set(ZLIB_BUILD_DIRECTORY "${THIRD_PARTY_LIBS}/Build/zlib")
-set(LIBZIP_BUILD_DIRECTORY "${THIRD_PARTY_LIBS}/Build/libzip")
-set(LIBPNG_BUILD_DIRECTORY "${THIRD_PARTY_LIBS}/Build/libpng")
-set(SDL_BUILD_DIRECTORY "${THIRD_PARTY_LIBS}/Build/SDL")
-set(OPENALSOFT_BUILD_DIRECTORY "${THIRD_PARTY_LIBS}/Build/openal-soft")
-
-# Crée un dossier au moment de la génération du projet CMake.
-file(MAKE_DIRECTORY "${ZLIB_BUILD_DIRECTORY}")
-file(MAKE_DIRECTORY "${LIBZIP_BUILD_DIRECTORY}")
-file(MAKE_DIRECTORY "${LIBPNG_BUILD_DIRECTORY}")
-file(MAKE_DIRECTORY "${SDL_BUILD_DIRECTORY}")
-file(MAKE_DIRECTORY "${OPENALSOFT_BUILD_DIRECTORY}")
-
-# Certaines dépendances ont besion de zlib, généralement ce sont ces 2 variables qui sont utilisées.
-set(ZLIB_INCLUDE_DIR "${THIRD_PARTY_LIBS}/zlib" CACHE INTERNAL "zlib_include" FORCE)
-set(ZLIB_LIBRARY "${ZLIB_BUILD_DIRECTORY}/zlibd.lib")
-
-# Ajoute des constantes au préprocesseur.
-add_compile_definitions(PRIVATE DE_AUTHORS=${DE_AUTHORS})   # Le nom des auteurs stockés dans les variables partagées.
-add_compile_definitions(PRIVATE DE_VERSION=${DE_VERSION})   # Le nom de la version actuelle stockée dans les variables partagées.
+# Ajoute des constantes au prÃ©processeur.
+add_compile_definitions(PRIVATE DE_AUTHORS=${DE_AUTHORS})   # Le nom des auteurs stockÃ©s dans les variables partagÃ©es.
+add_compile_definitions(PRIVATE DE_VERSION=${DE_VERSION})   # Le nom de la version actuelle stockÃ©e dans les variables partagÃ©es.
 
 set(CORE_SOURCE "${CMAKE_CURRENT_LIST_DIR}/Source" CACHE INTERNAL "")
 set(CORE_INCLUDE "${CORE_SOURCE}" CACHE INTERNAL "")
 
-# Variables qui stockent les chemins des différentes librairies utilisées.
-set(SDL_INCLUDE "${THIRD_PARTY_LIBS}/SDL/include")
-
-set(IMGUI_INCLUDE "${THIRD_PARTY_LIBS}/imgui")
-
-set(ZLIB_INCLUDE "${THIRD_PARTY_LIBS}/zlib")
-set(ZLIB_LIB "${ZLIB_BUILD_DIRECTORY}")
-set(ZLIB_INCLUDE_2 "${ZLIB_BUILD_DIRECTORY}")
-
-set(LIBZIP_INCLUDE "${THIRD_PARTY_LIBS}/libzip/lib")
-
-set(LIBPNG_INCLUDE "${THIRD_PARTY_LIBS}/libpng")
-set(LIBPNG_LIB "${LIBPNG_BUILD_DIRECTORY}")
-set(LIBPNG_INCLUDE_2 "${LIBPNG_BUILD_DIRECTORY}")
-
-set(OPENAL_INCLUDE "${THIRD_PARTY_LIBS}/openal-soft/include")
-set(OPENAL_LIB "${OPENALSOFT_BUILD_DIRECTORY}")
-
-message(STATUS "===== Add subdir zlib =====")
-# Indique à CMake qu'un sous projet CMake est présent et doit être compilé.
-add_subdirectory("${THIRD_PARTY_LIBS}/zlib" "${ZLIB_BUILD_DIRECTORY}")
-# zlib génère une config qui est nécessaire par d'autres dépendances.
-file(COPY "${ZLIB_BUILD_DIRECTORY}/zconf.h" DESTINATION "${ZLIB_INCLUDE}")
-
-message(STATUS "===== Add subdir libzip =====")
-add_subdirectory("${THIRD_PARTY_LIBS}/libzip" "${LIBZIP_BUILD_DIRECTORY}")
-file(COPY "${LIBZIP_BUILD_DIRECTORY}/zipconf.h" DESTINATION "${LIBZIP_INCLUDE}")
-
-message(STATUS "===== Add subdir libpng =====")
-add_subdirectory("${THIRD_PARTY_LIBS}/libpng" "${LIBPNG_BUILD_DIRECTORY}")
-
-message(STATUS "===== Add subdir SDL =====")
-add_subdirectory("${THIRD_PARTY_LIBS}/SDL" "${SDL_BUILD_DIRECTORY}")
-
-message(STATUS "===== Add subdir openal-soft =====")
-add_subdirectory("${THIRD_PARTY_LIBS}/openal-soft" "${OPENALSOFT_BUILD_DIRECTORY}")
+find_package(SDL2 CONFIG REQUIRED)
+find_package(PNG REQUIRED)
+find_package(OpenAL CONFIG REQUIRED)
+find_package(libzip CONFIG REQUIRED)
+find_package(imgui CONFIG REQUIRED)
+find_package(glad CONFIG REQUIRED)
 
 # add_folders est le nom de la fonction.
-# dest_list est un paramètre qui correspond à la liste dans laquelle ajouter tous les fichiers.
+# dest_list est un paramÃ¨tre qui correspond Ã  la liste dans laquelle ajouter tous les fichiers.
 function(deep_add_folders dest_list)
     set(options)
     set(args INCLUDE_DIR)
@@ -98,7 +50,7 @@ function(deep_add_folders dest_list)
         "${list_args}"
     )
 
-    # Affiche un warning pour tous les paramètres qui n'ont pas de nom associé lors de l'appel.
+    # Affiche un warning pour tous les paramÃ¨tres qui n'ont pas de nom associÃ© lors de l'appel.
     # foreach(arg IN LISTS DEEP_FOLDER_UNPARSED_ARGUMENTS)
         # message(WARNING "Unparsed argument: ${arg}")
     # endforeach()
@@ -134,7 +86,7 @@ function(deep_add_folders dest_list)
 
     #message(STATUS "globbing_files: ${globbing_files}")
 
-    # Cette fonction n'ajoute pas les fichiers dans la liste mais l'écrase entièrement.
+    # Cette fonction n'ajoute pas les fichiers dans la liste mais l'Ã©crase entiÃ¨rement.
     file(
         GLOB new_files
         ${globbing_files}
@@ -142,12 +94,12 @@ function(deep_add_folders dest_list)
 
     #message(STATUS "new_files: ${new_files}")
 
-    # Il faut donc itérer chaque fichier trouvé et l'ajouter dans la liste destination.
+    # Il faut donc itÃ©rer chaque fichier trouvÃ© et l'ajouter dans la liste destination.
     foreach(f IN LISTS new_files)
         list(APPEND files ${f})
     endforeach()
 
-    # Il n'est pas possible de modifier la liste référencée autrement que par un 'set', d'où les copies et l'itération précédentes.
+    # Il n'est pas possible de modifier la liste rÃ©fÃ©rencÃ©e autrement que par un 'set', d'oÃ¹ les copies et l'itÃ©ration prÃ©cÃ©dentes.
     set(${dest_list} ${files} PARENT_SCOPE)
 endfunction()
 
@@ -174,21 +126,8 @@ endfunction()
 
 deep_add_folders(
     DEEP_SOURCE_FILES
-    INCLUDE_DIR ${IMGUI_INCLUDE}
-    FOLDERS " "
-    EXTENSIONS ".c" ".cpp"
-)
-
-deep_add_files(
-    DEEP_SOURCE_FILES
-    INCLUDE_DIR ${IMGUI_INCLUDE}/backends
-    FILES "imgui_impl_sdl2.cpp" "imgui_impl_opengl3.cpp"
-)
-
-deep_add_folders(
-    DEEP_SOURCE_FILES
     INCLUDE_DIR ${CORE_SOURCE}
-    FOLDERS "" "core" "maths" "os" "hardware" "audio" "ecs" "graphics" "image" "gui" "file" "io" "modules"
+    FOLDERS "" "core" "maths" "os" "hardware" "audio" "ecs" "graphics" "image" "gui" "file" "io" "modules" "modules/zip"
     EXTENSIONS ".c" ".cpp"
 )
 
@@ -206,56 +145,27 @@ deep_add_folders(
     EXTENSIONS ".c" ".cpp"
 )
 
-deep_add_folders(
-    DEEP_SOURCE_FILES
-    INCLUDE_DIR ${CORE_SOURCE}/modules
-    FOLDERS "zip"
-    EXTENSIONS ".c" ".cpp"
-)
-
-deep_add_folders(
-    DEEP_SOURCE_FILES
-    INCLUDE_DIR ${THIRD_PARTY_LIBS}
-    FOLDERS "glad"
-    EXTENSIONS ".c" ".cpp"
-)
-
 message(STATUS "DEEP_SOURCE_FILES: ${DEEP_SOURCE_FILES}")
 
 add_library(${CORE_PROJECT} SHARED ${DEEP_SOURCE_FILES})
 
 if(MSVC)
-    # Le problème de cette commande est qu'elle applique le niveau de warning même aux dépendances, ce qui empêche parfois la compilation du projet.
+    # Le problÃ¨me de cette commande est qu'elle applique le niveau de warning mÃªme aux dÃ©pendances, ce qui empÃªche parfois la compilation du projet.
     # target_compile_options(${CORE_PROJECT} PRIVATE /W4 /WX)
     set_source_files_properties(${DEEP_SOURCE_FILES} PROPERTIES COMPILE_OPTIONS /W4 COMPILE_OPTIONS /WX)
 endif()
 
 target_include_directories(${CORE_PROJECT} PRIVATE ${CORE_INCLUDE})
-target_include_directories(${CORE_PROJECT} PUBLIC
-    ${SDL_INCLUDE}
-    ${IMGUI_INCLUDE}
-    ${ZLIB_INCLUDE}
-    ${ZLIB_INCLUDE_2}
-    ${LIBZIP_INCLUDE}
-    ${LIBPNG_INCLUDE}
-    ${LIBPNG_INCLUDE_2}
-    ${OPENAL_INCLUDE}
-    ${THIRD_PARTY_LIBS}
-)
-
-target_link_directories(${CORE_PROJECT} PUBLIC
-    ${ZLIB_LIB}
-    ${LIBPNG_LIB}
-    ${OPENAL_LIB}
-)
 
 target_link_libraries(${CORE_PROJECT}
-    SDL2-static     # Nom de la cible de la SDL2 pour que CMake crée une dépendance.
-    zlibstatic      # Nom de la cible de zlib pour que CMake crée une dépendance.
-    zip
-    png_static      # Nom de la cible de libpng pour que CMake crée une dépendance.
-    OpenGL32.lib    # Nom de la cible OpenGL pour que CMake le considère comme une dépendance.
-    OpenAL          # Nom de la cible de OpenAL pour que CMake crée une dépendance.
-)
+    PUBLIC
+        SDL2::SDL2
+        SDL2::SDL2main
+        libzip::zip
+        PNG::PNG
+        OpenGL32.lib    # Nom de la cible OpenGL pour que CMake le considÃ¨re comme une dÃ©pendance.
+        OpenAL::OpenAL
+        imgui::imgui
+        glad::glad)
 
 target_compile_definitions(${CORE_PROJECT} PRIVATE DEEPENGINE_LIB=1)

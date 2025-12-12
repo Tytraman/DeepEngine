@@ -1,4 +1,4 @@
-#ifndef __DEEP_ENGINE_WINDOW_HPP__
+﻿#ifndef __DEEP_ENGINE_WINDOW_HPP__
 #define __DEEP_ENGINE_WINDOW_HPP__
 
 #include "core/def.hpp"
@@ -12,7 +12,7 @@
 
 #include <stdint.h>
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 namespace deep
 {
@@ -33,80 +33,80 @@ namespace deep
     class window
     {
 
-        public:
-            using pre_event_callback = void (*)(window &window);
+    public:
+        using pre_event_callback = void (*)(window &window);
 
-            typedef void (*event_callback)(window &window, devent e);
-            typedef void (*update_callback)(window &window);
+        typedef void (*event_callback)(window &window, devent e);
+        typedef void (*update_callback)(window &window);
 
-        public:
-            DE_API window(uint16_t targetMS, uint16_t targetFPS);
-            
-            /// @brief			Crée une fenêtre avec un titre et une taille.
-            /// @param win		La fenêtre à créer.
-            /// @param title	Titre de la fenêtre.
-            /// @param size		Taille de la fenêtre.
-            /// @return			Le code d'erreur.
-            DE_API static bool create(window &win, const char *title, const size &size);
+    public:
+        DE_API window(uint16_t targetMS, uint16_t targetFPS);
 
-            DE_API static window_handle find(const char *className);
-            DE_API static void show(window_handle win);
-            DE_API static void focus(window_handle win);
-            DE_API static void set_foreground(window_handle win);
-            DE_API static void set_active(window_handle win);
-            
-            /// @brief Détruit la fenêtre ainsi que tous ses composants internes.
-            DE_API void destroy();
-            
-            /// @brief Game Loop
-            DE_API void run();
+        /// @brief			Crée une fenêtre avec un titre et une taille.
+        /// @param win		La fenêtre à créer.
+        /// @param title	Titre de la fenêtre.
+        /// @param size		Taille de la fenêtre.
+        /// @return			Le code d'erreur.
+        DE_API static bool create(window &win, const char *title, const size &size);
 
-            DE_API bool add_pre_event_callback(pre_event_callback callback);
-            
-            /// @brief			Récupère et retire l'évènement le plus vieux de la queue.
-            /// @return			Un \ref de::devent lorsqu'un évènement s'est produit ou \c nullptr s'il n'y a aucun évènement.
-            /// @remark			La valeur retournée par cette méthode doit être \c delete.
-            DE_API devent poll_event() const;
+        DE_API static window_handle find(const char *className);
+        DE_API static void show(window_handle win);
+        DE_API static void focus(window_handle win);
+        DE_API static void set_foreground(window_handle win);
+        DE_API static void set_active(window_handle win);
 
-            DE_API void set_cursor_position(int x, int y);
+        /// @brief Détruit la fenêtre ainsi que tous ses composants internes.
+        DE_API void destroy();
 
-            DE_API static void default_input_callback(window &window, devent e);
+        /// @brief Game Loop
+        DE_API void run();
+
+        DE_API bool add_pre_event_callback(pre_event_callback callback);
+
+        /// @brief			Récupère et retire l'évènement le plus vieux de la queue.
+        /// @return			Un \ref de::devent lorsqu'un évènement s'est produit ou \c nullptr s'il n'y a aucun évènement.
+        /// @remark			La valeur retournée par cette méthode doit être \c delete.
+        DE_API devent poll_event() const;
+
+        DE_API void set_cursor_position(int x, int y);
+
+        DE_API static void default_input_callback(window &window, devent e);
 
 
-            //===== GETTERS =====//
+        //===== GETTERS =====//
 
-            DE_API SDL_Window *get_window();
-            DE_API size get_size() const;
-            DE_API uint32_t get_width() const;
-            DE_API uint32_t get_height() const;
-            DE_API uint32_t get_FPS() const;
-            DE_API uint32_t get_UPS() const;
-            DE_API const char *get_title() const;
-            DE_API GL3::gl_renderer &get_renderer();
-            DE_API bool is_showing_debug_panel() const;
+        DE_API SDL_Window *get_window();
+        DE_API size get_size() const;
+        DE_API uint32_t get_width() const;
+        DE_API uint32_t get_height() const;
+        DE_API uint32_t get_FPS() const;
+        DE_API uint32_t get_UPS() const;
+        DE_API const char *get_title() const;
+        DE_API GL3::gl_renderer &get_renderer();
+        DE_API bool is_showing_debug_panel() const;
 
-            //===== SETTERS =====//
+        //===== SETTERS =====//
 
-            DE_API void set_event_callback(event_callback callabck);
-            DE_API void set_update_callback(update_callback callback);
-            DE_API void set_title(const char *title) const;
-            DE_API void set_showing_debug_panel(bool value);
+        DE_API void set_event_callback(event_callback callabck);
+        DE_API void set_update_callback(update_callback callback);
+        DE_API void set_title(const char *title) const;
+        DE_API void set_showing_debug_panel(bool value);
 
-        private:
-            SDL_Window              *m_Window;
-            list<pre_event_callback> m_PreEventCallbacks;
-            event_callback           m_EventCallback;
-            update_callback          m_UpdateCallback;
-            GL3::gl_renderer         m_Renderer;
-            uint16_t                 m_TargetMSPerUpdate;
-            uint16_t                 m_TargetFPS;
-            uint32_t                 m_FPS;
-            uint32_t                 m_UPS;
-            bool                     m_Running;
-            bool                     m_ShowDebugPanel;
-            GL3::framerenderbuffer   m_FRB;
+    private:
+        SDL_Window *m_Window;
+        list<pre_event_callback> m_PreEventCallbacks;
+        event_callback           m_EventCallback;
+        update_callback          m_UpdateCallback;
+        GL3::gl_renderer         m_Renderer;
+        uint16_t                 m_TargetMSPerUpdate;
+        uint16_t                 m_TargetFPS;
+        uint32_t                 m_FPS;
+        uint32_t                 m_UPS;
+        bool                     m_Running;
+        bool                     m_ShowDebugPanel;
+        GL3::framerenderbuffer   m_FRB;
 
-            void internalEventCallback(devent e);
+        void internalEventCallback(devent e);
 
     };
 
@@ -242,7 +242,7 @@ namespace deep
     */
     inline void window::set_showing_debug_panel(bool value)
     {
-        if(value)
+        if (value)
             im_gui_debug_menu::add_window(this);
         else
             im_gui_debug_menu::remove_window(this);

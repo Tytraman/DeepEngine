@@ -1,4 +1,4 @@
-#ifndef __DEEP_ENGINE_KEY_HPP__
+﻿#ifndef __DEEP_ENGINE_KEY_HPP__
 #define __DEEP_ENGINE_KEY_HPP__
 
 #include "core/def.hpp"
@@ -6,11 +6,11 @@
 
 #include <stdint.h>
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 namespace deep
 {
-    
+
     enum class dkey
     {
         LeftArrow = SDLK_LEFT,
@@ -45,13 +45,13 @@ namespace deep
         Y = SDLK_y,
         Z = SDLK_z,
 
-        Esc    = SDLK_ESCAPE,
-        LCtrl  = SDLK_LCTRL,
+        Esc = SDLK_ESCAPE,
+        LCtrl = SDLK_LCTRL,
         LShift = SDLK_LSHIFT,
-        Space  = SDLK_SPACE,
+        Space = SDLK_SPACE,
         Insert = SDLK_INSERT,
 
-        F2  = SDLK_F2,
+        F2 = SDLK_F2,
         F11 = SDLK_F11,
         F12 = SDLK_F12
 
@@ -60,13 +60,13 @@ namespace deep
     class DE_API key
     {
 
-        public:
-            static void update();
+    public:
+        static void update();
 
-            static bool isPressed(dkey key);
+        static bool isPressed(dkey key);
 
-        private:
-            static const Uint8 *m_Keys;
+    private:
+        static const Uint8 *m_Keys;
 
     };
 

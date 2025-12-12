@@ -1,11 +1,11 @@
-#include "graphics/renderer.hpp"
+﻿#include "graphics/renderer.hpp"
 #include "os/window.hpp"
 
 #include <glad/glad.h>
 
 #include <imgui.h>
-#include <backends/imgui_impl_sdl2.h>
-#include <backends/imgui_impl_opengl3.h>
+#include <imgui_impl_sdl2.h>
+#include <imgui_impl_opengl3.h>
 
 #include <stdio.h>
 
@@ -29,7 +29,7 @@ namespace deep
     bool renderer::create(renderer &dest, window &window)
     {
         dest.m_Renderer = SDL_CreateRenderer(window.get_window(), -1, SDL_RENDERER_ACCELERATED);
-        if(dest.m_Renderer == NULL)
+        if (dest.m_Renderer == NULL)
         {
             return false;
         }

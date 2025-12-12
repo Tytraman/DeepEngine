@@ -1,10 +1,10 @@
-#ifndef __DEEP_ENGINE_TYPES_HPP__
+﻿#ifndef __DEEP_ENGINE_TYPES_HPP__
 #define __DEEP_ENGINE_TYPES_HPP__
 
 #include "core/def.hpp"
 #include "core/common.hpp"
 
-#include <SDL.h>
+#include <SDL2/SDL.h>
 
 /// @namespace de
 /// @brief Espace de nom regroupant tout ce qui est relatif au DeepEngine.
@@ -37,7 +37,7 @@ namespace deep
 
     constexpr size_t nothing = static_cast<size_t>(-1); ///< Quand rien n'a été trouvé.
     constexpr de_id badID = static_cast<de_id>(-1);     ///< Quand un ID n'est pas valide.
-    
+
     typedef SDL_Keycode keycode;
 
     namespace direction
@@ -52,31 +52,31 @@ namespace deep
     }
 
     DE_UNION(dual8,
-        struct u
-        {
-            uint8_t l;
-            uint8_t h;
-        };
-        uint16_t value;
-    );
+             struct u
+    {
+        uint8_t l;
+        uint8_t h;
+    };
+    uint16_t value;
+        );
 
     DE_UNION(dual16,
-        struct u
-        {
-            uint16_t l;
-            uint16_t h;
-        };
-        uint32_t value;
-    );
+             struct u
+    {
+        uint16_t l;
+        uint16_t h;
+    };
+    uint32_t value;
+        );
 
     DE_UNION(dual32,
-        struct u
-        {
-            uint32_t l;
-            uint32_t h;
-        };
-        uint64_t value;
-    );
+             struct u
+    {
+        uint32_t l;
+        uint32_t h;
+    };
+    uint64_t value;
+        );
 
     struct size
     {
@@ -92,7 +92,7 @@ namespace deep
     size::size
     ==========
     */
-    inline size::size() 
+    inline size::size()
     {
         width = 0;
         height = 0;
@@ -182,14 +182,14 @@ namespace deep
     class number_format_option
     {
 
-        public:
-            static number_format_option dec();
-            static number_format_option hex();
+    public:
+        static number_format_option dec();
+        static number_format_option hex();
 
-            number_format get_format() const;
+        number_format get_format() const;
 
-        private:
-            number_format m_Format;
+    private:
+        number_format m_Format;
 
     };
 
