@@ -1,1 +1,0 @@
-- Cette page regroupe tous les bugs connus.

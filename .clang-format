@@ -1,0 +1,299 @@
+﻿# Language:        Cpp
+BasedOnStyle:  LLVM
+
+# > Indique le nombre d'espaces à retirer pour les mots clés d'accesseurs dans les classes, par exemple 'public', 'private' et 'protected'.
+AccessModifierOffset: -2
+
+# > Aligne ou non les paramètres dans une fonction.
+AlignAfterOpenBracket: Align
+# AlignArrayOfStructures: Left
+AlignConsecutiveAssignments:
+   Enabled:         true
+   AcrossEmptyLines: false
+   AcrossComments:  false
+   AlignCompound:   false
+   AlignFunctionPointers: false
+   PadOperators:    true
+# AlignConsecutiveBitFields:
+#   Enabled:         true
+#   AcrossEmptyLines: false
+#   AcrossComments:  false
+#   AlignCompound:   false
+#   AlignFunctionPointers: false
+#   PadOperators:    false
+# AlignConsecutiveDeclarations:
+#   Enabled:         false
+#   AcrossEmptyLines: false
+#   AcrossComments:  false
+#   AlignCompound:   false
+#   AlignFunctionPointers: false
+#   PadOperators:    false
+# AlignConsecutiveMacros:
+#   Enabled:         true
+#   AcrossEmptyLines: false
+#   AcrossComments:  false
+#   AlignCompound:   false
+#   AlignFunctionPointers: false
+#   PadOperators:    false
+# AlignConsecutiveShortCaseStatements:
+#   Enabled:         false
+#   AcrossEmptyLines: false
+#   AcrossComments:  false
+#   AlignCaseColons: false
+# AlignEscapedNewlines: LeftWithLastLine
+AlignOperands:   Align
+AlignTrailingComments:
+  Kind:            Always
+  OverEmptyLines:  0
+# AllowAllArgumentsOnNextLine: true
+AllowAllParametersOfDeclarationOnNextLine: false
+AllowBreakBeforeNoexceptSpecifier: Never
+# AllowShortBlocksOnASingleLine: Empty
+# AllowShortCaseLabelsOnASingleLine: false
+AllowShortCompoundRequirementOnASingleLine: true
+# AllowShortEnumsOnASingleLine: true
+
+# > Détermine si "int f() { return 0; }" peut être mis sur une seule ligne ou non.
+AllowShortFunctionsOnASingleLine: Empty
+
+# > Détermine si un "if" peut tenir sur une seule ligne.
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortLambdasOnASingleLine: All
+AllowShortLoopsOnASingleLine: false
+# AlwaysBreakAfterDefinitionReturnType: None
+# AlwaysBreakAfterReturnType: None
+
+# > Détermine si dans une fonction, un saut de ligne doit être effectué après le type.
+# > 'Automatic' se base sur l'option 'PenaltyReturnTypeOnItsOwnLine'.
+BreakAfterReturnType: Automatic
+AlwaysBreakBeforeMultilineStrings: false
+BreakTemplateDeclarations: Yes
+AlwaysBreakTemplateDeclarations: Yes
+# AttributeMacros:
+#   - __capability
+# BinPackArguments: true
+# BinPackParameters: true
+# BitFieldColonSpacing: Both
+
+# >> Les options suivantes déterminent la façon dont sont positionnées les accolades.
+BreakBeforeBraces: Custom
+BraceWrapping:
+   AfterCaseLabel:  true
+   AfterClass:      true
+   AfterControlStatement: Always
+   AfterEnum:       true
+   AfterExternBlock: true
+   AfterFunction:   true
+   AfterNamespace:  true
+   AfterObjCDeclaration: true
+   AfterStruct:     true
+   AfterUnion:      true
+   BeforeCatch:     true
+   BeforeElse:      true
+   BeforeLambdaBody: false
+   BeforeWhile:     false
+   IndentBraces:    false
+   SplitEmptyFunction: true
+   SplitEmptyRecord: true
+   SplitEmptyNamespace: true
+
+# > Indique si des sauts de lignes doivent être mis entre chaque chaînes de caractères littérales.
+BreakAdjacentStringLiterals: true
+# BreakAfterAttributes: Leave
+# BreakAfterJavaFieldAnnotations: false
+# BreakArrays:     true
+# BreakBeforeBinaryOperators: None
+# BreakBeforeConceptDeclarations: Always
+# BreakBeforeInlineASMColon: OnlyMultiline
+# BreakBeforeTernaryOperators: true
+# BreakConstructorInitializers: BeforeColon
+# BreakInheritanceList: BeforeColon
+# BreakStringLiterals: true
+
+# > La limite de colonnes sur une ligne.
+# > '0' indique qu'il n'y a aucune limite.
+ColumnLimit:     0
+# CommentPragmas:  '^ IWYU pragma:'
+# CompactNamespaces: false
+ConstructorInitializerIndentWidth: 8
+ContinuationIndentWidth: 8
+Cpp11BracedListStyle: false
+# DerivePointerAlignment: false
+
+# > Désactive ou non complètement le formatage.
+DisableFormat:   false
+
+# > Indique si un saut de ligne doit être fait après un modificateur d'accès dans une classe ou une structure.
+EmptyLineAfterAccessModifier: Never
+
+# > Détermine dans quel cas mettre un saut de ligne avant un modificateur d'accès.
+# > 'LogicalBlock' met un saut de ligne entre chaque groupement de modificateurs d'accès.
+EmptyLineBeforeAccessModifier: LogicalBlock
+# ExperimentalAutoDetectBinPacking: false
+# FixNamespaceComments: true
+# ForEachMacros:
+#   - foreach
+#   - Q_FOREACH
+#   - BOOST_FOREACH
+# IfMacros:
+#   - KJ_IF_MAYBE
+# IncludeBlocks:   Preserve
+# IncludeCategories:
+#   - Regex:           '^"(llvm|llvm-c|clang|clang-c)/'
+#     Priority:        2
+#     SortPriority:    0
+#     CaseSensitive:   false
+#   - Regex:           '^(<|"(gtest|gmock|isl|json)/)'
+#     Priority:        3
+#     SortPriority:    0
+#     CaseSensitive:   false
+#   - Regex:           '.*'
+#     Priority:        1
+#     SortPriority:    0
+#     CaseSensitive:   false
+# IncludeIsMainRegex: '(Test)?$'
+# IncludeIsMainSourceRegex: ''
+
+# > Détermine si les modificateurs d'accès doivent avoir leur propre niveau d'indentation.
+IndentAccessModifiers: false
+
+# > Détermine si le bloque suivant un "case" doit être indenté ou non.
+# > Si 'false' alors le bloc sera au même niveau que le mot clé "case".
+IndentCaseBlocks: false
+
+# > Détermine si les mots clés "case" doivent être indentés ou non.
+# > Si 'false' alors le mot clé sera au même niveau que le mot clé "switch".
+IndentCaseLabels: true
+# IndentExternBlock: AfterExternBlock
+# IndentGotoLabels: true
+# IndentPPDirectives: None
+# IndentRequiresClause: true
+
+# > Le nombre de colonnes à mettre pour faire un espace blanc.
+IndentWidth:     4
+# IndentWrappedFunctionNames: false
+
+# > Ajoute des accolades après les déclarations de contrôle (if, else, for, do, while).
+InsertBraces:    true
+
+# > Ajoute une ligne vide à la fin du fichier si inexistante.
+InsertNewlineAtEOF: true
+# InsertTrailingCommas: None
+# IntegerLiteralSeparator:
+#   Binary:          0
+#   BinaryMinDigits: 0
+#   Decimal:         0
+#   DecimalMinDigits: 0
+#   Hex:             0
+#   HexMinDigits:    0
+# JavaScriptQuotes: Leave
+# JavaScriptWrapImports: true
+# KeepEmptyLinesAtTheStartOfBlocks: true
+# KeepEmptyLinesAtEOF: false
+
+# > Garde ou non les lignes vides.
+KeepEmptyLines:
+  AtEndOfFile: false
+  AtStartOfBlock: false
+  AtStartOfFile: false
+LambdaBodyIndentation: Signature
+
+# > Quels caractères sont utilisés pour sauter une ligne.
+LineEnding:      LF
+MacroBlockBegin: ''
+MacroBlockEnd:   ''
+
+# > Le nombre de lignes vides à garder entre 2 lignes de code.
+MaxEmptyLinesToKeep: 1
+NamespaceIndentation: All
+ObjCBinPackProtocolList: Auto
+ObjCBlockIndentWidth: 2
+ObjCBreakBeforeNestedBlockParam: true
+ObjCSpaceAfterProperty: false
+ObjCSpaceBeforeProtocolList: true
+PackConstructorInitializers: NextLine
+# PenaltyBreakAssignment: 2
+PenaltyBreakBeforeFirstCallParameter: 100
+# PenaltyBreakComment: 300
+# PenaltyBreakFirstLessLess: 120
+# PenaltyBreakOpenParenthesis: 0
+# PenaltyBreakScopeResolution: 500
+# PenaltyBreakString: 1000
+# PenaltyBreakTemplateDeclaration: 10
+PenaltyExcessCharacter:  1000000
+# PenaltyIndentedWhitespace: 0
+
+# > Détermine à quel point lors d'un excès de longueur d'une ligne, le type retourné d'une fonction doit avoir un saut de ligne après.
+# > Plus la valeur est élevée, plus il est autorisé de dépasser la limite, dans le cas contraire, la ligne sera plus suceptible d'avoir un saut de ligne.
+PenaltyReturnTypeOnItsOwnLine: 100
+PointerAlignment: Right
+PPIndentWidth:   -1
+QualifierAlignment: Leave
+ReferenceAlignment: Pointer
+ReflowComments:  true
+RemoveBracesLLVM: false
+RemoveParentheses: Leave
+RemoveSemicolon: false
+RequiresClausePosition: OwnLine
+RequiresExpressionIndentation: OuterScope
+SeparateDefinitionBlocks: Leave
+ShortNamespaceLines: 1
+SkipMacroDefinitionBody: false
+SortIncludes:    false
+SortJavaStaticImport: Before
+SortUsingDeclarations: LexicographicNumeric
+SpaceAfterCStyleCast: true
+SpaceAfterLogicalNot: false
+SpaceAfterTemplateKeyword: true
+SpaceAroundPointerQualifiers: Default
+SpaceBeforeAssignmentOperators: true
+SpaceBeforeCaseColon: false
+SpaceBeforeCpp11BracedList: true
+SpaceBeforeCtorInitializerColon: true
+SpaceBeforeInheritanceColon: true
+SpaceBeforeJsonColon: false
+SpaceBeforeParens: ControlStatements
+SpaceBeforeParensOptions:
+  AfterControlStatements: true
+  AfterForeachMacros: true
+  AfterFunctionDefinitionName: false
+  AfterFunctionDeclarationName: false
+  AfterIfMacros:   true
+  AfterOverloadedOperator: false
+  AfterPlacementOperator: true
+  AfterRequiresInClause: false
+  AfterRequiresInExpression: false
+  BeforeNonEmptyParentheses: false
+SpaceBeforeRangeBasedForLoopColon: true
+SpaceBeforeSquareBrackets: false
+SpaceInEmptyBlock: true
+SpacesBeforeTrailingComments: 1
+SpacesInAngles:  Never
+SpacesInContainerLiterals: true
+SpacesInLineCommentPrefix:
+  Minimum:         1
+  Maximum:         -1
+SpacesInParens:  Never
+SpacesInParensOptions:
+  InCStyleCasts:   false
+  InConditionalStatements: false
+  InEmptyParentheses: false
+  Other:           false
+SpacesInSquareBrackets: false
+Standard:        Latest
+StatementAttributeLikeMacros:
+  - Q_EMIT
+StatementMacros:
+  - Q_UNUSED
+  - QT_REQUIRE_VERSION
+# > Le nombre de colonnes à appliquer pour un TAB.
+TabWidth:        4
+# > Détermine si le caractère TAB doit être utilisé pour un espace blanc.
+UseTab:          Never
+# VerilogBreakBetweenInstancePorts: true
+# WhitespaceSensitiveMacros:
+#   - BOOST_PP_STRINGIZE
+#   - CF_SWIFT_NAME
+#   - NS_SWIFT_NAME
+#   - PP_STRINGIZE
+#   - STRINGIZE

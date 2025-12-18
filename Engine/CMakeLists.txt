@@ -1,7 +1,7 @@
 ﻿cmake_minimum_required(VERSION 3.15.7)
 
 add_library(DeepEngine SHARED
-    "${CMAKE_CURRENT_LIST_DIR}/DeepEngine/empty.cpp")
+    "${CMAKE_CURRENT_LIST_DIR}/DeepEngine/engine.cpp")
 add_library(Deep::Engine ALIAS DeepEngine)
 
 set_target_properties(DeepEngine PROPERTIES
