@@ -4,7 +4,7 @@
 #include "DeepEngine/deep_engine_export.h"
 
 #include <DeepLib/object.hpp>
-#include <DeepLib/window.hpp>
+#include <DeepLib/window/window.hpp>
 
 namespace deep
 {

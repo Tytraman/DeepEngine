@@ -31,6 +31,8 @@ find_package(DeepLib REQUIRED)
 
 include("cmake/variables.cmake")
 
+add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Modules/Renderer/D3D")
+
 add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Engine")
 
 add_compile_definitions(PRIVATE DE_AUTHORS=${DE_AUTHORS})
@@ -39,7 +41,8 @@ add_compile_definitions(PRIVATE DE_VERSION=${DE_VERSION})
 target_link_libraries(DeepEngineEditor
     PRIVATE
         Deep::Lib
-        Deep::Engine)
+        Deep::Engine
+        Deep::D3D)
 
 add_custom_command(TARGET DeepEngineEditor PRE_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_if_different
