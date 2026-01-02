@@ -2,6 +2,8 @@
 
 #include <DeepLib/context.hpp>
 
+namespace wrl = Microsoft::WRL;
+
 namespace deep
 {
     namespace D3D
@@ -52,44 +54,57 @@ namespace deep
                     nullptr,
                     &graph->m_device_context);
 
-            ID3D11Resource *back_buffer = nullptr;
+            wrl::ComPtr<ID3D11Resource> back_buffer;
 
-            graph->m_swap_chain->GetBuffer(0, __uuidof(ID3D11Resource), reinterpret_cast<void **>(&back_buffer));
+            graph->m_swap_chain->GetBuffer(0, __uuidof(ID3D11Resource), &back_buffer);
 
-            graph->m_device->CreateRenderTargetView(back_buffer, nullptr, &graph->m_render_target_view);
-
-            back_buffer->Release();
+            graph->m_device->CreateRenderTargetView(back_buffer.Get(), nullptr, &graph->m_render_target_view);
 
             return ref<graphics>(context, graph);
+        }
+
+        void graphics::clear_buffer(float r, float g, float b) noexcept
+        {
+            const float colors[] = { r, g, b, 1.0f };
+
+            m_device_context->ClearRenderTargetView(m_render_target_view.Get(), colors);
+        }
+
+        void graphics::draw_test_triangle() noexcept
+        {
+            const float data[] = {
+                0.0f, 0.5f,
+                0.5f, -0.5f,
+                -0.5f, -0.5f
+            };
+
+            const UINT stride = sizeof(float) * 2;
+            const UINT offset = 0;
+
+            D3D11_BUFFER_DESC bd   = { 0 };
+            bd.BindFlags           = D3D11_BIND_VERTEX_BUFFER;
+            bd.Usage               = D3D11_USAGE_DEFAULT;
+            bd.CPUAccessFlags      = 0;
+            bd.MiscFlags           = 0;
+            bd.ByteWidth           = sizeof(data);
+            bd.StructureByteStride = stride;
+
+            D3D11_SUBRESOURCE_DATA sd = { 0 };
+            sd.pSysMem                = data;
+
+            wrl::ComPtr<ID3D11Buffer> vertex_buffer;
+
+            m_device->CreateBuffer(&bd, &sd, &vertex_buffer);
+
+            m_device_context->IASetVertexBuffers(0, 1, &vertex_buffer, &stride, &offset);
+
+            m_device_context->Draw(3, 0);
         }
 
         void graphics::end_frame() noexcept
         {
             // Affiche l'image finale à l'utilisateur.
             m_swap_chain->Present(1, 0);
-        }
-
-        void graphics::destroy() noexcept
-        {
-            if (m_render_target_view != nullptr)
-            {
-                m_render_target_view->Release();
-            }
-
-            if (m_device_context != nullptr)
-            {
-                m_device_context->Release();
-            }
-
-            if (m_swap_chain != nullptr)
-            {
-                m_swap_chain->Release();
-            }
-
-            if (m_device != nullptr)
-            {
-                m_device->Release();
-            }
         }
     } // namespace D3D
 } // namespace deep

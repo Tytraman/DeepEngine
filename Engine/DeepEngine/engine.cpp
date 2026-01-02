@@ -13,7 +13,7 @@ namespace deep
 
         engine eng;
 
-        eng.m_window = window::create(context, DEEP_TEXT_NATIVE("DeepEngineClass"), DEEP_TEXT_NATIVE("Deep Engine"), 0, 0, 800, 400);
+        eng.m_window = window::create(context, DEEP_TEXT_NATIVE("DeepEngineClass"), DEEP_TEXT_NATIVE("Deep Engine"), 0, 0, 1200, 800);
 
         if (eng.m_window.is_valid())
         {
@@ -32,6 +32,8 @@ namespace deep
 
         while (m_window->process_message())
         {
+            m_graphics->clear_buffer(0.0f, 0.0f, 0.0f);
+
             m_graphics->end_frame();
         }
     }
