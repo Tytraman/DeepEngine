@@ -17,6 +17,8 @@ namespace deep
 
         if (eng.m_window.is_valid())
         {
+            eng.m_graphics = D3D::graphics::create(context, eng.m_window->get_handle());
+
             eng.m_window->show();
         }
 
@@ -30,41 +32,7 @@ namespace deep
 
         while (m_window->process_message())
         {
-            while (!ms.is_empty())
-            {
-                mouse::event me = ms.read();
-
-                switch (me.get_action())
-                {
-                    default:
-                        break;
-                    case mouse::event::action::LeftPress:
-                    {
-                        printf("LeftPress\n");
-                    }
-                    break;
-                    case mouse::event::action::RightPress:
-                    {
-                        printf("RightPress\n");
-                    }
-                    break;
-                    case mouse::event::action::MiddlePress:
-                    {
-                        printf("MiddlePress\n");
-                    }
-                    break;
-                    case mouse::event::action::Enter:
-                    {
-                        printf("Enter\n");
-                    }
-                    break;
-                    case mouse::event::action::Leave:
-                    {
-                        printf("Leave\n");
-                    }
-                    break;
-                }
-            }
+            m_graphics->end_frame();
         }
     }
 } // namespace deep

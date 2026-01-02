@@ -40,11 +40,13 @@ endif()
 # Inclue les variables partagées.
 include("${CMAKE_CURRENT_LIST_DIR}/../cmake/variables.cmake")
 
+set(DeepModules "${CMAKE_SOURCE_DIR}/Modules")
+
+add_subdirectory("${DeepModules}/Renderer" "${CMAKE_CURRENT_BINARY_DIR}/Renderer")
+
 # Ajoute des constantes au préprocesseur.
 add_compile_definitions(PRIVATE DE_AUTHORS=${DE_AUTHORS})   # Le nom des auteurs stockés dans les variables partagées.
 add_compile_definitions(PRIVATE DE_VERSION=${DE_VERSION})   # Le nom de la version actuelle stockée dans les variables partagées.
-
-find_package(libzip CONFIG REQUIRED)
 
 target_include_directories(DeepEngine
     PUBLIC
@@ -57,6 +59,6 @@ target_link_libraries(DeepEngine
     PUBLIC
         Deep::Core
         Deep::Lib
-        libzip::zip)
+        Deep::D3D)
 
 target_compile_definitions(DeepEngine PRIVATE DEEPENGINE_LIB=1)

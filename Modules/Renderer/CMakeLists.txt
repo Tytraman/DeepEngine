@@ -1,7 +1,7 @@
 ﻿cmake_minimum_required(VERSION 3.15.7)
 
 add_library(DeepD3D SHARED
-    "${CMAKE_CURRENT_LIST_DIR}/graphics.cpp")
+    "${CMAKE_CURRENT_LIST_DIR}/D3D/graphics.cpp")
 add_library(Deep::D3D ALIAS DeepD3D)
 
 set(DeepD3DExport "${CMAKE_CURRENT_BINARY_DIR}/export/deep_d3d_export.h")
@@ -65,12 +65,13 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
     )
 endif()
 
+target_link_libraries(DeepD3D
+    PRIVATE
+        d3d11)
+
 target_include_directories(DeepD3D
     PUBLIC
-        # 1. Compilation locale : Source + Dossier de build (pour l'export généré)
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
         $<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/export>
 
-        # 2. Installation : Indique aux clients de regarder dans le dossier 'include'
-        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>
-)
+        $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}>)

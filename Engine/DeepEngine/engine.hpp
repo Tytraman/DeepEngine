@@ -6,6 +6,8 @@
 #include <DeepLib/object.hpp>
 #include <DeepLib/window/window.hpp>
 
+#include "D3D/graphics.hpp"
+
 namespace deep
 {
     class DEEP_ENGINE_API engine : public object
@@ -21,6 +23,7 @@ namespace deep
 
       private:
         ref<window> m_window;
+        ref<D3D::graphics> m_graphics;
     };
 
     inline ref<window> engine::get_window()
