@@ -199,7 +199,7 @@ KeepEmptyLines:
 LambdaBodyIndentation: Signature
 
 # > Quels caractères sont utilisés pour sauter une ligne.
-LineEnding:      LF
+LineEnding:      CRLF
 MacroBlockBegin: ''
 MacroBlockEnd:   ''
 

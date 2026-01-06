@@ -1,7 +1,26 @@
-﻿cmake_minimum_required(VERSION 3.15.7)
+cmake_minimum_required(VERSION 3.15.7)
+
+find_program(FXC_EXECUTABLE fxc.exe)
+
+function(deep_compile_shader SHADER_FILE TARGET_PROFILE ENTRY_POINT)
+    get_filename_component(SHADER_NAME ${SHADER_FILE} NAME_WE)
+    set(OUTPUT_FILE "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${SHADER_NAME}_${TARGET_PROFILE}.cso")
+
+    add_custom_command(
+        OUTPUT "${OUTPUT_FILE}"
+        COMMAND ${FXC_EXECUTABLE} /T "${TARGET_PROFILE}_5_0" /E ${ENTRY_POINT} /Fo ${OUTPUT_FILE} ${SHADER_FILE}
+        DEPENDS ${SHADER_FILE}
+    )
+
+    set(SHADER_CSO_FILES ${SHADER_CSO_FILES} ${OUTPUT_FILE} PARENT_SCOPE)
+endfunction()
+
+deep_compile_shader("${CMAKE_CURRENT_LIST_DIR}/DeepEngine/Shaders/test_triangle.hlsl" "vs" "main_vs")
+deep_compile_shader("${CMAKE_CURRENT_LIST_DIR}/DeepEngine/Shaders/test_triangle.hlsl" "ps" "main_ps")
 
 add_library(DeepEngine SHARED
-    "${CMAKE_CURRENT_LIST_DIR}/DeepEngine/engine.cpp")
+    "${CMAKE_CURRENT_LIST_DIR}/DeepEngine/engine.cpp"
+    ${SHADER_CSO_FILES})
 add_library(Deep::Engine ALIAS DeepEngine)
 
 set_target_properties(DeepEngine PROPERTIES

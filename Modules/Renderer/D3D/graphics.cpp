@@ -1,6 +1,11 @@
-﻿#include "graphics.hpp"
+#include "graphics.hpp"
+#include "error.hpp"
+#include "resource_factory.hpp"
 
 #include <DeepLib/context.hpp>
+#include <DeepLib/filesystem/filesystem.hpp>
+
+#include <d3dcompiler.h>
 
 namespace wrl = Microsoft::WRL;
 
@@ -14,13 +19,16 @@ namespace deep
                   m_device(nullptr),
                   m_swap_chain(nullptr),
                   m_device_context(nullptr),
-                  m_render_target_view(nullptr)
+                  m_render_target_view(nullptr),
+                  m_resources(context)
         {
         }
 
-        ref<graphics> graphics::create(const ref<ctx> &context, window_handle win) noexcept
+        ref<graphics> graphics::create(const ref<ctx> &context, window &win) noexcept
         {
-            graphics *graph = mem::alloc_type<graphics>(context.get(), context, win);
+            context->out() << "Direct3D 11 initialization...";
+
+            graphics *graph = mem::alloc_type<graphics>(context.get(), context, win.get_handle());
 
             DXGI_SWAP_CHAIN_DESC sd               = { 0 };
             sd.BufferDesc.Width                   = 0;
@@ -34,31 +42,57 @@ namespace deep
             sd.SampleDesc.Quality                 = 0;
             sd.BufferUsage                        = DXGI_USAGE_RENDER_TARGET_OUTPUT;
             sd.BufferCount                        = 1;
-            sd.OutputWindow                       = win;
+            sd.OutputWindow                       = win.get_handle();
             sd.Windowed                           = TRUE;
             sd.SwapEffect                         = DXGI_SWAP_EFFECT_DISCARD;
             sd.Flags                              = 0;
 
             // Crée le dispositif de rendu, les front/back buffers et la chaîne de rendu.
-            D3D11CreateDeviceAndSwapChain(
-                    nullptr, // Laisse l'OS choisir l'adaptateur par défaut.
-                    D3D_DRIVER_TYPE_HARDWARE,
-                    nullptr,
-                    0,
-                    nullptr,
-                    0,
-                    D3D11_SDK_VERSION,
-                    &sd,
-                    &graph->m_swap_chain,
-                    &graph->m_device,
-                    nullptr,
-                    &graph->m_device_context);
+            DEEP_DX_CHECK(D3D11CreateDeviceAndSwapChain(
+                                  nullptr, // Laisse l'OS choisir l'adaptateur par défaut.
+                                  D3D_DRIVER_TYPE_HARDWARE,
+                                  nullptr,
+                                  D3D11_CREATE_DEVICE_DEBUG,
+                                  nullptr,
+                                  0,
+                                  D3D11_SDK_VERSION,
+                                  &sd,
+                                  &graph->m_swap_chain,
+                                  &graph->m_device,
+                                  nullptr,
+                                  &graph->m_device_context),
+                          context, graph->m_device)
 
             wrl::ComPtr<ID3D11Resource> back_buffer;
 
-            graph->m_swap_chain->GetBuffer(0, __uuidof(ID3D11Resource), &back_buffer);
+            DEEP_DX_CHECK(graph->m_swap_chain->GetBuffer(0, __uuidof(ID3D11Resource), &back_buffer), context, graph->m_device)
 
-            graph->m_device->CreateRenderTargetView(back_buffer.Get(), nullptr, &graph->m_render_target_view);
+            DEEP_DX_CHECK(graph->m_device->QueryInterface(__uuidof(ID3D11Debug), &graph->m_debug), context, graph->m_device)
+
+            // Met un 'breakpoint' lorsqu'une erreur Direct3D est détectée.
+            /*wrl::ComPtr<ID3D11InfoQueue> info_queue;
+            if (SUCCEEDED(graph->m_debug.As(&info_queue)))
+            {
+                info_queue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_CORRUPTION, true);
+                info_queue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_ERROR, true);
+            }*/
+
+            DEEP_DX_CHECK(graph->m_device->CreateRenderTargetView(back_buffer.Get(), nullptr, &graph->m_render_target_view), context, graph->m_device)
+
+            graph->m_device_context->OMSetRenderTargets(1, graph->m_render_target_view.GetAddressOf(), nullptr);
+
+            // Configuration du 'viewport'.
+            D3D11_VIEWPORT vp = { 0 };
+            vp.Width          = static_cast<float>(win.get_width());
+            vp.Height         = static_cast<float>(win.get_height());
+            vp.MinDepth       = 0;
+            vp.MaxDepth       = 1;
+            vp.TopLeftX       = 0;
+            vp.TopLeftY       = 0;
+
+            graph->m_device_context->RSSetViewports(1, &vp);
+
+            context->out() << " OK\r\n";
 
             return ref<graphics>(context, graph);
         }
@@ -72,39 +106,100 @@ namespace deep
 
         void graphics::draw_test_triangle() noexcept
         {
-            const float data[] = {
-                0.0f, 0.5f,
-                0.5f, -0.5f,
-                -0.5f, -0.5f
+            struct vertex
+            {
+                float x;
+                float y;
+                uint8 red;
+                uint8 green;
+                uint8 blue;
+                uint8 alpha;
             };
 
-            const UINT stride = sizeof(float) * 2;
-            const UINT offset = 0;
+            const vertex vertices[] = {
+                { 0.0f, 0.5f, 255, 0, 0, 255 },
+                { 0.5f, -0.5f, 0, 255, 0, 255 },
+                { -0.5f, -0.5f, 0, 0, 255, 255 }
+            };
 
-            D3D11_BUFFER_DESC bd   = { 0 };
-            bd.BindFlags           = D3D11_BIND_VERTEX_BUFFER;
-            bd.Usage               = D3D11_USAGE_DEFAULT;
-            bd.CPUAccessFlags      = 0;
-            bd.MiscFlags           = 0;
-            bd.ByteWidth           = sizeof(data);
-            bd.StructureByteStride = stride;
+            ref<vertex_buffer> vb = resource_factory::create_vertex_buffer(get_context(), vertices, sizeof(vertices), sizeof(vertex), m_device, m_device_context);
 
-            D3D11_SUBRESOURCE_DATA sd = { 0 };
-            sd.pSysMem                = data;
+            wrl::ComPtr<ID3D11VertexShader> vertex_shader;
+            wrl::ComPtr<ID3D11PixelShader> pixel_shader;
+            wrl::ComPtr<ID3DBlob> blob;
 
-            wrl::ComPtr<ID3D11Buffer> vertex_buffer;
+            // Lit le contenu d'un fichier et le stock dans un 'blob'.
+            // Il n'est pas obligatoire de récupérer un shader de cette manière mais je le garde pour le test.
+            D3DReadFileToBlob(DEEP_TEXT_NATIVE("test_triangle_vs.cso"), &blob);
+            // Crée un 'vertex shader' depuis un fichier shader précompilé.
+            DEEP_DX_CHECK(m_device->CreateVertexShader(blob->GetBufferPointer(), blob->GetBufferSize(), nullptr, &vertex_shader), get_context(), m_device)
+            // Rend le shader précédemment créé actif.
+            m_device_context->VSSetShader(vertex_shader.Get(), nullptr, 0);
 
-            m_device->CreateBuffer(&bd, &sd, &vertex_buffer);
+            wrl::ComPtr<ID3D11InputLayout> input_layout;
 
-            m_device_context->IASetVertexBuffers(0, 1, &vertex_buffer, &stride, &offset);
+            const D3D11_INPUT_ELEMENT_DESC ied[] = {
+                { "Position", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+                { "Color", 0, DXGI_FORMAT_R8G8B8A8_UNORM, 0, sizeof(float) * 2, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+            };
 
-            m_device_context->Draw(3, 0);
+            DEEP_DX_CHECK(m_device->CreateInputLayout(ied, sizeof(ied) / sizeof(D3D11_INPUT_ELEMENT_DESC), blob->GetBufferPointer(), blob->GetBufferSize(), &input_layout), get_context(), m_device)
+            m_device_context->IASetInputLayout(input_layout.Get());
+
+            D3DReadFileToBlob(DEEP_TEXT_NATIVE("test_triangle_ps.cso"), &blob);
+            DEEP_DX_CHECK(m_device->CreatePixelShader(blob->GetBufferPointer(), blob->GetBufferSize(), nullptr, &pixel_shader), get_context(), m_device)
+            m_device_context->PSSetShader(pixel_shader.Get(), nullptr, 0);
+
+            m_device_context->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+
+            vb->draw(m_device_context);
         }
 
         void graphics::end_frame() noexcept
         {
             // Affiche l'image finale à l'utilisateur.
             m_swap_chain->Present(1, 0);
+
+            print_debug_messages();
+        }
+
+        void graphics::print_debug_messages() noexcept
+        {
+            if (!m_debug)
+            {
+                return;
+            }
+
+            wrl::ComPtr<ID3D11InfoQueue> info_queue;
+            if (FAILED(m_device.As(&info_queue)))
+            {
+                return;
+            }
+
+            UINT64 message_count = info_queue->GetNumStoredMessages();
+            UINT64 index;
+
+            for (index = 0; index < message_count; ++index)
+            {
+                SIZE_T message_size = 0;
+                info_queue->GetMessage(index, nullptr, &message_size);
+
+                D3D11_MESSAGE *message = mem::alloc<D3D11_MESSAGE>(get_context_ptr(), message_size);
+
+                if (SUCCEEDED(info_queue->GetMessage(index, message, &message_size)))
+                {
+                    get_context()->out() << message->pDescription << "\r\n";
+                }
+
+                mem::dealloc(get_context_ptr(), message);
+            }
+
+            info_queue->ClearStoredMessages();
+
+            if (message_count > 0)
+            {
+                DebugBreak();
+            }
         }
     } // namespace D3D
 } // namespace deep
