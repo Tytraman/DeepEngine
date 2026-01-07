@@ -42,5 +42,41 @@ namespace deep
 
             return ref<vertex_shader>(context.get(), vs);
         }
+
+        ref<pixel_shader> shader_factory::create_pixel_shader(const ref<ctx> &context, stream *input, Microsoft::WRL::ComPtr<ID3D11Device> device) noexcept
+        {
+            pixel_shader *ps = mem::alloc_type<pixel_shader>(context.get(), context);
+
+            if (ps == nullptr)
+            {
+                return ref<pixel_shader>();
+            }
+
+            usize bytes_size = input->get_length();
+            usize bytes_read;
+
+            uint8 *buff = mem::alloc<uint8>(context.get(), bytes_size);
+
+            if (buff == nullptr)
+            {
+                mem::dealloc_type(context.get_memory_manager(), ps);
+
+                return ref<pixel_shader>();
+            }
+
+            if (!input->read(buff, bytes_size, &bytes_read))
+            {
+                mem::dealloc(context.get(), buff);
+                mem::dealloc_type(context.get_memory_manager(), ps);
+
+                return ref<pixel_shader>();
+            }
+
+            DEEP_DX_CHECK(device->CreatePixelShader(buff, bytes_read, nullptr, &ps->m_shader), context, device)
+
+            mem::dealloc(context.get(), buff);
+
+            return ref<pixel_shader>(context.get(), ps);
+        }
     } // namespace D3D
 } // namespace deep

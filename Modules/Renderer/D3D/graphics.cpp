@@ -2,7 +2,6 @@
 #include "error.hpp"
 #include "resource_factory.hpp"
 #include "D3D/shader/shader_factory.hpp"
-#include "D3D/shader/vertex_shader.hpp"
 
 #include <DeepLib/context.hpp>
 #include <DeepLib/filesystem/filesystem.hpp>
@@ -132,20 +131,8 @@ namespace deep
             ref<vertex_buffer> vb   = resource_factory::create_vertex_buffer(get_context(), vertices, sizeof(vertices), sizeof(vertex), m_device, m_device_context);
             ref<constant_buffer> cb = resource_factory::create_constant_buffer(get_context(), transformation.get(), sizeof(transformation.data), m_device, m_device_context);
 
-            // wrl::ComPtr<ID3D11VertexShader> vertex_shader;
-            wrl::ComPtr<ID3D11PixelShader> pixel_shader;
-            wrl::ComPtr<ID3DBlob> blob;
-
             file_stream fs = file_stream(get_context(), DEEP_TEXT_NATIVE("test_triangle_vs.cso"), core_fs::file_mode::Open, core_fs::file_access::Read, core_fs::file_share::Read);
             fs.open();
-
-            // Lit le contenu d'un fichier et le stock dans un 'blob'.
-            // Il n'est pas obligatoire de récupérer un shader de cette manière mais je le garde pour le test.
-            // D3DReadFileToBlob(DEEP_TEXT_NATIVE("test_triangle_vs.cso"), &blob);
-            // Crée un 'vertex shader' depuis un fichier shader précompilé.
-            // DEEP_DX_CHECK(m_device->CreateVertexShader(blob->GetBufferPointer(), blob->GetBufferSize(), nullptr, &vertex_shader), get_context(), m_device)
-            // Rend le shader précédemment créé actif.
-            // m_device_context->VSSetShader(vertex_shader.Get(), nullptr, 0);
 
             const D3D11_INPUT_ELEMENT_DESC ied[] = {
                 { "Position", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
@@ -153,16 +140,15 @@ namespace deep
             };
 
             ref<vertex_shader> vs = shader_factory::create_vertex_shader(get_context(), &fs, ied, sizeof(ied) / sizeof(D3D11_INPUT_ELEMENT_DESC), m_device);
+            fs.close();
             vs->bind(m_device_context);
 
-            // wrl::ComPtr<ID3D11InputLayout> input_layout;
+            fs = file_stream(get_context(), DEEP_TEXT_NATIVE("test_triangle_ps.cso"), core_fs::file_mode::Open, core_fs::file_access::Read, core_fs::file_share::Read);
+            fs.open();
 
-            // DEEP_DX_CHECK(m_device->CreateInputLayout(ied, sizeof(ied) / sizeof(D3D11_INPUT_ELEMENT_DESC), blob->GetBufferPointer(), blob->GetBufferSize(), &input_layout), get_context(), m_device)
-            // m_device_context->IASetInputLayout(input_layout.Get());
-
-            D3DReadFileToBlob(DEEP_TEXT_NATIVE("test_triangle_ps.cso"), &blob);
-            DEEP_DX_CHECK(m_device->CreatePixelShader(blob->GetBufferPointer(), blob->GetBufferSize(), nullptr, &pixel_shader), get_context(), m_device)
-            m_device_context->PSSetShader(pixel_shader.Get(), nullptr, 0);
+            ref<pixel_shader> ps = shader_factory::create_pixel_shader(get_context(), &fs, m_device);
+            fs.close();
+            ps->bind(m_device_context);
 
             m_device_context->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 

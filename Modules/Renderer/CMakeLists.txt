@@ -7,6 +7,7 @@ add_library(DeepD3D SHARED
     "${CMAKE_CURRENT_LIST_DIR}/D3D/buffer/vertex_buffer.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/D3D/buffer/constant_buffer.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/D3D/shader/vertex_shader.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/D3D/shader/pixel_shader.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/D3D/shader/shader_factory.cpp"
 )
 add_library(Deep::D3D ALIAS DeepD3D)
