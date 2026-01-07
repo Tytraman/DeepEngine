@@ -1,9 +1,12 @@
 #include "engine.hpp"
+#include "D3D/shader/shader_factory.hpp"
+#include "D3D/drawable/drawable_factory.hpp"
 
 #include <DeepLib/lib.hpp>
 #include <DeepLib/context.hpp>
 #include <DeepLib/time/time.hpp>
 #include <DeepLib/string/string_native.hpp>
+#include <DeepLib/stream/file_stream.hpp>
 
 #include <stdio.h>
 
@@ -43,6 +46,27 @@ namespace deep
         uint64 start_time          = time::get_current_time_millis();
         uint64 end_time;
 
+        const D3D11_INPUT_ELEMENT_DESC ied[] = {
+            { "Position", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            { "Color", 0, DXGI_FORMAT_R8G8B8A8_UNORM, 0, sizeof(float) * 2, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+        };
+
+        file_stream fs = file_stream(get_context(), DEEP_TEXT_NATIVE("test_triangle_vs.cso"), core_fs::file_mode::Open, core_fs::file_access::Read, core_fs::file_share::Read);
+        fs.open();
+
+        ref<D3D::vertex_shader> vs = D3D::shader_factory::create_vertex_shader(get_context(), &fs, ied, sizeof(ied) / sizeof(D3D11_INPUT_ELEMENT_DESC), m_graphics->get_device());
+        fs.close();
+
+        fs = file_stream(get_context(), DEEP_TEXT_NATIVE("test_triangle_ps.cso"), core_fs::file_mode::Open, core_fs::file_access::Read, core_fs::file_share::Read);
+        fs.open();
+
+        ref<D3D::pixel_shader> ps = D3D::shader_factory::create_pixel_shader(get_context(), &fs, m_graphics->get_device());
+        fs.close();
+
+        ref<D3D::triangle> tr = D3D::drawable_factory::create_triangle(get_context(), vs, ps, m_graphics->get_device(), m_graphics->get_device_context());
+
+        m_graphics->add_drawable(ref_cast<D3D::drawable>(tr));
+
         // Boucle infinie du jeu. S'arrête quand l'utilisateur ferme la fenêtre.
         while (m_window->process_message())
         {
@@ -54,7 +78,9 @@ namespace deep
 
             m_graphics->clear_buffer(0.0f, 0.0f, 0.0f);
 
-            m_graphics->draw_test_triangle(get_time_seconds() * 10.0f);
+            // m_graphics->draw_test_triangle(get_time_seconds() * 10.0f);
+
+            m_graphics->draw_all();
 
             m_graphics->end_frame();
 

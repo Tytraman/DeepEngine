@@ -1,12 +1,13 @@
 #include "pixel_shader.hpp"
+#include "D3D/device_context.hpp"
 
 namespace deep
 {
     namespace D3D
     {
-        void pixel_shader::bind(Microsoft::WRL::ComPtr<ID3D11DeviceContext> device_context) noexcept
+        ID3D11PixelShader *pixel_shader::get() const noexcept
         {
-            device_context->PSSetShader(m_shader.Get(), nullptr, 0);
+            return m_shader.Get();
         }
     } // namespace D3D
 } // namespace deep

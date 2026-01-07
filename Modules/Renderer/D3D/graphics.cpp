@@ -21,10 +21,8 @@ namespace deep
                   m_window_handle(win),
                   m_device(nullptr),
                   m_swap_chain(nullptr),
-                  m_device_context(nullptr),
                   m_render_target_view(nullptr),
-                  m_resources(context),
-                  m_shaders(context)
+                  m_drawables(context)
         {
         }
 
@@ -64,7 +62,7 @@ namespace deep
                                   &graph->m_swap_chain,
                                   &graph->m_device,
                                   nullptr,
-                                  &graph->m_device_context),
+                                  &graph->m_device_context.m_device_context),
                           context, graph->m_device)
 
             wrl::ComPtr<ID3D11Resource> back_buffer;
@@ -83,7 +81,7 @@ namespace deep
 
             DEEP_DX_CHECK(graph->m_device->CreateRenderTargetView(back_buffer.Get(), nullptr, &graph->m_render_target_view), context, graph->m_device)
 
-            graph->m_device_context->OMSetRenderTargets(1, graph->m_render_target_view.GetAddressOf(), nullptr);
+            graph->m_device_context.get()->OMSetRenderTargets(1, graph->m_render_target_view.GetAddressOf(), nullptr);
 
             // Configuration du 'viewport'.
             D3D11_VIEWPORT vp = { 0 };
@@ -94,7 +92,7 @@ namespace deep
             vp.TopLeftX       = 0;
             vp.TopLeftY       = 0;
 
-            graph->m_device_context->RSSetViewports(1, &vp);
+            graph->m_device_context.get()->RSSetViewports(1, &vp);
 
             context->out() << " OK\r\n";
 
@@ -105,54 +103,23 @@ namespace deep
         {
             const float colors[] = { r, g, b, 1.0f };
 
-            m_device_context->ClearRenderTargetView(m_render_target_view.Get(), colors);
+            m_device_context.get()->ClearRenderTargetView(m_render_target_view.Get(), colors);
         }
 
-        void graphics::draw_test_triangle(float delta) noexcept
+        void graphics::add_drawable(const ref<drawable> &dr) noexcept
         {
-            struct vertex
+            m_drawables.add(dr);
+        }
+
+        void graphics::draw_all() noexcept
+        {
+            usize count = m_drawables.count();
+            usize index;
+
+            for (index = 0; index < count; ++index)
             {
-                float x;
-                float y;
-                uint8 red;
-                uint8 green;
-                uint8 blue;
-                uint8 alpha;
-            };
-
-            const vertex vertices[] = {
-                { 0.0f, 1.0f, 255, 0, 0, 255 },
-                { 0.5f, -0.5f, 0, 255, 0, 255 },
-                { -0.5f, -0.5f, 0, 0, 255, 255 }
-            };
-
-            fmat4 transformation = fmat4::rotate_z(fmat4(), delta);
-
-            ref<vertex_buffer> vb   = resource_factory::create_vertex_buffer(get_context(), vertices, sizeof(vertices), sizeof(vertex), m_device, m_device_context);
-            ref<constant_buffer> cb = resource_factory::create_constant_buffer(get_context(), transformation.get(), sizeof(transformation.data), m_device, m_device_context);
-
-            file_stream fs = file_stream(get_context(), DEEP_TEXT_NATIVE("test_triangle_vs.cso"), core_fs::file_mode::Open, core_fs::file_access::Read, core_fs::file_share::Read);
-            fs.open();
-
-            const D3D11_INPUT_ELEMENT_DESC ied[] = {
-                { "Position", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-                { "Color", 0, DXGI_FORMAT_R8G8B8A8_UNORM, 0, sizeof(float) * 2, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-            };
-
-            ref<vertex_shader> vs = shader_factory::create_vertex_shader(get_context(), &fs, ied, sizeof(ied) / sizeof(D3D11_INPUT_ELEMENT_DESC), m_device);
-            fs.close();
-            vs->bind(m_device_context);
-
-            fs = file_stream(get_context(), DEEP_TEXT_NATIVE("test_triangle_ps.cso"), core_fs::file_mode::Open, core_fs::file_access::Read, core_fs::file_share::Read);
-            fs.open();
-
-            ref<pixel_shader> ps = shader_factory::create_pixel_shader(get_context(), &fs, m_device);
-            fs.close();
-            ps->bind(m_device_context);
-
-            m_device_context->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-            vb->draw(m_device_context);
+                m_drawables[index]->draw(m_device_context);
+            }
         }
 
         void graphics::end_frame() noexcept
@@ -200,6 +167,21 @@ namespace deep
             {
                 DebugBreak();
             }
+        }
+
+        Microsoft::WRL::ComPtr<ID3D11Device> graphics::get_device() noexcept
+        {
+            return m_device;
+        }
+
+        device_context &graphics::get_device_context() noexcept
+        {
+            return m_device_context;
+        }
+
+        const device_context &graphics::get_device_context() const noexcept
+        {
+            return m_device_context;
         }
     } // namespace D3D
 } // namespace deep

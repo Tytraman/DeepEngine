@@ -2,7 +2,10 @@
 #define DEEP_ENGINE_D3D_PIXEL_SHADER_HPP
 
 #include "deep_d3d_export.h"
-#include "D3D/shader/shader.hpp"
+#include <DeepLib/object.hpp>
+
+#include <d3d11.h>
+#include <wrl.h>
 
 namespace deep
 {
@@ -10,20 +13,20 @@ namespace deep
     {
         template class DEEP_D3D_API Microsoft::WRL::ComPtr<ID3D11PixelShader>;
 
-        class DEEP_D3D_API pixel_shader : public shader
+        class DEEP_D3D_API pixel_shader : public object
         {
           public:
             pixel_shader()                                = delete;
             pixel_shader(const pixel_shader &)            = delete;
             pixel_shader &operator=(const pixel_shader &) = delete;
 
-            virtual void bind(Microsoft::WRL::ComPtr<ID3D11DeviceContext> device_context) noexcept override;
+            ID3D11PixelShader *get() const noexcept;
 
           private:
             Microsoft::WRL::ComPtr<ID3D11PixelShader> m_shader;
 
           protected:
-            using shader::shader;
+            using object::object;
 
           public:
             friend class shader_factory;

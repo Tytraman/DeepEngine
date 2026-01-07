@@ -1,13 +1,19 @@
 #include "vertex_shader.hpp"
+#include "D3D/device_context.hpp"
 
 namespace deep
 {
     namespace D3D
     {
-        void vertex_shader::bind(Microsoft::WRL::ComPtr<ID3D11DeviceContext> device_context) noexcept
+
+        ID3D11VertexShader *vertex_shader::get() const noexcept
         {
-            device_context->VSSetShader(m_shader.Get(), nullptr, 0);
-            device_context->IASetInputLayout(m_input_layout.Get());
+            return m_shader.Get();
+        }
+
+        ID3D11InputLayout *vertex_shader::get_input_layout() const noexcept
+        {
+            return m_input_layout.Get();
         }
 
     } // namespace D3D

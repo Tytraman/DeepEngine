@@ -11,6 +11,8 @@ namespace deep
 {
     namespace D3D
     {
+        class device_context;
+
         class DEEP_D3D_API shader : public object
         {
           public:
@@ -18,7 +20,7 @@ namespace deep
             shader(const shader &)            = delete;
             shader &operator=(const shader &) = delete;
 
-            virtual void bind(Microsoft::WRL::ComPtr<ID3D11DeviceContext> device_context) = 0;
+            virtual void bind(device_context &dc) = 0;
 
           protected:
             using object::object;

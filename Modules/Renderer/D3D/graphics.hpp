@@ -8,6 +8,8 @@
 #include <DeepLib/collection/list.hpp>
 #include <DeepLib/window/window.hpp>
 
+#include "D3D/device_context.hpp"
+#include "D3D/drawable/drawable.hpp"
 #include "D3D/resource.hpp"
 #include "D3D/shader/shader.hpp"
 
@@ -24,8 +26,7 @@ namespace deep
         template class DEEP_D3D_API Microsoft::WRL::ComPtr<ID3D11RenderTargetView>;
         template class DEEP_D3D_API Microsoft::WRL::ComPtr<ID3D11Debug>;
 
-        template class DEEP_D3D_API list<ref<resource>>;
-        template class DEEP_D3D_API list<ref<shader>>;
+        template class DEEP_D3D_API list<ref<drawable>>;
 
         class DEEP_D3D_API graphics : public object
         {
@@ -39,10 +40,17 @@ namespace deep
 
             void clear_buffer(float r, float g, float b) noexcept;
 
-            void draw_test_triangle(float delta) noexcept;
+            void add_drawable(const ref<drawable> &dr) noexcept;
+
+            void draw_all() noexcept;
 
             void end_frame() noexcept;
             void print_debug_messages() noexcept;
+
+            Microsoft::WRL::ComPtr<ID3D11Device> get_device() noexcept;
+
+            device_context &get_device_context() noexcept;
+            const device_context &get_device_context() const noexcept;
 
           protected:
             graphics(const ref<ctx> &context, window_handle win) noexcept;
@@ -52,13 +60,12 @@ namespace deep
             // Le 'device' permet la création de ressources Direct3D.
             Microsoft::WRL::ComPtr<ID3D11Device> m_device;
             // La 'device context' permet l'utilisation des ressources créées avec le 'device'.
-            Microsoft::WRL::ComPtr<ID3D11DeviceContext> m_device_context;
+            device_context m_device_context;
             Microsoft::WRL::ComPtr<IDXGISwapChain> m_swap_chain;
             Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_render_target_view;
             Microsoft::WRL::ComPtr<ID3D11Debug> m_debug;
 
-            list<ref<resource>> m_resources;
-            list<ref<shader>> m_shaders;
+            list<ref<drawable>> m_drawables;
 
           public:
             friend memory_manager;

@@ -3,12 +3,15 @@ cmake_minimum_required(VERSION 3.15.7)
 add_library(DeepD3D SHARED
     "${CMAKE_CURRENT_LIST_DIR}/D3D/graphics.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/D3D/error.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/D3D/device_context.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/D3D/resource_factory.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/D3D/buffer/vertex_buffer.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/D3D/buffer/constant_buffer.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/D3D/shader/vertex_shader.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/D3D/shader/pixel_shader.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/D3D/shader/shader_factory.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/D3D/drawable/drawable_factory.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/D3D/drawable/triangle.cpp"
 )
 add_library(Deep::D3D ALIAS DeepD3D)
 
