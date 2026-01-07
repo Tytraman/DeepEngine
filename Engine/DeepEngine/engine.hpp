@@ -1,4 +1,4 @@
-﻿#ifndef DEEP_ENGINE_ENGINE_HPP
+#ifndef DEEP_ENGINE_ENGINE_HPP
 #define DEEP_ENGINE_ENGINE_HPP
 
 #include "DeepEngine/deep_engine_export.h"
@@ -17,6 +17,9 @@ namespace deep
 
         void run();
 
+        uint64 get_time_millis() const noexcept;
+        float get_time_seconds() const noexcept;
+
         ref<window> get_window();
 
         bool is_valid() const;
@@ -24,6 +27,12 @@ namespace deep
       private:
         ref<window> m_window;
         ref<D3D::graphics> m_graphics;
+        uint64 m_startup_tick_count;
+        uint64 m_startup_time_millis;
+        uint32 m_FPS;
+
+      protected:
+        using object::object;
     };
 
     inline ref<window> engine::get_window()

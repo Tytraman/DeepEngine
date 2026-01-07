@@ -3,9 +3,12 @@ cmake_minimum_required(VERSION 3.15.7)
 add_library(DeepD3D SHARED
     "${CMAKE_CURRENT_LIST_DIR}/D3D/graphics.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/D3D/error.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/D3D/resource.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/D3D/resource_factory.cpp"
-    "${CMAKE_CURRENT_LIST_DIR}/D3D/vertex_buffer.cpp")
+    "${CMAKE_CURRENT_LIST_DIR}/D3D/buffer/vertex_buffer.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/D3D/buffer/constant_buffer.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/D3D/shader/vertex_shader.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/D3D/shader/shader_factory.cpp"
+)
 add_library(Deep::D3D ALIAS DeepD3D)
 
 set(DeepD3DExport "${CMAKE_CURRENT_BINARY_DIR}/export/deep_d3d_export.h")

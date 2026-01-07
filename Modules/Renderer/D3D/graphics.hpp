@@ -9,6 +9,7 @@
 #include <DeepLib/window/window.hpp>
 
 #include "D3D/resource.hpp"
+#include "D3D/shader/shader.hpp"
 
 #include <d3d11.h>
 #include <wrl.h>
@@ -24,6 +25,7 @@ namespace deep
         template class DEEP_D3D_API Microsoft::WRL::ComPtr<ID3D11Debug>;
 
         template class DEEP_D3D_API list<ref<resource>>;
+        template class DEEP_D3D_API list<ref<shader>>;
 
         class DEEP_D3D_API graphics : public object
         {
@@ -37,7 +39,7 @@ namespace deep
 
             void clear_buffer(float r, float g, float b) noexcept;
 
-            void draw_test_triangle() noexcept;
+            void draw_test_triangle(float delta) noexcept;
 
             void end_frame() noexcept;
             void print_debug_messages() noexcept;
@@ -56,6 +58,7 @@ namespace deep
             Microsoft::WRL::ComPtr<ID3D11Debug> m_debug;
 
             list<ref<resource>> m_resources;
+            list<ref<shader>> m_shaders;
 
           public:
             friend memory_manager;

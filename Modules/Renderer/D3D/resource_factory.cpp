@@ -35,5 +35,32 @@ namespace deep
 
             return ref<vertex_buffer>(context, vb);
         }
+
+        ref<constant_buffer> resource_factory::create_constant_buffer(const ref<ctx> &context, const void *data, uint32 bytes_size, Microsoft::WRL::ComPtr<ID3D11Device> device, Microsoft::WRL::ComPtr<ID3D11DeviceContext> device_context) noexcept
+        {
+            constant_buffer *cb = mem::alloc_type<constant_buffer>(context.get(), context);
+
+            if (cb == nullptr)
+            {
+                return ref<constant_buffer>();
+            }
+
+            D3D11_BUFFER_DESC bd   = { 0 };
+            bd.BindFlags           = D3D11_BIND_CONSTANT_BUFFER;
+            bd.Usage               = D3D11_USAGE_DYNAMIC;
+            bd.CPUAccessFlags      = D3D11_CPU_ACCESS_WRITE;
+            bd.MiscFlags           = 0;
+            bd.ByteWidth           = bytes_size;
+            bd.StructureByteStride = 0;
+
+            D3D11_SUBRESOURCE_DATA sd = { 0 };
+            sd.pSysMem                = data;
+
+            DEEP_DX_CHECK(device->CreateBuffer(&bd, &sd, &cb->m_buffer), context, device)
+
+            device_context->VSSetConstantBuffers(0, 1, cb->m_buffer.GetAddressOf());
+
+            return ref<constant_buffer>(context, cb);
+        }
     } // namespace D3D
 } // namespace deep
