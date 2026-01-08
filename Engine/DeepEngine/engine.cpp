@@ -63,9 +63,9 @@ namespace deep
         ref<D3D::pixel_shader> ps = D3D::shader_factory::create_pixel_shader(get_context(), &fs, m_graphics->get_device());
         fs.close();
 
-        ref<D3D::triangle> tr = D3D::drawable_factory::create_triangle(get_context(), vs, ps, m_graphics->get_device(), m_graphics->get_device_context());
+        ref<D3D::rectangle> rect = D3D::drawable_factory::create_rectangle(get_context(), vs, ps, m_graphics->get_device(), m_graphics->get_device_context());
 
-        m_graphics->add_drawable(ref_cast<D3D::drawable>(tr));
+        m_graphics->add_drawable(ref_cast<D3D::drawable>(rect));
 
         // Boucle infinie du jeu. S'arrête quand l'utilisateur ferme la fenêtre.
         while (m_window->process_message())
@@ -77,8 +77,6 @@ namespace deep
             lag += elapsed; // Plus le système est lent, et plus le lag sera élevé.
 
             m_graphics->clear_buffer(0.0f, 0.0f, 0.0f);
-
-            // m_graphics->draw_test_triangle(get_time_seconds() * 10.0f);
 
             m_graphics->draw_all();
 
