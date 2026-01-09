@@ -13,6 +13,7 @@ add_library(DeepD3D SHARED
     "${CMAKE_CURRENT_LIST_DIR}/D3D/drawable/drawable_factory.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/D3D/drawable/triangle.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/D3D/drawable/rectangle.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/D3D/drawable/cube.cpp"
 )
 add_library(Deep::D3D ALIAS DeepD3D)
 

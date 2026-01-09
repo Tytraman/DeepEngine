@@ -94,6 +94,14 @@ namespace deep
 
             graph->m_device_context.get()->RSSetViewports(1, &vp);
 
+            D3D11_RASTERIZER_DESC raster_desc = {};
+            raster_desc.FillMode              = D3D11_FILL_SOLID;
+            raster_desc.CullMode              = D3D11_CULL_BACK;
+            raster_desc.FrontCounterClockwise = false;
+
+            graph->m_device->CreateRasterizerState(&raster_desc, &graph->m_rasterizer_state);
+            graph->m_device_context.get()->RSSetState(graph->m_rasterizer_state.Get());
+
             context->out() << " OK\r\n";
 
             return ref<graphics>(context, graph);

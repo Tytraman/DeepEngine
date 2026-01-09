@@ -18,6 +18,9 @@ endfunction()
 deep_compile_shader("${CMAKE_CURRENT_LIST_DIR}/DeepEngine/Shaders/test_triangle.hlsl" "vs" "main_vs")
 deep_compile_shader("${CMAKE_CURRENT_LIST_DIR}/DeepEngine/Shaders/test_triangle.hlsl" "ps" "main_ps")
 
+deep_compile_shader("${CMAKE_CURRENT_LIST_DIR}/DeepEngine/Shaders/test_cube.hlsl" "vs" "main_vs")
+deep_compile_shader("${CMAKE_CURRENT_LIST_DIR}/DeepEngine/Shaders/test_cube.hlsl" "ps" "main_ps")
+
 add_library(DeepEngine SHARED
     "${CMAKE_CURRENT_LIST_DIR}/DeepEngine/engine.cpp"
     ${SHADER_CSO_FILES})
