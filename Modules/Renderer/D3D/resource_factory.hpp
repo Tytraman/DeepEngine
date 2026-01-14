@@ -19,8 +19,8 @@ namespace deep
         class DEEP_D3D_API resource_factory
         {
           public:
-            static ref<vertex_buffer> create_vertex_buffer(const ref<ctx> &context, const void *data, uint32 bytes_size, uint32 stride, Microsoft::WRL::ComPtr<ID3D11Device> device, const device_context &dc) noexcept;
-            static ref<constant_buffer> create_constant_buffer(const ref<ctx> &context, const void *data, uint32 bytes_size, Microsoft::WRL::ComPtr<ID3D11Device> device, const device_context &dc) noexcept;
+            static ref<vertex_buffer> create_vertex_buffer(const ref<ctx> &context, const void *data, uint32 bytes_size, uint32 stride, Microsoft::WRL::ComPtr<ID3D11Device> device) noexcept;
+            static ref<constant_buffer> create_constant_buffer(const ref<ctx> &context, const void *data, uint32 bytes_size, Microsoft::WRL::ComPtr<ID3D11Device> device) noexcept;
         };
     } // namespace D3D
 } // namespace deep

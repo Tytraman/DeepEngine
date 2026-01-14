@@ -39,6 +39,11 @@ namespace deep
             m_binded_pixel_shader = shader;
         }
 
+        void device_context::bind(const ref<vertex_buffer> &buffer) noexcept
+        {
+            m_device_context->IASetVertexBuffers(0, 1, buffer->get_address(), &buffer->m_stride, &buffer->m_offset);
+        }
+
         ref<vertex_shader> device_context::get_binded_vertex_shader() const noexcept
         {
             return m_binded_vertex_shader;
@@ -47,6 +52,39 @@ namespace deep
         ref<pixel_shader> device_context::get_binded_pixel_shader() const noexcept
         {
             return m_binded_pixel_shader;
+        }
+
+        void device_context::set_rasterizer_state(rasterizer_state state) noexcept
+        {
+            switch (state)
+            {
+                default:
+                    break;
+                case rasterizer_state::CullBackSolid:
+                {
+                    m_device_context->RSSetState(m_rasterizer_state_cull_back_solid.Get());
+                    m_rasterizer_state = rasterizer_state::CullBackSolid;
+                }
+                break;
+                case rasterizer_state::CullBackWireframe:
+                {
+                    m_device_context->RSSetState(m_rasterizer_state_cull_back_wireframe.Get());
+                    m_rasterizer_state = rasterizer_state::CullBackWireframe;
+                }
+                break;
+                case rasterizer_state::CullFrontSolid:
+                {
+                    m_device_context->RSSetState(m_rasterizer_state_cull_front_solid.Get());
+                    m_rasterizer_state = rasterizer_state::CullFrontSolid;
+                }
+                break;
+                case rasterizer_state::CullFrontWireframe:
+                {
+                    m_device_context->RSSetState(m_rasterizer_state_cull_front_wireframe.Get());
+                    m_rasterizer_state = rasterizer_state::CullFrontWireframe;
+                }
+                break;
+            }
         }
     } // namespace D3D
 } // namespace deep

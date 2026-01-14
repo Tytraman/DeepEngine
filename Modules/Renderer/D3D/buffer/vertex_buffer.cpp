@@ -4,18 +4,14 @@ namespace deep
 {
     namespace D3D
     {
-        void vertex_buffer::bind() noexcept
+        ID3D11Buffer *vertex_buffer::get() const noexcept
         {
+            return m_buffer.Get();
         }
 
-        void vertex_buffer::draw(Microsoft::WRL::ComPtr<ID3D11DeviceContext> device_context) noexcept
+        ID3D11Buffer *const *vertex_buffer::get_address() const noexcept
         {
-            device_context->Draw(3, 0);
-        }
-
-        bool vertex_buffer::can_draw() const noexcept
-        {
-            return true;
+            return m_buffer.GetAddressOf();
         }
     } // namespace D3D
 } // namespace deep

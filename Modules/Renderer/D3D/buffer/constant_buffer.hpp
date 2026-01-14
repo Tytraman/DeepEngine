@@ -22,6 +22,9 @@ namespace deep
 
             virtual bool can_draw() const noexcept override;
 
+            ID3D11Buffer *get() const noexcept;
+            ID3D11Buffer *const *get_address() const noexcept;
+
           protected:
             Microsoft::WRL::ComPtr<ID3D11Buffer> m_buffer;
 

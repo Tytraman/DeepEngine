@@ -16,5 +16,15 @@ namespace deep
         {
             return false;
         }
+
+        ID3D11Buffer *constant_buffer::get() const noexcept
+        {
+            return m_buffer.Get();
+        }
+
+        ID3D11Buffer *const *constant_buffer::get_address() const noexcept
+        {
+            return m_buffer.GetAddressOf();
+        }
     } // namespace D3D
 } // namespace deep

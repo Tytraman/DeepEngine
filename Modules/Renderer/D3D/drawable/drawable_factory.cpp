@@ -10,7 +10,7 @@ namespace deep
 {
     namespace D3D
     {
-        ref<triangle> drawable_factory::create_triangle(const ref<ctx> &context, const ref<vertex_shader> &vs, const ref<pixel_shader> &ps, Microsoft::WRL::ComPtr<ID3D11Device> device, const device_context &dc) noexcept
+        ref<triangle> drawable_factory::create_triangle(const ref<ctx> &context, const ref<vertex_shader> &vs, const ref<pixel_shader> &ps, Microsoft::WRL::ComPtr<ID3D11Device> device) noexcept
         {
             struct vertex
             {
@@ -37,15 +37,15 @@ namespace deep
 
             fmat4 transformation = fmat4();
 
-            tr->m_vertex_buffer   = resource_factory::create_vertex_buffer(context, vertices, sizeof(vertices), sizeof(vertex), device, dc);
-            tr->m_constant_buffer = resource_factory::create_constant_buffer(context, transformation.get(), sizeof(transformation.rows), device, dc);
-            tr->m_vertex_shader   = vs;
-            tr->m_pixel_shader    = ps;
+            tr->m_vertex_buffer    = resource_factory::create_vertex_buffer(context, vertices, sizeof(vertices), sizeof(vertex), device);
+            tr->m_transform_buffer = resource_factory::create_constant_buffer(context, transformation.get(), sizeof(transformation.rows), device);
+            tr->m_vertex_shader    = vs;
+            tr->m_pixel_shader     = ps;
 
             return ref<triangle>(context, tr);
         }
 
-        ref<rectangle> drawable_factory::create_rectangle(const ref<ctx> &context, const ref<vertex_shader> &vs, const ref<pixel_shader> &ps, Microsoft::WRL::ComPtr<ID3D11Device> device, const device_context &dc) noexcept
+        ref<rectangle> drawable_factory::create_rectangle(const ref<ctx> &context, const ref<vertex_shader> &vs, const ref<pixel_shader> &ps, Microsoft::WRL::ComPtr<ID3D11Device> device) noexcept
         {
             struct vertex
             {
@@ -77,15 +77,15 @@ namespace deep
             fmat4 model = fmat4();
             model       = fmat4::translate(model, fvec3(0.25f, 0.0f, 0.0f));
 
-            rect->m_vertex_buffer   = resource_factory::create_vertex_buffer(context, vertices, sizeof(vertices), sizeof(vertex), device, dc);
-            rect->m_constant_buffer = resource_factory::create_constant_buffer(context, model.get(), sizeof(model.rows), device, dc);
-            rect->m_vertex_shader   = vs;
-            rect->m_pixel_shader    = ps;
+            rect->m_vertex_buffer    = resource_factory::create_vertex_buffer(context, vertices, sizeof(vertices), sizeof(vertex), device);
+            rect->m_transform_buffer = resource_factory::create_constant_buffer(context, model.get(), sizeof(model.rows), device);
+            rect->m_vertex_shader    = vs;
+            rect->m_pixel_shader     = ps;
 
             return ref<rectangle>(context, rect);
         }
 
-        ref<cube> drawable_factory::create_cube(const ref<ctx> &context, const ref<vertex_shader> &vs, const ref<pixel_shader> &ps, Microsoft::WRL::ComPtr<ID3D11Device> device, const device_context &dc) noexcept
+        ref<cube> drawable_factory::create_cube(const ref<ctx> &context, const ref<vertex_shader> &vs, const ref<pixel_shader> &ps, const fvec3 &position, const fvec3 &rotation, const fvec3 &scale, Microsoft::WRL::ComPtr<ID3D11Device> device) noexcept
         {
             struct vertex
             {
@@ -95,64 +95,77 @@ namespace deep
                     float y;
                     float z;
                 } position;
+            };
+
+            struct color_buffer
+            {
                 struct
                 {
-                    uint8 red;
-                    uint8 green;
-                    uint8 blue;
-                    uint8 alpha;
-                } color;
+                    float red;
+                    float green;
+                    float blue;
+                    float alpha;
+                } face_color[6];
             };
 
             const vertex vertices[] = {
-                // Avant - Rouge
-                { -1.0f, 1.0f, -1.0f, 255, 0, 0, 255 },
-                { 1.0f, 1.0f, -1.0f, 255, 0, 0, 255 },
-                { 1.0f, -1.0f, -1.0f, 255, 0, 0, 255 },
-                { -1.0f, 1.0f, -1.0f, 255, 0, 0, 255 },
-                { 1.0f, -1.0f, -1.0f, 255, 0, 0, 255 },
-                { -1.0f, -1.0f, -1.0f, 255, 0, 0, 255 },
+                // Avant
+                { -1.0f, 1.0f, -1.0f },
+                { 1.0f, 1.0f, -1.0f },
+                { 1.0f, -1.0f, -1.0f },
+                { -1.0f, 1.0f, -1.0f },
+                { 1.0f, -1.0f, -1.0f },
+                { -1.0f, -1.0f, -1.0f },
 
-                // Droite - Vert
-                { 1.0f, 1.0f, -1.0f, 0, 255, 0, 255 },
-                { 1.0f, 1.0f, 1.0f, 0, 255, 0, 255 },
-                { 1.0f, -1.0f, 1.0f, 0, 255, 0, 255 },
-                { 1.0f, 1.0f, -1.0f, 0, 255, 0, 255 },
-                { 1.0f, -1.0f, 1.0f, 0, 255, 0, 255 },
-                { 1.0f, -1.0f, -1.0f, 0, 255, 0, 255 },
+                // Droite
+                { 1.0f, 1.0f, -1.0f },
+                { 1.0f, 1.0f, 1.0f },
+                { 1.0f, -1.0f, 1.0f },
+                { 1.0f, 1.0f, -1.0f },
+                { 1.0f, -1.0f, 1.0f },
+                { 1.0f, -1.0f, -1.0f },
 
-                // Arrière - Blanc
-                { -1.0f, 1.0f, 1.0f, 255, 255, 255, 255 },
-                { 1.0f, -1.0f, 1.0f, 255, 255, 255, 255 },
-                { 1.0f, 1.0f, 1.0f, 255, 255, 255, 255 },
-                { -1.0f, 1.0f, 1.0f, 255, 255, 255, 255 },
-                { -1.0f, -1.0f, 1.0f, 255, 255, 255, 255 },
-                { 1.0f, -1.0f, 1.0f, 255, 255, 255, 255 },
+                // Arrière
+                { -1.0f, 1.0f, 1.0f },
+                { 1.0f, -1.0f, 1.0f },
+                { 1.0f, 1.0f, 1.0f },
+                { -1.0f, 1.0f, 1.0f },
+                { -1.0f, -1.0f, 1.0f },
+                { 1.0f, -1.0f, 1.0f },
 
-                // Gauche - Jaune
-                { -1.0f, 1.0f, 1.0f, 255, 255, 0, 255 },
-                { -1.0f, 1.0f, -1.0f, 255, 255, 0, 255 },
-                { -1.0f, -1.0f, -1.0f, 255, 255, 0, 255 },
-                { -1.0f, 1.0f, 1.0f, 255, 255, 0, 255 },
-                { -1.0f, -1.0f, -1.0f, 255, 255, 0, 255 },
-                { -1.0f, -1.0f, 1.0f, 255, 255, 0, 255 },
+                // Gauche
+                { -1.0f, 1.0f, 1.0f },
+                { -1.0f, 1.0f, -1.0f },
+                { -1.0f, -1.0f, -1.0f },
+                { -1.0f, 1.0f, 1.0f },
+                { -1.0f, -1.0f, -1.0f },
+                { -1.0f, -1.0f, 1.0f },
 
-                // Bas - Aqua
-                { -1.0f, -1.0f, -1.0f, 0, 255, 255, 255 },
-                { 1.0f, -1.0f, -1.0f, 0, 255, 255, 255 },
-                { 1.0f, -1.0f, 1.0f, 0, 255, 255, 255 },
-                { 1.0f, -1.0f, 1.0f, 0, 255, 255, 255 },
-                { -1.0f, -1.0f, 1.0f, 0, 255, 255, 255 },
-                { -1.0f, -1.0f, -1.0f, 0, 255, 255, 255 },
+                // Bas
+                { -1.0f, -1.0f, -1.0f },
+                { 1.0f, -1.0f, -1.0f },
+                { 1.0f, -1.0f, 1.0f },
+                { 1.0f, -1.0f, 1.0f },
+                { -1.0f, -1.0f, 1.0f },
+                { -1.0f, -1.0f, -1.0f },
 
-                // Haut - Bleu
-                { -1.0f, 1.0f, 1.0f, 0, 0, 255, 255 },
-                { 1.0f, 1.0f, 1.0f, 0, 0, 255, 255 },
-                { 1.0f, 1.0f, -1.0f, 0, 0, 255, 255 },
-                { -1.0f, 1.0f, 1.0f, 0, 0, 255, 255 },
-                { 1.0f, 1.0f, -1.0f, 0, 0, 255, 255 },
-                { -1.0f, 1.0f, -1.0f, 0, 0, 255, 255 }
+                // Haut
+                { -1.0f, 1.0f, 1.0f },
+                { 1.0f, 1.0f, 1.0f },
+                { 1.0f, 1.0f, -1.0f },
+                { -1.0f, 1.0f, 1.0f },
+                { 1.0f, 1.0f, -1.0f },
+                { -1.0f, 1.0f, -1.0f }
 
+            };
+
+            const color_buffer colors = {
+                { { 1.0f, 0.0f, 0.0f, 1.0f },
+                  { 0.0f, 1.0f, 0.0f, 1.0f },
+                  { 1.0f, 1.0f, 1.0f, 1.0f },
+                  { 1.0f, 1.0f, 0.0f, 1.0f },
+                  { 0.0f, 1.0f, 1.0f, 1.0f },
+                  { 0.0f, 0.0f, 1.0f, 1.0f } }
             };
 
             cube *c = mem::alloc_type<cube>(context.get(), context);
@@ -162,20 +175,56 @@ namespace deep
                 return ref<cube>();
             }
 
-            // INFO: juste pour le test.
             fmat4 model = fmat4();
-            model       = fmat4::translate(model, fvec3(0.0f, 0.0f, 4.0f));
-            model       = fmat4::rotate_x(model, -20.0f);
-            model       = fmat4::rotate_y(model, 45.0f);
+            model       = fmat4::translate(model, position);
+            model       = fmat4::rotate_x(model, rotation.x);
+            model       = fmat4::rotate_y(model, rotation.y);
+            model       = fmat4::rotate_z(model, rotation.z);
+            model       = fmat4::scale(model, scale);
 
             fmat4 projection = fmat4::d3d_perspective_lh(1.0f, 3.0f / 4.0f, 0.5f, 10.0f);
 
             fmat4 m = projection * model;
 
-            c->m_vertex_buffer   = resource_factory::create_vertex_buffer(context, vertices, sizeof(vertices), sizeof(vertex), device, dc);
-            c->m_constant_buffer = resource_factory::create_constant_buffer(context, m.get(), sizeof(m.rows), device, dc);
-            c->m_vertex_shader   = vs;
-            c->m_pixel_shader    = ps;
+            c->m_vertex_buffer    = resource_factory::create_vertex_buffer(context, vertices, sizeof(vertices), sizeof(vertex), device);
+            c->m_transform_buffer = resource_factory::create_constant_buffer(context, m.get(), sizeof(m.rows), device);
+            c->m_color_buffer     = resource_factory::create_constant_buffer(context, &colors, sizeof(colors), device);
+            c->m_vertex_shader    = vs;
+            c->m_pixel_shader     = ps;
+
+            return ref<cube>(context, c);
+        }
+
+        ref<cube> drawable_factory::from(const ref<ctx> &context, ref<cube> &from_cube, const ref<vertex_shader> &vs, const ref<pixel_shader> &ps, const fvec3 &position, const fvec3 &rotation, const fvec3 &scale, Microsoft::WRL::ComPtr<ID3D11Device> device) noexcept
+        {
+            if (!from_cube.is_valid())
+            {
+                return ref<cube>();
+            }
+
+            cube *c = mem::alloc_type<cube>(context.get(), context);
+
+            if (c == nullptr)
+            {
+                return ref<cube>();
+            }
+
+            fmat4 model = fmat4();
+            model       = fmat4::translate(model, position);
+            model       = fmat4::rotate_x(model, rotation.x);
+            model       = fmat4::rotate_y(model, rotation.y);
+            model       = fmat4::rotate_z(model, rotation.z);
+            model       = fmat4::scale(model, scale);
+
+            fmat4 projection = fmat4::d3d_perspective_lh(1.0f, 3.0f / 4.0f, 0.5f, 10.0f);
+
+            fmat4 m = projection * model;
+
+            c->m_vertex_buffer    = from_cube->m_vertex_buffer;
+            c->m_transform_buffer = resource_factory::create_constant_buffer(context, m.get(), sizeof(m.rows), device);
+            c->m_color_buffer     = from_cube->m_color_buffer;
+            c->m_vertex_shader    = vs;
+            c->m_pixel_shader     = ps;
 
             return ref<cube>(context, c);
         }

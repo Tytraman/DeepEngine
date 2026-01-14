@@ -24,8 +24,8 @@ namespace deep
         template class DEEP_D3D_API Microsoft::WRL::ComPtr<IDXGISwapChain>;
         template class DEEP_D3D_API Microsoft::WRL::ComPtr<ID3D11DeviceContext>;
         template class DEEP_D3D_API Microsoft::WRL::ComPtr<ID3D11RenderTargetView>;
+        template class DEEP_D3D_API Microsoft::WRL::ComPtr<ID3D11DepthStencilView>;
         template class DEEP_D3D_API Microsoft::WRL::ComPtr<ID3D11Debug>;
-        template class DEEP_D3D_API Microsoft::WRL::ComPtr<ID3D11RasterizerState>;
 
         template class DEEP_D3D_API list<ref<drawable>>;
 
@@ -64,8 +64,8 @@ namespace deep
             device_context m_device_context;
             Microsoft::WRL::ComPtr<IDXGISwapChain> m_swap_chain;
             Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_render_target_view;
+            Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_depth_stencil_view;
             Microsoft::WRL::ComPtr<ID3D11Debug> m_debug;
-            Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_rasterizer_state;
 
             list<ref<drawable>> m_drawables;
 

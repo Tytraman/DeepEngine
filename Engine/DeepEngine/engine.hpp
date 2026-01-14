@@ -25,6 +25,9 @@ namespace deep
         bool is_valid() const;
 
       private:
+        bool process_inputs() noexcept;
+
+      private:
         ref<window> m_window;
         ref<D3D::graphics> m_graphics;
         uint64 m_startup_tick_count;

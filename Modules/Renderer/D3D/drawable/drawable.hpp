@@ -22,11 +22,14 @@ namespace deep
         class DEEP_D3D_API drawable : public object
         {
           public:
+            drawable()                            = delete;
+            drawable(const drawable &)            = delete;
+            drawable &operator=(const drawable &) = delete;
+
             virtual void draw(device_context &dc) = 0;
 
           protected:
             ref<vertex_buffer> m_vertex_buffer;
-            ref<constant_buffer> m_constant_buffer;
             ref<vertex_shader> m_vertex_shader;
             ref<pixel_shader> m_pixel_shader;
 

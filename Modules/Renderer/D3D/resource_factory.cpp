@@ -7,7 +7,7 @@ namespace deep
 {
     namespace D3D
     {
-        ref<vertex_buffer> resource_factory::create_vertex_buffer(const ref<ctx> &context, const void *data, uint32 bytes_size, uint32 stride, Microsoft::WRL::ComPtr<ID3D11Device> device, const device_context &dc) noexcept
+        ref<vertex_buffer> resource_factory::create_vertex_buffer(const ref<ctx> &context, const void *data, uint32 bytes_size, uint32 stride, Microsoft::WRL::ComPtr<ID3D11Device> device) noexcept
         {
             vertex_buffer *vb = mem::alloc_type<vertex_buffer>(context.get(), context);
 
@@ -16,7 +16,8 @@ namespace deep
                 return ref<vertex_buffer>();
             }
 
-            const UINT offset = 0;
+            vb->m_offset = 0;
+            vb->m_stride = stride;
 
             D3D11_BUFFER_DESC bd   = { 0 };
             bd.BindFlags           = D3D11_BIND_VERTEX_BUFFER;
@@ -31,12 +32,10 @@ namespace deep
 
             DEEP_DX_CHECK(device->CreateBuffer(&bd, &sd, &vb->m_buffer), context, device)
 
-            dc.get()->IASetVertexBuffers(0, 1, vb->m_buffer.GetAddressOf(), &stride, &offset);
-
             return ref<vertex_buffer>(context, vb);
         }
 
-        ref<constant_buffer> resource_factory::create_constant_buffer(const ref<ctx> &context, const void *data, uint32 bytes_size, Microsoft::WRL::ComPtr<ID3D11Device> device, const device_context &dc) noexcept
+        ref<constant_buffer> resource_factory::create_constant_buffer(const ref<ctx> &context, const void *data, uint32 bytes_size, Microsoft::WRL::ComPtr<ID3D11Device> device) noexcept
         {
             constant_buffer *cb = mem::alloc_type<constant_buffer>(context.get(), context);
 
@@ -57,8 +56,6 @@ namespace deep
             sd.pSysMem                = data;
 
             DEEP_DX_CHECK(device->CreateBuffer(&bd, &sd, &cb->m_buffer), context, device)
-
-            dc.get()->VSSetConstantBuffers(0, 1, cb->m_buffer.GetAddressOf());
 
             return ref<constant_buffer>(context, cb);
         }

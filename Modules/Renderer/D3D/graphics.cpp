@@ -30,6 +30,9 @@ namespace deep
         {
             context->out() << "Direct3D 11 initialization...";
 
+            int32 width  = win.get_width();
+            int32 height = win.get_height();
+
             graphics *graph = mem::alloc_type<graphics>(context.get(), context, win.get_handle());
 
             DXGI_SWAP_CHAIN_DESC sd               = { 0 };
@@ -71,22 +74,47 @@ namespace deep
 
             DEEP_DX_CHECK(graph->m_device->QueryInterface(__uuidof(ID3D11Debug), &graph->m_debug), context, graph->m_device)
 
-            // Met un 'breakpoint' lorsqu'une erreur Direct3D est détectée.
-            /*wrl::ComPtr<ID3D11InfoQueue> info_queue;
-            if (SUCCEEDED(graph->m_debug.As(&info_queue)))
-            {
-                info_queue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_CORRUPTION, true);
-                info_queue->SetBreakOnSeverity(D3D11_MESSAGE_SEVERITY_ERROR, true);
-            }*/
-
             DEEP_DX_CHECK(graph->m_device->CreateRenderTargetView(back_buffer.Get(), nullptr, &graph->m_render_target_view), context, graph->m_device)
 
-            graph->m_device_context.get()->OMSetRenderTargets(1, graph->m_render_target_view.GetAddressOf(), nullptr);
+            D3D11_DEPTH_STENCIL_DESC ds_desc = { 0 };
+            ds_desc.DepthEnable              = TRUE;
+            ds_desc.DepthWriteMask           = D3D11_DEPTH_WRITE_MASK_ALL;
+            ds_desc.DepthFunc                = D3D11_COMPARISON_LESS;
+
+            wrl::ComPtr<ID3D11DepthStencilState> ds_state;
+
+            DEEP_DX_CHECK(graph->m_device->CreateDepthStencilState(&ds_desc, &ds_state), context, graph->m_device)
+
+            graph->m_device_context.get()->OMSetDepthStencilState(ds_state.Get(), 1);
+
+            D3D11_TEXTURE2D_DESC depth_stencil_texture_desc = { 0 };
+            depth_stencil_texture_desc.Width                = static_cast<UINT>(width);
+            depth_stencil_texture_desc.Height               = static_cast<UINT>(height);
+            depth_stencil_texture_desc.MipLevels            = 1;
+            depth_stencil_texture_desc.ArraySize            = 1;
+            depth_stencil_texture_desc.Format               = DXGI_FORMAT_D32_FLOAT;
+            depth_stencil_texture_desc.SampleDesc.Count     = 1;
+            depth_stencil_texture_desc.SampleDesc.Quality   = 0;
+            depth_stencil_texture_desc.Usage                = D3D11_USAGE_DEFAULT;
+            depth_stencil_texture_desc.BindFlags            = D3D11_BIND_DEPTH_STENCIL;
+
+            wrl::ComPtr<ID3D11Texture2D> depth_stencil_texture;
+
+            DEEP_DX_CHECK(graph->m_device->CreateTexture2D(&depth_stencil_texture_desc, nullptr, &depth_stencil_texture), context, graph->m_device)
+
+            D3D11_DEPTH_STENCIL_VIEW_DESC dsv_desc = {};
+            dsv_desc.Format                        = DXGI_FORMAT_D32_FLOAT;
+            dsv_desc.ViewDimension                 = D3D11_DSV_DIMENSION_TEXTURE2D;
+            dsv_desc.Texture2D.MipSlice            = 0;
+
+            DEEP_DX_CHECK(graph->m_device->CreateDepthStencilView(depth_stencil_texture.Get(), &dsv_desc, &graph->m_depth_stencil_view), context, graph->m_device)
+
+            graph->m_device_context.get()->OMSetRenderTargets(1, graph->m_render_target_view.GetAddressOf(), graph->m_depth_stencil_view.Get());
 
             // Configuration du 'viewport'.
             D3D11_VIEWPORT vp = { 0 };
-            vp.Width          = static_cast<float>(win.get_width());
-            vp.Height         = static_cast<float>(win.get_height());
+            vp.Width          = static_cast<FLOAT>(width);
+            vp.Height         = static_cast<FLOAT>(height);
             vp.MinDepth       = 0;
             vp.MaxDepth       = 1;
             vp.TopLeftX       = 0;
@@ -99,8 +127,19 @@ namespace deep
             raster_desc.CullMode              = D3D11_CULL_BACK;
             raster_desc.FrontCounterClockwise = false;
 
-            graph->m_device->CreateRasterizerState(&raster_desc, &graph->m_rasterizer_state);
-            graph->m_device_context.get()->RSSetState(graph->m_rasterizer_state.Get());
+            graph->m_device->CreateRasterizerState(&raster_desc, &graph->m_device_context.m_rasterizer_state_cull_back_solid);
+
+            raster_desc.FillMode = D3D11_FILL_WIREFRAME;
+            graph->m_device->CreateRasterizerState(&raster_desc, &graph->m_device_context.m_rasterizer_state_cull_back_wireframe);
+
+            raster_desc.FillMode = D3D11_FILL_SOLID;
+            raster_desc.CullMode = D3D11_CULL_FRONT;
+            graph->m_device->CreateRasterizerState(&raster_desc, &graph->m_device_context.m_rasterizer_state_cull_front_solid);
+
+            raster_desc.FillMode = D3D11_FILL_WIREFRAME;
+            graph->m_device->CreateRasterizerState(&raster_desc, &graph->m_device_context.m_rasterizer_state_cull_front_wireframe);
+
+            graph->m_device_context.set_rasterizer_state(rasterizer_state::CullBackSolid);
 
             context->out() << " OK\r\n";
 
@@ -112,6 +151,7 @@ namespace deep
             const float colors[] = { r, g, b, 1.0f };
 
             m_device_context.get()->ClearRenderTargetView(m_render_target_view.Get(), colors);
+            m_device_context.get()->ClearDepthStencilView(m_depth_stencil_view.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
         }
 
         void graphics::add_drawable(const ref<drawable> &dr) noexcept
@@ -126,7 +166,10 @@ namespace deep
 
             for (index = 0; index < count; ++index)
             {
-                m_drawables[index]->draw(m_device_context);
+                if (m_drawables[index].is_valid())
+                {
+                    m_drawables[index]->draw(m_device_context);
+                }
             }
         }
 

@@ -14,6 +14,10 @@ namespace deep
             virtual void draw(device_context &dc) override;
 
           protected:
+            ref<constant_buffer> m_transform_buffer;
+            ref<constant_buffer> m_color_buffer;
+
+          protected:
             using drawable::drawable;
 
           public:
