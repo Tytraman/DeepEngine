@@ -2,6 +2,7 @@
 #include "error.hpp"
 #include "resource_factory.hpp"
 #include "D3D/shader/shader_factory.hpp"
+#include "D3D/buffer/per_frame_buffer.hpp"
 
 #include <DeepLib/context.hpp>
 #include <DeepLib/filesystem/filesystem.hpp>
@@ -26,7 +27,7 @@ namespace deep
         {
         }
 
-        ref<graphics> graphics::create(const ref<ctx> &context, window &win) noexcept
+        ref<graphics> graphics::create(const ref<ctx> &context, window &win, const fvec3 &player_position) noexcept
         {
             context->out() << "Direct3D 11 initialization...";
 
@@ -141,6 +142,18 @@ namespace deep
 
             graph->m_device_context.set_rasterizer_state(rasterizer_state::CullBackSolid);
 
+            fmat4 view;
+            view = fmat4::translate(view, player_position);
+
+            fmat4 projection = fmat4::d3d_perspective_lh(1.0f, 3.0f / 4.0f, 0.5f, 10.0f);
+
+            const per_frame_buffer pfb = {
+                view,
+                projection
+            };
+
+            graph->m_per_frame_buffer = resource_factory::create_constant_buffer(context, &pfb, sizeof(pfb), graph->m_device);
+
             context->out() << " OK\r\n";
 
             return ref<graphics>(context, graph);
@@ -159,16 +172,19 @@ namespace deep
             m_drawables.add(dr);
         }
 
-        void graphics::draw_all() noexcept
+        void graphics::draw_all(const fvec3 &camera_location) noexcept
         {
             usize count = m_drawables.count();
             usize index;
+
+            m_device_context.get()->VSSetConstantBuffers(0, 1, m_per_frame_buffer->get_address());
+            m_device_context.get()->PSSetConstantBuffers(0, 1, m_per_frame_buffer->get_address());
 
             for (index = 0; index < count; ++index)
             {
                 if (m_drawables[index].is_valid())
                 {
-                    m_drawables[index]->draw(m_device_context);
+                    m_drawables[index]->draw(m_device_context, camera_location);
                 }
             }
         }
@@ -233,6 +249,11 @@ namespace deep
         const device_context &graphics::get_device_context() const noexcept
         {
             return m_device_context;
+        }
+
+        ref<constant_buffer> graphics::get_per_frame_buffer() noexcept
+        {
+            return m_per_frame_buffer;
         }
     } // namespace D3D
 } // namespace deep

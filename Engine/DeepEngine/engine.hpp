@@ -5,6 +5,8 @@
 
 #include <DeepLib/object.hpp>
 #include <DeepLib/window/window.hpp>
+#include <DeepLib/maths/vec.hpp>
+#include <DeepLib/maths/mat.hpp>
 
 #include "D3D/graphics.hpp"
 
@@ -33,9 +35,11 @@ namespace deep
         uint64 m_startup_tick_count;
         uint64 m_startup_time_millis;
         uint32 m_FPS;
+        fvec3 m_player_location;
+        fmat4 m_projection;
 
       protected:
-        using object::object;
+        engine(const ref<ctx> &context, const fvec3 &player_location) noexcept;
     };
 
     inline ref<window> engine::get_window()

@@ -7,6 +7,7 @@
 #include <DeepLib/memory/memory.hpp>
 #include <DeepLib/collection/list.hpp>
 #include <DeepLib/window/window.hpp>
+#include <DeepLib/maths/vec.hpp>
 
 #include "D3D/device_context.hpp"
 #include "D3D/drawable/drawable.hpp"
@@ -37,13 +38,13 @@ namespace deep
             graphics &operator=(const graphics &) = delete;
             ~graphics()                           = default;
 
-            static ref<graphics> create(const ref<ctx> &context, window &win) noexcept;
+            static ref<graphics> create(const ref<ctx> &context, window &win, const fvec3 &player_position) noexcept;
 
             void clear_buffer(float r, float g, float b) noexcept;
 
             void add_drawable(const ref<drawable> &dr) noexcept;
 
-            void draw_all() noexcept;
+            void draw_all(const fvec3 &camera_location) noexcept;
 
             void end_frame() noexcept;
             void print_debug_messages() noexcept;
@@ -52,6 +53,8 @@ namespace deep
 
             device_context &get_device_context() noexcept;
             const device_context &get_device_context() const noexcept;
+
+            ref<constant_buffer> get_per_frame_buffer() noexcept;
 
           protected:
             graphics(const ref<ctx> &context, window_handle win) noexcept;
@@ -66,6 +69,8 @@ namespace deep
             Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_render_target_view;
             Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_depth_stencil_view;
             Microsoft::WRL::ComPtr<ID3D11Debug> m_debug;
+
+            ref<constant_buffer> m_per_frame_buffer;
 
             list<ref<drawable>> m_drawables;
 

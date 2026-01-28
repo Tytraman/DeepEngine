@@ -44,10 +44,12 @@ namespace deep
                 return ref<constant_buffer>();
             }
 
+            cb->m_bytes_size = bytes_size;
+
             D3D11_BUFFER_DESC bd   = { 0 };
             bd.BindFlags           = D3D11_BIND_CONSTANT_BUFFER;
-            bd.Usage               = D3D11_USAGE_DYNAMIC;
-            bd.CPUAccessFlags      = D3D11_CPU_ACCESS_WRITE;
+            bd.Usage               = D3D11_USAGE_DEFAULT;
+            bd.CPUAccessFlags      = 0 /*D3D11_CPU_ACCESS_WRITE*/;
             bd.MiscFlags           = 0;
             bd.ByteWidth           = bytes_size;
             bd.StructureByteStride = 0;

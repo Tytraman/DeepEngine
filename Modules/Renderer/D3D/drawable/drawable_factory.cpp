@@ -1,5 +1,6 @@
 #include "drawable_factory.hpp"
 #include "D3D/resource_factory.hpp"
+#include "D3D/buffer/per_object_buffer.hpp"
 
 #include <DeepLib/memory/memory.hpp>
 #include <DeepLib/maths/mat.hpp>
@@ -184,13 +185,19 @@ namespace deep
 
             fmat4 projection = fmat4::d3d_perspective_lh(1.0f, 3.0f / 4.0f, 0.5f, 10.0f);
 
-            fmat4 m = projection * model;
+            const per_object_buffer pob = {
+                projection * model
+            };
 
-            c->m_vertex_buffer    = resource_factory::create_vertex_buffer(context, vertices, sizeof(vertices), sizeof(vertex), device);
-            c->m_transform_buffer = resource_factory::create_constant_buffer(context, m.get(), sizeof(m.rows), device);
-            c->m_color_buffer     = resource_factory::create_constant_buffer(context, &colors, sizeof(colors), device);
-            c->m_vertex_shader    = vs;
-            c->m_pixel_shader     = ps;
+            c->m_vertex_buffer     = resource_factory::create_vertex_buffer(context, vertices, sizeof(vertices), sizeof(vertex), device);
+            c->m_per_object_buffer = resource_factory::create_constant_buffer(context, &pob, sizeof(pob), device);
+            c->m_color_buffer      = resource_factory::create_constant_buffer(context, &colors, sizeof(colors), device);
+            c->m_vertex_shader     = vs;
+            c->m_pixel_shader      = ps;
+
+            c->m_location = position;
+            c->m_rotation = rotation;
+            c->m_scale    = fvec3(1.0f, 1.0f, 1.0f);
 
             return ref<cube>(context, c);
         }
@@ -218,13 +225,15 @@ namespace deep
 
             fmat4 projection = fmat4::d3d_perspective_lh(1.0f, 3.0f / 4.0f, 0.5f, 10.0f);
 
-            fmat4 m = projection * model;
+            const per_object_buffer pob = {
+                projection * model
+            };
 
-            c->m_vertex_buffer    = from_cube->m_vertex_buffer;
-            c->m_transform_buffer = resource_factory::create_constant_buffer(context, m.get(), sizeof(m.rows), device);
-            c->m_color_buffer     = from_cube->m_color_buffer;
-            c->m_vertex_shader    = vs;
-            c->m_pixel_shader     = ps;
+            c->m_vertex_buffer     = from_cube->m_vertex_buffer;
+            c->m_per_object_buffer = resource_factory::create_constant_buffer(context, &pob, sizeof(pob), device);
+            c->m_color_buffer      = from_cube->m_color_buffer;
+            c->m_vertex_shader     = vs;
+            c->m_pixel_shader      = ps;
 
             return ref<cube>(context, c);
         }

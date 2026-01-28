@@ -11,7 +11,7 @@ namespace deep
         class DEEP_D3D_API triangle : public drawable
         {
           public:
-            virtual void draw(device_context &dc) override;
+            virtual void draw(device_context &dc, const fvec3 &camera_location) override;
 
           protected:
             ref<constant_buffer> m_transform_buffer;
