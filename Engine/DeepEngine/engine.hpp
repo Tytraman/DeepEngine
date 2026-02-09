@@ -8,6 +8,7 @@
 #include <DeepLib/maths/vec.hpp>
 #include <DeepLib/maths/mat.hpp>
 
+#include "DeepEngine/camera.hpp"
 #include "D3D/graphics.hpp"
 
 namespace deep
@@ -15,7 +16,7 @@ namespace deep
     class DEEP_ENGINE_API engine : public object
     {
       public:
-        static engine create();
+        static ref<engine> create();
 
         void run();
 
@@ -35,11 +36,13 @@ namespace deep
         uint64 m_startup_tick_count;
         uint64 m_startup_time_millis;
         uint32 m_FPS;
-        fvec3 m_player_location;
-        fmat4 m_projection;
+        ref<camera> m_camera;
 
       protected:
-        engine(const ref<ctx> &context, const fvec3 &player_location) noexcept;
+        engine(const ref<ctx> &context) noexcept;
+
+      public:
+        friend memory_manager;
     };
 
     inline ref<window> engine::get_window()

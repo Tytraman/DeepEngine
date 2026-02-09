@@ -11,7 +11,7 @@ namespace deep
         class DEEP_D3D_API cube : public drawable
         {
           public:
-            virtual void draw(device_context &dc, const fvec3 &camera_location) override;
+            virtual void draw(device_context &dc, const fmat4 &view_projection) override;
 
           protected:
             ref<constant_buffer> m_color_buffer;

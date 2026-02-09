@@ -13,15 +13,26 @@
 
 namespace deep
 {
-    engine engine::create()
+    ref<engine> engine::create()
     {
         ref<ctx> context = lib::create_ctx();
 
-        engine eng = engine(context, fvec3(0.0f, 0.0f, 0.0f));
+        if (!context.is_valid())
+        {
+            return ref<engine>();
+        }
 
-        eng.m_startup_tick_count  = time::get_tick_count();
-        eng.m_startup_time_millis = time::get_current_time_millis();
-        eng.m_FPS                 = 0;
+        ref<engine> eng = ref<engine>(context, mem::alloc_type<engine>(context.get(), context));
+
+        if (!eng.is_valid())
+        {
+            context->err() << "[ERROR] Engine creation failed.\r\n";
+
+            return ref<engine>();
+        }
+
+        eng->m_startup_tick_count  = time::get_tick_count();
+        eng->m_startup_time_millis = time::get_current_time_millis();
 
         uint32 primary_monitor_index = 0;
         uint32 width;
@@ -31,22 +42,36 @@ namespace deep
         core_display::get_primary_monitor_index(&primary_monitor_index);
         core_display::get_monitor_infos(ctx::get_internal_ctx(context.get()), primary_monitor_index, &width, &height, &frequency);
 
-        width /= 2;
-        height /= 2;
-
         context->out() << "Creating window in " << width << "x" << height << ":" << frequency << "...";
 
-        eng.m_window = window::create(context, DEEP_TEXT_NATIVE("DeepEngineClass"), DEEP_TEXT_NATIVE("Deep Engine"), core_window::style::Windowed, false, 0, 0, width, height);
-        eng.m_window->get_keyboard().set_auto_repeat(true);
+        eng->m_window = window::create(context, DEEP_TEXT_NATIVE("DeepEngineClass"), DEEP_TEXT_NATIVE("Deep Engine"), core_window::style::Borderless, false, 0, 0, width, height);
+        if (!eng->m_window.is_valid())
+        {
+            context->out() << " failed\r\n";
+            context->err() << "[ERROR] Window creation failed.\r\n";
+
+            return ref<engine>();
+        }
+
+        eng->m_window->get_keyboard().set_auto_repeat(true);
+
+        context->out() << " OK\r\nCreating camera...";
+
+        eng->m_camera = ref<camera>(context, mem::alloc_type<camera>(context.get(), context, fvec3(0.0f, 0.0f, 0.0f)));
+        if (!eng->m_camera.is_valid())
+        {
+            context->out() << " failed\r\n";
+            context->err() << "[ERROR] Camera creation failed.\r\n";
+
+            return ref<engine>();
+        }
+        eng->m_camera->set_lens(90.0f, static_cast<float>(eng->m_window->get_width()) / static_cast<float>(eng->m_window->get_height()), 1.0f, 1000.0f);
 
         context->out() << " OK\r\n";
 
-        if (eng.m_window.is_valid())
-        {
-            eng.m_graphics = D3D::graphics::create(context, *eng.m_window, eng.m_player_location);
+        eng->m_graphics = D3D::graphics::create(context, *eng->m_window, eng->m_camera->get_location());
 
-            eng.m_window->show();
-        }
+        eng->m_window->show();
 
         return eng;
     }
@@ -77,11 +102,9 @@ namespace deep
         ref<D3D::pixel_shader> ps = D3D::shader_factory::create_pixel_shader(get_context(), &fs, m_graphics->get_device());
         fs.close();
 
-        ref<D3D::cube> c1 = D3D::drawable_factory::create_cube(get_context(), vs, ps, fvec3(0.0f, 0.0f, 4.0f), fvec3(-20.0f, 45.0f, 0.0f), fvec3(1.0f, 1.0f, 1.0f), m_graphics->get_device());
-        ref<D3D::cube> c2 = D3D::drawable_factory::from(get_context(), c1, vs, ps, fvec3(0.0f, 0.0f, 3.0f), fvec3(-35.0f, 90.0f, 180.0f), fvec3(0.5f, 0.5f, 0.5f), m_graphics->get_device());
+        ref<D3D::cube> c1 = D3D::drawable_factory::create_cube(get_context(), vs, ps, fvec3(0.0f, 0.0f, 4.0f), fvec3(), fvec3(1.0f, 1.0f, 1.0f), m_graphics->get_device());
 
         m_graphics->add_drawable(ref_cast<D3D::drawable>(c1));
-        // m_graphics->add_drawable(ref_cast<D3D::drawable>(c2));
 
         // Boucle infinie du jeu. S'arrête quand l'utilisateur ferme la fenêtre.
         while (m_window->process_message())
@@ -99,7 +122,7 @@ namespace deep
 
             m_graphics->clear_buffer(0.0f, 0.0f, 0.0f);
 
-            m_graphics->draw_all(m_player_location);
+            m_graphics->draw_all(m_camera->get_projection(), m_camera->get_view());
 
             m_graphics->end_frame();
 
@@ -176,22 +199,42 @@ namespace deep
                 break;
                 case vkeys::Z:
                 {
-                    m_player_location.z += 0.1f;
+                    m_camera->walk(0.5f);
                 }
                 break;
                 case vkeys::Q:
                 {
-                    m_player_location.x -= 0.1f;
+                    m_camera->strafe(-0.5f);
                 }
                 break;
                 case vkeys::S:
                 {
-                    m_player_location.z -= 0.1f;
+                    m_camera->walk(-0.5f);
                 }
                 break;
                 case vkeys::D:
                 {
-                    m_player_location.x += 0.1f;
+                    m_camera->strafe(0.5f);
+                }
+                break;
+                case vkeys::Up:
+                {
+                    m_camera->rotate_vertically(5.0f);
+                }
+                break;
+                case vkeys::Left:
+                {
+                    m_camera->rotate_horizontally(-5.0f);
+                }
+                break;
+                case vkeys::Down:
+                {
+                    m_camera->rotate_vertically(-5.0f);
+                }
+                break;
+                case vkeys::Right:
+                {
+                    m_camera->rotate_horizontally(5.0f);
                 }
                 break;
             }
@@ -200,9 +243,8 @@ namespace deep
         return true;
     }
 
-    engine::engine(const ref<ctx> &context, const fvec3 &player_location) noexcept
+    engine::engine(const ref<ctx> &context) noexcept
             : object(context),
-              m_player_location(player_location),
               m_startup_tick_count(0),
               m_startup_time_millis(0),
               m_FPS(0)

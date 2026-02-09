@@ -23,6 +23,7 @@ deep_compile_shader("${CMAKE_CURRENT_LIST_DIR}/DeepEngine/Shaders/test_cube.hlsl
 
 add_library(DeepEngine SHARED
     "${CMAKE_CURRENT_LIST_DIR}/DeepEngine/engine.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/DeepEngine/camera.cpp"
     ${SHADER_CSO_FILES})
 add_library(Deep::Engine ALIAS DeepEngine)
 

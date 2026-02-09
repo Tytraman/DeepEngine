@@ -44,7 +44,7 @@ namespace deep
 
             void add_drawable(const ref<drawable> &dr) noexcept;
 
-            void draw_all(const fvec3 &camera_location) noexcept;
+            void draw_all(const fmat4 &projection, const fmat4 &view) noexcept;
 
             void end_frame() noexcept;
             void print_debug_messages() noexcept;

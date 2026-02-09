@@ -5,7 +5,7 @@ namespace deep
 {
     namespace D3D
     {
-        void triangle::draw(device_context &dc, const fvec3 & /*camera_location*/)
+        void triangle::draw(device_context &dc, const fmat4 & /*view_projection*/)
         {
             dc.bind_shader(m_vertex_shader);
             dc.bind_shader(m_pixel_shader);

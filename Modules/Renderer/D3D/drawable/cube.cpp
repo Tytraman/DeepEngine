@@ -5,7 +5,7 @@ namespace deep
 {
     namespace D3D
     {
-        void cube::draw(device_context &dc, const fvec3 &camera_location)
+        void cube::draw(device_context &dc, const fmat4 &view_projection)
         {
             dc.bind_shader(m_vertex_shader);
             dc.bind_shader(m_pixel_shader);
@@ -14,9 +14,6 @@ namespace deep
 
             dc.get()->VSSetConstantBuffers(1, 1, m_per_object_buffer->get_address());
             dc.get()->PSSetConstantBuffers(0, 1, m_color_buffer->get_address());
-
-            fmat4 view = fmat4();
-            view       = fmat4::translate(view, camera_location);
 
             fmat4 model = fmat4();
             model       = fmat4::translate(model, m_location);
@@ -28,7 +25,7 @@ namespace deep
             fmat4 projection = fmat4::d3d_perspective_lh(1.0f, 3.0f / 4.0f, 0.5f, 10.0f);
 
             const per_object_buffer pob = {
-                projection * model * view
+                view_projection * model
             };
 
             m_per_object_buffer->update(&pob, dc);

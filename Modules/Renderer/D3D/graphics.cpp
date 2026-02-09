@@ -172,7 +172,7 @@ namespace deep
             m_drawables.add(dr);
         }
 
-        void graphics::draw_all(const fvec3 &camera_location) noexcept
+        void graphics::draw_all(const fmat4 &projection, const fmat4 &view) noexcept
         {
             usize count = m_drawables.count();
             usize index;
@@ -180,11 +180,13 @@ namespace deep
             m_device_context.get()->VSSetConstantBuffers(0, 1, m_per_frame_buffer->get_address());
             m_device_context.get()->PSSetConstantBuffers(0, 1, m_per_frame_buffer->get_address());
 
+            const fmat4 view_projection = projection * view;
+
             for (index = 0; index < count; ++index)
             {
                 if (m_drawables[index].is_valid())
                 {
-                    m_drawables[index]->draw(m_device_context, camera_location);
+                    m_drawables[index]->draw(m_device_context, view_projection);
                 }
             }
         }
