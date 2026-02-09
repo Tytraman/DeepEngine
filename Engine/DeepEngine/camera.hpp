@@ -17,6 +17,8 @@ namespace deep
 
         void walk(float value) noexcept;
         void strafe(float value) noexcept;
+        void move_vertically(float value) noexcept;
+
         void rotate_horizontally(float degrees) noexcept;
         void rotate_vertically(float degrees) noexcept;
 

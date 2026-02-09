@@ -237,6 +237,16 @@ namespace deep
                     m_camera->rotate_horizontally(5.0f);
                 }
                 break;
+                case vkeys::Spacebar:
+                {
+                    m_camera->move_vertically(0.5f);
+                }
+                break;
+                case vkeys::Control:
+                {
+                    m_camera->move_vertically(-0.5f);
+                }
+                break;
             }
         }
 

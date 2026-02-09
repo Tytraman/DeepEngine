@@ -20,12 +20,22 @@ namespace deep
 
     void camera::walk(float value) noexcept
     {
-        m_location += get_forward_axis() * value;
+        fvec3 forward = get_forward_axis();
+
+        forward.y = 0.0f;
+        forward   = fvec3::norm(forward);
+
+        m_location += forward * value;
     }
 
     void camera::strafe(float value) noexcept
     {
         m_location += get_right_axis() * value;
+    }
+
+    void camera::move_vertically(float value) noexcept
+    {
+        m_location.y += value;
     }
 
     void camera::rotate_horizontally(float degrees) noexcept
