@@ -7,8 +7,8 @@ namespace deep
     {
         void triangle::draw(device_context &dc, const fmat4 & /*view_projection*/)
         {
-            dc.bind_shader(m_vertex_shader);
-            dc.bind_shader(m_pixel_shader);
+            dc.bind(m_vertex_shader);
+            dc.bind(m_pixel_shader);
 
             dc.get()->IASetPrimitiveTopology(D3D10_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 

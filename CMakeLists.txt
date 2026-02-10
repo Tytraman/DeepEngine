@@ -1,4 +1,4 @@
-﻿cmake_minimum_required(VERSION 3.15.7)
+cmake_minimum_required(VERSION 3.15.7)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY "${CMAKE_CURRENT_LIST_DIR}/Build")
 
@@ -53,3 +53,9 @@ file(CREATE_LINK
     ${CMAKE_CURRENT_LIST_DIR}/compile_commands.json     # Destination.
     COPY_ON_ERROR   # S'il n'est pas possible de créer de lien symbolique, fait une copie du fichier à la place.
     SYMBOLIC)
+
+add_custom_command(TARGET DeepEngineEditor POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+        "${CMAKE_CURRENT_LIST_DIR}/Resources"
+        "$<TARGET_FILE_DIR:DeepEngine>/Resources"
+)

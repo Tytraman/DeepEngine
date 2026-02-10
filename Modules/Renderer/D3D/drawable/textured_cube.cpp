@@ -1,11 +1,11 @@
-#include "cube.hpp"
+#include "D3D/drawable/textured_cube.hpp"
 #include "D3D/buffer/per_object_buffer.hpp"
 
 namespace deep
 {
     namespace D3D
     {
-        void cube::draw(device_context &dc, const fmat4 &view_projection)
+        void textured_cube::draw(device_context &dc, const fmat4 &view_projection)
         {
             dc.bind(m_vertex_shader);
             dc.bind(m_pixel_shader);
@@ -13,7 +13,9 @@ namespace deep
             dc.bind(m_vertex_buffer);
 
             dc.get()->VSSetConstantBuffers(1, 1, m_per_object_buffer->get_address());
-            dc.get()->PSSetConstantBuffers(0, 1, m_color_buffer->get_address());
+
+            dc.bind(m_texture);
+            dc.bind(m_sampler);
 
             fmat4 model = fmat4();
             model       = fmat4::translate(model, m_location);

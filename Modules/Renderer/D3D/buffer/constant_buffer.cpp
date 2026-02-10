@@ -5,22 +5,9 @@ namespace deep
 {
     namespace D3D
     {
-        void constant_buffer::bind() noexcept
-        {
-        }
-
-        void constant_buffer::draw(Microsoft::WRL::ComPtr<ID3D11DeviceContext> /*device_context*/) noexcept
-        {
-        }
-
         void constant_buffer::update(const void *data, const device_context &dc) noexcept
         {
             dc.get()->UpdateSubresource(m_buffer.Get(), 0, nullptr, data, 0, 0);
-        }
-
-        bool constant_buffer::can_draw() const noexcept
-        {
-            return false;
         }
 
         ID3D11Buffer *constant_buffer::get() const noexcept

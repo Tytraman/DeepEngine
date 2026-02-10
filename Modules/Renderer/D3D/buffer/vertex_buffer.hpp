@@ -2,9 +2,9 @@
 #define DEEP_ENGINE_D3D_VERTEX_BUFFER_HPP
 
 #include "deep_d3d_export.h"
-#include "D3D/resource.hpp"
-
 #include <DeepLib/object.hpp>
+#include <d3d11.h>
+#include <wrl.h>
 
 namespace deep
 {

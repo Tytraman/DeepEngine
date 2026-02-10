@@ -5,9 +5,12 @@
 #include "D3D/device_context.hpp"
 #include "D3D/buffer/vertex_buffer.hpp"
 #include "D3D/buffer/constant_buffer.hpp"
+#include "D3D/texture.hpp"
+#include "D3D/sampler.hpp"
 
 #include <DeepLib/memory/memory.hpp>
 #include <DeepLib/memory/ref_counted.hpp>
+#include <DeepLib/image/image.hpp>
 
 #include <d3d11.h>
 #include <wrl.h>
@@ -21,6 +24,8 @@ namespace deep
           public:
             static ref<vertex_buffer> create_vertex_buffer(const ref<ctx> &context, const void *data, uint32 bytes_size, uint32 stride, Microsoft::WRL::ComPtr<ID3D11Device> device) noexcept;
             static ref<constant_buffer> create_constant_buffer(const ref<ctx> &context, const void *data, uint32 bytes_size, Microsoft::WRL::ComPtr<ID3D11Device> device) noexcept;
+            static ref<texture> create_texture(const ref<ctx> &context, const image &img, Microsoft::WRL::ComPtr<ID3D11Device> device) noexcept;
+            static ref<sampler> create_sampler(const ref<ctx> &context, Microsoft::WRL::ComPtr<ID3D11Device> device) noexcept;
         };
     } // namespace D3D
 } // namespace deep

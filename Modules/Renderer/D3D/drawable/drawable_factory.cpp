@@ -202,6 +202,109 @@ namespace deep
             return ref<cube>(context, c);
         }
 
+        ref<textured_cube> drawable_factory::create_textured_cube(const ref<ctx> &context, const ref<vertex_shader> &vs, const ref<pixel_shader> &ps, const fvec3 &position, const fvec3 &rotation, const fvec3 &scale, const ref<texture> &tex, const ref<sampler> &samp, Microsoft::WRL::ComPtr<ID3D11Device> device) noexcept
+        {
+            struct vertex
+            {
+                struct
+                {
+                    float x;
+                    float y;
+                    float z;
+                } position;
+                struct
+                {
+                    float u;
+                    float v;
+                } tex;
+            };
+
+            const vertex vertices[] = {
+                // Avant
+                { -1.0f, 1.0f, -1.0f, 0.0f, 0.0f },
+                { 1.0f, 1.0f, -1.0f, 1.0f, 0.0f },
+                { 1.0f, -1.0f, -1.0f, 1.0f, 1.0f },
+                { -1.0f, 1.0f, -1.0f, 0.0f, 0.0f },
+                { 1.0f, -1.0f, -1.0f, 1.0f, 1.0f },
+                { -1.0f, -1.0f, -1.0f, 0.0f, 1.0f },
+
+                // Droite
+                { 1.0f, 1.0f, -1.0f, 0.0f, 0.0f },
+                { 1.0f, 1.0f, 1.0f, 1.0f, 0.0f },
+                { 1.0f, -1.0f, 1.0f, 1.0f, 1.0f },
+                { 1.0f, 1.0f, -1.0f, 0.0f, 0.0f },
+                { 1.0f, -1.0f, 1.0f, 1.0f, 1.0f },
+                { 1.0f, -1.0f, -1.0f, 0.0f, 1.0f },
+
+                // Arrière
+                { -1.0f, 1.0f, 1.0f, 0.0f, 0.0f },
+                { 1.0f, -1.0f, 1.0f, 1.0f, 0.0f },
+                { 1.0f, 1.0f, 1.0f, 1.0f, 1.0f },
+                { -1.0f, 1.0f, 1.0f, 0.0f, 0.0f },
+                { -1.0f, -1.0f, 1.0f, 1.0f, 1.0f },
+                { 1.0f, -1.0f, 1.0f, 0.0f, 1.0f },
+
+                // Gauche
+                { -1.0f, 1.0f, 1.0f, 0.0f, 0.0f },
+                { -1.0f, 1.0f, -1.0f, 1.0f, 0.0f },
+                { -1.0f, -1.0f, -1.0f, 1.0f, 1.0f },
+                { -1.0f, 1.0f, 1.0f, 0.0f, 0.0f },
+                { -1.0f, -1.0f, -1.0f, 1.0f, 1.0f },
+                { -1.0f, -1.0f, 1.0f, 0.0f, 1.0f },
+
+                // Bas
+                { -1.0f, -1.0f, -1.0f, 0.0f, 0.0f },
+                { 1.0f, -1.0f, -1.0f, 1.0f, 0.0f },
+                { 1.0f, -1.0f, 1.0f, 1.0f, 1.0f },
+                { 1.0f, -1.0f, 1.0f, 0.0f, 0.0f },
+                { -1.0f, -1.0f, 1.0f, 1.0f, 1.0f },
+                { -1.0f, -1.0f, -1.0f, 0.0f, 1.0f },
+
+                // Haut
+                { -1.0f, 1.0f, 1.0f, 0.0f, 0.0f },
+                { 1.0f, 1.0f, 1.0f, 1.0f, 0.0f },
+                { 1.0f, 1.0f, -1.0f, 1.0f, 1.0f },
+                { -1.0f, 1.0f, 1.0f, 0.0f, 0.0f },
+                { 1.0f, 1.0f, -1.0f, 1.0f, 1.0f },
+                { -1.0f, 1.0f, -1.0f, 0.0f, 1.0f }
+
+            };
+
+            textured_cube *c = mem::alloc_type<textured_cube>(context.get(), context);
+
+            if (c == nullptr)
+            {
+                return ref<textured_cube>();
+            }
+
+            c->m_texture = tex;
+            c->m_sampler = samp;
+
+            fmat4 model = fmat4();
+            model       = fmat4::translate(model, position);
+            model       = fmat4::rotate_x(model, rotation.x);
+            model       = fmat4::rotate_y(model, rotation.y);
+            model       = fmat4::rotate_z(model, rotation.z);
+            model       = fmat4::scale(model, scale);
+
+            fmat4 projection = fmat4::d3d_perspective_lh(1.0f, 3.0f / 4.0f, 0.5f, 10.0f);
+
+            const per_object_buffer pob = {
+                projection * model
+            };
+
+            c->m_vertex_buffer     = resource_factory::create_vertex_buffer(context, vertices, sizeof(vertices), sizeof(vertex), device);
+            c->m_per_object_buffer = resource_factory::create_constant_buffer(context, &pob, sizeof(pob), device);
+            c->m_vertex_shader     = vs;
+            c->m_pixel_shader      = ps;
+
+            c->m_location = position;
+            c->m_rotation = rotation;
+            c->m_scale    = fvec3(1.0f, 1.0f, 1.0f);
+
+            return ref<textured_cube>(context, c);
+        }
+
         ref<cube> drawable_factory::from(const ref<ctx> &context, ref<cube> &from_cube, const ref<vertex_shader> &vs, const ref<pixel_shader> &ps, const fvec3 &position, const fvec3 &rotation, const fvec3 &scale, Microsoft::WRL::ComPtr<ID3D11Device> device) noexcept
         {
             if (!from_cube.is_valid())

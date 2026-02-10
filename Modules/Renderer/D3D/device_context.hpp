@@ -9,6 +9,8 @@
 #include "D3D/shader/vertex_shader.hpp"
 #include "D3D/shader/pixel_shader.hpp"
 #include "D3D/buffer/vertex_buffer.hpp"
+#include "D3D/texture.hpp"
+#include "D3D/sampler.hpp"
 
 #include <d3d11.h>
 #include <wrl.h>
@@ -22,6 +24,8 @@ namespace deep
 
         template class DEEP_D3D_API ref<vertex_shader>;
         template class DEEP_D3D_API ref<pixel_shader>;
+        template class DEEP_D3D_API ref<texture>;
+        template class DEEP_D3D_API ref<sampler>;
 
         enum class rasterizer_state
         {
@@ -42,13 +46,15 @@ namespace deep
             ID3D11DeviceContext *get() const noexcept;
             ID3D11DeviceContext *const *get_address() const noexcept;
 
-            void bind_shader(const ref<vertex_shader> &shader) noexcept;
-            void bind_shader(const ref<pixel_shader> &shader) noexcept;
-
+            void bind(const ref<vertex_shader> &shader) noexcept;
+            void bind(const ref<pixel_shader> &shader) noexcept;
             void bind(const ref<vertex_buffer> &buffer) noexcept;
+            void bind(const ref<texture> &tex) noexcept;
+            void bind(const ref<sampler> &samp) noexcept;
 
             ref<vertex_shader> get_binded_vertex_shader() const noexcept;
             ref<pixel_shader> get_binded_pixel_shader() const noexcept;
+            ref<texture> get_binded_texture() const noexcept;
 
             void set_rasterizer_state(rasterizer_state state) noexcept;
 
@@ -60,6 +66,7 @@ namespace deep
             Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_rasterizer_state_cull_front_wireframe;
             ref<vertex_shader> m_binded_vertex_shader;
             ref<pixel_shader> m_binded_pixel_shader;
+            ref<texture> m_binded_texture;
             rasterizer_state m_rasterizer_state;
 
           public:

@@ -14,9 +14,9 @@ namespace deep
             return m_device_context.GetAddressOf();
         }
 
-        void device_context::bind_shader(const ref<vertex_shader> &shader) noexcept
+        void device_context::bind(const ref<vertex_shader> &shader) noexcept
         {
-            if (shader == m_binded_vertex_shader)
+            if (!shader.is_valid() || shader == m_binded_vertex_shader)
             {
                 return;
             }
@@ -27,9 +27,9 @@ namespace deep
             m_binded_vertex_shader = shader;
         }
 
-        void device_context::bind_shader(const ref<pixel_shader> &shader) noexcept
+        void device_context::bind(const ref<pixel_shader> &shader) noexcept
         {
-            if (shader == m_binded_pixel_shader)
+            if (!shader.is_valid() || shader == m_binded_pixel_shader)
             {
                 return;
             }
@@ -41,7 +41,32 @@ namespace deep
 
         void device_context::bind(const ref<vertex_buffer> &buffer) noexcept
         {
+            if (!buffer.is_valid())
+            {
+                return;
+            }
+
             m_device_context->IASetVertexBuffers(0, 1, buffer->get_address(), &buffer->m_stride, &buffer->m_offset);
+        }
+
+        void device_context::bind(const ref<texture> &tex) noexcept
+        {
+            if (!tex.is_valid())
+            {
+                return;
+            }
+
+            m_device_context->PSSetShaderResources(0, 1, tex->m_texture_view.GetAddressOf());
+        }
+
+        void device_context::bind(const ref<sampler> &samp) noexcept
+        {
+            if (!samp.is_valid())
+            {
+                return;
+            }
+
+            m_device_context->PSSetSamplers(0, 1, samp->m_sampler_state.GetAddressOf());
         }
 
         ref<vertex_shader> device_context::get_binded_vertex_shader() const noexcept
@@ -52,6 +77,11 @@ namespace deep
         ref<pixel_shader> device_context::get_binded_pixel_shader() const noexcept
         {
             return m_binded_pixel_shader;
+        }
+
+        ref<texture> device_context::get_binded_texture() const noexcept
+        {
+            return m_binded_texture;
         }
 
         void device_context::set_rasterizer_state(rasterizer_state state) noexcept

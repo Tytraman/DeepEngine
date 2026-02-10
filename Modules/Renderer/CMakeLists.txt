@@ -10,10 +10,14 @@ add_library(DeepD3D SHARED
     "${CMAKE_CURRENT_LIST_DIR}/D3D/shader/vertex_shader.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/D3D/shader/pixel_shader.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/D3D/shader/shader_factory.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/D3D/texture.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/D3D/sampler.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/D3D/drawable/drawable_factory.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/D3D/drawable/triangle.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/D3D/drawable/rectangle.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/D3D/drawable/cube.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/D3D/drawable/textured_cube.cpp"
+
 )
 add_library(Deep::D3D ALIAS DeepD3D)
 
@@ -69,13 +73,13 @@ elseif(CMAKE_CXX_COMPILER_ID STREQUAL "MSVC")
         PRIVATE
             /WX     # Considère les warning comme des erreurs.
             /W4     # Niveau d'avertissement élevé.
-            ${FSANITIZE_ADDR}
+            #${FSANITIZE_ADDR}
     )
 
-    target_link_options(DeepD3D
-        PRIVATE
-            ${FSANITIZE_ADDR}
-    )
+    #target_link_options(DeepD3D
+    #    PRIVATE
+    #        ${FSANITIZE_ADDR}
+    #)
 endif()
 
 target_link_libraries(DeepD3D
