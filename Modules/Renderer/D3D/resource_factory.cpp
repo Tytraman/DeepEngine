@@ -64,6 +64,23 @@ namespace deep
 
         ref<texture> resource_factory::create_texture(const ref<ctx> &context, const image &img, Microsoft::WRL::ComPtr<ID3D11Device> device) noexcept
         {
+            DXGI_FORMAT format;
+            switch (img.get_color_space())
+            {
+                default:
+                    return ref<texture>();
+                case image::color_space::RGBA:
+                {
+                    format = DXGI_FORMAT_R8G8B8A8_UNORM;
+                }
+                break;
+                case image::color_space::BGRA:
+                {
+                    format = DXGI_FORMAT_B8G8R8A8_UNORM;
+                }
+                break;
+            }
+
             texture *tex = mem::alloc_type<texture>(context.get(), context);
 
             if (tex == nullptr)
@@ -76,7 +93,7 @@ namespace deep
             texture_desc.Height               = img.get_height();
             texture_desc.MipLevels            = 1;
             texture_desc.ArraySize            = 1;
-            texture_desc.Format               = DXGI_FORMAT_B8G8R8A8_UNORM;
+            texture_desc.Format               = format;
             texture_desc.SampleDesc.Count     = 1;
             texture_desc.SampleDesc.Quality   = 0;
             texture_desc.Usage                = D3D11_USAGE_DEFAULT;

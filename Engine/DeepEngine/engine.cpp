@@ -148,7 +148,7 @@ namespace deep
 
         if (png_source.is_valid() && png_source.check() && png_source.read_info())
         {
-            image img_tex1 = png_source.read_image();
+            image img_tex1 = png_source.read_image(image::color_space::RGBA);
 
             if (img_tex1.is_valid())
             {
