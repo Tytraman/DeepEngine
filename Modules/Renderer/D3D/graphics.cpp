@@ -19,6 +19,7 @@ namespace deep
     {
         graphics::graphics(const ref<ctx> &context, window_handle win) noexcept
                 : object(context),
+                  m_background_color(),
                   m_window_handle(win),
                   m_device(nullptr),
                   m_swap_chain(nullptr),
@@ -27,7 +28,7 @@ namespace deep
         {
         }
 
-        ref<graphics> graphics::create(const ref<ctx> &context, window &win, const fvec3 &player_position) noexcept
+        ref<graphics> graphics::create(const ref<ctx> &context, window &win, const fvec4 &background_color, const fvec3 &initial_location, post_init_callback post_init) noexcept
         {
             context->out() << "Direct3D 11 initialization...";
 
@@ -35,6 +36,13 @@ namespace deep
             int32 height = win.get_height();
 
             graphics *graph = mem::alloc_type<graphics>(context.get(), context, win.get_handle());
+
+            if (graph == nullptr)
+            {
+                return ref<graphics>();
+            }
+
+            graph->m_background_color = background_color;
 
             DXGI_SWAP_CHAIN_DESC sd               = { 0 };
             sd.BufferDesc.Width                   = 0;
@@ -143,7 +151,7 @@ namespace deep
             graph->m_device_context.set_rasterizer_state(rasterizer_state::CullBackSolid);
 
             fmat4 view;
-            view = fmat4::translate(view, player_position);
+            view = fmat4::translate(view, initial_location);
 
             fmat4 projection = fmat4::d3d_perspective_lh(1.0f, 3.0f / 4.0f, 0.5f, 10.0f);
 
@@ -154,16 +162,26 @@ namespace deep
 
             graph->m_per_frame_buffer = resource_factory::create_constant_buffer(context, &pfb, sizeof(pfb), graph->m_device);
 
+            if (post_init != nullptr)
+            {
+                post_init(graph);
+            }
+
             context->out() << " OK\r\n";
 
             return ref<graphics>(context, graph);
         }
 
-        void graphics::clear_buffer(float r, float g, float b) noexcept
+        void graphics::clear_buffer() noexcept
         {
-            const float colors[] = { r, g, b, 1.0f };
+            const float color[] = {
+                m_background_color.x,
+                m_background_color.y,
+                m_background_color.z,
+                m_background_color.w
+            };
 
-            m_device_context.get()->ClearRenderTargetView(m_render_target_view.Get(), colors);
+            m_device_context.get()->ClearRenderTargetView(m_render_target_view.Get(), color);
             m_device_context.get()->ClearDepthStencilView(m_depth_stencil_view.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
         }
 

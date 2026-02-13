@@ -28,6 +28,7 @@ if(MSVC)
 endif()
 
 find_package(DeepLib REQUIRED)
+find_package(imgui CONFIG REQUIRED)
 
 include("cmake/variables.cmake")
 

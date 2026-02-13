@@ -14,8 +14,19 @@
 #include <DeepLib/filesystem/filesystem.hpp>
 #include <DeepLib/image/png.hpp>
 
+#include <imgui.h>
+#include <imgui_impl_win32.h>
+#include <imgui_impl_dx11.h>
+
+extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 namespace deep
 {
+    void init_imgui_d3d(D3D::graphics *graph)
+    {
+        ImGui_ImplDX11_Init(graph->get_device().Get(), graph->get_device_context().get());
+    }
+
     ref<engine> engine::create()
     {
         ref<ctx> context = lib::create_ctx();
@@ -65,6 +76,20 @@ namespace deep
 
         eng->m_window->get_keyboard().set_auto_repeat(true);
 
+        context->out() << DEEP_TEXT_UTF8(" OK\r\nImGui initialization...");
+
+        eng->m_imgui_manager = imgui_manager::create(context);
+
+        if (!eng->m_imgui_manager.is_valid())
+        {
+            context->out() << DEEP_TEXT_UTF8(" failed\r\n");
+            context->err() << DEEP_TEXT_UTF8("[ERROR] ImGui initialization failed.\r\n");
+
+            return ref<engine>();
+        }
+
+        eng->m_imgui_manager->init(eng->m_window->get_handle());
+
         context->out() << DEEP_TEXT_UTF8(" OK\r\nCreating camera...");
 
         eng->m_camera = ref<camera>(context, mem::alloc_type<camera>(context.get(), context, fvec3(0.0f, 0.0f, 0.0f)));
@@ -79,9 +104,14 @@ namespace deep
 
         context->out() << DEEP_TEXT_UTF8(" OK\r\n");
 
-        eng->m_graphics = D3D::graphics::create(context, *eng->m_window, eng->m_camera->get_location());
+        eng->m_graphics = D3D::graphics::create(context, *eng->m_window, fvec4(38.0f / 255.0f, 62.0f / 255.0f, 155.0f / 255.0f, 1.0f), eng->m_camera->get_location(), init_imgui_d3d);
+
+        eng->m_window->set_pre_callback(ImGui_ImplWin32_WndProcHandler);
 
         eng->m_window->show();
+
+        core_window::hide_cursor();
+        eng->m_cursor_visible = false;
 
         return eng;
     }
@@ -196,9 +226,14 @@ namespace deep
                 break;
             }
 
-            m_graphics->clear_buffer(0.0f, 0.0f, 0.0f);
+            m_graphics->clear_buffer();
 
             m_graphics->draw_all(m_camera->get_projection(), m_camera->get_view());
+
+            if (m_imgui_manager->is_enabled())
+            {
+                m_imgui_manager->draw();
+            }
 
             m_graphics->end_frame();
 
@@ -219,6 +254,11 @@ namespace deep
         uint64 running_time_millis = get_time_millis();
 
         get_context()->out() << "DeepEngine ran for " << running_time_millis << "ms.\r\n";
+
+        //////////////
+        // SHUTDOWN //
+        //////////////
+        m_imgui_manager->shutdown();
     }
 
     bool engine::process_inputs() noexcept
@@ -236,6 +276,31 @@ namespace deep
                     break;
                 case vkeys::Escape:
                     return false;
+                case vkeys::F1:
+                {
+                    static bool f1_pressed = false;
+
+                    if (e.is_press() && !f1_pressed)
+                    {
+                        if (m_cursor_visible)
+                        {
+                            core_window::hide_cursor();
+                        }
+                        else
+                        {
+                            core_window::show_cursor();
+                        }
+
+                        m_cursor_visible = !m_cursor_visible;
+
+                        f1_pressed = true;
+                    }
+                    else if (e.is_release() && f1_pressed)
+                    {
+                        f1_pressed = false;
+                    }
+                }
+                break;
                 case vkeys::F3:
                 {
                     get_context()->out() << "FPS: " << m_FPS << "\r\n";
@@ -323,6 +388,29 @@ namespace deep
                     m_camera->move_vertically(-0.5f);
                 }
                 break;
+                case vkeys::H:
+                {
+                    static bool h_pressed = false;
+
+                    if (e.is_press() && !h_pressed)
+                    {
+                        if (m_imgui_manager->is_enabled())
+                        {
+                            m_imgui_manager->set_enabled(false);
+                        }
+                        else
+                        {
+                            m_imgui_manager->set_enabled(true);
+                        }
+
+                        h_pressed = true;
+                    }
+                    else if (e.is_release() && h_pressed)
+                    {
+                        h_pressed = false;
+                    }
+                }
+                break;
             }
         }
 
@@ -333,7 +421,8 @@ namespace deep
             : object(context),
               m_startup_tick_count(0),
               m_startup_time_millis(0),
-              m_FPS(0)
+              m_FPS(0),
+              m_cursor_visible(true)
     {
     }
 

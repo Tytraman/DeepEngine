@@ -33,14 +33,17 @@ namespace deep
         class DEEP_D3D_API graphics : public object
         {
           public:
+            using post_init_callback = void (*)(graphics *graph);
+
+          public:
             graphics()                            = delete;
             graphics(const graphics &)            = delete;
             graphics &operator=(const graphics &) = delete;
             ~graphics()                           = default;
 
-            static ref<graphics> create(const ref<ctx> &context, window &win, const fvec3 &player_position) noexcept;
+            static ref<graphics> create(const ref<ctx> &context, window &win, const fvec4 &background_color, const fvec3 &initial_location, post_init_callback post_init = nullptr) noexcept;
 
-            void clear_buffer(float r, float g, float b) noexcept;
+            void clear_buffer() noexcept;
 
             void add_drawable(const ref<drawable> &dr) noexcept;
 
@@ -60,6 +63,8 @@ namespace deep
             graphics(const ref<ctx> &context, window_handle win) noexcept;
 
           private:
+            DEEP_FVEC4 m_background_color;
+
             window_handle m_window_handle;
             // Le 'device' permet la création de ressources Direct3D.
             Microsoft::WRL::ComPtr<ID3D11Device> m_device;

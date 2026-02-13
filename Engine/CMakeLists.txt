@@ -27,6 +27,7 @@ deep_compile_shader("${CMAKE_CURRENT_LIST_DIR}/DeepEngine/Shaders/textured_cube.
 add_library(DeepEngine SHARED
     "${CMAKE_CURRENT_LIST_DIR}/DeepEngine/engine.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/DeepEngine/camera.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/DeepEngine/GUI/imgui_manager.cpp"
     ${SHADER_CSO_FILES})
 add_library(Deep::Engine ALIAS DeepEngine)
 
@@ -85,6 +86,8 @@ target_link_libraries(DeepEngine
     PUBLIC
         Deep::Core
         Deep::Lib
-        Deep::D3D)
+        Deep::D3D
+    PRIVATE
+        imgui::imgui)
 
 target_compile_definitions(DeepEngine PRIVATE DEEPENGINE_LIB=1)

@@ -9,6 +9,7 @@
 #include <DeepLib/maths/mat.hpp>
 
 #include "DeepEngine/camera.hpp"
+#include "DeepEngine/GUI/imgui_manager.hpp"
 #include "D3D/graphics.hpp"
 
 namespace deep
@@ -33,10 +34,12 @@ namespace deep
       private:
         ref<window> m_window;
         ref<D3D::graphics> m_graphics;
+        ref<imgui_manager> m_imgui_manager;
         uint64 m_startup_tick_count;
         uint64 m_startup_time_millis;
         uint32 m_FPS;
         ref<camera> m_camera;
+        bool m_cursor_visible;
 
       protected:
         engine(const ref<ctx> &context) noexcept;
