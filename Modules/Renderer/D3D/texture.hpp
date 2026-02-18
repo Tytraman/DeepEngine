@@ -15,6 +15,8 @@ namespace deep
         class DEEP_D3D_API texture : public object
         {
           public:
+            ID3D11ShaderResourceView *get() const;
+
           protected:
             using object::object;
 

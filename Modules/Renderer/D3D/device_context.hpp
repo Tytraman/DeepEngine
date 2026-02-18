@@ -22,11 +22,6 @@ namespace deep
         template class DEEP_D3D_API Microsoft::WRL::ComPtr<ID3D11DeviceContext>;
         template class DEEP_D3D_API Microsoft::WRL::ComPtr<ID3D11RasterizerState>;
 
-        template class DEEP_D3D_API ref<vertex_shader>;
-        template class DEEP_D3D_API ref<pixel_shader>;
-        template class DEEP_D3D_API ref<texture>;
-        template class DEEP_D3D_API ref<sampler>;
-
         enum class rasterizer_state
         {
             Unknown,
@@ -64,9 +59,9 @@ namespace deep
             Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_rasterizer_state_cull_back_wireframe;
             Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_rasterizer_state_cull_front_solid;
             Microsoft::WRL::ComPtr<ID3D11RasterizerState> m_rasterizer_state_cull_front_wireframe;
-            ref<vertex_shader> m_binded_vertex_shader;
-            ref<pixel_shader> m_binded_pixel_shader;
-            ref<texture> m_binded_texture;
+            DEEP_REF(vertex_shader, m_binded_vertex_shader)
+            DEEP_REF(pixel_shader, m_binded_pixel_shader)
+            DEEP_REF(texture, m_binded_texture)
             rasterizer_state m_rasterizer_state;
 
           public:

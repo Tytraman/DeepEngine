@@ -1,4 +1,5 @@
 #include "DeepEngine/GUI/imgui_manager.hpp"
+#include "DeepEngine/GUI/imgui_debug_panel.hpp"
 
 #include <DeepLib/memory/memory.hpp>
 
@@ -10,7 +11,8 @@ namespace deep
 {
     imgui_manager::imgui_manager(const ref<ctx> &context, bool enabled) noexcept
             : object::object(context),
-              m_enabled(enabled)
+              m_enabled(enabled),
+              m_drawables(context)
     {
     }
 
@@ -22,6 +24,12 @@ namespace deep
         {
             return ref<imgui_manager>();
         }
+
+        imgui_debug_panel *im_debug = mem::alloc_type<imgui_debug_panel>(context.get(), context, true);
+        imgui_chat *im_chat         = mem::alloc_type<imgui_chat>(context.get(), context, true);
+
+        im->m_debug_panel = ref<imgui_debug_panel>(context, im_debug);
+        im->m_chat        = ref<imgui_chat>(context, im_chat);
 
         return ref<imgui_manager>(context, im);
     }
@@ -43,13 +51,32 @@ namespace deep
         ImGui::DestroyContext();
     }
 
-    void imgui_manager::draw() noexcept
+    void imgui_manager::draw_all() noexcept
     {
         ImGui_ImplDX11_NewFrame();
         ImGui_ImplWin32_NewFrame();
         ImGui::NewFrame();
 
-        ImGui::ShowDemoWindow();
+        if (m_debug_panel.is_valid())
+        {
+            m_debug_panel->draw();
+        }
+
+        if (m_chat.is_valid())
+        {
+            m_chat->draw();
+        }
+
+        usize index;
+        for (index = 0; index < m_drawables.count(); ++index)
+        {
+            ref<imgui_drawable> im = m_drawables[index];
+
+            if (im.is_valid() && im->is_enabled())
+            {
+                im->draw();
+            }
+        }
 
         ImGui::Render();
         ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
@@ -63,5 +90,15 @@ namespace deep
     void imgui_manager::set_enabled(bool value) noexcept
     {
         m_enabled = value;
+    }
+
+    ref<imgui_debug_panel> imgui_manager::get_debug_panel() const noexcept
+    {
+        return m_debug_panel;
+    }
+
+    ref<imgui_chat> imgui_manager::get_chat() const noexcept
+    {
+        return m_chat;
     }
 } // namespace deep

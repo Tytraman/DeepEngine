@@ -27,7 +27,7 @@ namespace deep
         ImGui_ImplDX11_Init(graph->get_device().Get(), graph->get_device_context().get());
     }
 
-    ref<engine> engine::create()
+    ref<engine> engine::create() noexcept
     {
         ref<ctx> context = lib::create_ctx();
 
@@ -48,6 +48,8 @@ namespace deep
 
             return ref<engine>();
         }
+
+        context->set_object(DEEP_TEXT_UTF8("engine"), eng);
 
         eng->m_startup_tick_count  = time::get_tick_count();
         eng->m_startup_time_millis = time::get_current_time_millis();
@@ -108,15 +110,48 @@ namespace deep
 
         eng->m_window->set_pre_callback(ImGui_ImplWin32_WndProcHandler);
 
+        file_stream icon_stream = file_stream(context,
+                                              DEEP_TEXT_NATIVE("Resources") DEEP_NATIVE_SEPARATOR DEEP_TEXT_NATIVE("Textures") DEEP_NATIVE_SEPARATOR DEEP_TEXT_NATIVE("icon.png"),
+                                              core_fs::file_mode::Open,
+                                              core_fs::file_access::Read,
+                                              core_fs::file_share::Read);
+        icon_stream.open();
+
+        png icon_png = png::load(context, &icon_stream);
+
+        if (icon_png.is_valid() &&
+            icon_png.check() &&
+            icon_png.read_info())
+        {
+            image icon_img = icon_png.read_image();
+
+            if (icon_img.is_valid())
+            {
+                ref<D3D::texture> tex1 = D3D::resource_factory::create_texture(context, icon_img, eng->m_graphics->get_device());
+
+                eng->m_imgui_manager->get_debug_panel()->set_icon(tex1);
+            }
+            else
+            {
+                context->err() << DEEP_TEXT_UTF8("[ERROR] Cannot read image data from 'icon.png'.\r\n");
+            }
+        }
+        else
+        {
+            context->err() << DEEP_TEXT_UTF8("[ERROR] Cannot load 'icon.png'.\r\n");
+        }
+
         eng->m_window->show();
 
-        core_window::hide_cursor();
-        eng->m_cursor_visible = false;
+        if (eng->m_gui_mode == gui_mode::Viewport)
+        {
+            core_window::hide_cursor();
+        }
 
         return eng;
     }
 
-    void engine::run()
+    void engine::run() noexcept
     {
         uint64 tick_count;
         uint64 elapsed;
@@ -232,7 +267,7 @@ namespace deep
 
             if (m_imgui_manager->is_enabled())
             {
-                m_imgui_manager->draw();
+                m_imgui_manager->draw_all();
             }
 
             m_graphics->end_frame();
@@ -282,16 +317,18 @@ namespace deep
 
                     if (e.is_press() && !f1_pressed)
                     {
-                        if (m_cursor_visible)
+                        if (m_gui_mode == gui_mode::UI)
                         {
                             core_window::hide_cursor();
+
+                            m_gui_mode = gui_mode::Viewport;
                         }
                         else
                         {
                             core_window::show_cursor();
-                        }
 
-                        m_cursor_visible = !m_cursor_visible;
+                            m_gui_mode = gui_mode::UI;
+                        }
 
                         f1_pressed = true;
                     }
@@ -340,74 +377,107 @@ namespace deep
                 break;
                 case vkeys::Z:
                 {
-                    m_camera->walk(0.5f);
+                    if (m_gui_mode == gui_mode::Viewport)
+                    {
+                        m_camera->walk(0.5f);
+                    }
                 }
                 break;
                 case vkeys::Q:
                 {
-                    m_camera->strafe(-0.5f);
+                    if (m_gui_mode == gui_mode::Viewport)
+                    {
+                        m_camera->strafe(-0.5f);
+                    }
                 }
                 break;
                 case vkeys::S:
                 {
-                    m_camera->walk(-0.5f);
+                    if (m_gui_mode == gui_mode::Viewport)
+                    {
+                        m_camera->walk(-0.5f);
+                    }
                 }
                 break;
                 case vkeys::D:
                 {
-                    m_camera->strafe(0.5f);
+                    if (m_gui_mode == gui_mode::Viewport)
+                    {
+                        m_camera->strafe(0.5f);
+                    }
                 }
                 break;
                 case vkeys::Up:
                 {
-                    m_camera->rotate_vertically(5.0f);
+                    if (m_gui_mode == gui_mode::Viewport)
+                    {
+                        m_camera->rotate_vertically(5.0f);
+                    }
                 }
                 break;
                 case vkeys::Left:
                 {
-                    m_camera->rotate_horizontally(-5.0f);
+                    if (m_gui_mode == gui_mode::Viewport)
+                    {
+                        m_camera->rotate_horizontally(-5.0f);
+                    }
                 }
                 break;
                 case vkeys::Down:
                 {
-                    m_camera->rotate_vertically(-5.0f);
+                    if (m_gui_mode == gui_mode::Viewport)
+                    {
+                        m_camera->rotate_vertically(-5.0f);
+                    }
                 }
                 break;
                 case vkeys::Right:
                 {
-                    m_camera->rotate_horizontally(5.0f);
+                    if (m_gui_mode == gui_mode::Viewport)
+                    {
+                        m_camera->rotate_horizontally(5.0f);
+                    }
                 }
                 break;
                 case vkeys::Spacebar:
                 {
-                    m_camera->move_vertically(0.5f);
+                    if (m_gui_mode == gui_mode::Viewport)
+                    {
+                        m_camera->move_vertically(0.5f);
+                    }
                 }
                 break;
                 case vkeys::Control:
                 {
-                    m_camera->move_vertically(-0.5f);
+                    if (m_gui_mode == gui_mode::Viewport)
+                    {
+                        m_camera->move_vertically(-0.5f);
+                    }
                 }
                 break;
                 case vkeys::H:
                 {
                     static bool h_pressed = false;
 
-                    if (e.is_press() && !h_pressed)
+                    if (m_gui_mode == gui_mode::Viewport)
                     {
-                        if (m_imgui_manager->is_enabled())
+                        if (e.is_press() && !h_pressed)
                         {
-                            m_imgui_manager->set_enabled(false);
-                        }
-                        else
-                        {
-                            m_imgui_manager->set_enabled(true);
-                        }
+                            if (m_imgui_manager->is_enabled())
+                            {
+                                m_imgui_manager->set_enabled(false);
+                            }
+                            else
+                            {
+                                m_imgui_manager->set_enabled(true);
+                            }
 
-                        h_pressed = true;
-                    }
-                    else if (e.is_release() && h_pressed)
-                    {
-                        h_pressed = false;
+                            h_pressed = true;
+                        }
+                        else if (e.is_release() && h_pressed)
+                        {
+                            h_pressed = false;
+                        }
                     }
                 }
                 break;
@@ -422,7 +492,7 @@ namespace deep
               m_startup_tick_count(0),
               m_startup_time_millis(0),
               m_FPS(0),
-              m_cursor_visible(true)
+              m_gui_mode(gui_mode::UI)
     {
     }
 

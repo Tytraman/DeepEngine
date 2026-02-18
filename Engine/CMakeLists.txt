@@ -28,6 +28,9 @@ add_library(DeepEngine SHARED
     "${CMAKE_CURRENT_LIST_DIR}/DeepEngine/engine.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/DeepEngine/camera.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/DeepEngine/GUI/imgui_manager.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/DeepEngine/GUI/imgui_drawable.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/DeepEngine/GUI/imgui_debug_panel.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/DeepEngine/GUI/imgui_chat.cpp"
     ${SHADER_CSO_FILES})
 add_library(Deep::Engine ALIAS DeepEngine)
 
