@@ -38,6 +38,7 @@ target_link_libraries(DeepD3D
 
 set_target_properties(DeepD3D PROPERTIES
     OUTPUT_NAME DeepD3D
+    DEBUG_POSTFIX "_d"
     EXPORT_NAME D3D
     VERSION ${PROJECT_VERSION}
     SOVERSION ${PROJECT_VERSION_MAJOR}

@@ -20,6 +20,37 @@
 
 extern IMGUI_IMPL_API LRESULT ImGui_ImplWin32_WndProcHandler(HWND hWnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
+namespace
+{
+    bool window_activate_callback(void *data)
+    {
+        deep::window *win = static_cast<deep::window *>(data);
+
+        if (win == nullptr)
+        {
+            return true;
+        }
+
+        win->confine_cursor();
+
+        return true;
+    }
+
+    bool window_deactivate_callback(void *data)
+    {
+        deep::window *win = static_cast<deep::window *>(data);
+
+        if (win == nullptr)
+        {
+            return true;
+        }
+
+        win->free_cursor();
+
+        return true;
+    }
+} // namespace
+
 namespace deep
 {
     void init_imgui_d3d(D3D::graphics *graph)
@@ -106,9 +137,11 @@ namespace deep
 
         context->out() << DEEP_TEXT_UTF8(" OK\r\n");
 
-        eng->m_graphics = D3D::graphics::create(context, *eng->m_window, fvec4(38.0f / 255.0f, 62.0f / 255.0f, 155.0f / 255.0f, 1.0f), eng->m_camera->get_location(), init_imgui_d3d);
+        eng->m_graphics = D3D::graphics::create(context, *eng->m_window, fvec4(0.0f, 0.0f, 0.0f, 1.0f), eng->m_camera->get_location(), init_imgui_d3d);
 
         eng->m_window->set_pre_callback(ImGui_ImplWin32_WndProcHandler);
+        eng->m_window->set_activate_callback(window_activate_callback);
+        eng->m_window->set_deactivate_callback(window_deactivate_callback);
 
         file_stream icon_stream = file_stream(context,
                                               DEEP_TEXT_NATIVE("Resources") DEEP_NATIVE_SEPARATOR DEEP_TEXT_NATIVE("Textures") DEEP_NATIVE_SEPARATOR DEEP_TEXT_NATIVE("icon.png"),
@@ -248,7 +281,7 @@ namespace deep
         //////////////////////
 
         // Boucle infinie du jeu. S'arrête quand l'utilisateur ferme la fenêtre.
-        while (m_window->process_message())
+        while (!m_should_close && m_window->process_message())
         {
             // Calcule le temps passé à faire la boucle.
             tick_count          = time::get_tick_count();
@@ -319,6 +352,7 @@ namespace deep
                     {
                         if (m_gui_mode == gui_mode::UI)
                         {
+                            m_imgui_manager->lose_focus();
                             core_window::hide_cursor();
 
                             m_gui_mode = gui_mode::Viewport;
@@ -465,6 +499,7 @@ namespace deep
                         {
                             if (m_imgui_manager->is_enabled())
                             {
+                                m_imgui_manager->lose_focus();
                                 m_imgui_manager->set_enabled(false);
                             }
                             else
@@ -489,6 +524,7 @@ namespace deep
 
     engine::engine(const ref<ctx> &context) noexcept
             : object(context),
+              m_should_close(false),
               m_startup_tick_count(0),
               m_startup_time_millis(0),
               m_FPS(0),

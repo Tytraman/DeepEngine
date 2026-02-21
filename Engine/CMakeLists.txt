@@ -36,6 +36,7 @@ add_library(Deep::Engine ALIAS DeepEngine)
 
 set_target_properties(DeepEngine PROPERTIES
     OUTPUT_NAME DeepEngine
+    DEBUG_POSTFIX "_d"
     EXPORT_NAME Engine
     VERSION ${PROJECT_VERSION}
     SOVERSION ${PROJECT_VERSION_MAJOR}

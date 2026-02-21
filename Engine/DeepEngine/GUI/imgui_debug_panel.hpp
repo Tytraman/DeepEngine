@@ -15,7 +15,10 @@ namespace deep
         {
             Main,
             Stats,
-            About
+            About,
+            EditWorld,
+            EditCamera,
+            EditImGui
         };
 
       public:

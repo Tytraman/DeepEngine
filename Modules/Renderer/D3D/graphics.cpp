@@ -61,12 +61,18 @@ namespace deep
             sd.SwapEffect                         = DXGI_SWAP_EFFECT_DISCARD;
             sd.Flags                              = 0;
 
+            UINT create_flags = 0;
+
+#ifdef _DEBUG
+            create_flags |= D3D11_CREATE_DEVICE_DEBUG;
+#endif
+
             // Crée le dispositif de rendu, les front/back buffers et la chaîne de rendu.
             DEEP_DX_CHECK(D3D11CreateDeviceAndSwapChain(
                                   nullptr, // Laisse l'OS choisir l'adaptateur par défaut.
                                   D3D_DRIVER_TYPE_HARDWARE,
                                   nullptr,
-                                  D3D11_CREATE_DEVICE_DEBUG,
+                                  create_flags,
                                   nullptr,
                                   0,
                                   D3D11_SDK_VERSION,
@@ -254,6 +260,16 @@ namespace deep
             {
                 DebugBreak();
             }
+        }
+
+        fvec4 graphics::get_background_color() const noexcept
+        {
+            return m_background_color;
+        }
+
+        void graphics::set_background_color(const fvec4 &color) noexcept
+        {
+            m_background_color = color;
         }
 
         Microsoft::WRL::ComPtr<ID3D11Device> graphics::get_device() noexcept

@@ -33,11 +33,19 @@ namespace deep
         float footer_height = 35.0f;
         float height        = static_cast<float>(win->get_height());
 
-        ImGui::SetNextWindowPos({ 0.0f, height - panel_height });
+        ImGui::SetNextWindowPos({ 5.0f, height - panel_height - 5.0f });
         ImGui::SetNextWindowSize({ 500.0f, panel_height });
 
-        ImGui::PushStyleColor(ImGuiCol_WindowBg, ImVec4(46.0f / 255.0f, 57.0f / 255.0f, 68.0f / 255.0f, 1.0f));
-        if (ImGui::Begin("Chat", nullptr, ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize))
+        ImGuiWindowFlags window_flags   = ImGuiWindowFlags_NoCollapse | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoTitleBar;
+        ImGuiInputTextFlags input_flags = ImGuiInputTextFlags_EnterReturnsTrue;
+
+        if (eng->get_gui_mode() == gui_mode::Viewport)
+        {
+            window_flags |= ImGuiWindowFlags_NoInputs;
+            input_flags |= ImGuiInputTextFlags_ReadOnly;
+        }
+
+        if (ImGui::Begin("Chat", nullptr, window_flags))
         {
             float scrolling_region_height = ImGui::GetContentRegionAvail().y - footer_height;
 
@@ -63,7 +71,7 @@ namespace deep
             ImGui::SetCursorPosY(ImGui::GetWindowHeight() - footer_height);
 
             ImGui::PushItemWidth(ImGui::GetContentRegionAvail().x);
-            if (ImGui::InputText("##ChatInput", input_buffer, IM_ARRAYSIZE(input_buffer), ImGuiInputTextFlags_EnterReturnsTrue))
+            if (ImGui::InputText("##DeepEngineChatInput", input_buffer, IM_ARRAYSIZE(input_buffer), input_flags))
             {
                 // Code exécuté lors de l'appui sur la touche 'Entrée'.
 
@@ -84,6 +92,5 @@ namespace deep
 
             ImGui::End();
         }
-        ImGui::PopStyleColor();
     }
 } // namespace deep

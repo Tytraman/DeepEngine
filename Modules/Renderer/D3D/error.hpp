@@ -1,4 +1,4 @@
-﻿#ifndef DEEP_ENGINE_D3D_ERROR_HPP
+#ifndef DEEP_ENGINE_D3D_ERROR_HPP
 #define DEEP_ENGINE_D3D_ERROR_HPP
 
 #include "deep_d3d_export.h"
@@ -32,6 +32,7 @@ namespace deep
     } // namespace D3D
 } // namespace deep
 
+#ifdef _DEBUG
 #define DEEP_DX_CHECK(x, _ref_context, _device)                                \
     {                                                                          \
         HRESULT hr = (x);                                                      \
@@ -53,5 +54,8 @@ namespace deep
             DebugBreak();                                                      \
         }                                                                      \
     }
+#else
+#define DEEP_DX_CHECK(x, _ref_context, _device) (x);
+#endif
 
 #endif

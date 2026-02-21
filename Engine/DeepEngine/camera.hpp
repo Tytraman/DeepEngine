@@ -25,12 +25,17 @@ namespace deep
         /**
          * @brief Récupère la position relative au monde.
          */
-        const fvec3 &get_location() const noexcept;
+        const fvec3 get_location() const noexcept;
 
         /**
          * @brief Modifie la position relative au monde.
          */
         void set_location(const fvec3 &location) noexcept;
+
+        float get_yaw() const noexcept;
+        void set_yaw(float degrees) noexcept;
+        float get_pitch() const noexcept;
+        void set_pitch(float degrees) noexcept;
 
         float get_z_near() const noexcept;
         float get_z_far() const noexcept;
@@ -47,7 +52,7 @@ namespace deep
         fvec3 get_up_axis() const noexcept;
 
         fmat4 get_view() const noexcept;
-        const fmat4 &get_projection() const noexcept;
+        fmat4 get_projection() const noexcept;
 
         void set_lens(float vertical_fov, float aspect_ratio, float z_near, float z_far) noexcept;
 

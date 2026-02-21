@@ -52,6 +52,9 @@ namespace deep
             void end_frame() noexcept;
             void print_debug_messages() noexcept;
 
+            fvec4 get_background_color() const noexcept;
+            void set_background_color(const fvec4 &color) noexcept;
+
             Microsoft::WRL::ComPtr<ID3D11Device> get_device() noexcept;
 
             device_context &get_device_context() noexcept;

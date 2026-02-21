@@ -3,7 +3,6 @@
 
 #include <DeepLib/memory/memory.hpp>
 
-#include <imgui.h>
 #include <imgui_impl_win32.h>
 #include <imgui_impl_dx11.h>
 
@@ -12,6 +11,10 @@ namespace deep
     imgui_manager::imgui_manager(const ref<ctx> &context, bool enabled) noexcept
             : object::object(context),
               m_enabled(enabled),
+              m_global_background_color(DefaultGlobalBackgroundColor),
+              m_global_border_color(DefaultGlobalBorderColor),
+              m_global_text_color(DefaultGlobalTextColor),
+              m_global_border_size(DefaultBorderSize),
               m_drawables(context)
     {
     }
@@ -57,6 +60,12 @@ namespace deep
         ImGui_ImplWin32_NewFrame();
         ImGui::NewFrame();
 
+        ImGui::PushStyleColor(ImGuiCol_WindowBg, m_global_background_color);
+        ImGui::PushStyleColor(ImGuiCol_Border, m_global_border_color);
+        ImGui::PushStyleColor(ImGuiCol_Text, m_global_text_color);
+
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowBorderSize, m_global_border_size);
+
         if (m_debug_panel.is_valid())
         {
             m_debug_panel->draw();
@@ -78,6 +87,9 @@ namespace deep
             }
         }
 
+        ImGui::PopStyleVar();
+        ImGui::PopStyleColor(3);
+
         ImGui::Render();
         ImGui_ImplDX11_RenderDrawData(ImGui::GetDrawData());
     }
@@ -90,6 +102,51 @@ namespace deep
     void imgui_manager::set_enabled(bool value) noexcept
     {
         m_enabled = value;
+    }
+
+    void imgui_manager::lose_focus() noexcept
+    {
+        ImGui::SetWindowFocus(nullptr);
+    }
+
+    ImVec4 imgui_manager::get_global_background_color() const noexcept
+    {
+        return m_global_background_color;
+    }
+
+    ImVec4 imgui_manager::get_global_border_color() const noexcept
+    {
+        return m_global_border_color;
+    }
+
+    ImVec4 imgui_manager::get_global_text_color() const noexcept
+    {
+        return m_global_text_color;
+    }
+
+    float imgui_manager::get_global_border_size() const noexcept
+    {
+        return m_global_border_size;
+    }
+
+    void imgui_manager::set_global_background_color(const ImVec4 &value) noexcept
+    {
+        m_global_background_color = value;
+    }
+
+    void imgui_manager::set_global_border_color(const ImVec4 &value) noexcept
+    {
+        m_global_border_color = value;
+    }
+
+    void imgui_manager::set_global_text_color(const ImVec4 &value) noexcept
+    {
+        m_global_text_color = value;
+    }
+
+    void imgui_manager::set_global_border_size(float border_size) noexcept
+    {
+        m_global_border_size = border_size;
     }
 
     ref<imgui_debug_panel> imgui_manager::get_debug_panel() const noexcept

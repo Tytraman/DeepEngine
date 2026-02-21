@@ -59,7 +59,7 @@ namespace deep
         }
     }
 
-    const fvec3 &camera::get_location() const noexcept
+    const fvec3 camera::get_location() const noexcept
     {
         return m_location;
     }
@@ -67,6 +67,26 @@ namespace deep
     void camera::set_location(const fvec3 &location) noexcept
     {
         m_location = location;
+    }
+
+    float camera::get_yaw() const noexcept
+    {
+        return m_yaw;
+    }
+
+    void camera::set_yaw(float degrees) noexcept
+    {
+        m_yaw = degrees;
+    }
+
+    float camera::get_pitch() const noexcept
+    {
+        return m_pitch;
+    }
+
+    void camera::set_pitch(float degrees) noexcept
+    {
+        m_pitch = degrees;
     }
 
     float camera::get_z_near() const noexcept
@@ -168,7 +188,7 @@ namespace deep
         return fmat4::d3d_look_at_lh(m_location, target, fvec3(0.0f, 1.0f, 0.0f));
     }
 
-    const fmat4 &camera::get_projection() const noexcept
+    fmat4 camera::get_projection() const noexcept
     {
         return m_projection;
     }

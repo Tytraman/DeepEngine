@@ -16,6 +16,21 @@ set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 add_executable(DeepEngineEditor
     "${CMAKE_CURRENT_LIST_DIR}/Editor/main.cpp")
 
+set_target_properties(DeepEngineEditor PROPERTIES
+    OUTPUT_NAME DeepEngineEditor
+    DEBUG_POSTFIX "_d"
+    EXPORT_NAME EngineEditor
+    VERSION ${PROJECT_VERSION}
+    SOVERSION ${PROJECT_VERSION_MAJOR}
+    PREFIX ""   # Retire le prefix du nom du fichier généré ('lib' sous Linux par exemple).
+    # Indique que les symboles sont cachés par défaut, permettant une uniformisation entre les
+    # différents compilateurs et un meilleur contrôle sur la sortie générée par le linker.
+    C_VISIBILITY_PRESET hidden
+    CXX_VISIBILITY_PRESET hidden
+    # Indique que les fonctions 'inline' sont cachées par défaut, permettant de réduire la taille
+    # du fichier généré lors de l'utilisation de templates en C++.
+    VISIBILITY_INLINES_HIDDEN TRUE)
+
 message(STATUS "Compiler ID: ${CMAKE_CXX_COMPILER_ID}")
 
 if(MSVC)
