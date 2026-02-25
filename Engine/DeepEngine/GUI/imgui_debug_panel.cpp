@@ -132,6 +132,9 @@ namespace deep
                         ImGui::Spacing();
 
                         ImGui::SeparatorText("Viewport hotkeys :");
+                        ImGui::BulletText("ZQSD: move.");
+                        ImGui::BulletText("Space: go up.");
+                        ImGui::BulletText("Control: go down.");
                         ImGui::BulletText("H: toggle GUI visibility.");
                     }
                 }

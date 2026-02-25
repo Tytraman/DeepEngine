@@ -8,7 +8,7 @@
 
 #include <DeepLib/object.hpp>
 #include <DeepLib/memory/ref_counted.hpp>
-#include <DeepLib/collection/list.hpp>
+#include <DeepLib/collection/array_list.hpp>
 
 #include <imgui.h>
 
@@ -61,7 +61,7 @@ namespace deep
         ImVec4 m_global_border_color;
         ImVec4 m_global_text_color;
         float m_global_border_size;
-        list<ref<imgui_drawable>> m_drawables;
+        array_list<ref<imgui_drawable>> m_drawables;
         ref<imgui_debug_panel> m_debug_panel;
         ref<imgui_chat> m_chat;
 

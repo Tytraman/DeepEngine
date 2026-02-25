@@ -22,6 +22,9 @@ namespace deep
         void rotate_horizontally(float degrees) noexcept;
         void rotate_vertically(float degrees) noexcept;
 
+        void rotate_delta_x(int32 delta) noexcept;
+        void rotate_delta_y(int32 delta) noexcept;
+
         /**
          * @brief Récupère la position relative au monde.
          */
@@ -47,6 +50,9 @@ namespace deep
         float get_near_window_height() const noexcept;
         float get_far_window_height() const noexcept;
 
+        float get_vertical_rotation_speed() const noexcept;
+        float get_horizontal_rotation_speed() const noexcept;
+
         fvec3 get_forward_axis() const noexcept;
         fvec3 get_right_axis() const noexcept;
         fvec3 get_up_axis() const noexcept;
@@ -69,6 +75,9 @@ namespace deep
         float m_vertical_fov;
         float m_near_window_height;
         float m_far_window_height;
+
+        float m_vertical_rotation_speed;
+        float m_horizontal_rotation_speed;
 
         fmat4 m_projection;
     };

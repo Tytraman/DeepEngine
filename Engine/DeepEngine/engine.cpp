@@ -109,6 +109,8 @@ namespace deep
 
         eng->m_window->get_keyboard().set_auto_repeat(true);
 
+        core_window::register_raw_mouse_input(ctx::get_internal_ctx(context.get()));
+
         context->out() << DEEP_TEXT_UTF8(" OK\r\nImGui initialization...");
 
         eng->m_imgui_manager = imgui_manager::create(context);
@@ -409,86 +411,6 @@ namespace deep
                     }
                 }
                 break;
-                case vkeys::Z:
-                {
-                    if (m_gui_mode == gui_mode::Viewport)
-                    {
-                        m_camera->walk(0.5f);
-                    }
-                }
-                break;
-                case vkeys::Q:
-                {
-                    if (m_gui_mode == gui_mode::Viewport)
-                    {
-                        m_camera->strafe(-0.5f);
-                    }
-                }
-                break;
-                case vkeys::S:
-                {
-                    if (m_gui_mode == gui_mode::Viewport)
-                    {
-                        m_camera->walk(-0.5f);
-                    }
-                }
-                break;
-                case vkeys::D:
-                {
-                    if (m_gui_mode == gui_mode::Viewport)
-                    {
-                        m_camera->strafe(0.5f);
-                    }
-                }
-                break;
-                case vkeys::Up:
-                {
-                    if (m_gui_mode == gui_mode::Viewport)
-                    {
-                        m_camera->rotate_vertically(5.0f);
-                    }
-                }
-                break;
-                case vkeys::Left:
-                {
-                    if (m_gui_mode == gui_mode::Viewport)
-                    {
-                        m_camera->rotate_horizontally(-5.0f);
-                    }
-                }
-                break;
-                case vkeys::Down:
-                {
-                    if (m_gui_mode == gui_mode::Viewport)
-                    {
-                        m_camera->rotate_vertically(-5.0f);
-                    }
-                }
-                break;
-                case vkeys::Right:
-                {
-                    if (m_gui_mode == gui_mode::Viewport)
-                    {
-                        m_camera->rotate_horizontally(5.0f);
-                    }
-                }
-                break;
-                case vkeys::Spacebar:
-                {
-                    if (m_gui_mode == gui_mode::Viewport)
-                    {
-                        m_camera->move_vertically(0.5f);
-                    }
-                }
-                break;
-                case vkeys::Control:
-                {
-                    if (m_gui_mode == gui_mode::Viewport)
-                    {
-                        m_camera->move_vertically(-0.5f);
-                    }
-                }
-                break;
                 case vkeys::H:
                 {
                     static bool h_pressed = false;
@@ -516,6 +438,51 @@ namespace deep
                     }
                 }
                 break;
+            }
+        }
+
+        if (m_gui_mode == gui_mode::Viewport)
+        {
+            static constexpr float move_speed = 0.04f;
+
+            if (kbd.key_is_pressed(vkeys::Z))
+            {
+                m_camera->walk(move_speed);
+            }
+            if (kbd.key_is_pressed(vkeys::Q))
+            {
+                m_camera->strafe(-move_speed);
+            }
+            if (kbd.key_is_pressed(vkeys::S))
+            {
+                m_camera->walk(-move_speed);
+            }
+            if (kbd.key_is_pressed(vkeys::D))
+            {
+                m_camera->strafe(move_speed);
+            }
+            if (kbd.key_is_pressed(vkeys::Spacebar))
+            {
+                m_camera->move_vertically(move_speed);
+            }
+            if (kbd.key_is_pressed(vkeys::Control))
+            {
+                m_camera->move_vertically(-move_speed);
+            }
+
+            while (!ms.is_raw_delta_empty())
+            {
+                raw_mouse_delta raw_delta = ms.read_raw_delta();
+
+                if (raw_delta.x != 0)
+                {
+                    m_camera->rotate_delta_x(raw_delta.x);
+                }
+
+                if (raw_delta.y != 0)
+                {
+                    m_camera->rotate_delta_y(raw_delta.y);
+                }
             }
         }
 

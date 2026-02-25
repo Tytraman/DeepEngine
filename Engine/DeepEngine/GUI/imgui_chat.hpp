@@ -5,7 +5,7 @@
 #include "DeepEngine/GUI/imgui_drawable.hpp"
 
 #include <DeepLib/string/string.hpp>
-#include <DeepLib/collection/list.hpp>
+#include <DeepLib/collection/array_list.hpp>
 
 #include <imgui.h>
 
@@ -28,7 +28,7 @@ namespace deep
         virtual void draw() override;
 
       protected:
-        list<message> m_history;
+        array_list<message> m_history;
 
       protected:
         imgui_chat(const ref<ctx> &context, bool enabled) noexcept;

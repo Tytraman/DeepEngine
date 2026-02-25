@@ -49,7 +49,7 @@ namespace deep
         {
             float scrolling_region_height = ImGui::GetContentRegionAvail().y - footer_height;
 
-            if (ImGui::BeginChild("ScrollingRegion", ImVec2(0, scrolling_region_height), 0, ImGuiWindowFlags_HorizontalScrollbar))
+            if (ImGui::BeginChild("##DeepEngineScrollingRegion", ImVec2(0, scrolling_region_height), 0, ImGuiWindowFlags_HorizontalScrollbar))
             {
                 usize index;
                 usize count = m_history.count();

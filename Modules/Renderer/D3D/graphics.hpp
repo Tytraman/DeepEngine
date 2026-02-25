@@ -5,7 +5,7 @@
 #include <DeepCore/types.hpp>
 #include <DeepLib/object.hpp>
 #include <DeepLib/memory/memory.hpp>
-#include <DeepLib/collection/list.hpp>
+#include <DeepLib/collection/array_list.hpp>
 #include <DeepLib/window/window.hpp>
 #include <DeepLib/maths/vec.hpp>
 
@@ -28,7 +28,7 @@ namespace deep
         template class DEEP_D3D_API Microsoft::WRL::ComPtr<ID3D11DepthStencilView>;
         template class DEEP_D3D_API Microsoft::WRL::ComPtr<ID3D11Debug>;
 
-        template class DEEP_D3D_API list<ref<drawable>>;
+        template class DEEP_D3D_API array_list<ref<drawable>>;
 
         class DEEP_D3D_API graphics : public object
         {
@@ -80,7 +80,7 @@ namespace deep
 
             ref<constant_buffer> m_per_frame_buffer;
 
-            list<ref<drawable>> m_drawables;
+            array_list<ref<drawable>> m_drawables;
 
           public:
             friend memory_manager;

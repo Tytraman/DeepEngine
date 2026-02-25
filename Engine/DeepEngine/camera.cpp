@@ -14,7 +14,9 @@ namespace deep
               m_aspect_ratio(0.0f),
               m_vertical_fov(0.0f),
               m_near_window_height(0.0f),
-              m_far_window_height(0.0f)
+              m_far_window_height(0.0f),
+              m_vertical_rotation_speed(0.04f),
+              m_horizontal_rotation_speed(0.04f)
     {
     }
 
@@ -48,6 +50,27 @@ namespace deep
     void camera::rotate_vertically(float degrees) noexcept
     {
         m_pitch += degrees;
+
+        if (m_pitch > 89.0f)
+        {
+            m_pitch = 89.0f;
+        }
+        else if (m_pitch < -89.0f)
+        {
+            m_pitch = -89.0f;
+        }
+    }
+
+    void camera::rotate_delta_x(int32 delta) noexcept
+    {
+        m_yaw += delta * m_horizontal_rotation_speed;
+
+        m_yaw = std::fmod(m_yaw, 360.0f);
+    }
+
+    void camera::rotate_delta_y(int32 delta) noexcept
+    {
+        m_pitch -= delta * m_vertical_rotation_speed;
 
         if (m_pitch > 89.0f)
         {
@@ -134,6 +157,16 @@ namespace deep
     float camera::get_far_window_height() const noexcept
     {
         return m_far_window_height;
+    }
+
+    float camera::get_vertical_rotation_speed() const noexcept
+    {
+        return m_vertical_rotation_speed;
+    }
+
+    float camera::get_horizontal_rotation_speed() const noexcept
+    {
+        return m_horizontal_rotation_speed;
     }
 
     fvec3 camera::get_forward_axis() const noexcept
