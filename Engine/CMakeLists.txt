@@ -3,8 +3,20 @@ cmake_minimum_required(VERSION 3.15.7)
 find_program(FXC_EXECUTABLE fxc.exe)
 
 function(deep_compile_shader SHADER_FILE TARGET_PROFILE ENTRY_POINT)
+    set(options)
+    set(oneValueArgs ADD_PREFIX)
+    set(multiValueArgs)
+
+    cmake_parse_arguments(SHADER "${options}" "${oneValueArgs}" "${multiValueArgs}" ${ARGN})
+
     get_filename_component(SHADER_NAME ${SHADER_FILE} NAME_WE)
-    set(OUTPUT_FILE "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${SHADER_NAME}_${TARGET_PROFILE}.cso")
+    set(OUTPUT_FILE "${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/${SHADER_NAME}")
+
+    if(SHADER_ADD_PREFIX)
+        set(OUTPUT_FILE "${OUTPUT_FILE}_${TARGET_PROFILE}")
+    endif()
+
+    set(OUTPUT_FILE "${OUTPUT_FILE}.cso")
 
     add_custom_command(
         OUTPUT "${OUTPUT_FILE}"
@@ -15,19 +27,23 @@ function(deep_compile_shader SHADER_FILE TARGET_PROFILE ENTRY_POINT)
     set(SHADER_CSO_FILES ${SHADER_CSO_FILES} ${OUTPUT_FILE} PARENT_SCOPE)
 endfunction()
 
-deep_compile_shader("${CMAKE_CURRENT_LIST_DIR}/DeepEngine/Shaders/test_triangle.hlsl" "vs" "main_vs")
-deep_compile_shader("${CMAKE_CURRENT_LIST_DIR}/DeepEngine/Shaders/test_triangle.hlsl" "ps" "main_ps")
+deep_compile_shader("${CMAKE_CURRENT_LIST_DIR}/DeepEngine/Shaders/test_triangle.hlsl" "vs" "main_vs" ADD_PREFIX TRUE)
+deep_compile_shader("${CMAKE_CURRENT_LIST_DIR}/DeepEngine/Shaders/test_triangle.hlsl" "ps" "main_ps" ADD_PREFIX TRUE)
 
-deep_compile_shader("${CMAKE_CURRENT_LIST_DIR}/DeepEngine/Shaders/test_cube.hlsl" "vs" "main_vs")
-deep_compile_shader("${CMAKE_CURRENT_LIST_DIR}/DeepEngine/Shaders/test_cube.hlsl" "ps" "main_ps")
+deep_compile_shader("${CMAKE_CURRENT_LIST_DIR}/DeepEngine/Shaders/cube.hlsl" "vs" "main_vs" ADD_PREFIX TRUE)
+deep_compile_shader("${CMAKE_CURRENT_LIST_DIR}/DeepEngine/Shaders/cube.hlsl" "ps" "main_ps" ADD_PREFIX TRUE)
 
-deep_compile_shader("${CMAKE_CURRENT_LIST_DIR}/DeepEngine/Shaders/textured_cube.hlsl" "vs" "main_vs")
-deep_compile_shader("${CMAKE_CURRENT_LIST_DIR}/DeepEngine/Shaders/textured_cube.hlsl" "ps" "main_ps")
+deep_compile_shader("${CMAKE_CURRENT_LIST_DIR}/DeepEngine/Shaders/textured_cube.hlsl" "vs" "main_vs" ADD_PREFIX TRUE)
+deep_compile_shader("${CMAKE_CURRENT_LIST_DIR}/DeepEngine/Shaders/textured_cube.hlsl" "ps" "main_ps" ADD_PREFIX TRUE)
+
+deep_compile_shader("${CMAKE_CURRENT_LIST_DIR}/DeepEngine/Shaders/plane_vs.hlsl" "vs" "main_vs" ADD_PREFIX FALSE)
+deep_compile_shader("${CMAKE_CURRENT_LIST_DIR}/DeepEngine/Shaders/plane_ps.hlsl" "ps" "main_ps" ADD_PREFIX FALSE)
 
 add_library(DeepEngine SHARED
     "${CMAKE_CURRENT_LIST_DIR}/DeepEngine/engine.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/DeepEngine/camera.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/DeepEngine/GUI/imgui_manager.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/DeepEngine/GUI/imgui_helper.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/DeepEngine/GUI/imgui_drawable.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/DeepEngine/GUI/imgui_debug_panel.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/DeepEngine/GUI/imgui_chat.cpp"

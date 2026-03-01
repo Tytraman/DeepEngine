@@ -1,11 +1,11 @@
-#include "D3D/drawable/cube.hpp"
+#include "D3D/drawable/plane.hpp"
 #include "D3D/buffer/per_object_buffer.hpp"
 
 namespace deep
 {
     namespace D3D
     {
-        void cube::draw(device_context &dc, const fmat4 &view_projection)
+        void plane::draw(device_context &dc, const fmat4 &view_projection)
         {
             dc.bind(m_vertex_shader);
             dc.bind(m_pixel_shader);
@@ -30,7 +30,7 @@ namespace deep
 
             dc.get()->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-            dc.get()->Draw(6 * 6, 0);
+            dc.get()->Draw(6, 0);
         }
     } // namespace D3D
 } // namespace deep

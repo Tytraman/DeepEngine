@@ -305,6 +305,73 @@ namespace deep
             return ref<textured_cube>(context, c);
         }
 
+        ref<plane> drawable_factory::create_plane(const ref<ctx> &context, const ref<vertex_shader> &vs, const ref<pixel_shader> &ps, const fvec3 &position, const fvec3 &rotation, const fvec3 &scale, Microsoft::WRL::ComPtr<ID3D11Device> device) noexcept
+        {
+            struct vertex
+            {
+                struct
+                {
+                    float x;
+                    float y;
+                    float z;
+                } position;
+            };
+
+            struct color_buffer
+            {
+                float red;
+                float green;
+                float blue;
+                float alpha;
+            };
+
+            const vertex vertices[] = {
+                // Haut
+                { -1.0f, 1.0f, 1.0f },
+                { 1.0f, 1.0f, 1.0f },
+                { 1.0f, 1.0f, -1.0f },
+                { -1.0f, 1.0f, 1.0f },
+                { 1.0f, 1.0f, -1.0f },
+                { -1.0f, 1.0f, -1.0f }
+            };
+
+            const color_buffer colors = {
+                1.0f, 0.0f, 0.0f, 1.0f
+            };
+
+            plane *p = mem::alloc_type<plane>(context.get(), context);
+
+            if (p == nullptr)
+            {
+                return ref<plane>();
+            }
+
+            fmat4 model = fmat4();
+            model       = fmat4::translate(model, position);
+            model       = fmat4::rotate_x(model, rotation.x);
+            model       = fmat4::rotate_y(model, rotation.y);
+            model       = fmat4::rotate_z(model, rotation.z);
+            model       = fmat4::scale(model, scale);
+
+            fmat4 projection = fmat4::d3d_perspective_lh(1.0f, 3.0f / 4.0f, 0.5f, 10.0f);
+
+            const per_object_buffer pob = {
+                projection * model
+            };
+
+            p->m_vertex_buffer     = resource_factory::create_vertex_buffer(context, vertices, sizeof(vertices), sizeof(vertex), device);
+            p->m_per_object_buffer = resource_factory::create_constant_buffer(context, &pob, sizeof(pob), device);
+            p->m_color_buffer      = resource_factory::create_constant_buffer(context, &colors, sizeof(colors), device);
+            p->m_vertex_shader     = vs;
+            p->m_pixel_shader      = ps;
+
+            p->m_location = position;
+            p->m_rotation = rotation;
+            p->m_scale    = fvec3(1.0f, 1.0f, 1.0f);
+
+            return ref<plane>(context, p);
+        }
+
         ref<cube> drawable_factory::from(const ref<ctx> &context, ref<cube> &from_cube, const ref<vertex_shader> &vs, const ref<pixel_shader> &ps, const fvec3 &position, const fvec3 &rotation, const fvec3 &scale, Microsoft::WRL::ComPtr<ID3D11Device> device) noexcept
         {
             if (!from_cube.is_valid())
@@ -338,7 +405,58 @@ namespace deep
             c->m_vertex_shader     = vs;
             c->m_pixel_shader      = ps;
 
+            c->m_location = position;
+            c->m_rotation = rotation;
+            c->m_scale    = scale;
+
             return ref<cube>(context, c);
+        }
+
+        ref<plane> drawable_factory::from(const ref<ctx> &context,
+                                          ref<plane> &from_plane,
+                                          const ref<vertex_shader> &vs,
+                                          const ref<pixel_shader> &ps,
+                                          const fvec3 &position,
+                                          const fvec3 &rotation,
+                                          const fvec3 &scale,
+                                          Microsoft::WRL::ComPtr<ID3D11Device> device) noexcept
+        {
+            if (!from_plane.is_valid())
+            {
+                return ref<plane>();
+            }
+
+            plane *p = mem::alloc_type<plane>(context.get(), context);
+
+            if (p == nullptr)
+            {
+                return ref<plane>();
+            }
+
+            fmat4 model = fmat4();
+            model       = fmat4::translate(model, position);
+            model       = fmat4::rotate_x(model, rotation.x);
+            model       = fmat4::rotate_y(model, rotation.y);
+            model       = fmat4::rotate_z(model, rotation.z);
+            model       = fmat4::scale(model, scale);
+
+            fmat4 projection = fmat4::d3d_perspective_lh(1.0f, 3.0f / 4.0f, 0.5f, 10.0f);
+
+            const per_object_buffer pob = {
+                projection * model
+            };
+
+            p->m_vertex_buffer     = from_plane->m_vertex_buffer;
+            p->m_per_object_buffer = resource_factory::create_constant_buffer(context, &pob, sizeof(pob), device);
+            p->m_color_buffer      = from_plane->m_color_buffer;
+            p->m_vertex_shader     = vs;
+            p->m_pixel_shader      = ps;
+
+            p->m_location = position;
+            p->m_rotation = rotation;
+            p->m_scale    = scale;
+
+            return ref<plane>(context, p);
         }
     } // namespace D3D
 } // namespace deep

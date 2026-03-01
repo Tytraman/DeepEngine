@@ -11,6 +11,7 @@
 #include "DeepEngine/camera.hpp"
 #include "DeepEngine/GUI/gui.hpp"
 #include "DeepEngine/GUI/imgui_manager.hpp"
+#include "DeepEngine/basic_shapes.hpp"
 #include "D3D/graphics.hpp"
 
 namespace deep
@@ -26,6 +27,7 @@ namespace deep
         float get_time_seconds() const noexcept;
 
         ref<D3D::graphics> get_graphics() const noexcept;
+        basic_shapes &get_basic_shapes() noexcept;
         ref<imgui_manager> get_imgui_manager() const noexcept;
         ref<window> get_window();
         uint32 get_FPS() const noexcept;
@@ -35,12 +37,14 @@ namespace deep
         void set_should_close(bool value) noexcept;
 
       private:
+        bool init_basic_shapes() noexcept;
         bool process_inputs() noexcept;
 
       private:
         bool m_should_close;
         ref<window> m_window;
         ref<D3D::graphics> m_graphics;
+        basic_shapes m_basic_shapes;
         ref<imgui_manager> m_imgui_manager;
         uint64 m_startup_tick_count;
         uint64 m_startup_time_millis;
@@ -58,6 +62,11 @@ namespace deep
     inline ref<D3D::graphics> engine::get_graphics() const noexcept
     {
         return m_graphics;
+    }
+
+    inline basic_shapes &engine::get_basic_shapes() noexcept
+    {
+        return m_basic_shapes;
     }
 
     inline ref<imgui_manager> engine::get_imgui_manager() const noexcept

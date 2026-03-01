@@ -1,5 +1,7 @@
 #include "DeepEngine/GUI/imgui_debug_panel.hpp"
 #include "DeepEngine/engine.hpp"
+#include "DeepEngine/GUI/imgui_helper.hpp"
+#include "D3D/drawable/drawable_factory.hpp"
 
 #include <DeepLib/context.hpp>
 #include <imgui.h>
@@ -80,6 +82,72 @@ namespace deep
                     ImGui::EndMenu();
                 }
 
+                if (ImGui::BeginMenu("Add"))
+                {
+                    if (ImGui::BeginMenu("Basic shapes"))
+                    {
+                        if (ImGui::MenuItem("Cube"))
+                        {
+                            ref<camera> cam = eng->get_camera();
+                            if (cam.is_valid())
+                            {
+                                fvec3 location            = cam->get_location();
+                                ref<D3D::cube> basic_cube = eng->get_basic_shapes().cube;
+
+                                ref<D3D::cube> add_cube = D3D::drawable_factory::from(m_context,
+                                                                                      basic_cube,
+                                                                                      basic_cube->get_vertex_shader(),
+                                                                                      basic_cube->get_pixel_shader(),
+                                                                                      location,
+                                                                                      fvec3(),
+                                                                                      fvec3(1.0f, 1.0f, 1.0f),
+                                                                                      graph->get_device());
+
+                                if (add_cube.is_valid())
+                                {
+                                    graph->add_drawable(ref_cast<D3D::drawable>(add_cube));
+                                }
+                                else
+                                {
+                                    m_context->err() << "[ERROR] Cannot add 'basic_cube'\r\n";
+                                }
+                            }
+                        }
+
+                        if (ImGui::MenuItem("Plane"))
+                        {
+                            ref<camera> cam = eng->get_camera();
+                            if (cam.is_valid())
+                            {
+                                fvec3 location              = cam->get_location();
+                                ref<D3D::plane> basic_plane = eng->get_basic_shapes().plane;
+
+                                ref<D3D::plane> add_plane = D3D::drawable_factory::from(m_context,
+                                                                                        basic_plane,
+                                                                                        basic_plane->get_vertex_shader(),
+                                                                                        basic_plane->get_pixel_shader(),
+                                                                                        location,
+                                                                                        fvec3(),
+                                                                                        fvec3(1.0f, 1.0f, 1.0f),
+                                                                                        graph->get_device());
+
+                                if (add_plane.is_valid())
+                                {
+                                    graph->add_drawable(ref_cast<D3D::drawable>(add_plane));
+                                }
+                                else
+                                {
+                                    m_context->err() << "[ERROR] Cannot add 'basic_plane'\r\n";
+                                }
+                            }
+                        }
+
+                        ImGui::EndMenu();
+                    }
+
+                    ImGui::EndMenu();
+                }
+
                 ImGui::EndMenuBar();
             }
 
@@ -102,40 +170,40 @@ namespace deep
 
                     if (m_icon.is_valid())
                     {
-                        ImGui::Image((ImTextureID) m_icon->get(), ImVec2(icon_size, icon_size));
-                        ImGui::SameLine();
+                        imgui_helper::image(m_icon, icon_size, icon_size);
+                        imgui_helper::same_line();
 
                         float vertical_offset = (icon_size - title_size.y) / 2.0f;
                         ImGui::SetCursorPosY(ImGui::GetCursorPosY() + vertical_offset);
                     }
 
-                    ImGui::Text(title);
+                    imgui_helper::print(title);
 
                     if (m_icon.is_valid())
                     {
-                        ImGui::SameLine();
-                        ImGui::Image((ImTextureID) m_icon->get(), ImVec2(icon_size, icon_size));
+                        imgui_helper::same_line();
+                        imgui_helper::image(m_icon, icon_size, icon_size);
                     }
 
-                    ImGui::Spacing();
+                    imgui_helper::spacing();
 
                     if (ImGui::CollapsingHeader("How to use", ImGuiTreeNodeFlags_DefaultOpen))
                     {
-                        ImGui::SeparatorText("Global hotkeys :");
-                        ImGui::BulletText("Escape: exit program.");
-                        ImGui::BulletText("F1: toggle between GUI / Viewport mode.");
+                        imgui_helper::print_separator("Global hotkeys :");
+                        imgui_helper::print_bullet("Escape: exit program.");
+                        imgui_helper::print_bullet("F1: toggle between GUI / Viewport mode.");
 
-                        ImGui::Spacing();
+                        imgui_helper::spacing();
 
-                        ImGui::SeparatorText("GUI hotkeys :");
+                        imgui_helper::print_separator("GUI hotkeys :");
 
-                        ImGui::Spacing();
+                        imgui_helper::spacing();
 
-                        ImGui::SeparatorText("Viewport hotkeys :");
-                        ImGui::BulletText("ZQSD: move.");
-                        ImGui::BulletText("Space: go up.");
-                        ImGui::BulletText("Control: go down.");
-                        ImGui::BulletText("H: toggle GUI visibility.");
+                        imgui_helper::print_separator("Viewport hotkeys :");
+                        imgui_helper::print_bullet("ZQSD: move.");
+                        imgui_helper::print_bullet("Space: go up.");
+                        imgui_helper::print_bullet("Control: go down.");
+                        imgui_helper::print_bullet("H: toggle GUI visibility.");
                     }
                 }
                 break;
@@ -143,29 +211,29 @@ namespace deep
                 {
                     uint32 FPS = eng->get_FPS();
 
-                    ImGui::Text("FPS: %u", FPS);
+                    imgui_helper::print("FPS: %u", FPS);
                 }
                 break;
                 case view::About:
                 {
                     const char *text1 = "DeepEngine by Tytraman.";
 
-                    ImGui::Text(text1);
-                    ImGui::Spacing();
+                    imgui_helper::print(text1);
+                    imgui_helper::spacing();
 
                     if (ImGui::CollapsingHeader("Libraries", ImGuiTreeNodeFlags_DefaultOpen))
                     {
-                        ImGui::BulletText("DeepLib");
-                        ImGui::SeparatorText("External:");
-                        ImGui::BulletText("Direct3D 11");
-                        ImGui::BulletText("libpng");
+                        imgui_helper::print_bullet("DeepLib");
+                        imgui_helper::print_separator("External:");
+                        imgui_helper::print_bullet("Direct3D 11");
+                        imgui_helper::print_bullet("libpng");
                     }
                 }
                 break;
                 case view::EditWorld:
                 {
-                    ImGui::Text("World");
-                    ImGui::Spacing();
+                    imgui_helper::print("World");
+                    imgui_helper::spacing();
 
                     static fvec4 world_color = graph->get_background_color();
 
@@ -177,7 +245,7 @@ namespace deep
                         ImGui::TableNextRow();
                         ImGui::TableNextColumn();
                         ImGui::AlignTextToFramePadding();
-                        ImGui::Text("Background color");
+                        imgui_helper::print("Background color");
 
                         ImGui::TableNextColumn();
                         ImGui::SetNextItemWidth(-1);
@@ -193,8 +261,8 @@ namespace deep
                 break;
                 case view::EditCamera:
                 {
-                    ImGui::Text("Camera");
-                    ImGui::Spacing();
+                    imgui_helper::print("Camera");
+                    imgui_helper::spacing();
 
                     ref<camera> cam = eng->get_camera();
                     if (!cam.is_valid())
@@ -214,7 +282,7 @@ namespace deep
                         ImGui::TableNextRow();
                         ImGui::TableNextColumn();
                         ImGui::AlignTextToFramePadding();
-                        ImGui::Text("Location");
+                        imgui_helper::print("Location");
 
                         ImGui::TableNextColumn();
                         ImGui::SetNextItemWidth(-1);
@@ -227,7 +295,7 @@ namespace deep
                         ImGui::TableNextRow();
                         ImGui::TableNextColumn();
                         ImGui::AlignTextToFramePadding();
-                        ImGui::Text("Yaw");
+                        imgui_helper::print("Yaw");
 
                         ImGui::TableNextColumn();
                         ImGui::SetNextItemWidth(-1);
@@ -240,7 +308,7 @@ namespace deep
                         ImGui::TableNextRow();
                         ImGui::TableNextColumn();
                         ImGui::AlignTextToFramePadding();
-                        ImGui::Text("Pitch");
+                        imgui_helper::print("Pitch");
 
                         ImGui::TableNextColumn();
                         ImGui::SetNextItemWidth(-1);
@@ -267,7 +335,7 @@ namespace deep
                         ImGui::TableNextRow();
                         ImGui::TableNextColumn();
                         ImGui::AlignTextToFramePadding();
-                        ImGui::Text("Vertical FOV");
+                        imgui_helper::print("Vertical FOV");
 
                         ImGui::TableNextColumn();
                         ImGui::SetNextItemWidth(-1);
@@ -280,25 +348,25 @@ namespace deep
                         ImGui::TableNextRow();
                         ImGui::TableNextColumn();
                         ImGui::AlignTextToFramePadding();
-                        ImGui::Text("Horizontal FOV");
+                        imgui_helper::print("Horizontal FOV");
 
                         ImGui::TableNextColumn();
                         ImGui::SetNextItemWidth(-1);
-                        ImGui::Text("%.3f", horizontal_fov);
+                        imgui_helper::print("%.3f", horizontal_fov);
 
                         ImGui::TableNextRow();
                         ImGui::TableNextColumn();
                         ImGui::AlignTextToFramePadding();
-                        ImGui::Text("Aspect ratio");
+                        imgui_helper::print("Aspect ratio");
 
                         ImGui::TableNextColumn();
                         ImGui::SetNextItemWidth(-1);
-                        ImGui::Text("%.3f", aspect_ratio);
+                        imgui_helper::print("%.3f", aspect_ratio);
 
                         ImGui::TableNextRow();
                         ImGui::TableNextColumn();
                         ImGui::AlignTextToFramePadding();
-                        ImGui::Text("Z near");
+                        imgui_helper::print("Z near");
 
                         ImGui::TableNextColumn();
                         ImGui::SetNextItemWidth(-1);
@@ -311,7 +379,7 @@ namespace deep
                         ImGui::TableNextRow();
                         ImGui::TableNextColumn();
                         ImGui::AlignTextToFramePadding();
-                        ImGui::Text("Z far");
+                        imgui_helper::print("Z far");
 
                         ImGui::TableNextColumn();
                         ImGui::SetNextItemWidth(-1);
@@ -327,8 +395,8 @@ namespace deep
                 break;
                 case view::EditImGui:
                 {
-                    ImGui::Text("ImGui");
-                    ImGui::Spacing();
+                    imgui_helper::print("ImGui");
+                    imgui_helper::spacing();
 
                     ref<imgui_manager> im = eng->get_imgui_manager();
                     if (!im.is_valid())
@@ -349,7 +417,7 @@ namespace deep
                         ImGui::TableNextRow();
                         ImGui::TableNextColumn();
                         ImGui::AlignTextToFramePadding();
-                        ImGui::Text("Background color");
+                        imgui_helper::print("Background color");
 
                         ImGui::TableNextColumn();
                         ImGui::SetNextItemWidth(-1);
@@ -362,7 +430,7 @@ namespace deep
                         ImGui::TableNextRow();
                         ImGui::TableNextColumn();
                         ImGui::AlignTextToFramePadding();
-                        ImGui::Text("Border color");
+                        imgui_helper::print("Border color");
 
                         ImGui::TableNextColumn();
                         ImGui::SetNextItemWidth(-1);
@@ -375,7 +443,7 @@ namespace deep
                         ImGui::TableNextRow();
                         ImGui::TableNextColumn();
                         ImGui::AlignTextToFramePadding();
-                        ImGui::Text("Text color");
+                        imgui_helper::print("Text color");
 
                         ImGui::TableNextColumn();
                         ImGui::SetNextItemWidth(-1);
@@ -388,7 +456,7 @@ namespace deep
                         ImGui::TableNextRow();
                         ImGui::TableNextColumn();
                         ImGui::AlignTextToFramePadding();
-                        ImGui::Text("Border size");
+                        imgui_helper::print("Border size");
 
                         ImGui::TableNextColumn();
                         ImGui::SetNextItemWidth(-1);

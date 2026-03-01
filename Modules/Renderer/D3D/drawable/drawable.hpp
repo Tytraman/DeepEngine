@@ -30,6 +30,10 @@ namespace deep
 
             virtual void draw(device_context &dc, const fmat4 &view_projection) = 0;
 
+            virtual ref<vertex_buffer> get_vertex_buffer() const noexcept;
+            virtual ref<vertex_shader> get_vertex_shader() const noexcept;
+            virtual ref<pixel_shader> get_pixel_shader() const noexcept;
+
           protected:
             ref<vertex_buffer> m_vertex_buffer;
             ref<vertex_shader> m_vertex_shader;

@@ -145,6 +145,11 @@ namespace deep
         eng->m_window->set_activate_callback(window_activate_callback);
         eng->m_window->set_deactivate_callback(window_deactivate_callback);
 
+        if (!eng->init_basic_shapes())
+        {
+            return ref<engine>();
+        }
+
         file_stream icon_stream = file_stream(context,
                                               DEEP_TEXT_NATIVE("Resources") DEEP_NATIVE_SEPARATOR DEEP_TEXT_NATIVE("Textures") DEEP_NATIVE_SEPARATOR DEEP_TEXT_NATIVE("icon.png"),
                                               core_fs::file_mode::Open,
@@ -196,92 +201,6 @@ namespace deep
         uint64 start_time          = time::get_current_time_millis();
         uint64 end_time;
 
-        //////////////////
-        // ZONE DE TEST //
-        //////////////////
-
-        const D3D11_INPUT_ELEMENT_DESC cube_ied[] = {
-            { "Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-        };
-
-        const D3D11_INPUT_ELEMENT_DESC textured_cube_ied[] = {
-            { "Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-            { "TexCoord", 0, DXGI_FORMAT_R32G32_FLOAT, 0, sizeof(float) * 3, D3D11_INPUT_PER_VERTEX_DATA, 0 }
-        };
-
-        file_stream fs = file_stream(get_context(), DEEP_TEXT_NATIVE("test_cube_vs.cso"), core_fs::file_mode::Open, core_fs::file_access::Read, core_fs::file_share::Read);
-        fs.open();
-
-        ref<D3D::vertex_shader> cube_vs = D3D::shader_factory::create_vertex_shader(get_context(), &fs, cube_ied, sizeof(cube_ied) / sizeof(D3D11_INPUT_ELEMENT_DESC), m_graphics->get_device());
-        fs.close();
-
-        fs = file_stream(get_context(), DEEP_TEXT_NATIVE("test_cube_ps.cso"), core_fs::file_mode::Open, core_fs::file_access::Read, core_fs::file_share::Read);
-        fs.open();
-
-        ref<D3D::pixel_shader> cube_ps = D3D::shader_factory::create_pixel_shader(get_context(), &fs, m_graphics->get_device());
-        fs.close();
-
-        fs = file_stream(get_context(), DEEP_TEXT_NATIVE("textured_cube_vs.cso"), core_fs::file_mode::Open, core_fs::file_access::Read, core_fs::file_share::Read);
-        fs.open();
-
-        ref<D3D::vertex_shader> textured_cube_vs = D3D::shader_factory::create_vertex_shader(get_context(), &fs, textured_cube_ied, sizeof(textured_cube_ied) / sizeof(D3D11_INPUT_ELEMENT_DESC), m_graphics->get_device());
-        fs.close();
-
-        fs = file_stream(get_context(), DEEP_TEXT_NATIVE("textured_cube_ps.cso"), core_fs::file_mode::Open, core_fs::file_access::Read, core_fs::file_share::Read);
-        fs.open();
-
-        ref<D3D::pixel_shader> textured_cube_ps = D3D::shader_factory::create_pixel_shader(get_context(), &fs, m_graphics->get_device());
-        fs.close();
-
-        ref<D3D::cube> c1 = D3D::drawable_factory::create_cube(get_context(), cube_vs, cube_ps, fvec3(0.0f, 0.0f, 4.0f), fvec3(), fvec3(1.0f, 1.0f, 1.0f), m_graphics->get_device());
-
-        m_graphics->add_drawable(ref_cast<D3D::drawable>(c1));
-
-        fs = file_stream(get_context(),
-                         DEEP_TEXT_NATIVE("Resources") DEEP_NATIVE_SEPARATOR DEEP_TEXT_NATIVE("Textures") DEEP_NATIVE_SEPARATOR DEEP_TEXT_NATIVE("texture.png"),
-                         core_fs::file_mode::Open,
-                         core_fs::file_access::Read,
-                         core_fs::file_share::Read);
-        fs.open();
-
-        png png_source = png::load(get_context(), &fs);
-
-        if (png_source.is_valid() && png_source.check() && png_source.read_info())
-        {
-            image img_tex1 = png_source.read_image(image::color_space::RGBA);
-
-            if (img_tex1.is_valid())
-            {
-                ref<D3D::texture> tex1  = D3D::resource_factory::create_texture(get_context(), img_tex1, m_graphics->get_device());
-                ref<D3D::sampler> samp1 = D3D::resource_factory::create_sampler(get_context(), m_graphics->get_device());
-
-                ref<D3D::textured_cube> tc1 = D3D::drawable_factory::create_textured_cube(
-                        get_context(),
-                        textured_cube_vs,
-                        textured_cube_ps,
-                        fvec3(4.0f, 0.0f, 4.0f),
-                        fvec3(),
-                        fvec3(1.0f, 1.0f, 1.0f),
-                        tex1,
-                        samp1,
-                        m_graphics->get_device());
-
-                m_graphics->add_drawable(ref_cast<D3D::drawable>(tc1));
-            }
-            else
-            {
-                get_context()->err() << DEEP_TEXT_UTF8("[ERROR] Cannot read image data from 'texture.png'.\r\n");
-            }
-        }
-        else
-        {
-            get_context()->err() << DEEP_TEXT_UTF8("[ERROR] Cannot load 'texture.png'.\r\n");
-        }
-
-        //////////////////////
-        // FIN ZONE DE TEST //
-        //////////////////////
-
         // Boucle infinie du jeu. S'arrête quand l'utilisateur ferme la fenêtre.
         while (!m_should_close && m_window->process_message())
         {
@@ -329,6 +248,133 @@ namespace deep
         // SHUTDOWN //
         //////////////
         m_imgui_manager->shutdown();
+    }
+
+    bool engine::init_basic_shapes() noexcept
+    {
+        const D3D11_INPUT_ELEMENT_DESC ied[] = {
+            { "Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+        };
+
+        const D3D11_INPUT_ELEMENT_DESC textured_ied[] = {
+            { "Position", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+            { "TexCoord", 0, DXGI_FORMAT_R32G32_FLOAT, 0, sizeof(float) * 3, D3D11_INPUT_PER_VERTEX_DATA, 0 }
+        };
+
+        // Création du shader pour les cubes.
+        file_stream fs = file_stream(get_context(), DEEP_TEXT_NATIVE("cube_vs.cso"), core_fs::file_mode::Open, core_fs::file_access::Read, core_fs::file_share::Read);
+        fs.open();
+
+        ref<D3D::vertex_shader> cube_vs = D3D::shader_factory::create_vertex_shader(get_context(), &fs, ied, sizeof(ied) / sizeof(D3D11_INPUT_ELEMENT_DESC), m_graphics->get_device());
+        fs.close();
+
+        fs = file_stream(get_context(), DEEP_TEXT_NATIVE("cube_ps.cso"), core_fs::file_mode::Open, core_fs::file_access::Read, core_fs::file_share::Read);
+        fs.open();
+
+        ref<D3D::pixel_shader> cube_ps = D3D::shader_factory::create_pixel_shader(get_context(), &fs, m_graphics->get_device());
+        fs.close();
+
+        m_basic_shapes.cube = D3D::drawable_factory::create_cube(get_context(),
+                                                                 cube_vs,
+                                                                 cube_ps,
+                                                                 fvec3(0.0f, 0.0f, 0.0f),
+                                                                 fvec3(),
+                                                                 fvec3(1.0f, 1.0f, 1.0f),
+                                                                 m_graphics->get_device());
+
+        if (!m_basic_shapes.cube.is_valid())
+        {
+            return false;
+        }
+
+        // Création du shader pour les cubes texturés.
+        fs = file_stream(get_context(), DEEP_TEXT_NATIVE("textured_cube_vs.cso"), core_fs::file_mode::Open, core_fs::file_access::Read, core_fs::file_share::Read);
+        fs.open();
+
+        ref<D3D::vertex_shader> textured_cube_vs = D3D::shader_factory::create_vertex_shader(get_context(), &fs, textured_ied, sizeof(textured_ied) / sizeof(D3D11_INPUT_ELEMENT_DESC), m_graphics->get_device());
+        fs.close();
+
+        fs = file_stream(get_context(), DEEP_TEXT_NATIVE("textured_cube_ps.cso"), core_fs::file_mode::Open, core_fs::file_access::Read, core_fs::file_share::Read);
+        fs.open();
+
+        ref<D3D::pixel_shader> textured_cube_ps = D3D::shader_factory::create_pixel_shader(get_context(), &fs, m_graphics->get_device());
+        fs.close();
+
+        fs = file_stream(get_context(),
+                         DEEP_TEXT_NATIVE("Resources") DEEP_NATIVE_SEPARATOR DEEP_TEXT_NATIVE("Textures") DEEP_NATIVE_SEPARATOR DEEP_TEXT_NATIVE("texture.png"),
+                         core_fs::file_mode::Open,
+                         core_fs::file_access::Read,
+                         core_fs::file_share::Read);
+        fs.open();
+
+        png png_source = png::load(get_context(), &fs);
+
+        if (png_source.is_valid() && png_source.check() && png_source.read_info())
+        {
+            image img_tex1 = png_source.read_image(image::color_space::RGBA);
+
+            if (img_tex1.is_valid())
+            {
+                ref<D3D::texture> tex1  = D3D::resource_factory::create_texture(get_context(), img_tex1, m_graphics->get_device());
+                ref<D3D::sampler> samp1 = D3D::resource_factory::create_sampler(get_context(), m_graphics->get_device());
+
+                m_basic_shapes.textured_cube = D3D::drawable_factory::create_textured_cube(
+                        get_context(),
+                        textured_cube_vs,
+                        textured_cube_ps,
+                        fvec3(0.0f, 0.0f, 0.0f),
+                        fvec3(),
+                        fvec3(1.0f, 1.0f, 1.0f),
+                        tex1,
+                        samp1,
+                        m_graphics->get_device());
+
+                if (!m_basic_shapes.textured_cube.is_valid())
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                get_context()->err() << DEEP_TEXT_UTF8("[ERROR] Cannot read image data from 'texture.png'.\r\n");
+
+                return false;
+            }
+        }
+        else
+        {
+            get_context()->err() << DEEP_TEXT_UTF8("[ERROR] Cannot load 'texture.png'.\r\n");
+
+            return false;
+        }
+
+        // Création du shader pour les plateaux.
+        fs = file_stream(get_context(), DEEP_TEXT_NATIVE("plane_vs.cso"), core_fs::file_mode::Open, core_fs::file_access::Read, core_fs::file_share::Read);
+        fs.open();
+
+        ref<D3D::vertex_shader> plane_vs = D3D::shader_factory::create_vertex_shader(get_context(), &fs, ied, sizeof(ied) / sizeof(D3D11_INPUT_ELEMENT_DESC), m_graphics->get_device());
+        fs.close();
+
+        fs = file_stream(get_context(), DEEP_TEXT_NATIVE("plane_ps.cso"), core_fs::file_mode::Open, core_fs::file_access::Read, core_fs::file_share::Read);
+        fs.open();
+
+        ref<D3D::pixel_shader> plane_ps = D3D::shader_factory::create_pixel_shader(get_context(), &fs, m_graphics->get_device());
+        fs.close();
+
+        m_basic_shapes.plane = D3D::drawable_factory::create_plane(get_context(),
+                                                                   plane_vs,
+                                                                   plane_ps,
+                                                                   fvec3(0.0f, 0.0f, 0.0f),
+                                                                   fvec3(),
+                                                                   fvec3(1.0f, 1.0f, 1.0f),
+                                                                   m_graphics->get_device());
+
+        if (!m_basic_shapes.plane.is_valid())
+        {
+            return false;
+        }
+
+        return true;
     }
 
     bool engine::process_inputs() noexcept
