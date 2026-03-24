@@ -33,6 +33,20 @@ namespace deep
             virtual ref<vertex_buffer> get_vertex_buffer() const noexcept;
             virtual ref<vertex_shader> get_vertex_shader() const noexcept;
             virtual ref<pixel_shader> get_pixel_shader() const noexcept;
+            virtual ref<constant_buffer> get_per_object_buffer() const noexcept;
+
+            virtual void set_vertex_buffer(const ref<vertex_buffer> &buffer) noexcept;
+            virtual void set_vertex_shader(const ref<vertex_shader> &shader) noexcept;
+            virtual void set_pixel_shader(const ref<pixel_shader> &shader) noexcept;
+            virtual void set_per_object_buffer(const ref<constant_buffer> &buffer) noexcept;
+
+            virtual fvec3 get_location() const noexcept;
+            virtual fvec3 get_rotation() const noexcept;
+            virtual fvec3 get_scale() const noexcept;
+
+            virtual void set_location(const fvec3 &location) noexcept;
+            virtual void set_rotation(const fvec3 &rotation) noexcept;
+            virtual void set_scale(const fvec3 &scale) noexcept;
 
           protected:
             ref<vertex_buffer> m_vertex_buffer;
@@ -40,9 +54,9 @@ namespace deep
             ref<pixel_shader> m_pixel_shader;
             ref<constant_buffer> m_per_object_buffer;
 
-            DEEP_FVEC3 m_location;
-            DEEP_FVEC3 m_rotation;
-            DEEP_FVEC3 m_scale;
+            DEEP_FVEC3(m_location)
+            DEEP_FVEC3(m_rotation)
+            DEEP_FVEC3(m_scale)
 
           protected:
             using object::object;

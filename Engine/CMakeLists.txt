@@ -90,6 +90,7 @@ include("${CMAKE_CURRENT_LIST_DIR}/../cmake/variables.cmake")
 set(DeepModules "${CMAKE_SOURCE_DIR}/Modules")
 
 add_subdirectory("${DeepModules}/Renderer" "${CMAKE_CURRENT_BINARY_DIR}/Renderer")
+add_subdirectory("${DeepModules}/Model" "${CMAKE_CURRENT_BINARY_DIR}/Model")
 
 # Ajoute des constantes au préprocesseur.
 add_compile_definitions(PRIVATE DE_AUTHORS=${DE_AUTHORS})   # Le nom des auteurs stockés dans les variables partagées.

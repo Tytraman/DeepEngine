@@ -49,6 +49,16 @@ namespace deep
             m_device_context->IASetVertexBuffers(0, 1, buffer->get_address(), &buffer->m_stride, &buffer->m_offset);
         }
 
+        void device_context::bind(const ref<index_buffer> &buffer) noexcept
+        {
+            if (!buffer.is_valid())
+            {
+                return;
+            }
+
+            m_device_context->IASetIndexBuffer(buffer->get(), DXGI_FORMAT_R16_UINT, 0);
+        }
+
         void device_context::bind(const ref<texture> &tex) noexcept
         {
             if (!tex.is_valid())

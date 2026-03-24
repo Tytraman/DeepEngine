@@ -64,7 +64,7 @@ namespace deep
 
       protected:
         // Coordonnées relative au "world space".
-        DEEP_FVEC3 m_location;
+        DEEP_FVEC3(m_location)
 
         float m_yaw;
         float m_pitch;
@@ -79,7 +79,7 @@ namespace deep
         float m_vertical_rotation_speed;
         float m_horizontal_rotation_speed;
 
-        fmat4 m_projection;
+        DEEP_FMAT4(m_projection)
     };
 } // namespace deep
 

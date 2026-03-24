@@ -197,7 +197,7 @@ namespace deep
 
             c->m_location = position;
             c->m_rotation = rotation;
-            c->m_scale    = fvec3(1.0f, 1.0f, 1.0f);
+            c->m_scale    = scale;
 
             return ref<cube>(context, c);
         }

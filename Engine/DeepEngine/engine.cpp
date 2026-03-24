@@ -4,6 +4,7 @@
 #include "D3D/drawable/drawable_factory.hpp"
 #include "D3D/device_context.hpp"
 #include "D3D/buffer/per_frame_buffer.hpp"
+#include "Assimp/loader.hpp"
 
 #include <DeepLib/lib.hpp>
 #include <DeepLib/context.hpp>
@@ -201,6 +202,14 @@ namespace deep
         uint64 start_time          = time::get_current_time_millis();
         uint64 end_time;
 
+        ///////////////
+        // TEST ZONE //
+        ///////////////
+
+        //////////////////////
+        // END OF TEST ZONE //
+        //////////////////////
+
         // Boucle infinie du jeu. S'arrête quand l'utilisateur ferme la fenêtre.
         while (!m_should_close && m_window->process_message())
         {
@@ -373,6 +382,26 @@ namespace deep
         {
             return false;
         }
+
+        const char *monkey_filename = "Resources" DEEP_SEPARATOR "Models" DEEP_SEPARATOR "monkey.fbx";
+
+        model::loader::print_info(m_context, monkey_filename);
+
+        /*ref<D3D::mesh> monkey_mesh = model::loader::load(m_context,
+                                                         monkey_filename,
+                                                         plane_vs,
+                                                         plane_ps,
+                                                         fvec3(0.0f, 0.0f, 0.0f),
+                                                         fvec3(),
+                                                         fvec3(1.0f, 1.0f, 1.0f),
+                                                         m_graphics->get_device());
+
+        if (!monkey_mesh.is_valid())
+        {
+            return false;
+        }
+
+        m_graphics->add_drawable(ref_cast<D3D::drawable>(monkey_mesh));*/
 
         return true;
     }

@@ -66,7 +66,7 @@ namespace deep
             graphics(const ref<ctx> &context, window_handle win) noexcept;
 
           private:
-            DEEP_FVEC4 m_background_color;
+            DEEP_FVEC4(m_background_color)
 
             window_handle m_window_handle;
             // Le 'device' permet la création de ressources Direct3D.
@@ -78,7 +78,7 @@ namespace deep
             Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_depth_stencil_view;
             Microsoft::WRL::ComPtr<ID3D11Debug> m_debug;
 
-            ref<constant_buffer> m_per_frame_buffer;
+            DEEP_REF(constant_buffer, m_per_frame_buffer)
 
             array_list<ref<drawable>> m_drawables;
 

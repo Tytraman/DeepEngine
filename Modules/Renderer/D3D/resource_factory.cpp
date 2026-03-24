@@ -62,6 +62,33 @@ namespace deep
             return ref<constant_buffer>(context, cb);
         }
 
+        ref<index_buffer> resource_factory::create_index_buffer(const ref<ctx> &context, const uint16 *indices, uint16 count, Microsoft::WRL::ComPtr<ID3D11Device> device) noexcept
+        {
+            index_buffer *ib = mem::alloc_type<index_buffer>(context.get(), context);
+
+            if (ib == nullptr)
+            {
+                return ref<index_buffer>();
+            }
+
+            ib->m_count = count;
+
+            D3D11_BUFFER_DESC bd   = {};
+            bd.BindFlags           = D3D11_BIND_INDEX_BUFFER;
+            bd.Usage               = D3D11_USAGE_DEFAULT;
+            bd.CPUAccessFlags      = 0 /*D3D11_CPU_ACCESS_WRITE*/;
+            bd.MiscFlags           = 0;
+            bd.ByteWidth           = static_cast<UINT>(count * sizeof(*indices));
+            bd.StructureByteStride = sizeof(*indices);
+
+            D3D11_SUBRESOURCE_DATA sd = {};
+            sd.pSysMem                = indices;
+
+            DEEP_DX_CHECK(device->CreateBuffer(&bd, &sd, &ib->m_buffer), context, device)
+
+            return ref<index_buffer>(context, ib);
+        }
+
         ref<texture> resource_factory::create_texture(const ref<ctx> &context, const image &img, Microsoft::WRL::ComPtr<ID3D11Device> device) noexcept
         {
             DXGI_FORMAT format;

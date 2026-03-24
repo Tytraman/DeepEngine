@@ -1,6 +1,6 @@
-#include "graphics.hpp"
-#include "error.hpp"
-#include "resource_factory.hpp"
+#include "D3D/graphics.hpp"
+#include "D3D/error.hpp"
+#include "D3D/resource_factory.hpp"
 #include "D3D/shader/shader_factory.hpp"
 #include "D3D/buffer/per_frame_buffer.hpp"
 

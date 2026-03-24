@@ -1,23 +1,23 @@
-#ifndef DEEP_ENGINE_D3D_TEXTURED_CUBE_HPP
-#define DEEP_ENGINE_D3D_TEXTURED_CUBE_HPP
+#ifndef DEEP_ENGINE_D3D_MESH_HPP
+#define DEEP_ENGINE_D3D_MESH_HPP
 
 #include "deep_d3d_export.h"
 #include "D3D/drawable/drawable.hpp"
-#include "D3D/texture.hpp"
-#include "D3D/sampler.hpp"
+#include "D3D/buffer/index_buffer.hpp"
+
+#include <DeepLib/memory/ref_counted.hpp>
 
 namespace deep
 {
     namespace D3D
     {
-        class DEEP_D3D_API textured_cube : public drawable
+        class DEEP_D3D_API mesh : public drawable
         {
           public:
             virtual void draw(device_context &dc, const fmat4 &view_projection) override;
 
           protected:
-            DEEP_REF(texture, m_texture)
-            DEEP_REF(sampler, m_sampler)
+            DEEP_REF(index_buffer, m_index_buffer)
 
           protected:
             using drawable::drawable;

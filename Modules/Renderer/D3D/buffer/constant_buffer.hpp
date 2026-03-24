@@ -12,7 +12,10 @@ namespace deep
     {
         class device_context;
 
+#ifndef DEEP_D3D_BUFFER
+#define DEEP_D3D_BUFFER
         template class DEEP_D3D_API Microsoft::WRL::ComPtr<ID3D11Buffer>;
+#endif
 
         class DEEP_D3D_API constant_buffer : public object
         {

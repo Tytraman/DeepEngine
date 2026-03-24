@@ -7,6 +7,7 @@ add_library(DeepD3D SHARED
     "${CMAKE_CURRENT_LIST_DIR}/D3D/resource_factory.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/D3D/buffer/vertex_buffer.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/D3D/buffer/constant_buffer.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/D3D/buffer/index_buffer.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/D3D/shader/vertex_shader.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/D3D/shader/pixel_shader.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/D3D/shader/shader_factory.cpp"
@@ -19,6 +20,7 @@ add_library(DeepD3D SHARED
     "${CMAKE_CURRENT_LIST_DIR}/D3D/drawable/cube.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/D3D/drawable/textured_cube.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/D3D/drawable/plane.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/D3D/drawable/mesh.cpp"
 
 )
 add_library(Deep::D3D ALIAS DeepD3D)

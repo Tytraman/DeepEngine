@@ -8,12 +8,9 @@ namespace deep
 {
     namespace D3D
     {
-        template struct DEEP_D3D_API mat4x4<float>;
-
-        struct alignas(16) DEEP_D3D_API per_frame_buffer
-        {
-            fmat4 view;
-            fmat4 projection;
+        struct alignas(16) DEEP_D3D_API per_frame_buffer {
+            DEEP_FMAT4(view)
+                    DEEP_FMAT4(projection)
         };
     } // namespace D3D
 } // namespace deep

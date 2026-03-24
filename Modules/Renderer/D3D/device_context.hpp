@@ -9,6 +9,7 @@
 #include "D3D/shader/vertex_shader.hpp"
 #include "D3D/shader/pixel_shader.hpp"
 #include "D3D/buffer/vertex_buffer.hpp"
+#include "D3D/buffer/index_buffer.hpp"
 #include "D3D/texture.hpp"
 #include "D3D/sampler.hpp"
 
@@ -44,6 +45,7 @@ namespace deep
             void bind(const ref<vertex_shader> &shader) noexcept;
             void bind(const ref<pixel_shader> &shader) noexcept;
             void bind(const ref<vertex_buffer> &buffer) noexcept;
+            void bind(const ref<index_buffer> &buffer) noexcept;
             void bind(const ref<texture> &tex) noexcept;
             void bind(const ref<sampler> &samp) noexcept;
 
