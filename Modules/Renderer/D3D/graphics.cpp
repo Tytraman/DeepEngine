@@ -23,7 +23,7 @@ namespace deep
                   m_window_handle(win),
                   m_device(nullptr),
                   m_swap_chain(nullptr),
-                  m_render_target_view(nullptr),
+                  m_back_buffer_view(nullptr),
                   m_drawables(context)
         {
         }
@@ -89,9 +89,33 @@ namespace deep
 
             DEEP_DX_CHECK(graph->m_device->QueryInterface(__uuidof(ID3D11Debug), &graph->m_debug), context, graph->m_device)
 
-            DEEP_DX_CHECK(graph->m_device->CreateRenderTargetView(back_buffer.Get(), nullptr, &graph->m_render_target_view), context, graph->m_device)
+            DEEP_DX_CHECK(graph->m_device->CreateRenderTargetView(back_buffer.Get(), nullptr, &graph->m_back_buffer_view), context, graph->m_device)
 
-            D3D11_DEPTH_STENCIL_DESC ds_desc = { 0 };
+            // Crée le backbuffer miroir.
+            D3D11_TEXTURE2D_DESC mirror_desc = {};
+            wrl::ComPtr<ID3D11Texture2D> back_buffer_tex;
+
+            DEEP_DX_CHECK(back_buffer.As(&back_buffer_tex), context, graph->m_device)
+            back_buffer_tex->GetDesc(&mirror_desc);
+
+            mirror_desc.BindFlags      = D3D11_BIND_SHADER_RESOURCE;
+            mirror_desc.Usage          = D3D11_USAGE_DEFAULT;
+            mirror_desc.CPUAccessFlags = 0;
+            mirror_desc.MiscFlags      = 0;
+
+            DEEP_DX_CHECK(graph->m_device->CreateTexture2D(
+                                  &mirror_desc,
+                                  nullptr,
+                                  &graph->m_back_buffer_mirror_tex),
+                          context, graph->m_device)
+
+            DEEP_DX_CHECK(graph->m_device->CreateShaderResourceView(
+                                  graph->m_back_buffer_mirror_tex.Get(),
+                                  nullptr,
+                                  &graph->m_back_buffer_mirror_view),
+                          context, graph->m_device)
+
+            D3D11_DEPTH_STENCIL_DESC ds_desc = {};
             ds_desc.DepthEnable              = TRUE;
             ds_desc.DepthWriteMask           = D3D11_DEPTH_WRITE_MASK_ALL;
             ds_desc.DepthFunc                = D3D11_COMPARISON_LESS;
@@ -124,7 +148,7 @@ namespace deep
 
             DEEP_DX_CHECK(graph->m_device->CreateDepthStencilView(depth_stencil_texture.Get(), &dsv_desc, &graph->m_depth_stencil_view), context, graph->m_device)
 
-            graph->m_device_context.get()->OMSetRenderTargets(1, graph->m_render_target_view.GetAddressOf(), graph->m_depth_stencil_view.Get());
+            graph->m_device_context.get()->OMSetRenderTargets(1, graph->m_back_buffer_view.GetAddressOf(), graph->m_depth_stencil_view.Get());
 
             // Configuration du 'viewport'.
             D3D11_VIEWPORT vp = { 0 };
@@ -187,7 +211,7 @@ namespace deep
                 m_background_color.w
             };
 
-            m_device_context.get()->ClearRenderTargetView(m_render_target_view.Get(), color);
+            m_device_context.get()->ClearRenderTargetView(m_back_buffer_view.Get(), color);
             m_device_context.get()->ClearDepthStencilView(m_depth_stencil_view.Get(), D3D11_CLEAR_DEPTH, 1.0f, 0);
         }
 
@@ -213,6 +237,12 @@ namespace deep
                     m_drawables[index]->draw(m_device_context, view_projection);
                 }
             }
+
+            // Copie du backbuffer dans le miroir.
+            Microsoft::WRL::ComPtr<ID3D11Resource> mirror_source;
+            m_back_buffer_view->GetResource(&mirror_source);
+
+            m_device_context.get()->CopyResource(m_back_buffer_mirror_tex.Get(), mirror_source.Get());
         }
 
         void graphics::end_frame() noexcept
@@ -275,6 +305,37 @@ namespace deep
         Microsoft::WRL::ComPtr<ID3D11Device> graphics::get_device() noexcept
         {
             return m_device;
+        }
+
+        Microsoft::WRL::ComPtr<IDXGISwapChain> graphics::get_swap_chain() noexcept
+        {
+            return m_swap_chain;
+        }
+
+        Microsoft::WRL::ComPtr<ID3D11RenderTargetView> graphics::get_back_buffer_view() noexcept
+        {
+            return m_back_buffer_view;
+        }
+
+        Microsoft::WRL::ComPtr<ID3D11Texture2D> graphics::get_back_buffer_texture() noexcept
+        {
+            Microsoft::WRL::ComPtr<ID3D11Resource> resource;
+            m_back_buffer_view->GetResource(&resource);
+
+            Microsoft::WRL::ComPtr<ID3D11Texture2D> tex;
+            DEEP_DX_CHECK(resource.As(&tex), m_context, m_device)
+
+            return tex;
+        }
+
+        Microsoft::WRL::ComPtr<ID3D11DepthStencilView> graphics::get_depth_stencil_view() noexcept
+        {
+            return m_depth_stencil_view;
+        }
+
+        Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> graphics::get_back_buffer_mirror_view() noexcept
+        {
+            return m_back_buffer_mirror_view;
         }
 
         device_context &graphics::get_device_context() noexcept

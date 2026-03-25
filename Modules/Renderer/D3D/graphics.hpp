@@ -26,6 +26,8 @@ namespace deep
         template class DEEP_D3D_API Microsoft::WRL::ComPtr<ID3D11DeviceContext>;
         template class DEEP_D3D_API Microsoft::WRL::ComPtr<ID3D11RenderTargetView>;
         template class DEEP_D3D_API Microsoft::WRL::ComPtr<ID3D11DepthStencilView>;
+        template class DEEP_D3D_API Microsoft::WRL::ComPtr<ID3D11ShaderResourceView>;
+        template class DEEP_D3D_API Microsoft::WRL::ComPtr<ID3D11Texture2D>;
         template class DEEP_D3D_API Microsoft::WRL::ComPtr<ID3D11Debug>;
 
         template class DEEP_D3D_API array_list<ref<drawable>>;
@@ -56,6 +58,13 @@ namespace deep
             void set_background_color(const fvec4 &color) noexcept;
 
             Microsoft::WRL::ComPtr<ID3D11Device> get_device() noexcept;
+            Microsoft::WRL::ComPtr<IDXGISwapChain> get_swap_chain() noexcept;
+
+            Microsoft::WRL::ComPtr<ID3D11RenderTargetView> get_back_buffer_view() noexcept;
+            Microsoft::WRL::ComPtr<ID3D11Texture2D> get_back_buffer_texture() noexcept;
+
+            Microsoft::WRL::ComPtr<ID3D11DepthStencilView> get_depth_stencil_view() noexcept;
+            Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> get_back_buffer_mirror_view() noexcept;
 
             device_context &get_device_context() noexcept;
             const device_context &get_device_context() const noexcept;
@@ -74,8 +83,12 @@ namespace deep
             // La 'device context' permet l'utilisation des ressources créées avec le 'device'.
             device_context m_device_context;
             Microsoft::WRL::ComPtr<IDXGISwapChain> m_swap_chain;
-            Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_render_target_view;
+            Microsoft::WRL::ComPtr<ID3D11RenderTargetView> m_back_buffer_view;
             Microsoft::WRL::ComPtr<ID3D11DepthStencilView> m_depth_stencil_view;
+
+            Microsoft::WRL::ComPtr<ID3D11Texture2D> m_back_buffer_mirror_tex;
+            Microsoft::WRL::ComPtr<ID3D11ShaderResourceView> m_back_buffer_mirror_view;
+
             Microsoft::WRL::ComPtr<ID3D11Debug> m_debug;
 
             DEEP_REF(constant_buffer, m_per_frame_buffer)

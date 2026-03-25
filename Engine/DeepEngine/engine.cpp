@@ -230,7 +230,7 @@ namespace deep
 
             if (m_imgui_manager->is_enabled())
             {
-                m_imgui_manager->draw_all();
+                m_imgui_manager->draw_all(m_graphics);
             }
 
             m_graphics->end_frame();

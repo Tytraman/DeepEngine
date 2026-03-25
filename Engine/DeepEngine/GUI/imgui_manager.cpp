@@ -54,7 +54,7 @@ namespace deep
         ImGui::DestroyContext();
     }
 
-    void imgui_manager::draw_all() noexcept
+    void imgui_manager::draw_all(ref<D3D::graphics> &graph) noexcept
     {
         ImGui_ImplDX11_NewFrame();
         ImGui_ImplWin32_NewFrame();

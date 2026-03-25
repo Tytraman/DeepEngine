@@ -5,6 +5,7 @@
 #include "DeepEngine/GUI/imgui_drawable.hpp"
 #include "DeepEngine/GUI/imgui_debug_panel.hpp"
 #include "DeepEngine/GUI/imgui_chat.hpp"
+#include "D3D/graphics.hpp"
 
 #include <DeepLib/object.hpp>
 #include <DeepLib/memory/ref_counted.hpp>
@@ -32,7 +33,7 @@ namespace deep
         void init(window_handle win) noexcept;
         void shutdown() noexcept;
 
-        void draw_all() noexcept;
+        void draw_all(ref<D3D::graphics> &graph) noexcept;
 
         bool is_enabled() const noexcept;
         void set_enabled(bool value) noexcept;

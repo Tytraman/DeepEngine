@@ -18,7 +18,8 @@ namespace deep
             About,
             EditWorld,
             EditCamera,
-            EditImGui
+            EditImGui,
+            DirectX11Framebuffer
         };
 
       public:

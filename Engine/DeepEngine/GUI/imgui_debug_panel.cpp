@@ -4,6 +4,7 @@
 #include "D3D/drawable/drawable_factory.hpp"
 
 #include <DeepLib/context.hpp>
+#include <DeepLib/maths/math.hpp>
 #include <imgui.h>
 
 namespace deep
@@ -24,6 +25,12 @@ namespace deep
 
         ref<D3D::graphics> graph = eng->get_graphics();
         if (!graph.is_valid())
+        {
+            return;
+        }
+
+        ref<imgui_manager> manager = eng->get_imgui_manager();
+        if (!manager.is_valid())
         {
             return;
         }
@@ -143,6 +150,16 @@ namespace deep
                         }
 
                         ImGui::EndMenu();
+                    }
+
+                    ImGui::EndMenu();
+                }
+
+                if (ImGui::BeginMenu("DirectX 11"))
+                {
+                    if (ImGui::MenuItem("Framebuffer"))
+                    {
+                        m_view = view::DirectX11Framebuffer;
                     }
 
                     ImGui::EndMenu();
@@ -484,6 +501,36 @@ namespace deep
                         }
 
                         ImGui::EndTable();
+                    }
+                }
+                break;
+                case view::DirectX11Framebuffer:
+                {
+                    Microsoft::WRL::ComPtr<ID3D11Texture2D> back_buffer_tex = graph->get_back_buffer_texture();
+
+                    if (back_buffer_tex)
+                    {
+                        D3D11_TEXTURE2D_DESC desc;
+                        back_buffer_tex->GetDesc(&desc);
+
+                        imgui_helper::print("Resolution: %ux%u", desc.Width, desc.Height);
+                        imgui_helper::print("MSAA: %u", desc.SampleDesc.Count);
+
+                        imgui_helper::print_separator("Live Preview");
+                        imgui_helper::print("Back buffer:");
+
+                        float avaiable_width = ImGui::GetContentRegionAvail().x;
+                        float aspect_ratio   = static_cast<float>(desc.Height) / static_cast<float>(desc.Width);
+                        float final_height   = avaiable_width * aspect_ratio;
+
+                        ImVec2 final_size = ImVec2(avaiable_width, final_height);
+
+                        ImGui::Image((ImTextureID) graph->get_back_buffer_mirror_view().Get(),
+                                     final_size,
+                                     ImVec2(0.0f, 0.0f),
+                                     ImVec2(1.0f, 1.0f),
+                                     ImVec4(1.0f, 1.0f, 1.0f, 1.0f),
+                                     manager->get_global_border_color());
                     }
                 }
                 break;
