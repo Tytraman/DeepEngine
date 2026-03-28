@@ -1,10 +1,13 @@
 #include "DeepEngine/GUI/imgui_debug_panel.hpp"
 #include "DeepEngine/engine.hpp"
 #include "DeepEngine/GUI/imgui_helper.hpp"
+#include "DeepEngine/project.hpp"
 #include "D3D/drawable/drawable_factory.hpp"
 
 #include <DeepLib/context.hpp>
 #include <DeepLib/maths/math.hpp>
+#include <DeepLib/filesystem/filesystem.hpp>
+
 #include <imgui.h>
 
 namespace deep
@@ -42,6 +45,70 @@ namespace deep
         {
             if (ImGui::BeginMenuBar())
             {
+                if (ImGui::BeginMenu("File"))
+                {
+                    if (ImGui::MenuItem("Create new project..."))
+                    {
+                        string_native project_folder = fs::select_folder(m_context, DEEP_TEXT_NATIVE("Select a project folder"));
+
+                        if (project_folder.is_valid())
+                        {
+                            m_context->out() << "Creating new project in '" << *project_folder << "' folder...\r\n";
+
+                            ref<project> proj = m_context->get_object<project>("project");
+
+                            proj = project::create(m_context, project_folder, nullptr, proj);
+
+                            if (proj.is_valid())
+                            {
+                                m_context->set_object<project>("project", proj);
+
+                                m_context->out() << "New project created!\r\n";
+                            }
+                            else
+                            {
+                                m_context->err() << "[ERROR] Cannot create project.\r\n";
+                            }
+                        }
+                    }
+
+                    if (ImGui::MenuItem("Open project..."))
+                    {
+                        string_native project_folder = fs::select_folder(m_context, DEEP_TEXT_NATIVE("Select a project folder"));
+
+                        if (project_folder.is_valid())
+                        {
+                            m_context->out() << "Opening project in '" << *project_folder << "' folder...\r\n";
+
+                            ref<project> proj = m_context->get_object<project>("project");
+
+                            proj = project::open(m_context, project_folder, proj);
+
+                            if (proj.is_valid())
+                            {
+                                m_context->set_object<project>("project", proj);
+
+                                m_context->out() << "Project opened!\r\n";
+
+                                proj->load_settings(eng);
+                            }
+                            else
+                            {
+                                m_context->err() << "[ERROR] Cannot open project.\r\n";
+                            }
+                        }
+                    }
+
+                    ImGui::Separator();
+
+                    if (ImGui::MenuItem("Exit"))
+                    {
+                        eng->set_should_close(true);
+                    }
+
+                    ImGui::EndMenu();
+                }
+
                 if (ImGui::BeginMenu("View"))
                 {
                     if (ImGui::MenuItem("Main"))
@@ -57,13 +124,6 @@ namespace deep
                     if (ImGui::MenuItem("About"))
                     {
                         m_view = view::About;
-                    }
-
-                    ImGui::Separator();
-
-                    if (ImGui::MenuItem("Exit"))
-                    {
-                        eng->set_should_close(true);
                     }
 
                     ImGui::EndMenu();
@@ -244,6 +304,7 @@ namespace deep
                         imgui_helper::print_separator("External:");
                         imgui_helper::print_bullet("Direct3D 11");
                         imgui_helper::print_bullet("libpng");
+                        imgui_helper::print_bullet("nlohmann_json");
                     }
                 }
                 break;
@@ -270,6 +331,13 @@ namespace deep
                         if (ImGui::ColorEdit4("##WorldBackgroundColor", &world_color.x))
                         {
                             graph->set_background_color(world_color);
+
+                            ref<project> proj = m_context->get_object<project>("project");
+
+                            if (proj.is_valid())
+                            {
+                                proj->save_settings(eng);
+                            }
                         }
 
                         ImGui::EndTable();
@@ -442,6 +510,13 @@ namespace deep
                         if (ImGui::ColorEdit4("##ImGuiGlobalBackgroundColor", &background_color.x))
                         {
                             im->set_global_background_color(background_color);
+
+                            ref<project> proj = m_context->get_object<project>("project");
+
+                            if (proj.is_valid())
+                            {
+                                proj->save_settings(eng);
+                            }
                         }
 
                         ImGui::TableNextRow();
@@ -455,6 +530,13 @@ namespace deep
                         if (ImGui::ColorEdit4("##ImGuiGlobalBorderColor", &border_color.x))
                         {
                             im->set_global_border_color(border_color);
+
+                            ref<project> proj = m_context->get_object<project>("project");
+
+                            if (proj.is_valid())
+                            {
+                                proj->save_settings(eng);
+                            }
                         }
 
                         ImGui::TableNextRow();
@@ -468,6 +550,13 @@ namespace deep
                         if (ImGui::ColorEdit4("##ImGuiGlobalTextColor", &text_color.x))
                         {
                             im->set_global_text_color(text_color);
+
+                            ref<project> proj = m_context->get_object<project>("project");
+
+                            if (proj.is_valid())
+                            {
+                                proj->save_settings(eng);
+                            }
                         }
 
                         ImGui::TableNextRow();
@@ -481,6 +570,13 @@ namespace deep
                         if (ImGui::DragFloat("##ImGuiGlobalBorderSize", &border_size, 0.1f))
                         {
                             im->set_global_border_size(border_size);
+
+                            ref<project> proj = m_context->get_object<project>("project");
+
+                            if (proj.is_valid())
+                            {
+                                proj->save_settings(eng);
+                            }
                         }
 
                         ImGui::TableNextRow();
@@ -498,6 +594,13 @@ namespace deep
                             im->set_global_border_color(border_color);
                             im->set_global_text_color(text_color);
                             im->set_global_border_size(border_size);
+
+                            ref<project> proj = m_context->get_object<project>("project");
+
+                            if (proj.is_valid())
+                            {
+                                proj->save_settings(eng);
+                            }
                         }
 
                         ImGui::EndTable();

@@ -41,6 +41,7 @@ deep_compile_shader("${CMAKE_CURRENT_LIST_DIR}/DeepEngine/Shaders/plane_ps.hlsl"
 
 add_library(DeepEngine SHARED
     "${CMAKE_CURRENT_LIST_DIR}/DeepEngine/engine.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/DeepEngine/project.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/DeepEngine/camera.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/DeepEngine/GUI/imgui_manager.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/DeepEngine/GUI/imgui_helper.cpp"
@@ -96,6 +97,8 @@ add_subdirectory("${DeepModules}/Model" "${CMAKE_CURRENT_BINARY_DIR}/Model")
 add_compile_definitions(PRIVATE DE_AUTHORS=${DE_AUTHORS})   # Le nom des auteurs stockés dans les variables partagées.
 add_compile_definitions(PRIVATE DE_VERSION=${DE_VERSION})   # Le nom de la version actuelle stockée dans les variables partagées.
 
+find_package(nlohmann_json 3.12.0 REQUIRED)
+
 target_include_directories(DeepEngine
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
@@ -109,6 +112,7 @@ target_link_libraries(DeepEngine
         Deep::Lib
         Deep::D3D
     PRIVATE
-        imgui::imgui)
+        imgui::imgui
+        nlohmann_json::nlohmann_json)
 
 target_compile_definitions(DeepEngine PRIVATE DEEPENGINE_LIB=1)
