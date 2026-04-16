@@ -44,6 +44,11 @@ namespace deep
         ImGui::StyleColorsDark();
 
         ImGui_ImplWin32_Init(win);
+
+        // Désactive le fichier 'imgui.ini'.
+        ImGuiIO &io    = ImGui::GetIO();
+        io.IniFilename = nullptr;
+        io.LogFilename = nullptr;
     }
 
     void imgui_manager::shutdown() noexcept

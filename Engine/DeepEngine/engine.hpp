@@ -14,6 +14,8 @@
 #include "DeepEngine/basic_shapes.hpp"
 #include "D3D/graphics.hpp"
 
+#include "DeepEngine/Scripting/dot_net_host.hpp"
+
 namespace deep
 {
     class DEEP_ENGINE_API engine : public object
@@ -51,6 +53,7 @@ namespace deep
         uint32 m_FPS;
         ref<camera> m_camera;
         gui_mode m_gui_mode;
+        dot_net_host m_dot_net_host;
 
       protected:
         engine(const ref<ctx> &context) noexcept;

@@ -38,6 +38,8 @@ namespace deep
             return;
         }
 
+        ref<project> proj = m_context->get_object<project>("project");
+
         ImGui::SetNextWindowPos({ 5.0f, 5.0f });
         ImGui::SetNextWindowSize({ 450.0f, 600.0f });
 
@@ -54,8 +56,6 @@ namespace deep
                         if (project_folder.is_valid())
                         {
                             m_context->out() << "Creating new project in '" << *project_folder << "' folder...\r\n";
-
-                            ref<project> proj = m_context->get_object<project>("project");
 
                             proj = project::create(m_context, project_folder, nullptr, proj);
 
@@ -79,8 +79,6 @@ namespace deep
                         if (project_folder.is_valid())
                         {
                             m_context->out() << "Opening project in '" << *project_folder << "' folder...\r\n";
-
-                            ref<project> proj = m_context->get_object<project>("project");
 
                             proj = project::open(m_context, project_folder, proj);
 
@@ -107,6 +105,19 @@ namespace deep
                     }
 
                     ImGui::EndMenu();
+                }
+
+                if (proj.is_valid())
+                {
+                    if (ImGui::BeginMenu("Project"))
+                    {
+                        if (ImGui::MenuItem("Import resource..."))
+                        {
+                            // TODO: ouvrir un sélecteur de fichier puis copier le fichier dans le dossier des ressources.
+                        }
+
+                        ImGui::EndMenu();
+                    }
                 }
 
                 if (ImGui::BeginMenu("View"))

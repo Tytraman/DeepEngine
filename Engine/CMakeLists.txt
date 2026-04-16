@@ -48,6 +48,7 @@ add_library(DeepEngine SHARED
     "${CMAKE_CURRENT_LIST_DIR}/DeepEngine/GUI/imgui_drawable.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/DeepEngine/GUI/imgui_debug_panel.cpp"
     "${CMAKE_CURRENT_LIST_DIR}/DeepEngine/GUI/imgui_chat.cpp"
+    "${CMAKE_CURRENT_LIST_DIR}/DeepEngine/Scripting/dot_net_host.cpp"
     ${SHADER_CSO_FILES})
 add_library(Deep::Engine ALIAS DeepEngine)
 
@@ -99,6 +100,8 @@ add_compile_definitions(PRIVATE DE_VERSION=${DE_VERSION})   # Le nom de la versi
 
 find_package(nlohmann_json 3.12.0 REQUIRED)
 
+find_package(unofficial-nethost CONFIG REQUIRED)
+
 target_include_directories(DeepEngine
     PUBLIC
         $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
@@ -112,6 +115,7 @@ target_link_libraries(DeepEngine
         Deep::Lib
         Deep::D3D
     PRIVATE
+        unofficial::nethost::nethost
         imgui::imgui
         nlohmann_json::nlohmann_json)
 

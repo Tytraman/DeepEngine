@@ -2,6 +2,7 @@
 #include "DeepEngine/engine.hpp"
 
 #include <DeepLib/memory/memory.hpp>
+#include <DeepLib/filesystem/filesystem.hpp>
 
 #include <vector>
 
@@ -41,7 +42,7 @@ namespace deep
 
         current_proj->m_folder_path = move(folder_path);
 
-        string_native project_settings_path = current_proj->m_folder_path;
+        string_native project_settings_path = string_native(context, *current_proj->m_folder_path);
         project_settings_path.append(DEEP_NATIVE_SEPARATOR DEEP_TEXT_NATIVE("DeepEngineProject.json"));
 
         current_proj->m_settings_stream = ref<file_stream>(context, mem::alloc_type<file_stream>(context.get(),
@@ -103,6 +104,15 @@ namespace deep
 
         current_proj->m_settings_stream->write(settings_dump.c_str(), settings_dump.size(), &bytes_written);
 
+        if (fs::set_cwd(context, *current_proj->m_folder_path))
+        {
+            string_native resources_folder = current_proj->m_folder_path;
+
+            resources_folder.append(DEEP_NATIVE_SEPARATOR "resources");
+
+            fs::create_folder(context, *resources_folder);
+        }
+
         return current_proj;
     }
 
@@ -124,7 +134,7 @@ namespace deep
 
         current_proj->m_folder_path = move(folder_path);
 
-        string_native project_settings_path = current_proj->m_folder_path;
+        string_native project_settings_path = string_native(context, *current_proj->m_folder_path);
         project_settings_path.append(DEEP_NATIVE_SEPARATOR DEEP_TEXT_NATIVE("DeepEngineProject.json"));
 
         current_proj->m_settings_stream = ref<file_stream>(context, mem::alloc_type<file_stream>(context.get(),
@@ -153,6 +163,15 @@ namespace deep
         current_proj->m_settings_stream->read(&settings_dump[0], size, &bytes_read);
 
         current_proj->m_settings = json::parse(settings_dump);
+
+        if (fs::set_cwd(context, *current_proj->m_folder_path))
+        {
+            string_native resources_folder = current_proj->m_folder_path;
+
+            resources_folder.append(DEEP_NATIVE_SEPARATOR "resources");
+
+            fs::create_folder(context, *resources_folder);
+        }
 
         return current_proj;
     }

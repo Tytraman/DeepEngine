@@ -49,6 +49,9 @@ include("cmake/variables.cmake")
 
 add_subdirectory("${CMAKE_CURRENT_LIST_DIR}/Engine")
 
+include("cmake/DotnetSDK.cmake")
+deep_compile_cs()
+
 add_compile_definitions(PRIVATE DE_AUTHORS=${DE_AUTHORS})
 add_compile_definitions(PRIVATE DE_VERSION=${DE_VERSION})
 

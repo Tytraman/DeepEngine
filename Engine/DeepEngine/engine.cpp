@@ -189,6 +189,13 @@ namespace deep
             core_window::hide_cursor();
         }
 
+        if (!eng->m_dot_net_host.init(DEEP_TEXT_NATIVE("DeepManaged.runtimeconfig.json")))
+        {
+            context->err() << DEEP_TEXT_UTF8("[ERROR] Cannot initialize .NET Runtime.\r\n");
+
+            return ref<engine>();
+        }
+
         return eng;
     }
 
@@ -256,6 +263,7 @@ namespace deep
         //////////////
         // SHUTDOWN //
         //////////////
+        m_dot_net_host.shutdown();
         m_imgui_manager->shutdown();
     }
 
@@ -382,26 +390,6 @@ namespace deep
         {
             return false;
         }
-
-        const char *monkey_filename = "Resources" DEEP_SEPARATOR "Models" DEEP_SEPARATOR "monkey.fbx";
-
-        model::loader::print_info(m_context, monkey_filename);
-
-        /*ref<D3D::mesh> monkey_mesh = model::loader::load(m_context,
-                                                         monkey_filename,
-                                                         plane_vs,
-                                                         plane_ps,
-                                                         fvec3(0.0f, 0.0f, 0.0f),
-                                                         fvec3(),
-                                                         fvec3(1.0f, 1.0f, 1.0f),
-                                                         m_graphics->get_device());
-
-        if (!monkey_mesh.is_valid())
-        {
-            return false;
-        }
-
-        m_graphics->add_drawable(ref_cast<D3D::drawable>(monkey_mesh));*/
 
         return true;
     }
